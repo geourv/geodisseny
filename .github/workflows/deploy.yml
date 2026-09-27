@@ -1,0 +1,49 @@
+name: Deploy site
+
+on:
+  workflow_dispatch:
+    inputs:
+      reviewed_sha:
+        description: Full main commit SHA validated locally and approved for publication.
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    permissions: {}
+    env:
+      CURRENT_REF: ${{ github.ref }}
+      CURRENT_SHA: ${{ github.sha }}
+      REVIEWED_SHA: ${{ inputs.reviewed_sha }}
+    steps:
+      - name: Require reviewed main commit
+        shell: bash
+        run: |
+          if [[ "$CURRENT_REF" != "refs/heads/main" ]]; then
+            echo "Select the main branch when dispatching a deployment." >&2
+            exit 1
+          fi
+          if [[ ! "$REVIEWED_SHA" =~ ^[0-9a-f]{40}$ ]] || [[ "$REVIEWED_SHA" != "$CURRENT_SHA" ]]; then
+            echo "reviewed_sha must exactly match the selected main commit: $CURRENT_SHA" >&2
+            exit 1
+          fi
+
+  deploy:
+    needs: validate
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    uses: dosquartsdedocs/unaltraweb/.github/workflows/site-deploy.yml@02af70001bf8085af860fd57f8d7e75ec96a89c7
+    with:
+      reviewed_sha: ${{ inputs.reviewed_sha }}
+      manual-pdf-image: "ghcr.io/dosquartsdedocs/unaltraweb-manual-pdf@sha256:9e0b3a45753c170b795e9a9d6df61580085c113436beac5bf6c8de69b6562097"
+      check-manual-pdf: false
+      sync-manual-pdf: true
+      vegavisuals-sha: "68c0b231402ae9485cc34ce530dc5239cb0ec194"

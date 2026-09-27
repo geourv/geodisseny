@@ -1,0 +1,101 @@
+title: "Anàlisi Espacial i Geodisseny"
+description: "Manual de teoria aplicada, pràctiques i criteris d'anàlisi espacial i geodisseny amb QGIS."
+copyright_holder: "Benito Zaragozí"
+keywords: "anàlisi espacial, geodisseny, QGIS, geoestadística, autocorrelació espacial, kriging, avaluació multicriteri, AHP"
+url: "https://geourv.github.io"
+baseurl: "/geodisseny"
+lang: "ca"
+default_lang: "ca"
+languages: ["ca"]
+author:
+  name: Benito Zaragozí
+  name_ca: Benito Zaragozí
+  bio: Manual de l'assignatura Anàlisi Espacial i Geodisseny.
+  bio_ca: Manual de l'assignatura Anàlisi Espacial i Geodisseny.
+  affiliation: Universitat Rovira i Virgili
+  affiliation_ca: Universitat Rovira i Virgili
+  location: Vila-seca
+  location_ca: Vila-seca
+  email: benito.zaragozi@urv.cat
+  github: geourv
+theme: unaltraweb
+exclude:
+  - sandbox/
+  - tmp/
+  - vendor/
+  - _site/
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - AGENTS.md
+unaltraweb:
+  site_profile: unaltremanual
+  content_status_field: content_status
+  approved_status: approved
+  footer:
+    show_logo: true
+    brand_name: "Anàlisi Espacial i Geodisseny"
+    brand_url: "https://geourv.github.io/geodisseny/ca/"
+  features:
+    news: false
+    blog: false
+    cv: false
+    projects: false
+    publications: false
+    metrics: false
+    docs: false
+    manual: true
+    readings: true
+  manual:
+    collection: chapters
+    show_chapter_index: true
+    cover_image: /assets/img/manual-cover-ca.png
+    logo: /assets/img/brand/dosquartsdedocs-logo.svg
+    logo_inverse: /assets/img/brand/dosquartsdedocs-logo-white.svg
+    logo_cafe: /assets/img/brand/dosquartsdedocs-logo-cafe.svg
+    bibliography: true
+    bibliography_file: manual.bib
+    metadata:
+      title: "Anàlisi Espacial i Geodisseny"
+      short_title: Geodisseny
+      description: Manual de teoria aplicada, pràctiques i criteris d'anàlisi espacial i geodisseny amb QGIS.
+      series: Dos quarts de docs
+      series_subtitle: Recursos d'aprenentatge
+      publisher: Dos quarts de docs
+      edition: Edició digital de treball, curs 2026/2027
+      source: https://geourv.github.io/geodisseny/
+      subject: Anàlisi Espacial i Geodisseny
+      teaching_guides:
+        - degree: Grau en Geografia, Anàlisi Territorial i Sostenibilitat
+          subject_code: "21234116"
+      department: Departament de Geografia
+      faculty: Facultat de Turisme i Geografia
+      institution: Universitat Rovira i Virgili
+      location: Vila-seca
+      academic_year: 2026/2027
+      instructors:
+        - name: Benito Zaragozí
+        - name: Yolanda Pérez Albert
+      rights: © Benito Zaragozí. Les marques, les figures i els materials de tercers conserven els drets i les llicències indicats.
+    release:
+      selector: latest
+    pdf:
+      enabled: true
+      languages: ["ca"]
+      build_dir: tmp/manual-pdf
+      output: assets/pdf/manual-{lang}.pdf
+      cover_output: assets/img/manual-cover-{lang}.png
+      include_home: true
+      include_bibliography: true
+      toc: true
+      mark_drafts: true
+      home_title: Inici i presentació del curs
+      cover:
+        image: assets/img/manual-cover-background.jpg
+        band_color: "990000"
+        primary_color: "990000"
+        secondary_color: "003366"
+        muted_color: "666666"
+  figure_captions:
+    enabled: true
+    collections: [chapters]

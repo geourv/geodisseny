@@ -1,0 +1,135 @@
+# GitHub Web Editing Workflow
+
+This site uses the **`unaltremanual`** profile: Book-like manual, course, or teaching site.
+
+The package-managed collaboration contract is `.github/CONTRIBUTING.md`. It defines branch names, exact path reservations, single-checkout session coordination, generated figure bundles, and provider integrations.
+
+GitHub Web is suitable for small, coordinated content updates. Follow this workflow before changing a file:
+
+1. Open or choose an issue that describes one focused task.
+2. Be assigned to the issue, or add an explicit reservation naming the files you will edit and wait for the maintainer to accept it. There must be only one active editing session per repository; a file reservation limits scope but does not permit overlapping sessions.
+3. Create one correctly named branch per task as defined in `.github/CONTRIBUTING.md`. Use GitHub's branch selector or choose **Create a new branch for this commit and start a pull request**. Never edit or commit directly to `main`.
+4. Open a Draft pull request early, link the issue, and list the reserved files so other editors can avoid them.
+5. Change only the reserved content and keep the pull request small. Use another issue and branch for unrelated work.
+6. Review the **Files changed** tab before requesting review. Do not include technical files, generated outputs, or unrelated formatting.
+7. If GitHub reports a conflict, stop editing. Do not guess at a resolution or overwrite another editor's work; ask the maintainer to coordinate it.
+8. Leave the pull request in Draft until the content and file list are ready. The maintainer runs local checks and required renders before merging, then starts deployment manually only when publication is intended.
+
+## The Four Profiles
+
+| Profile | Purpose |
+|---|---|
+| `unaltreselfie` | A personal academic or professional site |
+| `unaltreprojecte` | A research project, group, infrastructure, or output site |
+| `unaltremanual` | A book-like manual, course, or teaching site |
+| `unaltredocs` | A technical or operational documentation portal |
+
+The selected profile is `unaltremanual`. Do not change the profile as part of an ordinary content edit.
+
+## Editable Content For `unaltremanual`
+
+- `_pages/<lang>/`: localized manual home pages
+- `_chapters/<lang>/`: hand-written chapters and authoritative executable chapter sources
+- `_bibliography/`: verified manual references
+- `context/writing-profile.md`: audience, voice, terminology, evidence, and review rules
+- `assets/img/`: approved source images that are not renderer-generated
+
+With maintainer approval, `_config.yml` may receive a small change to public site text, languages, URLs, or profile options. Ask before changing its structure.
+
+## Local Maintainer Workflow
+
+For rendered review, run the generated Docker-backed targets from this repository:
+
+```bash
+make build
+make serve
+make test
+make down
+```
+
+These commands validate, build, preview, test, and stop the site. They do not publish it or change Git history.
+
+## MCP Agent Workflow
+
+Open this repository as the IDE workspace and read `AGENTS.md`. Before editing, use the configured MCP control plane's read-only checkout preflight in the repository's primary mutable checkout. When a process-held cooperative lease is required, launch the editing command through its `exec` wrapper. Never create, switch to, move, prune, repair, or remove linked worktrees implicitly.
+
+Request `unaltraweb` as the one top-level MCP and let the control plane activate its declared dependency closure while preserving unrelated registrations. The consumer root must reach providers through `MCP_CONSUMER_WORKSPACE`; factory `build`, `check`, and `smoke` operations stay in each factory checkout. Use `site_context` and `site_doctor`, run `site_check` before `build_site`, and review the labelled local preview. For a manual with PDF output enabled, call `manual_pdf_preview_prepare` before direct MCP builds or previews; managed `make build`, `make test`, and `make serve` do this automatically. The operation returns `publishes: false` and stages only ignored, untracked PDF and cover copies. After review, dry-run `manual_pdf_preview_clean`, then pass that result's `receipt_sha256` as `expected_receipt_sha256` when confirming cleanup of unchanged receipt-owned copies. Make-only users can confirm the same operation with `make manual-pdf-preview-clean MANUAL_PDF_PREVIEW_CLEAN_DRY_RUN=0 MANUAL_PDF_PREVIEW_CONFIRM_CLEAN=1 MANUAL_PDF_PREVIEW_RECEIPT_SHA256=<sha256>`. Clean preview copies before disabling PDF output; `make clean` refuses to discard the supporting draft while a preview receipt remains. Keep durable decisions in versioned files rather than chat history. If the selected MCP image is not available, ask the core maintainer for the published release or for the reviewed candidate build; do not replace its pin with a mutable tag.
+
+## Guided Consumer Updates
+
+An updated MCP reports `site_context.update_status` when the agent opens a site
+session. The agent shows current and available package versions, planned paths,
+preserved customizations and conflicts, then asks whether to update. The target is
+the package already running in this MCP, not an unchecked release fetched online.
+After acceptance and the normal issue/branch/reservation, the agent applies
+`scaffold_sync` with the reviewed `plan_sha256` as `expected_plan_sha256`, then runs
+`site_check` and the relevant local build. Changed plans require a fresh review.
+An edited managed file is preserved when the package has not changed that file
+since the recorded baseline. Conflicting local/upstream edits still require a
+decision; the updater never recreates the site or overwrites editorial content.
+Updating the factory checkout alone does not replace a pinned MCP image; install
+the reviewed MCP release and reconnect the client first.
+
+## Editorial Review
+
+Write for the site's readers using the active profile's voice: personal for a
+personal introduction, project/team-oriented for a research site, and clear
+impersonal prose for teaching and technical reference. Reader-facing procedural
+instructions, attributed quotations and signed prefaces are legitimate. Keep
+instructions to editors and unresolved writing notes outside publication copy.
+
+The maintainer runs `prose_check` after substantial edits and before review,
+approval, translation or publication. It shares the source checks executed by
+`site_check` and the normal local build targets. An MCP-assisted review uses
+`editorial_review_prepare`, `editorial_review_record`, `editorial_review_resolve`
+and `editorial_status` to retain anchored feedback and decisions under `context/`.
+Reports become stale when their inputs change; a new report does not erase older
+decisions or approve content for its author. Style suggestions do not block previews.
+
+Local writing preferences and optional publication requirements belong in
+`context/writing-profile.md` and `context/editorial-policy.json`. Keep this
+directory out of public output. `editorial_publication_check` checks publication
+copy and any explicitly required fresh review passes. Human browser/PDF review
+and the maintainer's publication decision remain necessary.
+
+## Upload Images Safely
+
+1. Reserve the destination filename with the rest of the task and upload on the task branch, never on `main`.
+2. Use a descriptive lowercase filename in `assets/img/` or an existing editorial image subfolder. Do not upload into `assets/img/generated/`.
+3. Prefer a reasonably sized PNG, JPEG, or WebP. Only upload SVG files from a reviewed, trusted source.
+4. Confirm that the image may be published and contains no confidential information, unintended personal data, or sensitive metadata.
+5. Use a new filename instead of replacing an existing image unless the replacement is explicitly reserved. Add meaningful alternative text where the image is referenced.
+6. Include the image and its content reference in the same small pull request, then ask the maintainer to inspect the rendered page.
+
+## Never Edit These Paths In GitHub Web
+
+- `.github/`, `.unaltraweb/`, `.gitignore`, `Gemfile`, `Gemfile.lock`, and `Makefile` are repository and runtime controls.
+- `_layouts/`, `_includes/`, `_plugins/`, and `_sass/` are technical theme overrides.
+- `_site/`, `tmp/`, `.cache/`, `.jekyll-cache/`, `.bundle/`, and `vendor/` are local build products or caches.
+- `assets/img/generated/`, `.unaltraweb/computations.lock.json`, `.vegavisuals.lock.json`, rendered diagram/capture outputs, and other files marked as generated must be recreated by their renderer.
+- When a `.qmd`, `.Rmd`, `.R`, `.py`, or `.ipynb` source owns a Markdown result, edit the source locally; never edit its generated `.md` in GitHub Web.
+Never add passwords, access tokens, API keys, private keys, credentials, or `.env` files to an issue, branch, commit, or pull request. Ask the maintainer when a requested change falls outside the editable paths above.
+
+## unaltremanual Publishing Channels
+
+- `latest` is a manual-only deployment built from the reviewed `main` branch.
+- Pushing or merging to `main` does not publish the manual. A maintainer starts the deployment manually after local checks, required renders, and human review.
+- When PDF output is enabled, the default PDF and cover outputs, `assets/pdf/manual-<lang>.pdf` and `assets/img/manual-cover-<lang>.png`, are generated for deployment and are not versioned. Use `manual_pdf_preview_prepare` to review them with the local site, then `manual_pdf_preview_clean` to remove only unchanged receipt-owned preview copies. Do not upload, edit, or commit them.
+- The generated manual home, `manual-release.json`, and PDF editorial credits identify the publication channel and selector. Use the same selector for PDF build, site build, and local candidate checks.
+- Stable editions use `vYYYY.MM(.N)`: `vYYYY.MM` for the first edition in a month and `vYYYY.MM.N` for an additional edition. They are deferred to explicit releases, and a `latest` deployment never creates one.
+- Prepare a stable candidate only from the exact clean reviewed commit and an `unaltraweb-mcp` image selected by immutable digest; the candidate records both identities.
+- Release checks reject `legacy/` or `sandbox/` content in the generated site. Keep those trees outside current manual content paths.
+
+## Maintainer-Only Local Review And Deployment
+
+Content editors stop after requesting pull request review. A maintainer then:
+
+1. Checks out the task branch locally and confirms that it contains only the reserved files.
+2. Runs the site's local checks and every required computation, diagram, visualization, capture, and PDF render. At minimum, the generated site supports `make test` for its normal site build and HTML audit.
+3. Reviews the rendered pages and, for manuals, the generated PDF and cover.
+4. Resolves coordination questions, approves the pull request, and merges it into `main`.
+5. Starts the deploy workflow manually from GitHub Actions only after the reviewed change is on `main` and should go live.
+
+Repository administrators must enforce this workflow with a `main` branch ruleset that blocks direct changes and requires pull-request approval; this document is not an access control. Stable manual publication additionally requires immutable releases, protected `v*` tags, and approved reviewers on the `stable-release` environment.
+
+Pushing a branch or merging it does not publish this site. Local build and render commands also do not deploy it.
