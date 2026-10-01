@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="800" viewBox="0 0 1000 800" role="img" aria-labelledby="title desc">
+  <title id="title">Steinitz aplicat a alternatives d'un hort solar</title>
+  <desc id="desc">Sis models amb exemples solars: representació, procés, avaluació, canvi, impacte i decisió. Tres iteracions recorren els models avall per entendre el lloc, amunt per dissenyar el mètode i avall per executar l'estudi. Els efectes i les preferències poden obligar a reformular les alternatives.</desc>
+  <defs>
+    <marker id="blue" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#003366"/></marker>
+    <marker id="red" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#990000"/></marker>
+    <marker id="green" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#39734d"/></marker>
+    <marker id="grey" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#666666"/></marker>
+  </defs>
+  <rect width="1000" height="800" fill="white"/>
+  <g font-family="DejaVu Sans, sans-serif" fill="#222222">
+    <text x="30" y="36" font-size="25" font-weight="bold">Hort solar · del coneixement del lloc a les alternatives</text>
+    <text x="30" y="77" font-size="20">Objectius i perspectives de l'equip i de les persones del lloc</text>
+    <text x="30" y="109" font-size="19">Sis models</text>
+    <g font-size="18" text-anchor="middle">
+      <text x="785" y="77" fill="#003366">1 · Entendre</text><text x="785" y="101" fill="#003366">el lloc</text>
+      <text x="870" y="122" fill="#990000">2 · Dissenyar</text><text x="870" y="146" fill="#990000">el mètode</text>
+      <text x="940" y="77" fill="#39734d">3 · Executar</text><text x="940" y="101" fill="#39734d">l'estudi</text>
+    </g>
+    <g stroke="#cbd8e1" fill="#edf3f8">
+      <rect x="25" y="165" width="700" height="76" rx="5"/>
+      <rect x="25" y="251" width="700" height="76" rx="5"/>
+      <rect x="25" y="337" width="700" height="76" rx="5"/>
+    </g>
+    <g stroke="#cad9ce" fill="#edf4ee">
+      <rect x="25" y="423" width="700" height="76" rx="5"/>
+      <rect x="25" y="509" width="700" height="76" rx="5"/>
+      <rect x="25" y="595" width="700" height="76" rx="5"/>
+    </g>
+    <g font-size="21" font-weight="bold">
+      <text x="41" y="208">1 · Representació</text>
+      <text x="41" y="294">2 · Procés</text>
+      <text x="41" y="380">3 · Avaluació</text>
+      <text x="41" y="466">4 · Canvi</text>
+      <text x="41" y="552">5 · Impacte</text>
+      <text x="41" y="638">6 · Decisió</text>
+    </g>
+    <g font-size="19">
+      <text x="260" y="196">MDT, parcel·les, usos, xarxa viària</text><text x="260" y="221">i receptors del paisatge.</text>
+      <text x="260" y="282">Accessos, escorrentia, temperatura</text><text x="260" y="307">i línies de visió.</text>
+      <text x="260" y="368">Què s'exclou? Què es prefereix?</text><text x="260" y="393">Màscares, funcions de valor i pesos.</text>
+      <text x="260" y="454">Alternatives A i B amb superfície,</text><text x="260" y="479">disposició, accessos i alçades definits.</text>
+      <text x="260" y="540">Comparar amb l'estat de referència:</text><text x="260" y="565">sòl afectat, obres i receptors amb visió.</text>
+      <text x="260" y="626">Preferir, modificar o descartar</text><text x="260" y="651">segons efectes, incertesa i preferències.</text>
+    </g>
+    <path d="M785 159V683" fill="none" stroke="#003366" stroke-width="5" marker-end="url(#blue)"/>
+    <path d="M870 683V162" fill="none" stroke="#990000" stroke-width="5" marker-end="url(#red)"/>
+    <path d="M950 159V683" fill="none" stroke="#39734d" stroke-width="5" marker-end="url(#green)"/>
+    <path d="M785 694Q785 713 809 713H846Q870 713 870 693" fill="none" stroke="#777777" stroke-width="2" marker-end="url(#grey)"/>
+    <path d="M725 635H746V461H727" fill="none" stroke="#666666" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#grey)"/>
+    <rect x="25" y="706" width="700" height="63" rx="6" fill="#f5f3ed" stroke="#a3a09a"/>
+    <text x="375" y="732" text-anchor="middle" font-size="19">Reformular la implantació si els efectes no són acceptables.</text>
+    <text x="375" y="757" text-anchor="middle" font-size="19">La millor puntuació d'una cel·la no decideix tot el projecte.</text>
+  </g>
+</svg>

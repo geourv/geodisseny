@@ -1,0 +1,7 @@
+%%{init: {"flowchart": {"htmlLabels": false, "curve": "linear", "nodeSpacing": 22, "rankSpacing": 28}, "themeVariables": {"fontSize": "20px"}}}%%
+flowchart TB
+  B["Model base<br/>Dades, màscares i criteris"] --> E["Escenaris<br/>Pesos · funcions · temperatura"]
+  E --> C["Comparació comuna<br/>Puntuació · superfície · rànquing"]
+  C --> R["Robustesa condicionada<br/>Què es manté i què canvia?"]
+  R --> D["Recomanació<br/>Condicions i comprovacions"]
+  D -. "Revisió" .-> B

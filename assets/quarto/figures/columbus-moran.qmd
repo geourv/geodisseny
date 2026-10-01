@@ -1,0 +1,61 @@
+---
+title: Moran amb els barris de Columbus
+lang: ca
+ref: figura-columbus-moran
+format: gfm
+execute-dir: project
+execute: {echo: false, warning: false}
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  inputs: [context/inputs/columbus.geojson, context/inputs/columbus-resultats.json]
+  outputs: [assets/img/generated/columbus-moran.svg]
+---
+
+```{python}
+from pathlib import Path
+import json
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.colors import Normalize
+from matplotlib.cm import ScalarMappable
+from matplotlib.patches import Polygon,Patch
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root==root.parent:raise RuntimeError('Projecte absent')
+    root=root.parent
+features=json.loads((root/'context/inputs/columbus.geojson').read_text())['features']
+meta=json.loads((root/'context/inputs/columbus-resultats.json').read_text())
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':14,'svg.fonttype':'none'})
+fig,axes=plt.subplots(2,2,figsize=(9.7,8.5),layout='constrained')
+cmap=plt.colormaps['YlOrRd'];norm=Normalize(0,70)
+chosen=next(f['properties'] for f in features if len(f['properties']['neighbors'])>=6)
+centres={f['properties']['id']:f['properties']['centre'] for f in features}
+palette={1:'#b42b3b',2:'#a6cce2',3:'#276a98',4:'#eaa59b'}
+for ax,mode,title in [(axes[0,0],'value','A · Una variable als 49 barris'),
+                      (axes[0,1],'neighbors','B · Qui entra en el veïnatge?'),
+                      (axes[1,1],'local','D · Moran local: grups i contrastos')]:
+    for f in features:
+        p=f['properties'];g=f['geometry'];parts=g['coordinates'] if g['type']=='MultiPolygon' else [g['coordinates']]
+        colour=cmap(norm(p['crime'])) if mode=='value' else '#e1e5e8'
+        if mode=='neighbors':colour='#003366' if p['id']==chosen['id'] else '#91bdd5' if p['id'] in chosen['neighbors'] else colour
+        if mode=='local' and p['p_sim']<.05:colour=palette[p['quadrant']]
+        for part in parts:ax.add_patch(Polygon(part[0],facecolor=colour,edgecolor='white',lw=.65))
+    ax.autoscale_view();ax.set(aspect='equal',xticks=[],yticks=[],title=title)
+    for s in ax.spines.values():s.set_visible(False)
+for n in chosen['neighbors']:
+    xy=np.array([chosen['centre'],centres[n]]);axes[0,1].plot(xy[:,0],xy[:,1],color='#344e60',lw=1)
+axes[0,1].text(.5,0,'Blau fosc: barri · blau clar: veïns queen',transform=axes[0,1].transAxes,ha='center',fontsize=12.5)
+bar=fig.colorbar(ScalarMappable(norm=norm,cmap=cmap),ax=axes[0,0],orientation='horizontal',fraction=.045,pad=.03)
+bar.set_label('Incidències per 1.000 llars (1980)',fontsize=13)
+ax=axes[1,0];z=np.array([f['properties']['z'] for f in features]);lag=np.array([f['properties']['lag'] for f in features])
+ax.scatter(z,lag,color='#397b9e',s=28);xs=np.array([z.min()-.2,z.max()+.2]);ax.plot(xs,meta['I']*xs,color='#b42b3b',lw=2)
+ax.axhline(0,color='#8b9399',lw=.8);ax.axvline(0,color='#8b9399',lw=.8)
+ax.set(title='C · Valor propi i valor dels veïns',xlabel='Valor estandarditzat del barri',ylabel='Mitjana estandarditzada dels veïns')
+ax.text(.04,.95,'I = 0,500',transform=ax.transAxes,va='top',fontsize=13)
+for x,y,text in [(.85,.86,'HH'),(.85,.08,'HL'),(.08,.78,'LH'),(.08,.1,'LL')]:
+    ax.text(x,y,text,transform=ax.transAxes,color='#5e6970',fontsize=13)
+fig.legend(handles=[Patch(facecolor=palette[q],label=l) for q,l in [(1,'Alt–alt'),(3,'Baix–baix'),(4,'Alt–baix'),(2,'Baix–alt')]]+
+           [Patch(facecolor='#e1e5e8',label='No destacat')],loc='outside lower center',ncol=3,frameon=False,fontsize=12.5)
+fig.savefig(root/'assets/img/generated/columbus-moran.svg',facecolor='white',metadata={'Date':None});plt.close(fig)
+```

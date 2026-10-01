@@ -1,0 +1,22 @@
+{
+  "sha256": "3058210cf065ee884745b887f56c77d660068532dc8e425f9a70d4de23ae5b1a",
+  "bytes": 2435071,
+  "retrieved": "2026-09-29",
+  "url": "https://geoserveis.icgc.cat/servei/catalunya/orto-territorial/wms?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=ortofoto_25cm_color_2025&STYLES=&CRS=EPSG%3A25831&BBOX=347200%2C4550750%2C348050%2C4551420&WIDTH=1020&HEIGHT=804&FORMAT=image%2Fpng",
+  "bbox": [
+    347200,
+    4550750,
+    348050,
+    4551420
+  ],
+  "pixels": [
+    1020,
+    804
+  ],
+  "edition": 2025,
+  "role": "visual check of study-site selection; not an elevation model",
+  "producer": "Institut Cartogràfic i Geològic de Catalunya",
+  "layer": "ortofoto_25cm_color_2025",
+  "crs": "EPSG:25831",
+  "input_path": "context/inputs/ortofoto-pineda-2025.png"
+}

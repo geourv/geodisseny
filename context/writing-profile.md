@@ -1,41 +1,89 @@
-# Writing Profile
+# Perfil de redacció d'Anàlisi Espacial i Geodisseny
 
-This file defines the local editorial policy for this manual. Revise it before substantial drafting when the project has more specific requirements.
+## Públic i continuïtat de la sèrie
 
-## Audience
+- És el tercer manual del recorregut TIGIT → TIG → Anàlisi Espacial i Geodisseny. Les explicacions han de ser accessibles a estudiants dels primers cursos de Geografia, sense pressuposar coneixements previs d'estadística.
+- TIGIT i TIG són les referències d'estructura, profunditat conceptual i integració entre teoria i pràctica. Els primers esquemes breus de geodisseny no són el patró de redacció.
+- Es pressuposa experiència inicial amb taules, cartografia, models vectorial i ràster i QGIS. Cal recuperar els conceptes quan condicionin una decisió, sense donar per consolidat tot el curs anterior.
+- El manual ha de permetre comprendre una explicació fora de l'aula. Les receptes, dades o demostracions futures no poden substituir contingut essencial.
+- El manual tracta tècniques d'anàlisi espacial i geodisseny en general. La fotovoltaica és un cas docent substituïble, no la identitat ni la finalitat exclusiva del llibre.
+- Continuar l'enfocament de TIG: treballar principalment sobre el Camp de Tarragona i el Tarragonès perquè són propers i es poden reconèixer i contrastar. Presentar-los com a àrea de treball dels exemples, no com un cas d'estudi únic ni un projecte conductor fix. Les pràctiques poden variar de tema, d'àrea i de fonts.
+- Explicar per què els conceptes i els fonaments permeten traslladar els mètodes a altres llocs i dades: cal revisar què representa cada observació, les dates, l'escala, la cobertura i els supòsits del model. La introducció ha de donar aquest context sense prescriure una comarca assignada ni un producte final comú a totes les pràctiques.
+- Presentar el capítol 0 dins del grau: TIGIT, TIG i Anàlisi Espacial i Geodisseny formen part d'un aprenentatge progressiu, també alimentat per altres assignatures que utilitzen SIG, R, Python o altres eines. Explicar l'aportació dels fonaments geogràfics i estadístics, no limitar la continuïtat a una successió de programes o operacions.
+- Relacionar coneixement del paisatge, activitats, relleu, recursos hídrics i problemàtiques amb la formulació de preguntes, la diagnosi i les propostes territorials. Descriure l'orientació de la formació geogràfica sense jerarquitzar professions ni atribuir capacitats exclusives als geògrafs.
+- Justificar el territori proper perquè connecta la part tècnica amb observacions i coneixements treballats en altres assignatures. Convidar els estudiants a explorar noves aplicacions, fonts i preguntes a mesura que avancen; no convertir aquesta invitació en un lliurament obligatori ni inventar continguts detallats del pla d'estudis.
+- Els noms dels fitxers de capítol, els títols i els objectius principals identifiquen tècniques. Les aplicacions es delimiten dins dels capítols i poden canviar sense alterar-ne l'estructura estable.
 
-- Write for learners and practitioners who need both conceptual understanding and operational guidance.
-- State assumed prior knowledge instead of treating unfamiliarity as a weakness.
-- Introduce specialized terms before relying on them.
+## Veu i estructura
 
-## Purpose
+- Català estàndard, prosa narrativa i explicativa, amb veu impersonal coherent amb TIGIT i TIG.
+- Capítols: introducció amb una pregunta territorial; un únic bloc inicial d'objectius amb tres a cinc resultats observables; desenvolupament conceptual amb exemples, supòsits i límits; aplicació i comprovacions; secció final `## Activitats`. La pàgina de presentació orienta la lectura i situa l'àrea de treball: no necessita reproduir aquest esquema ni afegir activitats d'organització del curs.
+- Redacció directa i sòbria. Preferir subjectes i exemples concrets a abstraccions com «el recorregut construeix un llenguatge compartit». Evitar floritures, frases de tancament solemnes i anuncis repetits del que es farà després. Reduir les fórmules repetitives «cal», «el resultat serà» i «ha de permetre» quan només afegeixen to de programació docent; els imperatius són adequats a les activitats i als procediments.
+- Al capítol 0, desenvolupar un fil narratiu: aprenentatge dins del grau, aportació de l'assignatura, interpretació geogràfica, treball proper i noves aplicacions. Evitar seccions breus desconnectades, inventaris de competències i detalls de configuració que interrompin l'argument. Una invitació final adreçada directament a l'estudiant és adequada en aquesta presentació.
+- Desenvolupar els conceptes en paràgrafs connectats. Les llistes són adequades per a passos o criteris, però no substitueixen la teoria.
+- Adreçar les explicacions a estudiants de grau de Geografia: començar amb una pregunta i dades petites comprensibles, introduir el vocabulari, resoldre un exemple i interpretar-lo abans de discutir excepcions. No concentrar la redacció en advertiments tècnics sense haver explicat primer el mètode.
+- Introduir primer una situació reconeixible i una operació amb nombres; després, el nom estadístic i els símbols. Els càlculs generals es poden desenvolupar en un nivell posterior. No exigir comprendre α, β, H₀, µ o una distribució de referència per començar a llegir un exemple.
+- Cada peu de figura ha de permetre identificar el cas, què representa cada punt o element, les unitats i una conclusió senzilla. Evitar condensar teoria o introduir-hi notació nova. Els callouts de lectura poden guiar una comparació concreta dins de la figura.
+- Les activitats han de ser autònomes: reproduir les dades, taules o fragments necessaris, o donar una referència inequívoca al material. Un enllaç a un apartat llunyà no substitueix recuperar les dades quan el lector les necessita per fer els càlculs.
+- La progressió s'ha de mantenir a tots els capítols, no només als fonaments. Presentar el significat en llenguatge corrent abans del terme tècnic i recuperar-lo quan reaparegui: pes com a contribució, impedància com a cost de pas, residu com a diferència observat–estimat, matriu com a taula de relacions, etc. Definir una sigla no és haver explicat el concepte.
+- Integrar els exemples, les eines, els seus paràmetres i la interpretació dins del fil conceptual. No acumular una secció separada de «Pràctica» abans d'«Activitats». Les activitats finals proposen transferir allò après, no repeteixen una altra pràctica completa.
+- Utilitzar callouts amb funcions diferents: `>>` per a un recordatori o consell, `>>>` per a un exemple raonat, `>>>>` per a un error d'interpretació important i `>>>>>>` només per a una precaució justificada. No convertir tots els paràgrafs en advertiments ni repetir la capçalera automàtica del component.
+- Definir els símbols i les unitats de cada fórmula, mostrar substitucions numèriques i oferir comprovacions raonades. Els exemples essencials han de tenir totes les dades al capítol i ser resolubles sense paquets pendents de Moodle.
+- Combinar prosa desenvolupada amb definicions, callouts breus, taules de càlcul, figures analítiques i preguntes amb resposta explicada. Ampliar amb passos de raonament, no amb repeticions o només més advertiments.
+- Identificar un exemple construït quan s'introdueixen les dades; evitar expressions ambigües com «potències docents». Als peus de figures, descriure què s'aprèn: «càlcul amb QGIS», nom de l'eina i resultat. Evitar «operació real», «geometria cadastral real», «executat i verificat», referències a generadors o altres formulacions que traslladen la feina editorial al manual. La font i els crèdits aporten la procedència.
+- Distingir exemple conceptual construït, experiment numèric simulat i aplicació territorial amb observacions. El recorregut va del concepte al cas realista. Les primeres figures han de tenir prou detall bidimensional per facilitar la transferència; no representar àrees només amb una fila de rectangles.
+- Les captures QGIS han d'utilitzar dades reals de les demos o activitats. Preferir subfigures que relacionin accés a l'eina i resultat interpretat; les captures de paràmetres amb dades fictícies no són el model de la pràctica.
+- Unificar símbols entre panells comparables; etiquetar els mateixos punts en tots els panells on apareixen. Acompanyar matrius espacials amb mapa i instruccions de lectura. Ajustar extensió i escala perquè es vegin les connexions i el context; usar ortofoto al cas de la Pineda.
+- Quan es relacioni un perfil de relleu amb un gràfic d'altitud i temperatura, compartir l'escala vertical dins de cada parell i conservar les etiquetes d'estació. Distingir la disposició dels eixos de la direcció del model de regressió i indicar qualsevol canvi de rang entre panells.
+- Utilitzar figures per explicar operacions i inferències: punts i boxplot, desviacions i quadrats, productes de covariància, agregacions i relacions entre grups. Acompanyar-les d'una lectura concreta; no limitar el text a remetre a la imatge.
+- Reservar `###` i `####` per a divisions amb contingut propi. Evitar subtítols artificials, frases grandiloqüents i afirmacions absolutes.
+- Cada activitat ha d'identificar un resultat conservable i criteris de comprovació. Les condicions d'avaluació només es poden fixar amb la guia docent i els enunciats verificats.
 
-- Each chapter should support an identifiable reader goal or task.
-- Connect theory, evidence, examples, and practice rather than presenting disconnected lists.
-- Prefer explanations that help readers transfer what they learn to a new situation.
+## Contingut i cas territorial
 
-## Voice And Structure
+- El capítol 1 explica anàlisi espacial, relacions, escala, incertesa i geodisseny, desenvolupa les sis preguntes de Steinitz i relaciona l'àrea de treball propera amb l'aplicació dels mètodes a altres territoris i fonts.
+- Els detalls de la sèrie, els prerequisits i la configuració general de QGIS van a l'inici. El capítol de fonaments inclou estadística descriptiva, ponderació, dispersió, covariància, regressió, inferència i validació, recuperables als capítols aplicats.
+- Desenvolupar la inferència amb un exemple coherent que connecti població i mostra, normal, distribució mostral, error estàndard, intervals, contrast, p-valor, errors de tipus I/II i potència. Fer explícits independència, normalitat i dispersió coneguda quan s'utilitzin; explicar després què canvia amb dependència espacial.
+- Als fonaments, utilitzar la comprovació d'una cinta sobre un tram conegut de20m: errors en cm, grups de16lectures i valors ficticis declarats. Mostrar junts els límits de la regla i la mitjana observada; explicar falses alarmes i desajustos no detectats amb freqüències aproximades per100proves, sense confondre-les amb proves realment executades.
+- Distingir l'efecte de canviar agregacions (MAUP) de l'atribució de relacions agregades a individus (fal·làcia ecològica). Els exemples gràfics construïts mostren possibilitats matemàtiques, no patrons territorials observats.
+- Presentar els precedents del geodisseny amb fonts històriques verificades, més enllà de McHarg. Desenvolupar hort solar i abocador com a exemples de les sis preguntes: lloc i funcionament actual, criteris, alternatives, impactes respecte d'una referència, decisió i retorns. Identificar-ne el caràcter fictici i no atribuir-hi normes ni autoritzacions no comprovades.
+- L'estructura de set capítols i les decisions del cas es documenten a `context/manual-fotovoltaic.md`. Les fonts i les eines específiques apareixen dins del capítol que les necessita.
+- En el cas fotovoltaic actual, una de les fonts d'observacions és l'Observatori d'autoconsum de l'ICAEN: punts de consumidors associats, no necessàriament la petjada dels panells ni tot el parc solar català. Cap mapa de detall no pot donar per exacta aquesta localització.
+- Les dades originals i els paquets de les demos es mantenen a `sandbox/` i `tmp/dades-docents/`, fora de Git i del lloc públic. La distribució docent es fa per Moodle; el manual només inclou explicacions, resultats, figures i referències de procedència, sense descàrregues dels paquets de dades.
+- Donar sempre enllaços als productors i explicar com s'obté cada font. No confondre l'absència de descàrregues locals del manual amb l'absència d'enllaços als catàlegs oficials. Els petits inputs de figures agregades poden quedar a `context/inputs/`, exclosos del web, sense publicar registres individuals.
+- Els retalls d'ortofoto necessaris per regenerar una figura es conserven com a inputs a `context/inputs/`, amb servei, edició, extensió i hash. El web incorpora la figura amb crèdits, no una descàrrega independent del paquet docent.
+- Casos acordats: xarxa original ICGC Vila-seca–Tarragona amb adaptacions locals; cost a peu al voltant d'un solar de la Pineda; visibilitat petroquímica sobre Tarragonès i Baix Camp amb altures i representació d'objectius variables; autoconsum i antiguitat cadastral per seccions censals.
+- Distingir inventari d'autoconsum, parcs anteriors al DL 16/2019, sol·licituds amb estat, línies d'expedients, bateries i productes PLATER. Conservar les dates de metadades i no convertir l'extracció en data efectiva del conjunt.
+- Interpolar temperatures màximes de l'aire per discutir exposició tèrmica i rendiment, amb període explícit. No interpolar àrees parcel·làries com un camp puntual ni equiparar kW amb kWh, superfície amb propietat o temperatura de l'aire amb temperatura del mòdul.
+- Distingir Camp de Tarragona com a context ampli i Tarragonès com a comarca de molts exemples. Els dominis de càlcul poden superar el límit de comunicació.
+- Relacionar energia, agricultura, paisatge i infraestructures sense inventar projectes, posicionaments locals, capacitat de connexió ni autoritzacions.
+- Distingir observació, model, supòsit docent, preferència, restricció i decisió. Una simulació d'actors no és participació real.
+- Recuperar el marc de Steinitz a l'EMC amb exemples de l'hort solar en cadascun dels sis models, connectant les tres iteracions amb allò explicat als fonaments.
+- Les dades fictícies han de quedar identificades al text i al peu de les taules. Els resultats quantitatius s'han de comprovar.
 
-- Use direct, precise, and respectful prose.
-- Give each paragraph one clear function and connect it to the surrounding argument.
-- Use headings, callouts, tables, figures, diagrams, and code only when they improve comprehension.
-- Keep web and PDF readers in mind when choosing components and visual dimensions.
+## Terminologia i precisió
 
-## Terminology And Evidence
+- Introduir entre parèntesis els equivalents anglesos dels conceptes clau quan faciliten cercar bibliografia o eines. Fer-ho de manera selectiva a la primera explicació, mantenint la prosa i els encapçalaments en català.
+- Distingir desviació estàndard de les dades i error estàndard d'un estimador; divisor descriptiu n i estimació mostral amb n−1; nivell α i p-valor; cobertura d'un interval, errors de tipus I/II i potència per a una alternativa concreta. Un interval freqüentista no és una probabilitat posterior del paràmetre.
+- Utilitzar `CRS` després d'introduir sistema de referència de coordenades; distingir assignació, transformació al vol i reprojecció.
+- Distingir fricció local, cost acumulat, longitud i temps. Una penalització finita no equival a una barrera estricta; una banda de cost només és una isòcrona si expressa temps.
+- Distingir visibilitat geomètrica i impacte visual o paisatgístic; MDT i MDS no garanteixen una ordenació universal de visibilitats amb altures relatives diferents.
+- Distingir intensitat, valors crus KDE, agrupació exploratòria, contrast de patrons puntuals i autocorrelació d'atributs.
+- Distingir error observat, variància de kriging, incertesa de model i sensibilitat de preferències. Una EMC no genera necessàriament residus predictius.
+- Utilitzar «avaluació multicriteri» de manera coherent i definir AHP com un mètode, no com tot el geodisseny.
 
-- Use one term consistently for each concept and record project-specific terminology here.
-- Separate established evidence, bounded interpretation, and teaching examples.
-- Cite verified sources for claims that depend on external research or standards.
-- Do not invent references, results, quotations, or implementation guarantees.
+## Fonts, programari i referències
 
-## Language And Approval
+- QGIS 3.44 és la referència documental inicial. Cada procediment executat necessita versió completa, proveïdor, identificador, paràmetres, entrades i comprovacions.
+- No pressupostar que una instal·lació incorpora GRASS, kriging, LISA o una funció perquè n'aparegui una de nom semblant.
+- Identificar productor, producte, edició, cobertura, unitats, CRS, llicència i consulta. OSM és una font col·laborativa, no una administració; una IDE facilita descoberta, no és necessàriament el productor.
+- Preferir bibliografia acadèmica, documentació oficial i fonts institucionals verificades. No inventar cites, dates, resultats ni garanties d'implementació.
+- Conservar `ref` i permalinks existents en reordenar capítols. La numeració visible correspon al nucli, a partir de l'ordre; no duplicar-la manualment als encapçalaments.
 
-- Draft and revise in the configured default language first.
-- Keep working content in `draft` or `review` state until the author approves it.
-- Translate only approved default-language content and preserve references, code, figures, and stable `ref` identifiers.
+## Components i revisió
 
-## Review
-
-- Remove drafting instructions, placeholders, workflow notes, and agent-facing language from reader-facing chapters.
-- Run the manual source, editorial, computation, capture, visualization, and PDF checks that apply.
-- Require human review of rendered web and PDF output before publication.
+- Taules amb el component numerat; figures amb peu i text alternatiu; fonts executables editables i sortides gestionades només pel proveïdor.
+- Les figures han d'explicar una relació, no actuar com a diapositives o repetir la prosa. Verificar llegibilitat web i PDF i no modificar imatges d'autor per eliminar transparència sense decisió explícita.
+- Mantenir `draft` o `review` fins a l'aprovació humana. La revisió d'un agent no és aprovació.
+- Guardar diagnòstics, reserves i qüestions pendents a `context/`, fora del contingut publicable. Els registres editorials els gestionen les eines MCP.
+- Executar comprovacions de prosa, fonts i artefactes aplicables; revisar web i PDF abans del lliurament a l'autor.

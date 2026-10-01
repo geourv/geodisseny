@@ -1,0 +1,47 @@
+---
+title: Mateixa distribució numèrica, patrons espacials diferents
+lang: ca
+ref: figura-patrons-espacials
+format: gfm
+execute-dir: project
+execute:
+  echo: false
+  warning: false
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  outputs:
+    - assets/img/generated/patrons-espacials.svg
+---
+
+```{python}
+from pathlib import Path
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
+
+root = Path.cwd()
+while not (root / '.unaltraweb/computations.yml').exists():
+    if root == root.parent: raise RuntimeError('No es troba el projecte')
+    root = root.parent
+out = root / 'assets/img/generated/patrons-espacials.svg'
+out.parent.mkdir(parents=True, exist_ok=True)
+plt.rcParams.update({'font.family':'DejaVu Sans', 'font.size':14,
+                     'svg.fonttype':'none', 'figure.facecolor':'white'})
+patterns = [np.array([[10,30],[10,30]]), np.array([[10,30],[30,10]])]
+assert all(p.mean() == 20 for p in patterns)
+fig, axes = plt.subplots(1,2,figsize=(7.4,3.5),layout='constrained')
+for ax, values, title in zip(axes, patterns, ['Agrupació', 'Alternança']):
+    for y in range(2):
+        for x in range(2):
+            value = values[y,x]
+            ax.add_patch(Rectangle((x,y),1,1,facecolor='#d5e2ef' if value==10 else '#003366',
+                                   edgecolor='white',lw=3))
+            ax.text(x+.5,y+.5,str(value),ha='center',va='center',fontsize=22,
+                    color='#003366' if value==10 else 'white')
+    ax.set(xlim=(0,2),ylim=(0,2),aspect='equal',xticks=[],yticks=[],title=title,
+           xlabel='4 àrees · mitjana = 20')
+    for spine in ax.spines.values(): spine.set_visible(False)
+fig.savefig(out,facecolor='white',metadata={'Date':None})
+plt.close(fig)
+```

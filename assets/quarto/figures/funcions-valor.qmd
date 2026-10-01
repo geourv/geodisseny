@@ -1,0 +1,50 @@
+---
+title: Funcions de valor i llindar de canvi d'alternativa
+lang: ca
+ref: figura-funcions-valor
+format: gfm
+execute-dir: project
+execute:
+  echo: false
+  warning: false
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  outputs:
+    - assets/img/generated/funcions-valor.svg
+---
+
+```{python}
+from pathlib import Path
+import numpy as np
+import matplotlib.pyplot as plt
+
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root==root.parent:raise RuntimeError('No es troba el projecte')
+    root=root.parent
+out=root/'assets/img/generated/funcions-valor.svg'
+out.parent.mkdir(parents=True,exist_ok=True)
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':14,'svg.fonttype':'none',
+                     'axes.spines.top':False,'axes.spines.right':False})
+p=np.linspace(0,12,121);score=np.clip(100*(10-p)/8,0,100)
+t=np.linspace(0,.7,141);a=74-40*t;b=57+30*t;cross=17/70
+assert np.allclose([74-40*.2,57+30*.2,74-40*.5,57+30*.5],[66,63,54,72])
+assert np.isclose(74-40*cross,57+30*cross)
+fig,axes=plt.subplots(1,2,figsize=(8,4.5),layout='constrained')
+ax=axes[0];ax.plot(p,score,color='#003366',lw=2.5)
+ax.scatter([2,6,10],[100,50,0],color='#003366',s=45,zorder=3)
+ax.vlines(6,0,50,color='#666666',ls=':');ax.hlines(50,0,6,color='#666666',ls=':')
+ax.set(xlim=(0,12),ylim=(-5,110),xticks=[0,2,6,10,12],yticks=[0,50,100],
+       xlabel='Pendent (%)',ylabel='Preferència (0–100)',title='A · Transformar una mesura')
+ax=axes[1];ax.plot(t,a,color='#003366',lw=2.5,label='Alternativa A')
+ax.plot(t,b,color='#990000',lw=2.5,label='Alternativa B')
+ax.axvline(cross,color='#666666',ls=':',lw=1.5)
+ax.annotate('Canvi d’ordre\nt ≈ 0,243',(cross,74-40*cross),xytext=(.03,84),
+            arrowprops={'arrowstyle':'->','color':'#666666'},fontsize=13)
+ax.set(xlim=(0,.7),ylim=(43,96),xticks=[0,.2,.5,.7],
+       xlabel='Pes tèrmic t',ylabel='Puntuació',title='B · Canviar la preferència')
+ax.legend(loc='lower left',frameon=False,fontsize=13)
+fig.savefig(out,facecolor='white',metadata={'Date':None})
+plt.close(fig)
+```

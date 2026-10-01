@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="780" viewBox="0 0 1000 780" role="img" aria-labelledby="title desc">
+  <title id="title">Marc de Steinitz: sis models i tres iteracions</title>
+  <desc id="desc">Les sis files són representació, procés, avaluació, canvi, impacte i decisió. Les tres fletxes recorren el marc avall per comprendre el lloc, amunt per dissenyar els mètodes, i avall per executar l'estudi. Hi ha participació de les persones del lloc i retorns per revisar el treball.</desc>
+  <rect width="1000" height="780" fill="#ffffff"/>
+  <g font-family="DejaVu Sans, sans-serif" font-size="22" fill="#222222">
+    <rect x="28" y="22" width="405" height="72" rx="7" fill="#f5f3ed" stroke="#666666"/>
+    <text x="230" y="52" text-anchor="middle" font-weight="bold">Equip i persones del lloc</text>
+    <text x="230" y="80" text-anchor="middle" font-size="20">Objectius, coneixement i perspectives</text>
+    <text x="640" y="54" text-anchor="middle" fill="#003366" font-weight="bold">1</text>
+    <text x="738" y="54" text-anchor="middle" fill="#990000" font-weight="bold">2</text>
+    <text x="836" y="54" text-anchor="middle" fill="#39734d" font-weight="bold">3</text>
+    <g font-size="18" text-anchor="middle">
+      <text x="640" y="83" fill="#003366">Entendre</text><text x="640" y="107" fill="#003366">el lloc</text>
+      <text x="738" y="83" fill="#990000">Dissenyar</text><text x="738" y="107" fill="#990000">el mètode</text>
+      <text x="836" y="83" fill="#39734d">Executar</text><text x="836" y="107" fill="#39734d">l'estudi</text>
+    </g>
+    <g stroke="#d4dce3" fill="#edf3f8">
+      <rect x="318" y="145" width="564" height="58" rx="5"/>
+      <rect x="318" y="217" width="564" height="58" rx="5"/>
+      <rect x="318" y="289" width="564" height="58" rx="5"/>
+    </g>
+    <g stroke="#d5dfd5" fill="#edf4ee">
+      <rect x="318" y="361" width="564" height="58" rx="5"/>
+      <rect x="318" y="433" width="564" height="58" rx="5"/>
+      <rect x="318" y="505" width="564" height="58" rx="5"/>
+    </g>
+    <g font-size="21">
+      <text x="28" y="182">Com es descriu el lloc?</text>
+      <text x="28" y="254">Com funciona?</text>
+      <text x="28" y="311">Funciona</text>
+      <text x="28" y="336">satisfactòriament?</text>
+      <text x="28" y="398">Què es podria canviar?</text>
+      <text x="28" y="470">Quins efectes tindria?</text>
+      <text x="28" y="542">Quin canvi es prefereix?</text>
+    </g>
+    <g font-weight="bold">
+      <text x="338" y="183">1 · Representació</text>
+      <text x="338" y="255">2 · Procés</text>
+      <text x="338" y="327">3 · Avaluació</text>
+      <text x="338" y="399">4 · Canvi</text>
+      <text x="338" y="471">5 · Impacte</text>
+      <text x="338" y="543">6 · Decisió</text>
+    </g>
+    <path d="M640 145 V576" fill="none" stroke="#003366" stroke-width="5"/>
+    <polygon points="628,575 652,575 640,595" fill="#003366"/>
+    <path d="M738 582 V153" fill="none" stroke="#990000" stroke-width="5"/>
+    <polygon points="726,154 750,154 738,134" fill="#990000"/>
+    <path d="M836 145 V576" fill="none" stroke="#39734d" stroke-width="5"/>
+    <polygon points="824,575 848,575 836,595" fill="#39734d"/>
+    <path d="M640 600 Q640 612 660 612 H718 Q738 612 738 603" fill="none" stroke="#666666" stroke-width="2"/>
+    <polygon points="732,604 744,604 738,592" fill="#666666"/>
+    <path d="M738 127 V119 H836 V127" fill="none" stroke="#666666" stroke-width="2"/>
+    <polygon points="830,126 842,126 836,137" fill="#666666"/>
+    <path d="M916 587 V174 H899 M916 246 H899 M916 318 H899 M916 390 H899 M916 462 H899 M916 534 H899" fill="none" stroke="#666666" stroke-width="2" stroke-dasharray="6 4"/>
+    <g fill="#666666">
+      <polygon points="887,174 899,168 899,180"/>
+      <polygon points="887,246 899,240 899,252"/>
+      <polygon points="887,318 899,312 899,324"/>
+      <polygon points="887,390 899,384 899,396"/>
+      <polygon points="887,462 899,456 899,468"/>
+      <polygon points="887,534 899,528 899,540"/>
+    </g>
+    <text transform="translate(948 400) rotate(-90)" text-anchor="middle" font-size="20" fill="#555555">Retorns entre models</text>
+    <rect x="318" y="620" width="332" height="69" rx="7" fill="#f5f3ed" stroke="#666666"/>
+    <text x="484" y="649" text-anchor="middle" font-size="20" font-weight="bold">Revisió i decisió compartida</text>
+    <text x="484" y="677" text-anchor="middle" font-size="20">Acceptar · reformular · descartar</text>
+    <path d="M836 600 V643 H666" fill="none" stroke="#39734d" stroke-width="3"/>
+    <polygon points="650,643 666,635 666,651" fill="#39734d"/>
+    <path d="M318 654 H12 V59 H18" fill="none" stroke="#666666" stroke-width="2"/>
+    <polygon points="28,59 17,53 17,65" fill="#666666"/>
+    <path d="M650 672 H916 V587" fill="none" stroke="#666666" stroke-width="2" stroke-dasharray="6 4"/>
+    <text x="500" y="738" text-anchor="middle" font-size="20">Revisar dades, mètodes, alternatives o escala quan sigui necessari</text>
+  </g>
+</svg>

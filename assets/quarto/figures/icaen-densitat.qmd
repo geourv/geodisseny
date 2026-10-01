@@ -1,0 +1,50 @@
+---
+title: Recompte en graella i densitat kernel
+lang: ca
+ref: figura-icaen-densitat
+format: gfm
+execute-dir: project
+execute: {echo: false, warning: false}
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  inputs: [context/inputs/icaen-estadistica.json]
+  outputs: [assets/img/generated/icaen-densitat.svg]
+---
+
+```{python}
+from pathlib import Path
+import json
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.colors import Normalize
+from matplotlib.cm import ScalarMappable
+from matplotlib.patches import Polygon
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root==root.parent:raise RuntimeError('Projecte absent')
+    root=root.parent
+d=json.loads((root/'context/inputs/icaen-estadistica.json').read_text())
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':14,'svg.fonttype':'none'})
+fig=plt.figure(figsize=(9.6,8.7),layout='constrained');grid=fig.add_gridspec(2,2)
+axes=[fig.add_subplot(grid[0,:]),fig.add_subplot(grid[1,0]),fig.add_subplot(grid[1,1])]
+extent=[339,374,4546,4570]
+g=d['county'];parts=g['coordinates'] if g['type']=='MultiPolygon' else [g['coordinates']]
+def decorate(ax,title):
+    for p in parts:ax.add_patch(Polygon(np.array(p[0])/1000,facecolor='none',edgecolor='#596672',lw=.8))
+    ax.set(xlim=extent[:2],ylim=extent[2:],aspect='equal',title=title,xlabel='Est UTM (km)',ylabel='Nord UTM (km)')
+    ax.ticklabel_format(useOffset=False,style='plain')
+cmap=plt.colormaps['YlOrRd'];norm=Normalize(0,max(c['count'] for c in d['cells']))
+for c in d['cells']:
+    axes[0].add_patch(Polygon(np.array(c['geometry']['coordinates'][0])/1000,facecolor=cmap(norm(c['count'])),edgecolor='white',lw=.2))
+decorate(axes[0],'A · Recompte en quadrats d’1 km²')
+bar=fig.colorbar(ScalarMappable(norm=norm,cmap=cmap),ax=axes[0],orientation='horizontal',fraction=.05,pad=.02,shrink=.55)
+bar.set_label('Punts dins del quadrat')
+maximum=max(max(max(row) for row in k['values']) for k in d['kernels']);norm=Normalize(0,maximum)
+for ax,k in zip(axes[1:],d['kernels']):
+    image=ax.imshow(k['values'],extent=np.array(k['extent'])/1000,origin='upper',cmap='YlOrRd',norm=norm)
+    decorate(ax,('B' if k['radius_m']==500 else 'C')+f" · Kernel, radi {k['radius_m']} m")
+bar=fig.colorbar(image,ax=axes[1:],orientation='horizontal',fraction=.05,pad=.05,shrink=.9)
+bar.set_label('Densitat kernel (punts/km²), mateixa escala als dos radis')
+fig.savefig(root/'assets/img/generated/icaen-densitat.svg',facecolor='white',metadata={'Date':None});plt.close(fig)
+```

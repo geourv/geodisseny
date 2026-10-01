@@ -1,0 +1,62 @@
+---
+title: Un centre i vint-i-vuit mostres de la refineria nord
+lang: ca
+ref: figura-visibilitat-petroquimica
+format: gfm
+execute-dir: project
+execute:
+  echo: false
+  warning: false
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  inputs:
+    - context/inputs/practiques-mapes.json
+  outputs:
+    - assets/img/generated/visibilitat-petroquimica.svg
+---
+
+```{python}
+from pathlib import Path
+import json
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.colors import ListedColormap,BoundaryNorm
+from matplotlib.patches import Polygon,Patch
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root==root.parent:raise RuntimeError('No es troba el projecte')
+    root=root.parent
+data=json.loads((root/'context/inputs/practiques-mapes.json').read_text())
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':14,'svg.fonttype':'none'})
+fig,axes=plt.subplots(2,1,figsize=(8.6,10.1),layout='constrained',sharex=True)
+# Decimation keeps the first cell of each four-cell interval. Shift display
+# edges to retain those sample centres rather than moving the observations.
+extent=(np.array(data['regional_extent'])+np.array([-37.5,-37.5,37.5,37.5]))/1000
+for ax,field,title in zip(axes,['regional_single','regional_accumulated'],
+                          ['A · Un centre a 30 m','B · 28 mostres a 30 m']):
+    values=np.array(data[field]);n=1 if field=='regional_single' else data['controls']['target_count']
+    assert set(np.unique(values))<=set(range(n+1))|{255}
+    colours=['#f4f7fa','#176b48'] if n==1 else list(plt.colormaps['Greens'](np.linspace(.05,.95,n+1)))
+    colours[0]='#f4f7fa'
+    cmap=ListedColormap(colours);cmap.set_bad('#d6d9dc')
+    norm=BoundaryNorm(np.arange(-.5,n+1.5),cmap.N)
+    image=ax.imshow(np.ma.masked_equal(values,255),extent=extent,origin='upper',cmap=cmap,norm=norm)
+    for geometry in data['county_boundaries']:
+        polys=geometry['coordinates'] if geometry['type']=='MultiPolygon' else [geometry['coordinates']]
+        for polygon in polys:
+            ax.add_patch(Polygon(np.array(polygon[0])/1000,fill=False,edgecolor='#586571',lw=.8))
+    x,y=np.array(data['centre'])/1000
+    ax.plot(x,y,'*',color='#bb303c',ms=10)
+    ax.annotate('Sector de\nrefineria',xy=(x,y),xytext=(x+10,y+10),fontsize=14,ha='right',
+                arrowprops={'arrowstyle':'-','color':'#bb303c'},color='#8f2330')
+    ax.set(title=title,ylabel='Nord UTM (km)',aspect='equal')
+    ax.ticklabel_format(useOffset=False,style='plain')
+    bar=fig.colorbar(image,ax=ax,orientation='vertical',ticks=[0,1] if n==1 else [0,7,14,21,28],fraction=.05,pad=.025)
+    bar.set_label('0: ocult · 1: visible' if n==1 else 'Nombre de mostres visibles')
+axes[1].set_xlabel('Est UTM (km)')
+fig.legend(handles=[Patch(facecolor='#d6d9dc',label='Fora del domini comú calculable')],
+           loc='outside lower center',frameon=False)
+fig.savefig(root/'assets/img/generated/visibilitat-petroquimica.svg',facecolor='white',metadata={'Date':None})
+plt.close(fig)
+```

@@ -1,0 +1,78 @@
+{
+  "ok": true,
+  "capture_id": "icaen-resultat",
+  "provenance": {
+    "recipe_id": "icaen-centres",
+    "recipe_title": "Centres reals d'autoconsum al Tarragon\u00e8s",
+    "recipe_path": "/workspace/context/qgis/icaen-centres.yml",
+    "capture_title": "Comparaci\u00f3 dels centres sobre la mateixa selecci\u00f3",
+    "source_prompt": "context/qgis/icaen-centres.md",
+    "recipe_source_prompt": "context/qgis/icaen-centres.md",
+    "capture_source_prompt": null
+  },
+  "image": "sha256:950ee7bf7cbab5163849415d4f7fd72dc400b1e81127913ff308244ae4a6ebdc",
+  "image_digest": "sha256:950ee7bf7cbab5163849415d4f7fd72dc400b1e81127913ff308244ae4a6ebdc",
+  "probe": {
+    "ok": true,
+    "image": "sha256:950ee7bf7cbab5163849415d4f7fd72dc400b1e81127913ff308244ae4a6ebdc",
+    "digest": "sha256:950ee7bf7cbab5163849415d4f7fd72dc400b1e81127913ff308244ae4a6ebdc",
+    "qgis_version": "3.44.11",
+    "raw": "QGIS 3.44.11-Solothurn 'Solothurn' (f8f5812197f)\nQGIS code revision f8f5812197f\nQt version 5.15.17\nPython version 3.13.7\nGDAL/OGR version 3.10.3\nPROJ version 9.6.0\nEPSG Registry database version v12.004 (2025-03-02)\nGEOS version 3.13.1-CAPI-1.19.2\nSQLite version 3.46.1\nOS Ubuntu 25.10\n",
+    "returncode": 0
+  },
+  "output": "/workspace/assets/captures/icaen-resultat.png",
+  "annotation_svg": "/workspace/assets/captures/icaen-resultat.annotations.svg",
+  "annotation_svg_background": {
+    "mode": "embedded_png_data_uri",
+    "width": 1440,
+    "height": 900
+  },
+  "manifest": "/workspace/context/qgis/manifests/icaen-resultat.yml",
+  "backend": "offscreen",
+  "locale": {
+    "requested": "ca",
+    "qsettings_user_locale": "ca",
+    "qsettings_override": true
+  },
+  "device_pixel_ratio": 1.0426788330078125,
+  "coordinate_space": "logical pixels in the captured image; recipe relative coordinates share this space for PNG and SVG annotations",
+  "camera": {
+    "mode": "full",
+    "requested": {
+      "mode": "full",
+      "target": null,
+      "padding": 0,
+      "output_size": null
+    },
+    "full_capture": {
+      "width": 1440,
+      "height": 900
+    },
+    "scale": 1.0
+  },
+  "layout_policy": {
+    "reading_direction": "left_to_right",
+    "prefer_local_empty_space": true,
+    "prefer_leaderless_labels": true,
+    "avoid_diagonal_leaders": true,
+    "allow_diagonal_leaders": "when_no_clear_local_candidate",
+    "protect_text": true,
+    "protect_controls": true,
+    "obstacle_padding": 4.0
+  },
+  "project_crs": "EPSG:25831",
+  "canvas_crs": "EPSG:25831",
+  "warnings": [],
+  "target": {
+    "object_name": "QgisApp",
+    "class_name": null,
+    "text": null,
+    "item_text": null,
+    "layer_name": null,
+    "target_part": null,
+    "title": null,
+    "parent_window": null,
+    "fallback": []
+  },
+  "annotations": []
+}

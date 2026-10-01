@@ -1,0 +1,63 @@
+---
+title: Dels valors al diagrama de caixa
+lang: ca
+ref: figura-distribucions-potencia
+format: gfm
+execute-dir: project
+execute:
+  echo: false
+  warning: false
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  outputs:
+    - assets/img/generated/distribucions.svg
+---
+
+```{python}
+from pathlib import Path
+import numpy as np
+import matplotlib.pyplot as plt
+
+root = Path.cwd()
+while not (root / '.unaltraweb/computations.yml').exists():
+    if root == root.parent:
+        raise RuntimeError('No es troba el projecte')
+    root = root.parent
+out = root / 'assets/img/generated/distribucions.svg'
+out.parent.mkdir(parents=True, exist_ok=True)
+plt.rcParams.update({'font.family': 'DejaVu Sans', 'font.size': 13,
+                     'svg.fonttype': 'none', 'axes.spines.top': False,
+                     'axes.spines.right': False, 'figure.facecolor': 'white'})
+values = np.array([5., 5., 10., 20., 60.])
+assert values.mean() == 20 and np.median(values) == 10
+assert np.var(values) == 430
+assert np.allclose(np.quantile(values,[.25,.5,.75],method='linear'),[5,10,20])
+fig, axes = plt.subplots(2, 1, figsize=(8.2, 6.2), layout='constrained', sharex=True)
+for ax, sample, title in zip(axes, [values, np.full(5, 20.)],
+                             ['A · Valors diferents', 'B · Valors iguals']):
+    counts = {}
+    levels = []
+    for value in sample:
+        levels.append(.65 + counts.get(value, 0) * .10)
+        counts[value] = counts.get(value, 0) + 1
+    ax.scatter(sample, levels, color='#003366', s=75, zorder=3)
+    ax.boxplot(sample,vert=False,positions=[.15],widths=.25,whis=1.5,patch_artist=True,
+               boxprops={'facecolor':'#dcebf2','edgecolor':'#003366'},
+               medianprops={'color':'#39734d','linewidth':3},
+               whiskerprops={'color':'#003366'},capprops={'color':'#003366'},
+               flierprops={'marker':'D','markeredgecolor':'#a34423','markerfacecolor':'white','markersize':7})
+    ax.axvline(sample.mean(),color='#990000',lw=1.7,ls=':',label='Mitjana: 20 kW')
+    ax.set(xlim=(-2,70),ylim=(-.5,1.2),yticks=[],title=title)
+    ax.spines['left'].set_visible(False)
+    ax.legend(loc='upper right',frameon=False,fontsize=13)
+axes[0].annotate('Q1 = 5\nMediana = 10\nQ3 = 20',(10,.15),xytext=(28,.9),
+                 ha='left',va='top',arrowprops={'arrowstyle':'->','color':'#39734d'},fontsize=13)
+axes[0].text(5,-.34,'Bigotis: 5–20',ha='left',fontsize=13)
+axes[0].annotate('60: fora de la tanca',(60,.15),xytext=(42,-.35),fontsize=13,
+                 arrowprops={'arrowstyle':'->','color':'#a34423'},color='#a34423')
+axes[1].text(25,.07,'Caixa reduïda a 20\nQ1 = mediana = Q3',fontsize=13)
+axes[-1].set_xlabel('Potència (kW) · punts originals i boxplot de les mateixes dades')
+fig.savefig(out, facecolor='white', metadata={'Date': None})
+plt.close(fig)
+```

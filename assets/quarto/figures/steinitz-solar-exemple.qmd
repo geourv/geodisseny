@@ -1,0 +1,153 @@
+---
+title: Sis preguntes sobre un hort solar en una plana agrària fictícia
+lang: ca
+ref: figura-steinitz-solar-exemple
+format: gfm
+execute-dir: project
+execute: {echo: false, warning: false}
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  outputs: [assets/img/generated/steinitz-solar-exemple.svg]
+---
+
+```{python}
+from pathlib import Path
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle, FancyBboxPatch, Circle
+from matplotlib.lines import Line2D
+
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root==root.parent:raise RuntimeError('Projecte absent')
+    root=root.parent
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':14,'svg.fonttype':'none'})
+blue='#006699';green='#39734d';orange='#b45c29';purple='#7154a0';grey='#747574'
+river=np.array([[800,650],[770,530],[790,430],[730,320],[750,220],[710,100],[720,0]])
+# Coordenades mètriques fictícies. Cada rectangle és una petjada esquemàtica
+# del projecte complet; no és la suma de la superfície dels mòduls.
+alternative_a=[(250,160,400,300)]
+alternative_b=[(250,140,300,150),(250,340,300,150)]
+area_a=sum(w*h for x,y,w,h in alternative_a)/10000
+area_b=sum(w*h for x,y,w,h in alternative_b)/10000
+assert area_a==12 and area_b==9
+assert alternative_b[0][1]+alternative_b[0][3]<310<alternative_b[1][1]
+assert alternative_a[0][1]<310<alternative_a[0][1]+alternative_a[0][3]
+
+def label(ax,x,y,text,color='#252525',ha='center',weight='normal'):
+    return ax.text(x,y,text,ha=ha,va='center',fontsize=13,color=color,
+                   fontweight=weight,zorder=12,
+                   bbox={'facecolor':'white','edgecolor':'none','alpha':.9,'pad':1.5})
+
+def arrow(ax,start,end,color,lw=2,style='-',rad=0):
+    ax.annotate('',xy=end,xytext=start,arrowprops={
+        'arrowstyle':'->','color':color,'lw':lw,'linestyle':style,
+        'connectionstyle':f'arc3,rad={rad}'},zorder=10)
+
+def base(ax,names=False):
+    ax.set(xlim=(0,1000),ylim=(0,650),aspect='equal',xticks=[],yticks=[])
+    ax.set_facecolor('#faf9f5')
+    for x,w in [(35,135),(180,150),(345,175),(535,140),(820,145)]:
+        for y,h in [(40,150),(200,180),(390,105)]:
+            ax.add_patch(Rectangle((x,y),w,h,facecolor='#efe8d2',edgecolor='#d3c7a8',lw=.6,zorder=1))
+    ax.plot(river[:,0],river[:,1],color=blue,lw=2,zorder=4)
+    ax.plot([0,1000],[550,550],color=grey,lw=4,zorder=3)
+    ax.plot([0,1000],[550,550],color='white',lw=.8,zorder=4)
+    for path in [np.array([[160,550],[160,310],[925,310]]),np.array([[250,80],[250,490]])]:
+        ax.plot(path[:,0],path[:,1],color=grey,lw=1.5,zorder=3)
+    for x,name in [(95,'N1'),(875,'N2')]:
+        for dx,dy in [(0,0),(30,10),(60,0)]:
+            ax.add_patch(Rectangle((x+dx,560+dy),22,24,facecolor='#a8a7a4',edgecolor='#626461',lw=.6,zorder=5))
+        label(ax,x+35,615,name)
+    for x,y in [(845,90),(905,90),(845,145)]:
+        ax.add_patch(Rectangle((x,y),45,35,facecolor='#c3c5c5',edgecolor=grey,lw=.7,zorder=5))
+    for spine in ax.spines.values():spine.set_color('#d1d3d3')
+    if names:
+        label(ax,440,420,'Conreus')
+        label(ax,515,590,'Carretera')
+        label(ax,475,265,'Camí agrícola')
+        label(ax,825,225,'Riera',color=blue)
+        label(ax,895,40,'Polígon')
+        ax.plot([40,240],[15,15],color='#222222',lw=2)
+        ax.plot([40,40],[9,21],color='#222222',lw=1)
+        ax.plot([240,240],[9,21],color='#222222',lw=1)
+        label(ax,140,55,'200 m')
+
+def footprint(ax,rectangles,color,name,filled=True):
+    for x,y,w,h in rectangles:
+        if filled:ax.add_patch(Rectangle((x,y),w,h,facecolor=color,edgecolor='none',alpha=.14,zorder=6))
+        ax.add_patch(Rectangle((x,y),w,h,fill=False,edgecolor=color,lw=2,
+                               linestyle='-' if filled else '--',zorder=8))
+        if filled:label(ax,x+w/2,y+h/2,name,color=color,weight='bold')
+
+fig,axes=plt.subplots(3,2,figsize=(9.2,11.2),layout='constrained')
+fig.get_layout_engine().set(w_pad=.10,h_pad=.12,wspace=.06,hspace=.06)
+titles=['1 · Representació\nQuè hi ha al lloc?',
+        '2 · Procés\nCom funciona?',
+        '3 · Avaluació\nQuè es vol conservar?',
+        '4 · Canvi\nCom es disposa el projecte?',
+        '5 · Impacte\nQuanta ocupació s’afegeix?',
+        '6 · Decisió\nQuè es tria o es revisa?']
+for ax,title in zip(axes.flat,titles):ax.set_title(title,fontsize=15,color='#003366',pad=10)
+
+ax=axes[0,0];base(ax,names=True)
+
+ax=axes[0,1];base(ax)
+arrow(ax,(185,310),(660,310),green,lw=2.8)
+label(ax,440,235,'Accés als camps',green)
+arrow(ax,(525,465),(748,330),blue,lw=2.2)
+arrow(ax,(780,490),(748,350),blue,lw=2.5)
+arrow(ax,(742,205),(720,65),blue,lw=2.5)
+label(ax,470,485,'Escorrentia',blue)
+ax.set_xlabel('Moviments i fluxos esquemàtics',fontsize=13)
+
+ax=axes[1,0];base(ax)
+ax.plot([160,650],[310,310],color=green,lw=14,alpha=.22,zorder=5)
+ax.plot(river[1:-1,0],river[1:-1,1],color=blue,lw=14,alpha=.15,zorder=2)
+label(ax,430,390,'Mantenir el pas',green)
+arrow(ax,(430,360),(430,315),green,lw=1.2)
+label(ax,410,135,'Conservar el drenatge',blue)
+arrow(ax,(605,135),(716,120),blue,lw=1.2)
+ax.set_xlabel('Criteris del cas',fontsize=13)
+
+ax=axes[1,1];base(ax)
+footprint(ax,alternative_b,purple,'B')
+footprint(ax,alternative_a,orange,'A',filled=False)
+label(ax,615,420,'A',orange,weight='bold')
+ax.set_xlabel('A: compacte · B: dos recintes',fontsize=13)
+
+ax=axes[2,0]
+ax.set_box_aspect(.72)
+areas=[0,area_a,area_b]
+ax.bar([0,1,2],areas,width=.52,color=['#a8a8a8',orange,purple])
+for i,area in enumerate(areas):ax.text(i,area+.6,f'+{area:.0f}',ha='center',fontsize=14)
+ax.set(xticks=[0,1,2],xticklabels=['Sense\nprojecte','A','B'],ylim=(0,15),yticks=[0,5,10,15],ylabel='Ocupació nova (ha)')
+ax.spines[['top','right']].set_visible(False)
+ax.grid(axis='y',alpha=.16);ax.set_axisbelow(True)
+ax.set_xlabel('Mateixa generació d’energia\nSupòsit per poder comparar A i B',fontsize=13)
+
+ax=axes[2,1];ax.set(xlim=(0,1),ylim=(0,1));ax.set_box_aspect(.72);ax.axis('off')
+def card(x,y,w,h,text,edge,fill):
+    ax.add_patch(FancyBboxPatch((x,y),w,h,boxstyle='round,pad=0.01,rounding_size=0.025',
+                               facecolor=fill,edgecolor=edge,lw=1.2,zorder=2))
+    ax.text(x+w/2,y+h/2,text,ha='center',va='center',fontsize=13,color='#252525',zorder=3)
+for x in [.30,.50,.70]:
+    ax.add_patch(Circle((x,.89),.027,facecolor='#687b8b',edgecolor='none'))
+    ax.plot([x,x],[.81,.855],color='#687b8b',lw=3)
+ax.text(.5,.73,'Agricultors, veïnat, promotor\ni administració',ha='center',va='center',fontsize=13)
+card(.10,.42,.80,.18,'Comparar efectes\ni perspectives',grey,'#f2f4f5')
+arrow(ax,(.5,.66),(.5,.61),grey,lw=1.4)
+card(.025,.045,.445,.23,'Accessos\n4 · Canvi',green,'#edf4ee')
+card(.53,.045,.445,.23,'Connexió\n1 · Dades',blue,'#edf3f8')
+arrow(ax,(.33,.42),(.24,.28),green,lw=1.5)
+arrow(ax,(.67,.42),(.75,.28),blue,lw=1.5)
+ax.text(.5,-.08,'Retorns abans de decidir',ha='center',va='top',fontsize=13,color='#555555')
+
+handles=[Line2D([],[],color=blue,lw=2,label='Riera'),Line2D([],[],color=grey,lw=2,label='Carretera i camins'),
+         Line2D([],[],color=orange,lw=2,ls='--',label='Alternativa A'),Line2D([],[],color=purple,lw=2,label='Alternativa B')]
+fig.legend(handles=handles,loc='outside lower center',ncol=2,frameon=False,fontsize=13)
+fig.savefig(root/'assets/img/generated/steinitz-solar-exemple.svg',facecolor='white',metadata={'Date':None})
+plt.close(fig)
+print('Petjades fictícies (ha):',{'A0':0,'A':area_a,'B':area_b})
+```

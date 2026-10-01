@@ -1,0 +1,39 @@
+---
+title: Distribució de mesures i distribució de mitjanes
+lang: ca
+ref: figura-normal-mitjanes
+format: gfm
+execute-dir: project
+execute: {echo: false, warning: false}
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  outputs: [assets/img/generated/normal-mitjanes.svg]
+---
+
+```{python}
+from pathlib import Path
+from math import erf,sqrt,pi
+import numpy as np
+import matplotlib.pyplot as plt
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root==root.parent:raise RuntimeError('Projecte absent')
+    root=root.parent
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':14,'svg.fonttype':'none'})
+pdf=lambda x,s:np.exp(-.5*(x/s)**2)/(s*sqrt(2*pi))
+assert np.isclose(erf(1/sqrt(2)),.682689492,atol=1e-8)
+assert np.isclose(erf(1.95996398454/sqrt(2)),.95)
+fig,axes=plt.subplots(2,1,figsize=(8.3,7),layout='constrained',sharex=True,sharey=True)
+x=np.linspace(-13,13,2601)
+for ax,s,title,label in zip(axes,[4,1],['A · Una lectura de la cinta\nDispersió habitual: 4 cm','B · Mitjana de 16 lectures\nDispersió entre mitjanes: 1 cm'],
+                             ['Error d’una lectura del tram de 20 m (cm)','Error mitjà de 16 lectures (cm)']):
+    y=pdf(x,s);ax.plot(x,y,color='#003366',lw=2)
+    ax.fill_between(x,0,y,where=abs(x)<=1.95996398454*s,color='#dceaf2',label='Aproximadament 95 de cada 100')
+    ax.fill_between(x,0,y,where=abs(x)<=s,color='#80b4d0',label='Aproximadament 68 de cada 100')
+    ax.axvline(0,color='#8a222d',ls='--');ax.set(title=title,ylabel='Distribució esperada',xlabel=label,xlim=(-13,13),ylim=(0,.43),yticks=[])
+    ax.text(.02,.68,'0 cm: sense\ndiferència de llargada',transform=ax.transAxes,fontsize=13)
+    ax.legend(loc='upper right',frameon=False,fontsize=13)
+    ax.spines[['top','right','left']].set_visible(False)
+fig.savefig(root/'assets/img/generated/normal-mitjanes.svg',facecolor='white',metadata={'Date':None});plt.close(fig)
+```

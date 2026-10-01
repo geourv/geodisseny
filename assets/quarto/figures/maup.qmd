@@ -1,0 +1,54 @@
+---
+title: Població de 65 anys o més i ús del bus amb tres divisions del mapa
+lang: ca
+ref: figura-maup
+format: gfm
+execute-dir: project
+execute: {echo: false, warning: false}
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  outputs: [assets/img/generated/maup.svg]
+---
+
+```{python}
+from pathlib import Path
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root==root.parent:raise RuntimeError('Projecte absent')
+    root=root.parent
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':14,'svg.fonttype':'none'})
+r,c=np.mgrid[0:4,0:4];x=10+4*r+4*c;y=40+4*r-4*c
+groups=[(x.ravel(),y.ravel()),(x.mean(axis=1),y.mean(axis=1)),(x.mean(axis=0),y.mean(axis=0))]
+correlations=[np.corrcoef(a,b)[0,1] for a,b in groups]
+assert np.allclose(correlations,[0,1,-1])
+assert all(a.mean()==22 and b.mean()==40 for a,b in groups)
+fig,axes=plt.subplots(2,3,figsize=(9.6,7.6),layout='constrained')
+colors=['#dceaf2','#bfd6e5','#99bed5','#6a9dbc']
+for k,ax in enumerate(axes[0]):
+    for row,col in np.ndindex(4,4):
+        ax.add_patch(Rectangle((col,3-row),1,1,facecolor='#f3f4f5' if k==0 else colors[row if k==1 else col],edgecolor='white'))
+        if k==0:ax.text(col+.5,3.5-row,f'{x[row,col]}/{y[row,col]}',ha='center',va='center',fontsize=12)
+    if k:
+        for i in range(4):
+            bounds=(0,3-i,4,1) if k==1 else (i,0,1,4)
+            ax.add_patch(Rectangle(bounds[:2],bounds[2],bounds[3],fill=False,edgecolor='#263a48',lw=2))
+            a,b=groups[k][0][i],groups[k][1][i]
+            ax.text(2 if k==1 else i+.5,3.5-i if k==1 else 2,
+                    f'{a:.0f} / {b:.0f}' if k==1 else f'{a:.0f}\n/\n{b:.0f}',ha='center',va='center',fontsize=13)
+    ax.set(xlim=(0,4),ylim=(0,4),aspect='equal',xticks=[],yticks=[],
+           title=['A · 16 cel·les','B · 4 franges horitzontals','C · 4 franges verticals'][k])
+    ax.set_xlabel('Població 65+ (%) / viatges',fontsize=13)
+for k,(ax,(a,b)) in enumerate(zip(axes[1],groups)):
+    ax.scatter(a,b,s=50,color='#006699')
+    if k:ax.plot(a,b,color='#8a222d',lw=1.6)
+    ax.set(xlim=(8,36),ylim=(26,54),xlabel='Població de 65 anys\no més (%)',
+           ylabel='Viatges diaris en bus\nper 100 habitants' if k==0 else '',
+           title=['Sense tendència lineal\nr = 0','Augmenten junts\nr = +1','Canvien a l’inrevés\nr = −1'][k])
+    ax.xaxis.label.set_fontsize(13)
+    ax.grid(alpha=.15);ax.spines[['top','right']].set_visible(False)
+fig.savefig(root/'assets/img/generated/maup.svg',facecolor='white',metadata={'Date':None});plt.close(fig)
+```

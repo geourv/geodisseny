@@ -1,0 +1,64 @@
+---
+title: Ajust, residu i validació amb estacions fictícies
+lang: ca
+ref: figura-regressio-residus
+format: gfm
+execute-dir: project
+execute:
+  echo: false
+  warning: false
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  outputs:
+    - assets/img/generated/regressio-residus.svg
+---
+
+```{python}
+from pathlib import Path
+import numpy as np
+import matplotlib.pyplot as plt
+
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root==root.parent: raise RuntimeError('No es troba el projecte')
+    root=root.parent
+out=root/'assets/img/generated/regressio-residus.svg'
+out.parent.mkdir(parents=True,exist_ok=True)
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':14,'svg.fonttype':'none',
+                     'axes.spines.top':False,'axes.spines.right':False})
+z=np.array([0.,100.,200.,300.]); t=np.array([30.,30.,29.,27.])
+b,a=np.polyfit(z,t,1)
+assert np.allclose([a,b],[30.5,-.01])
+assert np.allclose(t-(a+b*z),[-.5,.5,.5,-.5])
+fig,(terrain,ax)=plt.subplots(1,2,figsize=(8.8,5.9),layout='constrained',sharey=True)
+distance=np.array([0,.5,1,1.5,2,2.6,3]);elevation=np.array([0,65,100,150,200,265,300])
+assert np.allclose(np.interp([0,1,2,3],distance,elevation),z)
+terrain.fill_between(distance,-25,elevation,color='#e9e2d2')
+terrain.plot(distance,elevation,color='#7c725f',lw=2)
+for i,(d,h,temp) in enumerate(zip([0,1,2,3],z,t),1):
+    terrain.scatter(d,h,s=70,color='#003366',zorder=4)
+    terrain.annotate(f'E{i} · {temp:.0f} °C',(d,h),xytext=(0,12),textcoords='offset points',
+                     ha='left' if i==1 else 'right' if i==4 else 'center',fontsize=13)
+terrain.scatter(1.5,150,marker='D',s=80,color='#39734d',zorder=4)
+terrain.annotate('V · 30 °C',(1.5,150),xytext=(-30,30),textcoords='offset points',color='#39734d',fontsize=13)
+terrain.set(xlim=(-.15,3.2),xlabel='Distància al llarg del perfil (km)',ylabel='Altitud (m)',title='A · Estacions sobre el relleu\nPerfil fictici')
+ax.plot(a+b*z,z,color='#003366',lw=2,label='T̂ = 30,5 − 0,01 z')
+ax.scatter(t,z,color='#003366',s=75,zorder=4,label='E1–E4 · ajust')
+for i,(temp,h) in enumerate(zip(t,z),1):
+    ax.annotate(f'E{i}',(temp,h),xytext=(-8,7) if i==1 else (7,7),ha='right' if i==1 else 'left',textcoords='offset points',fontsize=13)
+ax.plot([28.5,29],[200,200],color='#990000',lw=3,zorder=3)
+ax.annotate('Residu +0,5 °C',(28.75,200),xytext=(31.4,245),ha='right',fontsize=13,
+            arrowprops={'arrowstyle':'->','color':'#990000'},color='#990000')
+ax.scatter([30],[150],marker='D',s=80,color='#39734d',zorder=5,label='V · validació')
+ax.scatter([29],[150],marker='D',s=70,facecolors='white',edgecolors='#39734d',zorder=5)
+ax.plot([29,30],[150,150],color='#39734d',ls=':',lw=2)
+ax.annotate('Error de V: +1 °C',(29.5,150),xytext=(26.25,70),ha='left',fontsize=13,
+            arrowprops={'arrowstyle':'->','color':'#39734d'},color='#39734d')
+ax.text(.96,.92,'r = −0,913',transform=ax.transAxes,ha='right',fontsize=13)
+ax.set(xlim=(26,32),ylim=(-25,345),xlabel='Temperatura (°C)',title='B · Temperatura i altitud\nMateixa escala vertical')
+for panel in [terrain,ax]:panel.set_yticks([0,100,150,200,300]);panel.grid(axis='y',alpha=.18)
+fig.legend(*ax.get_legend_handles_labels(),loc='outside lower center',frameon=False,ncol=3,fontsize=13)
+fig.savefig(out,facecolor='white',metadata={'Date':None})
+plt.close(fig)
+```

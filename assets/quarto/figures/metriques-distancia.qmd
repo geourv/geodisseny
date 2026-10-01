@@ -1,0 +1,73 @@
+---
+title: Euclidiana, Manhattan i distàncies amb relleu
+lang: ca
+ref: figura-metriques-distancia
+format: gfm
+execute-dir: project
+execute:
+  echo: false
+  warning: false
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  outputs:
+    - assets/img/generated/metriques-distancia.svg
+---
+
+```{python}
+from pathlib import Path
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
+
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root==root.parent:raise RuntimeError('No es troba el projecte')
+    root=root.parent
+out=root/'assets/img/generated/metriques-distancia.svg'
+out.parent.mkdir(parents=True,exist_ok=True)
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':13,'svg.fonttype':'none',
+                     'axes.spines.top':False,'axes.spines.right':False})
+euclidean=np.hypot(300,400);manhattan=300+400
+spatial=np.hypot(euclidean,120)
+s=np.arange(0,501,50)
+z=np.array([100,126,184,215,207,256,290,252,264,238,220])
+surface=np.hypot(np.diff(s),np.diff(z)).sum()
+assert euclidean==500 and manhattan==700 and round(spatial,1)==514.2 and surface>spatial
+fig=plt.figure(figsize=(8.8,7.6),layout='constrained')
+grid=fig.add_gridspec(2,2,height_ratios=[1.25,1])
+ax=fig.add_subplot(grid[0,0])
+ax.set(xlim=(-30,370),ylim=(-40,470),aspect='equal',xticks=[0,100,200,300],yticks=[0,100,200,300,400],
+       xlabel='Est (m)',ylabel='Nord (m)',title='A · Moviment en planta')
+ax.grid(color='#dddddd',lw=.8)
+ax.plot([0,300],[0,400],color='#bf5960',ls='--',lw=2.5,label='Recta plana: 500 m')
+ax.plot([0,300,300],[0,0,400],color='#006699',lw=2.5,label='Manhattan: 700 m')
+ax.scatter([0,300],[0,400],color='black',s=40,zorder=4)
+ax.annotate('O',(0,0),xytext=(7,9),textcoords='offset points')
+ax.annotate('D',(300,400),xytext=(8,8),textcoords='offset points')
+ax.legend(loc='upper left',frameon=False,fontsize=12)
+ax=fig.add_subplot(grid[0,1],projection='3d',computed_zorder=False)
+xx,yy=np.meshgrid(np.linspace(0,300,31),np.linspace(0,400,41))
+along=.6*xx+.8*yy;across=-.8*xx+.6*yy
+relief=np.interp(along,s,z)+18*np.sin(2*np.pi*across/400)*np.sin(np.pi*along/500)**2
+ax.plot_surface(xx,yy,relief,color='#c7b994',alpha=.6,edgecolor='#b1a58a',linewidth=.25,zorder=1)
+ax.plot(.6*s,.8*s,z,color='#006699',lw=3,zorder=4)
+ax.plot([0,300],[0,400],[100,220],color='#bf5960',ls='--',lw=2,zorder=5)
+ax.scatter([0,300],[0,400],[100,220],color='black',s=26,zorder=6)
+ax.text(0,0,118,'O',fontsize=13);ax.text(300,400,236,'D',fontsize=13)
+ax.set(xlabel='Est (m)',ylabel='Nord (m)',zlabel='Cota (m)',title='B · El mateix traçat sobre el relleu',
+       xticks=[0,150,300],yticks=[0,200,400],zticks=[100,200,300])
+ax.view_init(elev=26,azim=-115);ax.set_box_aspect((300,400,230));ax.tick_params(labelsize=11.5)
+ax=fig.add_subplot(grid[1,:])
+ax.fill_between(s,z,80,color='#ece7da')
+ax.plot(s,z,color='#006699',lw=2.5,marker='o',ms=4,label=f'Sobre el terreny: {surface:.1f} m'.replace('.',','))
+ax.plot([0,500],[100,220],color='#bf5960',ls='--',lw=2,label='Recta 3D: 514,2 m')
+ax.plot([0,500],[80,80],color='#8b969f',ls=':',lw=2,label='Projecció plana: 500 m')
+ax.text(6,110,'O');ax.text(485,230,'D')
+ax.set(xlim=(-10,510),ylim=(65,315),xlabel='Distància projectada des d’O (m)',ylabel='Cota (m)',
+       title='C · Perfil: sumar els trams entre mostres',xticks=s)
+ax.legend(loc='upper left',frameon=False,fontsize=12,ncol=1)
+print({'planar_m':float(euclidean),'direct_3d_m':float(spatial),'sampled_terrain_m':float(surface)})
+fig.savefig(out,facecolor='white',metadata={'Date':None})
+plt.close(fig)
+```

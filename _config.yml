@@ -7,6 +7,8 @@ baseurl: "/geodisseny"
 lang: "ca"
 default_lang: "ca"
 languages: ["ca"]
+first_name: Benito
+last_name: Zaragozí
 author:
   name: Benito Zaragozí
   name_ca: Benito Zaragozí
@@ -20,14 +22,25 @@ author:
   github: geourv
 theme: unaltraweb
 exclude:
+  - context/
   - sandbox/
   - tmp/
+  - assets/quarto/
   - vendor/
   - _site/
   - Gemfile
   - Gemfile.lock
   - README.md
   - AGENTS.md
+defaults:
+  - scope:
+      path: assets
+    values:
+      sitemap: false
+  - scope:
+      path: assets/plotly/demo.html
+    values:
+      published: false
 unaltraweb:
   site_profile: unaltremanual
   content_status_field: content_status
@@ -48,6 +61,7 @@ unaltraweb:
     readings: true
   manual:
     collection: chapters
+    nav_title: Geodisseny
     show_chapter_index: true
     cover_image: /assets/img/manual-cover-ca.png
     logo: /assets/img/brand/dosquartsdedocs-logo.svg
@@ -75,7 +89,6 @@ unaltraweb:
       academic_year: 2026/2027
       instructors:
         - name: Benito Zaragozí
-        - name: Yolanda Pérez Albert
       rights: © Benito Zaragozí. Les marques, les figures i els materials de tercers conserven els drets i les llicències indicats.
     release:
       selector: latest
@@ -89,9 +102,11 @@ unaltraweb:
       include_bibliography: true
       toc: true
       mark_drafts: true
-      home_title: Inici i presentació del curs
+      home_title: Presentació
       cover:
         image: assets/img/manual-cover-background.jpg
+        series_logo: assets/img/brand/docs-quarts-logo-small-white.png
+        institution_logo: assets/img/brand/dgeo-apilat-color.pdf
         band_color: "990000"
         primary_color: "990000"
         secondary_color: "003366"

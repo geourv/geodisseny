@@ -1,0 +1,40 @@
+---
+title: Què vol dir cobertura d'un interval de confiança
+lang: ca
+ref: figura-intervals-confianca
+format: gfm
+execute-dir: project
+execute: {echo: false, warning: false}
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  outputs: [assets/img/generated/intervals-confianca.svg]
+---
+
+```{python}
+from pathlib import Path
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root==root.parent:raise RuntimeError('Projecte absent')
+    root=root.parent
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':14,'svg.fonttype':'none'})
+rng=np.random.default_rng(20260930);samples=rng.normal(0,4,size=(40,16));means=samples.mean(axis=1)
+margin=1.959963984540054*4/np.sqrt(16);low=means-margin;high=means+margin;covered=(low<=0)&(high>=0)
+assert np.isclose(margin,1.959963984540054) and np.allclose(high-low,2*margin)
+fig,ax=plt.subplots(figsize=(8.2,7.5),layout='constrained')
+ax.axvline(0,color='#252525',ls='--',lw=1.6)
+for i,(m,lo,hi,yes) in enumerate(zip(means,low,high,covered),1):
+    color='#006699' if yes else '#b64b29'
+    ax.plot([lo,hi],[i,i],color=color,lw=1.6,marker='|',markersize=5);ax.scatter(m,i,color=color,s=18,zorder=3)
+ax.set(ylim=(41,0),yticks=[1,10,20,30,40],xlabel='Error mitjà i marge d’estimació (cm)',ylabel='Grup de 16 lectures',
+       title='Repetim 40 vegades la prova de la cinta\nEn la simulació, la cinta està ben ajustada')
+ax.spines[['top','right']].set_visible(False)
+fig.legend(handles=[Line2D([],[],color='#006699',lw=2,label=f'{covered.sum()} marges inclouen el zero'),Line2D([],[],color='#b64b29',lw=2,label=f'{(~covered).sum()} marges no l’inclouen'),
+                    Line2D([],[],color='#252525',ls='--',label='Desajust real de la cinta: 0 cm')],
+           loc='outside lower center',ncol=2,frameon=False,fontsize=13)
+print('CI coverage',int(covered.sum()),'of',len(covered))
+fig.savefig(root/'assets/img/generated/intervals-confianca.svg',facecolor='white',metadata={'Date':None});plt.close(fig)
+```

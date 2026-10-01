@@ -1,0 +1,21 @@
+{
+  "source": "libpysal.examples columbus",
+  "url": "https://pysal.org/libpysal/generated/libpysal.examples.available.html",
+  "n": 49,
+  "variable": "CRIME: residential burglaries and vehicle thefts per thousand households, 1980",
+  "I": 0.5001885571828611,
+  "p_sim": 0.0001,
+  "permutations": 9999,
+  "seed": 20260930,
+  "weights": "Queen, row standardised",
+  "local_threshold": 0.05,
+  "source_files": {
+    "columbus.html": "23cbfafea4c2387596102088b11b3305bacde8fe4914008bfe3804dadd26513c",
+    "columbus.json": "b80936ba15bdc5b4c5da364e29fe7684eb597f4bbfac546a7e20d1e900101637",
+    "README.md": "e25196f2d87e9b835b9c9ec80064636074c877e357bc734c2669b3a2f3354eb4",
+    "columbus.shx": "ce8fdc2a975081d686533e855d17032f2ddccabd5fd72021cb0d1f3ef8bde0c7",
+    "columbus.shp": "f79a9a4ea814ef3abbc3780c6f91816a6ee56edf60b2c5592158e66b317a4da1",
+    "columbus.gal": "675da6e3d24603e1907c278be4dfc20107ba4888b9a64b442e3f160a46d3dada",
+    "columbus.dbf": "b82171027d294bec701f5a7732eeaf8e0eb6a075b6900daac91c7533bf80bda2"
+  }
+}

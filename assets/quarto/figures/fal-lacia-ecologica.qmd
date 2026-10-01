@@ -1,0 +1,43 @@
+---
+title: Mitjanes de zones i relacions entre habitatges
+lang: ca
+ref: figura-fallacia-ecologica
+format: gfm
+execute-dir: project
+execute: {echo: false, warning: false}
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  outputs: [assets/img/generated/fal-lacia-ecologica.svg]
+---
+
+```{python}
+from pathlib import Path
+import numpy as np
+import matplotlib.pyplot as plt
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root==root.parent:raise RuntimeError('Projecte absent')
+    root=root.parent
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':14,'svg.fonttype':'none'})
+offset=np.array([-10,-6,-2,2,6,10]);means_x=np.array([60,100,140]);means_y=np.array([6,10,14])
+fig,axes=plt.subplots(1,2,figsize=(9,5.4),layout='constrained',sharex=True,sharey=True)
+for label,color,mx,my in zip('ABC',['#006699','#b87924','#39734d'],means_x,means_y):
+    x=mx+offset;y=my-.1*offset
+    assert np.isclose(np.corrcoef(x,y)[0,1],-1) and x.mean()==mx and y.mean()==my
+    axes[0].scatter(x,y,s=60,color=color,label=f'Zona {label}')
+    axes[0].plot(x,y,color=color,lw=2)
+    axes[0].scatter(mx,my,marker='x',s=85,color='black')
+    axes[1].scatter(mx,my,s=120,color=color)
+    axes[1].annotate(label,(mx,my),xytext=(7,7),textcoords='offset points')
+assert np.isclose(np.corrcoef(means_x,means_y)[0,1],1)
+axes[1].plot(means_x,means_y,color='#8a222d',lw=2,zorder=0)
+axes[0].set_title('A · Cada punt és un habitatge\nDins de cada zona: pendent negatiu')
+axes[1].set_title('B · Cada punt és una zona\nEntre mitjanes: pendent positiu')
+for ax in axes:
+    ax.set(xlim=(40,160),ylim=(3.5,17),xlabel='Superfície (m²)')
+    ax.grid(alpha=.15);ax.spines[['top','right']].set_visible(False)
+axes[0].set_ylabel('Consum anual (MWh)')
+fig.legend(*axes[0].get_legend_handles_labels(),loc='outside lower center',ncol=3,frameon=False)
+fig.savefig(root/'assets/img/generated/fal-lacia-ecologica.svg',facecolor='white',metadata={'Date':None});plt.close(fig)
+```

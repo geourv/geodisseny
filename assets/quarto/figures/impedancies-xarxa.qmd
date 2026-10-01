@@ -1,0 +1,70 @@
+---
+title: Canviar els costos canvia la ruta
+lang: ca
+ref: figura-impedancies-xarxa
+format: gfm
+execute-dir: project
+execute:
+  echo: false
+  warning: false
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  outputs:
+    - assets/img/generated/impedancies-xarxa.svg
+---
+
+```{python}
+from pathlib import Path
+import heapq
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root==root.parent:raise RuntimeError('No es troba el projecte')
+    root=root.parent
+nodes={'O':(0,0),'A':(3,2),'B':(3,-2),'D':(6,0)}
+edges=[('O','A'),('O','B'),('B','A'),('A','D'),('B','D')]
+scenarios=[[3,1,1,2,5],[3,1,10,2,5],[3,1,10,6,5]]
+expected=[(['O','B','A','D'],4),(['O','A','D'],5),(['O','B','D'],6)]
+def solve(weights):
+    graph={n:[] for n in nodes}
+    for (a,b),w in zip(edges,weights):graph[a].append((b,w));graph[b].append((a,w))
+    queue=[(0,'O',[])];seen=set()
+    while queue:
+        cost,node,path=heapq.heappop(queue)
+        if node in seen:continue
+        seen.add(node);path=path+[node]
+        if node=='D':return path,cost
+        for n,w in graph[node]:heapq.heappush(queue,(cost+w,n,path))
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':14,'svg.fonttype':'none'})
+fig,axes=plt.subplots(1,3,figsize=(10,4.8),layout='constrained')
+for index,(ax,weights,(path,total)) in enumerate(zip(axes,scenarios,expected)):
+    assert solve(weights)==(path,total)
+    for (a,b),w,base in zip(edges,weights,scenarios[0]):
+        xy=np.array([nodes[a],nodes[b]])
+        ax.plot(xy[:,0],xy[:,1],color='#8b969f',lw=2,zorder=1)
+        mid=xy.mean(axis=0)
+        if (a,b)==('B','A'):mid[0]+=.45
+        else:mid[1]+=.15 if mid[1]>0 else -.2
+        ax.text(*mid,str(w),ha='center',va='center',zorder=5,fontsize=15,
+                weight='bold' if w!=base else 'normal',
+                bbox={'facecolor':'#f8dab3' if w!=base else 'white','edgecolor':'none','pad':2})
+    xy=np.array([nodes[n] for n in path]);ax.plot(xy[:,0],xy[:,1],color='#006699',lw=3.5,zorder=2)
+    for name,(x,y) in nodes.items():
+        ax.scatter([x],[y],s=220,facecolor='black' if name in ['O','D'] else 'white',
+                   edgecolor='#43525d',lw=1.3,zorder=4)
+        ax.text(x,y,name,ha='center',va='center',color='white' if name in ['O','D'] else '#23343e',
+                weight='bold',fontsize=13,zorder=6)
+    ax.set(xlim=(-.7,6.7),ylim=(-2.8,3),aspect='equal',xticks=[],yticks=[],
+           title=['1 · Temps inicials','2 · Obres entre B i A','3 · Retard entre A i D'][index])
+    ax.text(3,-3.15,' → '.join(path)+f'\n{total} minuts',ha='center',va='top',fontsize=14,color='#006699')
+    for s in ax.spines.values():s.set_visible(False)
+fig.legend(handles=[Line2D([],[],color='#006699',lw=3,label='Ruta de menor temps'),
+                    Line2D([],[],color='#8b969f',lw=2,label='Altres connexions')],
+           loc='outside lower center',ncol=2,frameon=False,fontsize=13)
+fig.suptitle('Mateixes ciutats i connexions · Costos dels trams en minuts',fontsize=14)
+fig.savefig(root/'assets/img/generated/impedancies-xarxa.svg',facecolor='white',metadata={'Date':None})
+plt.close(fig)
+```

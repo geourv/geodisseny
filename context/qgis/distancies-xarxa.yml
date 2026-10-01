@@ -1,0 +1,153 @@
+id: distancies-xarxa
+title: Ruta i accessibilitat amb el pas P2 obert i tancat
+source_prompt: context/qgis/distancies.md
+plugins: [processing]
+compat: {qgis: '>=3.44'}
+data:
+  - {id: distancies-ruta-xarxa, type: vector, path: distancies-vilaseca-20261001/resultats/ruta-xarxa-obert.gpkg}
+  - {id: distancies-servei03, type: vector, path: distancies-vilaseca-20261001/resultats/servei-03-min.gpkg}
+  - {id: distancies-servei06, type: vector, path: distancies-vilaseca-20261001/resultats/servei-06-min.gpkg}
+  - {id: distancies-servei12, type: vector, path: distancies-vilaseca-20261001/resultats/servei-12-min.gpkg}
+setup:
+  - {action: set_project_crs, auth_id: 'EPSG:25831'}
+  - {action: load_raster, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/fonts/ortofoto-2025.tif, name: Ortofoto ICGC 2025}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/dades/xarxa-oberta.gpkg, name: Xarxa oberta}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/resultats/servei-12-min.gpkg, name: Accessible en 12 min}
+  - {action: set_layer_visible, layer: Accessible en 12 min, visible: false}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/resultats/servei-06-min.gpkg, name: Accessible en 6 min}
+  - {action: set_layer_visible, layer: Accessible en 6 min, visible: false}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/resultats/servei-03-min.gpkg, name: Accessible en 3 min}
+  - {action: set_layer_visible, layer: Accessible en 3 min, visible: false}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/resultats/servei-tancat-06-min.gpkg, name: 6 min amb el pas tancat}
+  - {action: set_layer_visible, layer: 6 min amb el pas tancat, visible: false}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/resultats/linia-euclidiana.gpkg, name: Línia recta}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/resultats/ruta-xarxa-obert.gpkg, name: Ruta de xarxa 454 m}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/dades/pas-p2.gpkg, name: Pas P2}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/dades/extrems.gpkg, name: Extrems O i D}
+  - {action: set_layer_visible, layer: Extrems O i D, visible: false}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/dades/origen.gpkg, name: Origen O}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/dades/desti.gpkg, name: Destí D}
+  - {action: zoom_to_layer, layer: Extrems O i D, scale: 0.9}
+  - {action: clear_message_bar}
+captures:
+  - id: distancies-xarxa-parametres
+    title: Camí més curt amb els extrems explícits
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:native:shortestpathpointtopoint'}
+    camera:
+      mode: crop
+      target: {object_name: 'unaltracapturaProcessingParameter:START_POINT'}
+      output_size: {width: 900, height: 490}
+    steps:
+      - action: open_processing_algorithm_dialog
+        algorithm: native:shortestpathpointtopoint
+        parameters:
+          INPUT: Xarxa oberta
+          STRATEGY: 0
+          START_POINT: '344407,4553668.36 [EPSG:25831]'
+          END_POINT: '344473.01,4554030.72 [EPSG:25831]'
+          DEFAULT_DIRECTION: 2
+          TOLERANCE: 0
+          POINT_TOLERANCE: 0.1
+          OUTPUT: TEMPORARY_OUTPUT
+    drawings:
+      - type: callout
+        target: {object_name: 'unaltracapturaProcessingParameter:START_POINT'}
+        text: Origen O
+        number: 1
+        number_style: label
+        target_marker: box
+        colour: information
+        placement: right
+        max_width: 120
+      - type: callout
+        target: {object_name: 'unaltracapturaProcessingParameter:END_POINT'}
+        text: Destí D
+        number: 2
+        number_style: label
+        target_marker: box
+        colour: ember
+        placement: right
+        max_width: 120
+    output:
+      path: assets/captures/distancies-xarxa-parametres.png
+      annotations_svg: assets/captures/distancies-xarxa-parametres.annotations.svg
+      manifest: context/qgis/manifests/distancies-xarxa-parametres.yml
+  - id: distancies-xarxa-resultat
+    title: Comparar la recta amb la ruta pel pas de l'autopista
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: close_transients}
+      - {action: zoom_to_layer, layer: Extrems O i D, scale: 1.7}
+      - {action: clear_message_bar}
+    drawings:
+      - type: callout
+        target: {layer_name: Pas P2}
+        text: La ruta utilitza aquest pas
+        target_marker: box
+        colour: information
+        placement: left
+        max_width: 205
+    output:
+      path: assets/captures/distancies-xarxa-resultat.png
+      annotations_svg: assets/captures/distancies-xarxa-resultat.annotations.svg
+      manifest: context/qgis/manifests/distancies-xarxa-resultat.yml
+  - id: distancies-isocrones-parametres
+    title: Convertir dotze minuts a hores
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:native:serviceareafrompoint'}
+    camera:
+      mode: crop
+      target: {object_name: 'unaltracapturaProcessingParameter:TRAVEL_COST2'}
+      output_size: {width: 900, height: 520}
+    steps:
+      - action: open_processing_algorithm_dialog
+        algorithm: native:serviceareafrompoint
+        parameters:
+          INPUT: Xarxa oberta
+          STRATEGY: 1
+          SPEED_FIELD: v_kmh
+          DEFAULT_SPEED: 5
+          DEFAULT_DIRECTION: 2
+          START_POINT: '344407,4553668.36 [EPSG:25831]'
+          TRAVEL_COST2: 0.2
+          OUTPUT_LINES: TEMPORARY_OUTPUT
+    drawings:
+      - type: callout
+        target: {object_name: 'unaltracapturaProcessingParameter:TRAVEL_COST2'}
+        text: '12 min = 0,20 hores'
+        target_marker: box
+        colour: information
+        placement: right
+        max_width: 190
+    output:
+      path: assets/captures/distancies-isocrones-parametres.png
+      annotations_svg: assets/captures/distancies-isocrones-parametres.annotations.svg
+      manifest: context/qgis/manifests/distancies-isocrones-parametres.yml
+  - id: distancies-isocrones-resultat
+    title: Trams accessibles en tres, sis i dotze minuts
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: close_transients}
+      - {action: set_layer_visible, layer: Línia recta, visible: false}
+      - {action: set_layer_visible, layer: Ruta de xarxa 454 m, visible: false}
+      - {action: set_layer_visible, layer: Accessible en 12 min, visible: true}
+      - {action: set_layer_visible, layer: Accessible en 6 min, visible: true}
+      - {action: set_layer_visible, layer: Accessible en 3 min, visible: true}
+      - {action: set_layer_visible, layer: 6 min amb el pas tancat, visible: true}
+      - {action: zoom_to_layer, layer: Accessible en 12 min, scale: 1.1}
+      - {action: clear_message_bar}
+    drawings:
+      - type: callout
+        target: {item_text: 6 min amb el pas tancat}
+        text: El tancament limita la connexió
+        target_marker: box
+        colour: ember
+        placement: right
+        max_width: 205
+    output:
+      path: assets/captures/distancies-isocrones-resultat.png
+      annotations_svg: assets/captures/distancies-isocrones-resultat.annotations.svg
+      manifest: context/qgis/manifests/distancies-isocrones-resultat.yml

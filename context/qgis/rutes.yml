@@ -1,0 +1,46 @@
+id: xarxa-ficticia
+title: Configuració de la ruta més curta
+source_prompt: context/qgis/rutes.md
+compat:
+  qgis: '>=3.28'
+data:
+  - id: xarxa-ficticia
+    type: vector
+    path: xarxa.geojson
+setup:
+  - action: set_project_crs
+    auth_id: EPSG:25831
+  - action: load_vector
+    path: tmp/dades-docents/qgis/xarxa.geojson
+    name: Xarxa fictícia
+  - action: zoom_to_layer
+    layer: Xarxa fictícia
+  - action: clear_message_bar
+captures:
+  - id: ruta-parametres
+    title: Xarxa, estratègia i extrems
+    mode: window
+    target:
+      object_name: unaltracapturaProcessingDialog:native:shortestpathpointtopoint
+    steps:
+      - action: open_processing_algorithm_dialog
+        algorithm: native:shortestpathpointtopoint
+        parameters:
+          INPUT: Xarxa fictícia
+          STRATEGY: 0
+          START_POINT: '350100,4550200 [EPSG:25831]'
+          END_POINT: '350700,4550200 [EPSG:25831]'
+          DEFAULT_DIRECTION: 2
+          OUTPUT: TEMPORARY_OUTPUT
+        wait_ms: 900
+    drawings:
+      - type: rect
+        colour: information
+        fill: false
+        stroke: 2
+        target:
+          object_name: unaltracapturaProcessingParameter:STRATEGY
+    output:
+      path: assets/captures/ruta-parametres.png
+      annotations_svg: assets/captures/ruta-parametres.annotations.svg
+      manifest: context/qgis/manifests/ruta-parametres.yml

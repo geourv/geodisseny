@@ -1,0 +1,57 @@
+---
+title: Moran global i local al Tarragonès
+lang: ca
+ref: figura-moran-tarragones
+format: gfm
+execute-dir: project
+execute:
+  echo: false
+  warning: false
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  inputs:
+    - context/dades/cartografia_figures.py
+    - context/inputs/seccions-tarragones.geojson
+    - context/inputs/seccions-resultats.json
+  outputs:
+    - assets/img/generated/moran-tarragones.svg
+---
+
+```{python}
+from pathlib import Path
+import importlib.util
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.patches import Patch
+root = Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root == root.parent: raise RuntimeError('No es troba el projecte')
+    root = root.parent
+spec = importlib.util.spec_from_file_location('maps', root/'context/dades/cartografia_figures.py')
+maps = importlib.util.module_from_spec(spec); spec.loader.exec_module(maps)
+features, result = maps.load(root)
+rows = [f['properties'] for f in features if 'moran_z' in f['properties']]
+z = np.array([r['moran_z'] for r in rows]); lag = np.array([r['moran_lag'] for r in rows])
+slope = z @ lag / (z @ z)
+assert np.isclose(slope, result['moran']['I']) and len(rows) == 150
+fig, axes = plt.subplots(1, 2, figsize=(10.7, 5.5), layout='constrained')
+ax = axes[0]
+ax.scatter(z, lag, s=24, color='#326b94', alpha=.65)
+x = np.array([z.min()-.2, z.max()+.2]); ax.plot(x, slope*x, color='#bd3644', lw=2)
+ax.axhline(0, color='#87939e', lw=.8); ax.axvline(0, color='#87939e', lw=.8)
+ax.set(title='A · Diagrama de Moran', xlabel='Valor estandarditzat de log(1 + q)',
+       ylabel='Mitjana estandarditzada dels veïns')
+ax.text(.03, .97, 'n = 150\nI = 0,144\npseudo-p = 0,0024', transform=ax.transAxes,
+        va='top', bbox={'facecolor':'white','edgecolor':'none','alpha':.9})
+palette = {'HH':'#c73942','LH':'#90b9d6','LL':'#27608f','HL':'#edb193'}
+def colour(p):
+    if 'moran_z' not in p: return '#666f78'
+    return palette[p['moran_quadrant']] if p['moran_fdr'] else '#e1e4e8'
+maps.draw(axes[1], features, colour, 'B · Moran local\ndesprés de BH-FDR')
+fig.legend(handles=[Patch(facecolor='#c73942', label='HH: 1 secció'),
+                    Patch(facecolor='#e1e4e8', label='No destacada: 149'),
+                    Patch(facecolor='#666f78', label='No calculable: 1')],
+           loc='outside lower center', ncol=3, frameon=False, fontsize=14)
+maps.save(fig, root, 'moran-tarragones')
+```

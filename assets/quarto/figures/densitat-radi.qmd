@@ -1,0 +1,49 @@
+---
+title: Amplada de banda i concentracions locals
+lang: ca
+ref: figura-densitat-radi
+format: gfm
+execute-dir: project
+execute:
+  echo: false
+  warning: false
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  outputs:
+    - assets/img/generated/densitat-radi.svg
+---
+
+```{python}
+from pathlib import Path
+import numpy as np
+import matplotlib.pyplot as plt
+
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root==root.parent:raise RuntimeError('No es troba el projecte')
+    root=root.parent
+out=root/'assets/img/generated/densitat-radi.svg'
+out.parent.mkdir(parents=True,exist_ok=True)
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':14,'svg.fonttype':'none'})
+points=np.array([[1,1],[1.4,1.2],[1.8,.8],[2,1.8],[4,3.7],[4.4,4],[4.8,3.6],[3,2.5]])
+x=np.linspace(0,6,201);y=np.linspace(0,5,171);xx,yy=np.meshgrid(x,y)
+surfaces=[]
+for h in [.4,1.2]:
+    surface=sum(np.exp(-((xx-px)**2+(yy-py)**2)/(2*h*h))/(2*np.pi*h*h) for px,py in points)
+    assert np.all(surface>=0)
+    surfaces.append(surface)
+vmax=max(s.max() for s in surfaces)
+fig,axes=plt.subplots(1,2,figsize=(8,4.9),sharey=True)
+fig.subplots_adjust(left=.08,right=.98,bottom=.32,top=.88,wspace=.15)
+for ax,surface,label in zip(axes,surfaces,['h = 0,4 km','h = 1,2 km']):
+    image=ax.imshow(surface,origin='lower',extent=(0,6,0,5),cmap='YlOrRd',vmin=0,vmax=vmax)
+    ax.scatter(points[:,0],points[:,1],s=20,facecolor='#003366',edgecolor='white',lw=.6)
+    ax.set(title=label,xlabel='Est (km)',xticks=[0,2,4,6],yticks=[0,1,2,3,4,5])
+axes[0].set_ylabel('Nord (km)')
+color_axis=fig.add_axes([.15,.14,.7,.035])
+bar=fig.colorbar(image,cax=color_axis,orientation='horizontal')
+bar.set_label('Intensitat estimada (punts/km²) · mateixa escala')
+fig.savefig(out,facecolor='white',metadata={'Date':None})
+plt.close(fig)
+```

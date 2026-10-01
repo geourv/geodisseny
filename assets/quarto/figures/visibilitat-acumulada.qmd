@@ -1,0 +1,95 @@
+---
+title: Acumulació de conques visuals des d'una carretera
+lang: ca
+ref: figura-visibilitat-acumulada
+format: gfm
+execute-dir: project
+execute:
+  echo: false
+  warning: false
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  outputs:
+    - assets/img/generated/visibilitat-acumulada.svg
+---
+
+```{python}
+from pathlib import Path
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.colors import BoundaryNorm, ListedColormap
+
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root==root.parent:raise RuntimeError('No es troba el projecte')
+    root=root.parent
+out=root/'assets/img/generated/visibilitat-acumulada.svg'
+out.parent.mkdir(parents=True,exist_ok=True)
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':13,'svg.fonttype':'none'})
+ny,nx=18,24
+yy,xx=np.mgrid[0:ny,0:nx]
+terrain=30+1.2*yy+24*np.exp(-((xx-12)**2/8+(yy-9)**2/32))
+terrain+=18*np.exp(-((xx-5)**2/12+(yy-13)**2/8))
+observers=[(2,2),(2,6),(3,10),(5,13),(6,17),(6,21)]
+
+def elevations(x,y):
+    x=np.clip(x,0,nx-1);y=np.clip(y,0,ny-1)
+    x0=np.floor(x).astype(int);y0=np.floor(y).astype(int)
+    x1=np.minimum(x0+1,nx-1);y1=np.minimum(y0+1,ny-1)
+    fx=x-x0;fy=y-y0
+    return ((1-fx)*(1-fy)*terrain[y0,x0]+fx*(1-fy)*terrain[y0,x1]+
+            (1-fx)*fy*terrain[y1,x0]+fx*fy*terrain[y1,x1])
+
+def viewshed(origin):
+    oy,ox=origin;result=np.zeros((ny,nx),dtype=int)
+    for y,x in np.ndindex(result.shape):
+        n=max(3,int(np.hypot(x-ox,y-oy)*4)+1)
+        t=np.linspace(0,1,n)[1:-1]
+        surface=elevations(ox+t*(x-ox),oy+t*(y-oy))
+        ray=terrain[oy,ox]+1.7+t*((terrain[y,x]+2)-(terrain[oy,ox]+1.7))
+        result[y,x]=int(np.all(surface<=ray))
+    return result
+
+binary=np.stack([viewshed(o) for o in observers]);accumulated=binary.sum(axis=0)
+assert binary.shape==(6,18,24) and set(np.unique(binary))=={0,1}
+assert len(np.unique(accumulated))>=5 and accumulated.max()<=6
+fig=plt.figure(figsize=(8,9.2),layout='constrained')
+grid=fig.add_gridspec(2,2,height_ratios=[1,1.65])
+axes=[fig.add_subplot(grid[0,0]),fig.add_subplot(grid[0,1]),fig.add_subplot(grid[1,:])]
+extent=(-25,1175,-25,875)
+image=axes[0].imshow(terrain,origin='lower',extent=extent,cmap='terrain')
+bar=fig.colorbar(image,ax=axes[0],orientation='horizontal',pad=.08,shrink=.9)
+bar.set_label('Cota simulada (m)',fontsize=12);bar.ax.tick_params(labelsize=11)
+axes[1].imshow(binary[2],origin='lower',extent=extent,cmap=ListedColormap(['#eeeeee','#39734d']),vmin=0,vmax=1)
+axes[1].text(.02,.9,'0: ocult · 1: visible',transform=axes[1].transAxes,fontsize=11,
+             bbox={'facecolor':'white','edgecolor':'none','alpha':1})
+colors=['#f7fbff','#deebf7','#c6dbef','#9ecae1','#6baed6','#3182bd','#08519c']
+image=axes[2].imshow(accumulated,origin='lower',extent=extent,cmap=ListedColormap(colors),
+                     norm=BoundaryNorm(np.arange(-.5,7),7))
+for (y,x),value in np.ndenumerate(accumulated):
+    axes[2].text(x*50,y*50,str(value),ha='center',va='center',fontsize=11,
+                 color='white' if value>=5 else '#222222')
+for ax in axes:
+    ax.set(xlabel='Est local (m)',ylabel='Nord local (m)',xticks=[0,400,800],yticks=[0,400,800])
+    ax.plot([x*50 for y,x in observers],[y*50 for y,x in observers],color='#990000',lw=2,zorder=3)
+    ax.scatter([x*50 for y,x in observers],[y*50 for y,x in observers],facecolor='#990000',
+                edgecolor='white',s=35,zorder=4)
+axes[0].set_title('A · Relleu i 6 observadors')
+axes[1].set_title('B · Conca de l’observador 3')
+axes[2].set_title('C · Acumulació de les sis conques')
+for i,(y,x) in enumerate(observers,1):
+    for ax in axes:
+        ax.annotate(f'O{i}',(x*50,y*50),xytext=(0,-16),textcoords='offset points',
+                    ha='center',fontsize=11,color='#990000',zorder=7,
+                    bbox={'facecolor':'white','edgecolor':'none','alpha':.93,'pad':.8})
+axes[2].set_xticks(np.arange(-25,1200,50),minor=True)
+axes[2].set_yticks(np.arange(-25,900,50),minor=True)
+axes[2].grid(which='minor',color='#cccccc',lw=.4)
+axes[2].tick_params(which='minor',length=0)
+bar=fig.colorbar(image,ax=axes[2],orientation='horizontal',ticks=range(7),pad=.07,shrink=.8,fraction=.05)
+bar.set_label('Nombre d’observadors amb visió de la cel·la',fontsize=12)
+bar.ax.tick_params(labelsize=11)
+fig.savefig(out,facecolor='white',metadata={'Date':None})
+plt.close(fig)
+```

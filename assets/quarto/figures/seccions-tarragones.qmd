@@ -1,0 +1,56 @@
+---
+title: Autoconsum i antiguitat per seccions del Tarragonès
+lang: ca
+ref: figura-seccions-tarragones
+format: gfm
+execute-dir: project
+execute:
+  echo: false
+  warning: false
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  inputs:
+    - context/dades/cartografia_figures.py
+    - context/inputs/seccions-tarragones.geojson
+    - context/inputs/seccions-resultats.json
+  outputs:
+    - assets/img/generated/seccions-tarragones.svg
+---
+
+```{python}
+from pathlib import Path
+import importlib.util
+import matplotlib.pyplot as plt
+from matplotlib.colors import BoundaryNorm, ListedColormap
+from matplotlib.cm import ScalarMappable
+from matplotlib.patches import Patch
+root = Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root == root.parent: raise RuntimeError('No es troba el projecte')
+    root = root.parent
+spec = importlib.util.spec_from_file_location('maps', root/'context/dades/cartografia_figures.py')
+maps = importlib.util.module_from_spec(spec); spec.loader.exec_module(maps)
+features, result = maps.load(root)
+fig, axes = plt.subplots(1, 2, figsize=(10.8, 6.1), layout='constrained')
+definitions = [
+    ('kw_per_100_buildings', [0, 10, 30, 100, 300, 1000, 4000],
+     ['#eff3ff','#c6dbef','#9ecae1','#6baed6','#3182bd','#08519c'],
+     'A · Potència registrada\nconeguda', 'kW per 100 edificis funcionals',
+     lambda p: p['moran_sample']),
+    ('age_median_exact', [0, 20, 40, 60, 80, 100, 200],
+     ['#ffffd4','#fee391','#fec44f','#fe9929','#d95f0e','#993404'],
+     'B · Antiguitat\nmediana', 'Anys respecte de 2026',
+     lambda p: p['age_exact_n'] >= 10)]
+for ax, (field, bounds, colours, title, label, valid) in zip(axes, definitions):
+    cmap = ListedColormap(colours); norm = BoundaryNorm(bounds, cmap.N, clip=True)
+    values = [f['properties'][field] for f in features if valid(f['properties'])]
+    assert min(values) >= bounds[0] and max(values) <= bounds[-1]
+    maps.draw(ax, features, lambda p: cmap(norm(p[field])) if valid(p) else '#b6b9bd', title)
+    bar = fig.colorbar(ScalarMappable(norm=norm, cmap=cmap), ax=ax, orientation='horizontal',
+                       fraction=.055, pad=.06, ticks=bounds, spacing='uniform')
+    bar.set_label(label, fontsize=14); bar.ax.tick_params(labelsize=14)
+fig.legend(handles=[Patch(facecolor='#b6b9bd', label='Dades insuficients segons el criteri de cada mapa')],
+           loc='outside lower center', frameon=False, fontsize=14)
+maps.save(fig, root, 'seccions-tarragones')
+```

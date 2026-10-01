@@ -1,0 +1,54 @@
+---
+title: Antiguitat i potència registrada, una associació ecològica
+lang: ca
+ref: figura-potencia-antiguitat
+format: gfm
+execute-dir: project
+execute:
+  echo: false
+  warning: false
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  inputs:
+    - context/dades/cartografia_figures.py
+    - context/inputs/seccions-tarragones.geojson
+    - context/inputs/seccions-resultats.json
+  outputs:
+    - assets/img/generated/potencia-antiguitat.svg
+---
+
+```{python}
+from pathlib import Path
+import importlib.util
+import numpy as np
+import matplotlib.pyplot as plt
+root = Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root == root.parent: raise RuntimeError('No es troba el projecte')
+    root = root.parent
+spec = importlib.util.spec_from_file_location('maps', root/'context/dades/cartografia_figures.py')
+maps = importlib.util.module_from_spec(spec); spec.loader.exec_module(maps)
+features, result = maps.load(root)
+rows = [f['properties'] for f in features if f['properties']['association_sample']]
+x = np.array([r['age_median_exact'] for r in rows])
+y = np.log1p([r['kw_per_100_buildings'] for r in rows])
+b, a = np.polyfit(x, y, 1); residuals = y - (a+b*x)
+assert len(x) == 126 and np.isclose(np.corrcoef(x,y)[0,1], result['association']['pearson_r'])
+fig, axes = plt.subplots(1, 2, figsize=(10.1, 4.5), layout='constrained')
+axes[0].scatter(x, y, s=27, color='#326b94', alpha=.65)
+grid = np.linspace(x.min(), x.max(), 100)
+axes[0].plot(grid, a+b*grid, color='#bd3644', lw=2)
+axes[0].set(title='A · Associació entre seccions', xlabel='Antiguitat mediana (anys)',
+            ylabel='log(1 + kW per 100 edificis)')
+axes[0].text(.97,.97,'n = 126\nr = −0,401\nR² = 0,161', transform=axes[0].transAxes,
+             ha='right', va='top', bbox={'facecolor':'white','edgecolor':'none','alpha':.9})
+axes[1].scatter(a+b*x, residuals, s=27, color='#326b94', alpha=.65)
+axes[1].axhline(0, color='#bd3644', lw=1.5)
+axes[1].set(title='B · Residus del mateix ajust', xlabel='Valor ajustat, escala logarítmica',
+            ylabel='Observat − ajustat')
+for ax in axes:
+    ax.spines[['top','right']].set_visible(False)
+    ax.grid(alpha=.12)
+maps.save(fig, root, 'potencia-antiguitat')
+```

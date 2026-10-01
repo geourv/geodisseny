@@ -1,0 +1,96 @@
+id: autocorrelacio
+title: Moran local i Getis–Ord Gi* a les seccions censals
+source_prompt: context/qgis/autocorrelacio.md
+plugins: [processing, HotSpotAnalysis_v3]
+compat: {qgis: '>=3.44'}
+data:
+  - {id: seccions-moran-shp, type: vector, path: seccions-moran.shp}
+  - {id: seccions-moran-shx, type: file, path: seccions-moran.shx}
+  - {id: seccions-moran-dbf, type: file, path: seccions-moran.dbf}
+  - {id: seccions-moran-prj, type: file, path: seccions-moran.prj}
+  - {id: seccions-moran-cpg, type: file, path: seccions-moran.cpg}
+  - {id: seccions-lisa, type: vector, path: seccions-lisa.gpkg}
+  - {id: seccions-gi, type: vector, path: seccions-gi.gpkg}
+setup:
+  - {action: set_project_crs, auth_id: 'EPSG:25831'}
+  - {action: load_vector, path: tmp/dades-docents/qgis/seccions-moran.shp, name: Seccions · 150 casos}
+  - {action: zoom_to_layer, layer: Seccions · 150 casos}
+  - {action: clear_message_bar}
+captures:
+  - id: moran-parametres
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:hotspotanalysis:moranlocal'}
+    steps:
+      - action: open_processing_algorithm_dialog
+        algorithm: hotspotanalysis:moranlocal
+        parameters: {INPUT: Seccions · 150 casos, FIELD: log_pot, WEIGHTS_TYPE: 2, OPTIMIZE: false, BINARY_WEIGHTS: true, ROW_STANDARDIZE: true, PERMUTATIONS: 9999, TWO_TAILED: false, OUTPUT: TEMPORARY_OUTPUT}
+    drawings:
+      - type: callout
+        target: {object_name: 'unaltracapturaProcessingParameter:WEIGHTS_TYPE'}
+        text: Queen · contacte per vora o vèrtex
+        target_marker: box
+        colour: '#006699'
+        max_width: 230
+    output:
+      path: assets/captures/moran-parametres.png
+      annotations_svg: assets/captures/moran-parametres.annotations.svg
+      manifest: context/qgis/manifests/moran-parametres.yml
+  - id: moran-resultat
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: close_transients}
+      - {action: load_vector, path: tmp/dades-docents/qgis/seccions-lisa.gpkg, name: 'Moran local · p nominal menor de 0,05'}
+      - {action: zoom_to_layer, layer: Seccions · 150 casos, scale: 1.12}
+      - {action: clear_message_bar}
+    drawings:
+      - type: callout
+        target: {item_text: 'Moran local · p nominal menor de 0,05'}
+        text: Grups i atípics · sense correcció múltiple
+        target_marker: box
+        placement: right
+        colour: '#006699'
+        max_width: 240
+    output:
+      path: assets/captures/moran-resultat.png
+      annotations_svg: assets/captures/moran-resultat.annotations.svg
+      manifest: context/qgis/manifests/moran-resultat.yml
+  - id: hotspots-parametres
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:hotspotanalysis:getisordgistar'}
+    steps:
+      - action: open_processing_algorithm_dialog
+        algorithm: hotspotanalysis:getisordgistar
+        parameters: {INPUT: Seccions · 150 casos, FIELD: log_pot, WEIGHTS_TYPE: 2, OPTIMIZE: false, BINARY_WEIGHTS: true, ROW_STANDARDIZE: false, PERMUTATIONS: 9999, TWO_TAILED: true, OUTPUT: TEMPORARY_OUTPUT}
+    drawings:
+      - type: callout
+        target: {object_name: 'unaltracapturaProcessingParameter:FIELD'}
+        text: Mateix indicador, una altra pregunta local
+        target_marker: box
+        colour: '#006699'
+        max_width: 240
+    output:
+      path: assets/captures/hotspots-parametres.png
+      annotations_svg: assets/captures/hotspots-parametres.annotations.svg
+      manifest: context/qgis/manifests/hotspots-parametres.yml
+  - id: hotspots-resultat
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: close_transients}
+      - {action: set_layer_visible, layer: 'Moran local · p nominal menor de 0,05', visible: false}
+      - {action: load_vector, path: tmp/dades-docents/qgis/seccions-gi.gpkg, name: 'Gi estrella · p bilateral menor de 0,05'}
+      - {action: zoom_to_layer, layer: Seccions · 150 casos, scale: 1.12}
+      - {action: clear_message_bar}
+    drawings:
+      - type: callout
+        target: {item_text: 'Gi estrella · p bilateral menor de 0,05'}
+        text: Concentracions altes i baixes, no HL ni LH
+        target_marker: box
+        placement: right
+        colour: '#006699'
+        max_width: 240
+    output:
+      path: assets/captures/hotspots-resultat.png
+      annotations_svg: assets/captures/hotspots-resultat.annotations.svg
+      manifest: context/qgis/manifests/hotspots-resultat.yml

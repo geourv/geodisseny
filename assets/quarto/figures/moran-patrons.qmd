@@ -1,0 +1,60 @@
+---
+title: Mateixos valors, diferent autocorrelació
+lang: ca
+ref: figura-moran-patrons
+format: gfm
+execute-dir: project
+execute:
+  echo: false
+  warning: false
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  outputs:
+    - assets/img/generated/moran-patrons.svg
+---
+
+```{python}
+from pathlib import Path
+from itertools import permutations
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.patches import Polygon
+
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root==root.parent:raise RuntimeError('No es troba el projecte')
+    root=root.parent
+out=root/'assets/img/generated/moran-patrons.svg'
+out.parent.mkdir(parents=True,exist_ok=True)
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':14,'svg.fonttype':'none'})
+w=np.array([[0,1,0,0],[.5,0,.5,0],[0,.5,0,.5],[0,0,1,0]])
+def moran(x):
+    z=np.asarray(x)-np.mean(x)
+    return len(z)/w.sum()*(z@(w@z))/(z@z)
+assert moran([1,1,4,4])==.5 and moran([1,4,1,4])==-1
+perms=sorted(set(permutations([1,1,4,4])))
+assert np.allclose([moran(x) for x in perms],[.5,-1,-.5,-.5,-1,.5])
+fig,axes=plt.subplots(1,2,figsize=(8,4.7),layout='constrained')
+# A bent chain with shared edges A–B, B–C and C–D. Shapes are schematic,
+# not proportional to the assigned area attribute; topology remains explicit.
+polygons=[[(0,2),(1.2,2),(1.5,3.2),(.2,3.5),(-.2,2.8)],
+          [(0,0),(1.2,0),(1.2,2),(0,2),(-.3,.9)],
+          [(1.2,0),(3,0),(3,1.1),(2.1,1.5),(1.2,1.1)],
+          [(3,0),(4.3,.1),(4.1,2.4),(3.4,2.7),(3,1.1)]]
+centres=[(.6,2.65),(.5,1), (2.05,.6),(3.6,1.25)]
+for ax,x,title,result in zip(axes,[[1,1,4,4],[1,4,1,4]],
+                             ['Agrupació de semblants','Alternança'],['I = 0,5','I = −1']):
+    for i,value in enumerate(x):
+        ax.add_patch(Polygon(polygons[i],facecolor='#d5e2ef' if value==1 else '#003366',
+                             edgecolor='#657787',lw=1.5))
+        cx,cy=centres[i]
+        ax.text(cx,cy,f'{"ABCD"[i]}\n{value} ha',ha='center',va='center',fontsize=15,
+                 color='#003366' if value==1 else 'white')
+    ax.text(2,-.4,result,ha='center',fontsize=17)
+    ax.set(xlim=(-.5,4.6),ylim=(-.75,3.8),aspect='equal',xticks=[],yticks=[],title=title)
+    for spine in ax.spines.values():spine.set_visible(False)
+fig.supxlabel('Contactes: A–B–C–D · Geometria esquemàtica, sense escala',fontsize=12)
+fig.savefig(out,facecolor='white',metadata={'Date':None})
+plt.close(fig)
+```

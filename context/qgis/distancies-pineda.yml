@@ -1,0 +1,63 @@
+id: distancies-pineda
+title: Veure els ràsters de fricció i cost de la Pineda
+source_prompt: context/qgis/distancies.md
+plugins: [processing]
+compat: {qgis: '>=3.44'}
+data:
+  - {id: distancies-pineda-friccio, type: raster, path: distancies-vilaseca-20261001/dades/pineda-friccio.tif}
+  - {id: distancies-pineda-cost, type: raster, path: distancies-vilaseca-20261001/resultats/pineda-cost.tif}
+setup:
+  - {action: set_project_crs, auth_id: 'EPSG:25831'}
+  - {action: load_raster, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/fonts/pineda-ortofoto-2025.tif, name: Ortofoto ICGC 2025}
+  - {action: load_raster, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/fonts/pineda-mdt-5m.tif, name: MDT · altitud (no és fricció)}
+  - {action: set_layer_visible, layer: MDT · altitud (no és fricció), visible: false}
+  - {action: load_raster, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/resultats/pineda-cost.tif, name: Cost acumulat (m ponderats)}
+  - {action: set_layer_visible, layer: Cost acumulat (m ponderats), visible: false}
+  - {action: load_raster, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/dades/pineda-friccio.tif, name: Fricció · exterior 1 i interior 20}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/dades/pineda-parcella.gpkg, name: Parcel·la cadastral}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/resultats/pineda-ruta-uniforme.gpkg, name: 'Travessar · 608,3 m'}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/resultats/pineda-ruta-penalitzada.gpkg, name: 'Vorejar · 724,3 m'}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/dades/pineda-extrems.gpkg, name: Extrems O i D}
+  - {action: zoom_to_layer, layer: Parcel·la cadastral, scale: 1.35}
+  - {action: clear_message_bar}
+captures:
+  - id: distancies-pineda-friccio
+    title: El valor de les cel·les dins i fora de la parcel·la
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: zoom_to_layer, layer: Parcel·la cadastral, scale: 1.6}
+    drawings:
+      - type: callout
+        target: {item_text: Fricció · exterior 1 i interior 20}
+        text: Aquest ràster governa el cost
+        target_marker: box
+        colour: information
+        placement: right
+        max_width: 220
+    output:
+      path: assets/captures/distancies-pineda-friccio.png
+      annotations_svg: assets/captures/distancies-pineda-friccio.annotations.svg
+      manifest: context/qgis/manifests/distancies-pineda-friccio.yml
+  - id: distancies-pineda-cost
+    title: El cost creix des d'O i el camí evita les cel·les cares
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: set_layer_visible, layer: Fricció · exterior 1 i interior 20, visible: false}
+      - {action: set_layer_visible, layer: Cost acumulat (m ponderats), visible: true}
+      - {action: set_layer_visible, layer: 'Travessar · 608,3 m', visible: false}
+      - {action: zoom_to_layer, layer: Parcel·la cadastral, scale: 1.6}
+      - {action: clear_message_bar}
+    drawings:
+      - type: callout
+        target: {item_text: Cost acumulat (m ponderats)}
+        text: Cost mínim per arribar des d'O
+        target_marker: box
+        colour: information
+        placement: right
+        max_width: 225
+    output:
+      path: assets/captures/distancies-pineda-cost.png
+      annotations_svg: assets/captures/distancies-pineda-cost.annotations.svg
+      manifest: context/qgis/manifests/distancies-pineda-cost.yml

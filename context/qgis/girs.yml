@@ -1,0 +1,43 @@
+id: girs
+title: Abast de les opcions natives de ruta
+source_prompt: context/qgis/accessibilitat-ampliada.md
+plugins: [processing]
+compat: {qgis: '>=3.44'}
+data:
+  - {id: girs-xarxa, type: vector, path: distancies-vilaseca-20261001-ampliada/dades/xarxa-oberta.gpkg}
+setup:
+  - {action: set_project_crs, auth_id: 'EPSG:25831'}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001-ampliada/dades/xarxa-oberta.gpkg, name: Xarxa oberta}
+captures:
+  - id: xarxa-girs-parametres
+    title: Criteri de ruta del motor natiu
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:native:shortestpathpointtopoint'}
+    camera:
+      mode: crop
+      target: {object_name: 'unaltracapturaProcessingParameter:STRATEGY'}
+      output_size: {width: 960, height: 570}
+    steps:
+      - action: open_processing_algorithm_dialog
+        algorithm: native:shortestpathpointtopoint
+        parameters:
+          INPUT: Xarxa oberta
+          STRATEGY: 1
+          DIRECTION_FIELD: sentit
+          VALUE_FORWARD: F
+          VALUE_BACKWARD: R
+          VALUE_BOTH: B
+          DEFAULT_DIRECTION: 2
+          SPEED_FIELD: v_kmh
+          DEFAULT_SPEED: 5
+          START_POINT: '344407,4553668.36 [EPSG:25831]'
+          END_POINT: '344473.01,4554030.72 [EPSG:25831]'
+          TOLERANCE: 0
+          POINT_TOLERANCE: 0.1
+          OUTPUT: TEMPORARY_OUTPUT
+    drawings:
+      - {type: callout, target: {object_name: 'unaltracapturaProcessingParameter:STRATEGY'}, text: Minimitzar temps, target_marker: box, colour: information, placement: right, max_width: 190}
+    output:
+      path: assets/captures/xarxa-girs-parametres.png
+      annotations_svg: assets/captures/xarxa-girs-parametres.annotations.svg
+      manifest: context/qgis/manifests/xarxa-girs-parametres.yml

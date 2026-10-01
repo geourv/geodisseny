@@ -1,0 +1,71 @@
+---
+title: Centres i dispersió de potència sintètica
+lang: ca
+ref: figura-centres-potencia
+format: gfm
+execute-dir: project
+execute:
+  echo: false
+  warning: false
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  outputs:
+    - assets/img/generated/centres-potencia.svg
+---
+
+```{python}
+from pathlib import Path
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.patches import Ellipse, Rectangle
+from matplotlib.lines import Line2D
+
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root==root.parent: raise RuntimeError('No es troba el projecte')
+    root=root.parent
+out=root/'assets/img/generated/centres-potencia.svg'
+out.parent.mkdir(parents=True,exist_ok=True)
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':13,'svg.fonttype':'none',
+                     'axes.spines.top':False,'axes.spines.right':False})
+xy=np.array([[0.,0.],[4.,0.],[0.,4.],[4.,4.]])
+w=np.array([10.,10.,20.,60.])
+centre=np.average(xy,axis=0,weights=w)
+mean=xy.mean(axis=0)
+delta=xy-centre
+cov=(delta.T*w)@delta/w.sum()
+values,vectors=np.linalg.eigh(cov)
+order=np.argsort(values)[::-1]
+values,vectors=values[order],vectors[:,order]
+angle=np.degrees(np.arctan2(vectors[1,0],vectors[0,0]))
+assert np.allclose(centre,[2.8,3.2]) and np.allclose(mean,[2,2])
+assert np.all(values>=0)
+assert np.allclose(cov,[[3.36,.64],[.64,2.56]])
+assert np.isclose(np.trace(cov),5.92)
+fig,axes=plt.subplots(1,2,figsize=(8,4.8),layout='constrained',sharey=True)
+for ax,weights,title in zip(axes,[np.ones(4),w],['Pes igual per registre','Pes segons potència']):
+    center=np.average(xy,axis=0,weights=weights)
+    deviations=xy-center
+    covariance=(deviations.T*weights)@deviations/weights.sum()
+    val,vec=np.linalg.eigh(covariance);order=np.argsort(val)[::-1];val=val[order];vec=vec[:,order]
+    direction=np.degrees(np.arctan2(vec[1,0],vec[0,0]))
+    ax.add_patch(Rectangle((-1,-1),7,6,facecolor='#f5f3ed',edgecolor='#9d9d9d',lw=1))
+    ax.scatter(xy[:,0],xy[:,1],s=weights/weights.sum()*600,
+               facecolor='#b4c7db',edgecolor='#003366',zorder=4)
+    for i,((x,y),p) in enumerate(zip(xy,w),1):
+        ax.annotate(f'{int(p)} kW',(x,y),xytext=(5,-19),textcoords='offset points',fontsize=13)
+    ax.add_patch(Ellipse(center,2*np.sqrt(val[0]),2*np.sqrt(val[1]),angle=direction,
+                         fill=False,color='#990000',lw=2))
+    ax.scatter(*center,marker='D',color='#990000',s=65,zorder=5)
+    ax.scatter(2.5,2,marker='x',color='#555555',s=65,zorder=5)
+    ax.set(xlim=(-1.2,6.2),ylim=(-1.2,5.4),aspect='equal',xlabel='Est (km)',title=title,
+           xticks=[0,2,4,6],yticks=[0,2,4])
+axes[0].set_ylabel('Nord (km)')
+fig.legend(handles=[Line2D([],[],color='#990000',marker='D',linestyle='none',label='Centre'),
+                    Line2D([],[],color='#990000',lw=2,label='El·lipse: k = 1'),
+                    Line2D([],[],color='#555555',marker='x',linestyle='none',label='Centroide del polígon')],
+           loc='outside lower center',ncol=3,frameon=False,fontsize=13)
+fig.savefig(out,facecolor='white',metadata={'Date':None})
+plt.close(fig)
+```

@@ -1,0 +1,65 @@
+id: visibilitat
+title: Conca visual petroquímica i mostreig als receptors
+source_prompt: context/qgis/visibilitat.md
+plugins: [processing]
+compat: {qgis: '>=3.44'}
+data:
+  - {id: mdt-visibilitat, type: raster, path: mdt-visibilitat.tif}
+  - {id: conca-centre, type: raster, path: conca-centre.tif}
+  - {id: conca-centre-estil, type: file, path: conca-centre.qml}
+  - {id: receptors-visibilitat, type: vector, path: receptors-visibilitat.gpkg}
+  - {id: receptors-mostreig, type: vector, path: receptors-mostreig.gpkg}
+setup:
+  - {action: set_project_crs, auth_id: 'EPSG:25831'}
+  - {action: load_raster, path: tmp/dades-docents/qgis/mdt-visibilitat.tif, name: MDT 25 m}
+  - {action: zoom_to_layer, layer: MDT 25 m}
+  - {action: clear_message_bar}
+captures:
+  - id: visibilitat-parametres
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:gdal:viewshed'}
+    steps:
+      - action: open_processing_algorithm_dialog
+        algorithm: gdal:viewshed
+        parameters:
+          INPUT: MDT 25 m
+          BAND: 1
+          OBSERVER: '350900.88274222304,4560059.918881127 [EPSG:25831]'
+          OBSERVER_HEIGHT: 30
+          TARGET_HEIGHT: 1.7
+          MAX_DISTANCE: 0
+          EXTRA: '-vv 1 -iv 0 -ov 255 -a_nodata 255 -cc 0.85714'
+          OUTPUT: TEMPORARY_OUTPUT
+    drawings:
+      - type: callout
+        target: {object_name: 'unaltracapturaProcessingParameter:OBSERVER_HEIGHT'}
+        text: Altura assumida sobre el terreny
+        target_marker: box
+        colour: '#006699'
+        max_width: 230
+    output:
+      path: assets/captures/visibilitat-parametres.png
+      annotations_svg: assets/captures/visibilitat-parametres.annotations.svg
+      manifest: context/qgis/manifests/visibilitat-parametres.yml
+  - id: intervisibilitat-mostreig
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:native:rastersampling'}
+    steps:
+      - {action: close_transients}
+      - {action: load_raster, path: tmp/dades-docents/qgis/conca-centre.tif, name: Conca · centre a 30 m}
+      - {action: load_vector, path: tmp/dades-docents/qgis/receptors-mostreig.gpkg, name: Receptors · resultat 0 o 1}
+      - {action: load_vector, path: tmp/dades-docents/qgis/receptors-visibilitat.gpkg, name: Caps de municipi}
+      - action: open_processing_algorithm_dialog
+        algorithm: native:rastersampling
+        parameters: {INPUT: Caps de municipi, RASTERCOPY: Conca · centre a 30 m, COLUMN_PREFIX: centre_, OUTPUT: TEMPORARY_OUTPUT}
+    drawings:
+      - type: callout
+        target: {object_name: 'unaltracapturaProcessingParameter:COLUMN_PREFIX'}
+        text: centre_1 guardarà el valor de la banda
+        target_marker: box
+        colour: '#006699'
+        max_width: 235
+    output:
+      path: assets/captures/intervisibilitat-mostreig.png
+      annotations_svg: assets/captures/intervisibilitat-mostreig.annotations.svg
+      manifest: context/qgis/manifests/intervisibilitat-mostreig.yml

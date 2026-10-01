@@ -1,0 +1,84 @@
+id: accessibilitat-real
+title: Ruta ICGC i canvi local de sentit
+source_prompt: context/qgis/accessibilitat.md
+plugins: [processing]
+compat:
+  qgis: '>=3.44'
+data:
+  - id: xarxa-copia-impedancia
+    type: vector
+    path: xarxa-copia-impedancia.gpkg
+  - id: ruta-xarxa-base
+    type: vector
+    path: ruta-xarxa-base.gpkg
+  - id: ruta-xarxa-sentit
+    type: vector
+    path: ruta-xarxa-sentit.gpkg
+  - id: xarxa-detall
+    type: vector
+    path: xarxa-detall.gpkg
+setup:
+  - action: set_project_crs
+    auth_id: EPSG:25831
+  - action: load_vector
+    path: tmp/dades-docents/qgis/xarxa-copia-impedancia.gpkg
+    name: RTT · còpia (4512 eixos)
+  - action: zoom_to_layer
+    layer: RTT · còpia (4512 eixos)
+  - action: clear_message_bar
+captures:
+  - id: accessibilitat-menu
+    title: Ruta curta sobre dades reals
+    mode: window
+    target:
+      object_name: unaltracapturaProcessingDialog:native:shortestpathpointtopoint
+    camera:
+      mode: crop
+      target:
+        object_name: unaltracapturaProcessingParameter:STRATEGY
+      output_size:
+        width: 500
+        height: 315
+    steps:
+      - action: open_processing_algorithm_dialog
+        algorithm: native:shortestpathpointtopoint
+        parameters:
+          INPUT: RTT · còpia (4512 eixos)
+          STRATEGY: 0
+          START_POINT: '344141.54,4553070.82 [EPSG:25831]'
+          END_POINT: '353180.77,4553971.06 [EPSG:25831]'
+          DEFAULT_DIRECTION: 2
+          TOLERANCE: 0
+          OUTPUT: TEMPORARY_OUTPUT
+        wait_ms: 800
+    output:
+      path: assets/captures/accessibilitat-menu.png
+      annotations_svg: assets/captures/accessibilitat-menu.annotations.svg
+      manifest: context/qgis/manifests/accessibilitat-menu.yml
+  - id: accessibilitat-resultat
+    title: Detall de la modificació local
+    mode: window
+    target:
+      object_name: QgisApp
+    steps:
+      - action: close_transients
+      - action: load_vector
+        path: tmp/dades-docents/qgis/ruta-xarxa-base.gpkg
+        name: Base · 10989,3 m
+      - action: load_vector
+        path: tmp/dades-docents/qgis/ruta-xarxa-sentit.gpkg
+        name: Sentit invertit · 11012,8 m
+      - action: load_vector
+        path: tmp/dades-docents/qgis/xarxa-detall.gpkg
+        name: Àmbit del detall
+      - action: set_layer_visible
+        layer: Àmbit del detall
+        visible: false
+      - action: zoom_to_layer
+        layer: Àmbit del detall
+        scale: 2.5
+      - action: clear_message_bar
+    output:
+      path: assets/captures/accessibilitat-resultat.png
+      annotations_svg: assets/captures/accessibilitat-resultat.annotations.svg
+      manifest: context/qgis/manifests/accessibilitat-resultat.yml

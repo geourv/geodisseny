@@ -1,0 +1,45 @@
+---
+title: Pujar i baixar pel mateix pendent
+lang: ca
+ref: figura-anisotropia-pendent
+format: gfm
+execute-dir: project
+execute: {echo: false, warning: false}
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  inputs: [context/inputs/accessibilitat-ampliada.json]
+  outputs: [assets/img/generated/anisotropia-pendent.svg]
+---
+
+```{python}
+from pathlib import Path
+import json
+import matplotlib.pyplot as plt
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():root=root.parent
+controls=json.loads((root/'context/inputs/accessibilitat-ampliada.json').read_text())['controls']
+assert abs(controls['ramp_check']['up']['seconds']-132)<.01
+assert abs(controls['ramp_check']['down']['seconds']-52.002)<.01
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':15,'svg.fonttype':'none'})
+fig,axes=plt.subplots(1,2,figsize=(9.5,4.8))
+fig.subplots_adjust(left=.04,right=.98,bottom=.09,top=.84,wspace=.12)
+for ax,direction,color in zip(axes,['up','down'],['#bb492f','#147b6b']):
+    ax.set(xlim=(-10,110),ylim=(-14,27));ax.axis('off')
+    ax.fill_between([0,100],[0,10],[-2,-2],color='#ece7d8')
+    ax.plot([0,100],[0,10],color='#716647',lw=3)
+    ax.plot([0,100,100],[0,0,10],color='#999999',ls='--',lw=1.3)
+    ax.text(50,-2.9,'100 m horitzontals',ha='center')
+    ax.text(104,5,'10 m',rotation=90,ha='center',va='center')
+    start,end=((12,3),(88,10.6)) if direction=='up' else ((88,14),(12,6.4))
+    ax.annotate('',xy=end,xytext=start,arrowprops={'arrowstyle':'-|>','color':color,'lw':3,'mutation_scale':20})
+    title='A · Pujar 10 m' if direction=='up' else 'B · Baixar 10 m'
+    formula='0,72 × 100 + 6 × 10' if direction=='up' else '0,72 × 100 − 1,9998 × 10'
+    time='132 s = 2,20 min' if direction=='up' else '52 s ≈ 0,87 min'
+    ax.set_title(title,loc='left',fontsize=18,weight='bold',color=color,pad=12)
+    ax.text(50,22,time,ha='center',fontsize=19,weight='bold',color=color)
+    ax.text(50,-7,formula,ha='center',fontsize=14)
+    ax.text(50,-11,'Mateix perfil · fricció addicional 0',ha='center',fontsize=13)
+fig.savefig(root/'assets/img/generated/anisotropia-pendent.svg',facecolor='white',metadata={'Date':None})
+plt.close(fig)
+```
