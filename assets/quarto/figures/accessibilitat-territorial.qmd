@@ -1,0 +1,61 @@
+---
+title: Travessar o vorejar un solar de la Pineda
+lang: ca
+ref: figura-accessibilitat-territorial
+format: gfm
+execute-dir: project
+execute:
+  echo: false
+  warning: false
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  inputs:
+    - context/inputs/practiques-mapes.json
+    - context/inputs/ortofoto-pineda-2025.png
+    - context/inputs/ortofoto-pineda-2025.json
+  outputs:
+    - assets/img/generated/accessibilitat-territorial.svg
+---
+
+```{python}
+from pathlib import Path
+import json
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.patheffects as pe
+from matplotlib.colors import ListedColormap
+from matplotlib.patches import Polygon
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root==root.parent:raise RuntimeError('No es troba el projecte')
+    root=root.parent
+data=json.loads((root/'context/inputs/practiques-mapes.json').read_text())
+ortho=plt.imread(root/'context/inputs/ortofoto-pineda-2025.png')
+metadata=json.loads((root/'context/inputs/ortofoto-pineda-2025.json').read_text())
+assert metadata['bbox']==[347200,4550750,348050,4551420]
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':13,'svg.fonttype':'none'})
+fig,axes=plt.subplots(1,2,figsize=(9.4,4.9),layout='constrained')
+extent=np.array(data['walking_extent'])/1000
+geometry=data['solar'];polys=geometry['coordinates'] if geometry['type']=='MultiPolygon' else [geometry['coordinates']]
+for ax,scenario,title in zip(axes,['obert','penalitzat'],['A · Cost uniforme','B · Solar amb cost 20']):
+    stats=data['controls']['walking'][scenario]
+    ax.imshow(ortho,origin='upper',extent=extent,zorder=0)
+    for polygon in polys:
+        ax.add_patch(Polygon(np.array(polygon[0])/1000,facecolor='#f5c159' if scenario=='penalitzat' else 'none',
+                            edgecolor='#ffe08a',lw=1.8,alpha=.3 if scenario=='penalitzat' else 1,zorder=1))
+    xy=np.array(data['walking_paths'][scenario])/1000
+    ax.plot(xy[:,0],xy[:,1],color='#006699',lw=2.7,zorder=3,
+            path_effects=[pe.Stroke(linewidth=5,foreground='white'),pe.Normal()])
+    for label,point in [('O',data['walking_start']),('D',data['walking_end'])]:
+        x,y=np.array(point)/1000;ax.plot(x,y,'o',color='#b33442',ms=6,zorder=4)
+        ax.text(x,y+.045,label,ha='center',color='#8d2632',weight='bold',zorder=5,
+                bbox={'facecolor':'white','edgecolor':'none','alpha':.95,'pad':1})
+    ax.set(title=title+'\n'+f"{stats['length_m']:.1f} m".replace('.',','),
+           xlabel='Est UTM (km)',ylabel='Nord UTM (km)',aspect='equal')
+    ax.ticklabel_format(useOffset=False,style='plain');ax.tick_params(labelsize=13)
+    ax.text(.04,.04,'Graella de 5 m',transform=ax.transAxes,
+            bbox={'facecolor':'white','edgecolor':'none','alpha':.95})
+out=root/'assets/img/generated/accessibilitat-territorial.svg'
+fig.savefig(out,facecolor='white',metadata={'Date':None});plt.close(fig)
+```

@@ -1,0 +1,163 @@
+---
+title: Sis preguntes sobre un abocador en una conca fictícia
+lang: ca
+ref: figura-steinitz-abocador-exemple
+format: gfm
+execute-dir: project
+execute: {echo: false, warning: false}
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  outputs: [assets/img/generated/steinitz-abocador-exemple.svg]
+---
+
+```{python}
+from pathlib import Path
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle, Polygon, FancyBboxPatch, Circle
+from matplotlib.lines import Line2D
+
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root==root.parent:raise RuntimeError('Projecte absent')
+    root=root.parent
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':14,'svg.fonttype':'none'})
+blue='#006699';green='#39734d';orange='#b45c29';purple='#7154a0';grey='#747574'
+river=np.array([[810,650],[760,540],[780,420],[690,320],[710,220],[650,100],[630,0]])
+well=(620,60)
+sites={'A':(250,350,180,100),'B':(450,110,180,100)}
+routes={'A':np.array([[140,540],[320,540],[320,450]]),
+        'B':np.array([[140,540],[500,540],[500,210]])}
+# Les rutes parteixen del mateix punt i acaben al límit de cada recinte.
+# Només comproven la comparació geomètrica curt/llarg del relat fictici.
+lengths={k:np.linalg.norm(np.diff(v,axis=0),axis=1).sum() for k,v in routes.items()}
+assert np.allclose(routes['A'][0],routes['B'][0]) and lengths['A']<lengths['B']
+for name,(x,y,w,h) in sites.items():
+    end=routes[name][-1]
+    assert x<=end[0]<=x+w and end[1]==y+h
+
+def label(ax,x,y,text,color='#252525',ha='center',weight='normal'):
+    return ax.text(x,y,text,ha=ha,va='center',fontsize=13,color=color,fontweight=weight,zorder=12,
+                   bbox={'facecolor':'white','edgecolor':'none','alpha':.9,'pad':1.5})
+
+def arrow(ax,start,end,color,lw=2,style='-',rad=0):
+    ax.annotate('',xy=end,xytext=start,arrowprops={
+        'arrowstyle':'->','color':color,'lw':lw,'linestyle':style,
+        'connectionstyle':f'arc3,rad={rad}'},zorder=10)
+
+def base(ax,names=False):
+    ax.set(xlim=(0,1000),ylim=(0,650),aspect='equal',xticks=[],yticks=[])
+    ax.set_facecolor('#faf9f5')
+    for shift in [0,115,230]:
+        ax.plot([0,130,250,380,510],np.maximum([430-shift,400-shift,345-shift,285-shift,210-shift],5),
+                color='#d4d8cf',lw=1,zorder=1)
+        ax.plot([830,900,1000],[220+shift,285+shift,325+shift],color='#d4d8cf',lw=1,zorder=1)
+    for x,y,w,h in [(55,70,150,95),(75,190,145,110),(300,100,105,125),(820,170,135,120),(805,335,135,120)]:
+        ax.add_patch(Rectangle((x,y),w,h,facecolor='#eee8d3',edgecolor='#d3c7a8',lw=.6,zorder=2))
+    ax.plot(river[:,0],river[:,1],color=blue,lw=2,zorder=4)
+    ax.plot([0,1000],[540,540],color=grey,lw=4,zorder=3)
+    ax.plot([0,1000],[540,540],color='white',lw=.8,zorder=4)
+    for x,name in [(80,'N1'),(860,'N2')]:
+        for dx,dy in [(0,0),(30,10),(60,0)]:
+            ax.add_patch(Rectangle((x+dx,555+dy),22,24,facecolor='#a8a7a4',edgecolor='#626461',lw=.6,zorder=5))
+        label(ax,x+35,605,name)
+    ax.scatter(*well,s=65,facecolors='white',edgecolors=blue,lw=2,zorder=8)
+    label(ax,well[0]+60,well[1],'P',blue,weight='bold')
+    for spine in ax.spines.values():spine.set_color('#d1d3d3')
+    if names:
+        label(ax,485,585,'Carretera')
+        label(ax,165,145,'Camps')
+        label(ax,850,75,'Pou',blue)
+        arrow(ax,(790,75),(642,62),blue,lw=1.1)
+        label(ax,880,400,'Riera',blue)
+        ax.plot([40,240],[15,15],color='#222222',lw=2)
+        ax.plot([40,40],[9,21],color='#222222',lw=1)
+        ax.plot([240,240],[9,21],color='#222222',lw=1)
+        label(ax,140,52,'200 m')
+
+fig,axes=plt.subplots(3,2,figsize=(9.2,11.2),layout='constrained')
+fig.get_layout_engine().set(w_pad=.10,h_pad=.12,wspace=.06,hspace=.06)
+titles=['1 · Representació\nQuè hi ha a la conca?',
+        '2 · Procés\nCom circulen aigua i vehicles?',
+        '3 · Avaluació\nQuè cal protegir i conèixer?',
+        '4 · Canvi\nOn i com s’implanta?',
+        '5 · Impacte\nCom podria afectar el pou?',
+        '6 · Decisió\nHi ha prou informació?']
+for ax,title in zip(axes.flat,titles):ax.set_title(title,fontsize=15,color='#003366',pad=10)
+
+ax=axes[0,0];base(ax,names=True)
+
+ax=axes[0,1];base(ax)
+arrow(ax,(290,540),(650,540),grey,lw=2.8)
+label(ax,465,595,'Trànsit',grey)
+arrow(ax,(776,475),(718,350),blue,lw=2.5)
+arrow(ax,(704,200),(645,75),blue,lw=2.5)
+arrow(ax,(260,380),(588,88),blue,lw=1.7,style='--',rad=-.18)
+label(ax,300,205,'Circulació\nsubterrània?',blue)
+ax.set_xlabel('Traç discontinu: hipòtesi a contrastar',fontsize=13)
+
+ax=axes[1,0];base(ax)
+for x in [65,845]:
+    ax.add_patch(Rectangle((x,520),115,85,fill=False,edgecolor=orange,lw=2,zorder=6))
+ax.scatter(*well,s=450,facecolors='none',edgecolors=blue,lw=1.5,zorder=7)
+label(ax,450,435,'Protegir nuclis i pou',green)
+ax.add_patch(Rectangle((240,145),340,220,facecolor='#eee9dc',edgecolor='#a08b64',
+                       lw=1,linestyle='--',alpha=.75,zorder=5))
+label(ax,410,255,'Subsòl\nper investigar',orange)
+ax.set_xlabel('Els ressalts identifiquen receptors',fontsize=13)
+
+ax=axes[1,1];base(ax)
+for name,color in [('A',orange),('B',purple)]:
+    x,y,w,h=sites[name]
+    ax.add_patch(Rectangle((x,y),w,h,facecolor=color,edgecolor='none',alpha=.16,zorder=5))
+    ax.add_patch(Rectangle((x,y),w,h,fill=False,edgecolor=color,lw=2,zorder=7))
+    label(ax,x+w/2,y+h/2,name,color,weight='bold')
+    path=routes[name]
+    ax.plot(path[:,0],path[:,1],color=color,lw=2,ls='--' if name=='A' else '-',zorder=8)
+label(ax,120,475,'Origen')
+ax.set_xlabel('A: accés curt · B: accés més llarg\nMateixa capacitat: supòsit del cas',fontsize=13)
+
+ax=axes[2,0];ax.set(xlim=(0,1),ylim=(0,1));ax.set_box_aspect(.72);ax.axis('off')
+def section(ground):
+    ax.add_patch(Rectangle((.03,ground-.21),.94,.21,facecolor='#eee8d3',edgecolor='none'))
+    ax.plot([.03,.97],[ground,ground],color='#897e65',lw=1.5)
+    ax.plot([.03,.97],[ground-.14,ground-.14],color=blue,lw=1,alpha=.5)
+    ax.plot([.83,.83],[ground+.08,ground-.19],color=blue,lw=2)
+    ax.plot([.80,.86],[ground+.08,ground+.08],color=blue,lw=2)
+    ax.text(.89,ground-.08,'P',ha='left',va='center',color=blue,fontsize=13)
+section(.73);section(.28)
+ax.text(.04,.93,'Sense el nou abocador',fontsize=13,va='top')
+arrow(ax,(.24,.59),(.68,.59),blue,lw=1.4)
+ax.text(.04,.49,'Projecte · escenari de fallada',fontsize=13,va='top',color=orange)
+ax.add_patch(Polygon([[.16,.29],[.22,.41],[.40,.41],[.47,.29]],closed=True,
+                      facecolor='#b3a79c',edgecolor='#695d52',lw=1.2))
+arrow(ax,(.32,.30),(.36,.13),orange,lw=1.7,style='--')
+arrow(ax,(.37,.13),(.80,.11),orange,lw=1.7,style='--')
+ax.text(.59,.19,'?',color=orange,fontsize=19,ha='center')
+ax.text(.5,-.08,'Via potencial de lixiviats\nConnexió i efectes per estimar',ha='center',va='top',fontsize=13)
+
+ax=axes[2,1];ax.set(xlim=(0,1),ylim=(0,1));ax.set_box_aspect(.72);ax.axis('off')
+def card(x,y,w,h,text,edge,fill):
+    ax.add_patch(FancyBboxPatch((x,y),w,h,boxstyle='round,pad=0.01,rounding_size=0.025',
+                               facecolor=fill,edgecolor=edge,lw=1.2,zorder=2))
+    ax.text(x+w/2,y+h/2,text,ha='center',va='center',fontsize=13,color='#252525',zorder=3)
+for x in [.30,.50,.70]:
+    ax.add_patch(Circle((x,.89),.027,facecolor='#687b8b',edgecolor='none'))
+    ax.plot([x,x],[.81,.855],color='#687b8b',lw=3)
+ax.text(.5,.73,'Veïnat, abastament, gestor\ni administració',ha='center',va='center',fontsize=13)
+card(.10,.42,.80,.18,'Comparar efectes\ni incerteses',grey,'#f2f4f5')
+arrow(ax,(.5,.66),(.5,.61),grey,lw=1.4)
+card(.025,.045,.445,.23,'Circulació\n2 · Procés',blue,'#edf3f8')
+card(.53,.045,.445,.23,'Subsòl\n1 · Dades',orange,'#fbefe1')
+arrow(ax,(.33,.42),(.24,.28),blue,lw=1.5)
+arrow(ax,(.67,.42),(.75,.28),orange,lw=1.5)
+ax.text(.5,-.08,'Investigar abans de triar',ha='center',va='top',fontsize=13,color='#555555')
+
+handles=[Line2D([],[],color=blue,lw=2,label='Riera · P: pou'),Line2D([],[],color=grey,lw=2,label='Carretera'),
+         Line2D([],[],color=orange,lw=2,ls='--',label='Alternativa A'),Line2D([],[],color=purple,lw=2,label='Alternativa B')]
+fig.legend(handles=handles,loc='outside lower center',ncol=2,frameon=False,fontsize=13)
+fig.savefig(root/'assets/img/generated/steinitz-abocador-exemple.svg',facecolor='white',metadata={'Date':None})
+plt.close(fig)
+print('Recorreguts ficticis des del mateix origen (m):',lengths)
+```

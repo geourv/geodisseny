@@ -1,0 +1,145 @@
+id: rwalk
+title: Marxa anisòtropa i isòcrones de Vila-seca
+source_prompt: context/qgis/accessibilitat-ampliada.md
+plugins: [processing]
+compat: {qgis: '>=3.44'}
+data:
+  - {id: marxa-mdt, type: raster, path: distancies-vilaseca-20261001-ampliada/fonts/mdt-5m.tif}
+  - {id: marxa-friccio, type: raster, path: distancies-vilaseca-20261001-ampliada/dades/friccio-marxa-obert.tif}
+  - {id: marxa-minuts, type: raster, path: distancies-vilaseca-20261001-ampliada/resultats/rwalk-obert-anada-minuts.tif}
+setup:
+  - {action: set_project_crs, auth_id: 'EPSG:25831'}
+  - {action: load_raster, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001-ampliada/fonts/ortofoto-2025.tif, name: Ortofoto ICGC 2025}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001-ampliada/dades/barrera-ap7.gpkg, name: AP-7}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001-ampliada/fonts/edificis.gpkg, name: Edificis}
+  - {action: load_raster, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001-ampliada/fonts/mdt-5m.tif, name: MDT de 5 m}
+  - {action: set_layer_visible, layer: MDT de 5 m, visible: false}
+  - {action: load_raster, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001-ampliada/dades/friccio-marxa-obert.tif, name: Fricció addicional · s per metre}
+  - {action: set_layer_visible, layer: Fricció addicional · s per metre, visible: false}
+  - {action: load_raster, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001-ampliada/resultats/rwalk-obert-anada-minuts.tif, name: Temps des d’O · minuts}
+  - {action: load_raster, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001-ampliada/resultats/isocrones-marxa-obert.tif, name: Franges · pas obert}
+  - {action: set_layer_visible, layer: Franges · pas obert, visible: false}
+  - {action: load_raster, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001-ampliada/resultats/isocrones-marxa-tancat.tif, name: Franges · pas tancat}
+  - {action: set_layer_visible, layer: Franges · pas tancat, visible: false}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001-ampliada/resultats/isocrones-contorns-obert.gpkg, name: Contorns · pas obert}
+  - {action: set_layer_visible, layer: Contorns · pas obert, visible: false}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001-ampliada/resultats/isocrones-contorns-tancat.gpkg, name: Contorns · pas tancat}
+  - {action: set_layer_visible, layer: Contorns · pas tancat, visible: false}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001-ampliada/resultats/rwalk-obert-anada-ruta.gpkg, name: 'Anada · 6,63 min'}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001-ampliada/resultats/rwalk-obert-tornada-ruta.gpkg, name: 'Tornada · 6,48 min'}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001-ampliada/dades/ambit.gpkg, name: Àmbit}
+  - {action: set_layer_visible, layer: Àmbit, visible: false}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001-ampliada/dades/pas-p2.gpkg, name: Pas P2}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001-ampliada/dades/extrems.gpkg, name: Extrems O i D}
+  - {action: set_layer_visible, layer: Extrems O i D, visible: false}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001-ampliada/dades/origen.gpkg, name: Origen O}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001-ampliada/dades/desti.gpkg, name: Destí D}
+captures:
+  - id: rwalk-parametres
+    title: Altitud i fricció temporal són dues entrades diferents
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:grass:r.walk.points'}
+    camera:
+      mode: crop
+      target: {object_name: 'unaltracapturaProcessingParameter:friction'}
+      output_size: {width: 1000, height: 670}
+    steps:
+      - {action: zoom_to_layer, layer: Extrems O i D, scale: 1.7}
+      - {action: clear_message_bar, wait_ms: 800}
+      - action: open_processing_algorithm_dialog
+        algorithm: grass:r.walk.points
+        parameters:
+          elevation: MDT de 5 m
+          friction: Fricció addicional · s per metre
+          start_points: Origen O
+          walk_coeff: '0.72,6.0,1.9998,-1.9998'
+          lambda: 1
+          slope_factor: -0.2125
+          '-k': false
+          '-n': true
+          output: TEMPORARY_OUTPUT
+          outdir: TEMPORARY_OUTPUT
+          GRASS_REGION_PARAMETER: '343600,345300,4553000,4554700 [EPSG:25831]'
+          GRASS_REGION_CELLSIZE_PARAMETER: 5
+    drawings:
+      - {type: callout, target: {object_name: 'unaltracapturaProcessingParameter:elevation'}, text: Altitud en metres, target_marker: box, colour: information, placement: right, max_width: 180}
+      - {type: callout, target: {object_name: 'unaltracapturaProcessingParameter:friction'}, text: Segons addicionals per metre, target_marker: box, colour: ember, placement: right, max_width: 215}
+    output:
+      path: assets/captures/rwalk-parametres.png
+      annotations_svg: assets/captures/rwalk-parametres.annotations.svg
+      manifest: context/qgis/manifests/rwalk-parametres.yml
+  - id: rwalk-resultat
+    title: Temps des d’O i camins d'anada i tornada
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: close_transients}
+      - {action: zoom_to_layer, layer: Extrems O i D, scale: 1.7}
+      - {action: clear_message_bar, wait_ms: 500}
+      - {action: clear_message_bar}
+    drawings:
+      - {type: callout, target: {layer_name: Destí D}, text: 'O → D: 6,63 min', target_marker: point, colour: information, placement: left, max_width: 180}
+    output:
+      path: assets/captures/rwalk-resultat.png
+      annotations_svg: assets/captures/rwalk-resultat.annotations.svg
+      manifest: context/qgis/manifests/rwalk-resultat.yml
+  - id: rwalk-contorns
+    title: Corbes de temps igual amb r.contour
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:grass:r.contour'}
+    camera:
+      mode: crop
+      target: {object_name: 'unaltracapturaProcessingParameter:levels'}
+      output_size: {width: 1000, height: 600}
+    steps:
+      - action: open_processing_algorithm_dialog
+        algorithm: grass:r.contour
+        parameters:
+          input: Temps des d’O · minuts
+          levels: '3,6,12'
+          cut: 3
+          output: TEMPORARY_OUTPUT
+          GRASS_REGION_PARAMETER: '343600,345300,4553000,4554700 [EPSG:25831]'
+          GRASS_REGION_CELLSIZE_PARAMETER: 5
+    drawings:
+      - {type: callout, target: {object_name: 'unaltracapturaProcessingParameter:levels'}, text: '3, 6 i 12 minuts', target_marker: box, colour: information, placement: right, max_width: 180}
+    output:
+      path: assets/captures/rwalk-contorns.png
+      annotations_svg: assets/captures/rwalk-contorns.annotations.svg
+      manifest: context/qgis/manifests/rwalk-contorns.yml
+  - id: rwalk-isocrones-obert
+    title: Isòcrones amb el pas P2 obert
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: close_transients}
+      - {action: set_layer_visible, layer: Temps des d’O · minuts, visible: false}
+      - {action: set_layer_visible, layer: 'Anada · 6,63 min', visible: false}
+      - {action: set_layer_visible, layer: 'Tornada · 6,48 min', visible: false}
+      - {action: set_layer_visible, layer: Franges · pas obert, visible: true}
+      - {action: set_layer_visible, layer: Contorns · pas obert, visible: true}
+      - {action: zoom_to_layer, layer: Àmbit, scale: 1.02}
+      - {action: clear_message_bar}
+    drawings:
+      - {type: callout, target: {layer_name: Destí D}, text: D entre 6 i 12 min, target_marker: point, colour: information, placement: left, max_width: 190}
+    output:
+      path: assets/captures/rwalk-isocrones-obert.png
+      annotations_svg: assets/captures/rwalk-isocrones-obert.annotations.svg
+      manifest: context/qgis/manifests/rwalk-isocrones-obert.yml
+  - id: rwalk-isocrones-tancat
+    title: Isòcrones amb el pas P2 tancat
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: set_layer_visible, layer: Franges · pas obert, visible: false}
+      - {action: set_layer_visible, layer: Contorns · pas obert, visible: false}
+      - {action: set_layer_visible, layer: Franges · pas tancat, visible: true}
+      - {action: set_layer_visible, layer: Contorns · pas tancat, visible: true}
+      - {action: zoom_to_layer, layer: Àmbit, scale: 1.02}
+      - {action: clear_message_bar}
+    drawings:
+      - {type: callout, target: {layer_name: Destí D}, text: 'D fora dels 12 min: 17,49', target_marker: point, colour: ember, placement: left, max_width: 230}
+    output:
+      path: assets/captures/rwalk-isocrones-tancat.png
+      annotations_svg: assets/captures/rwalk-isocrones-tancat.annotations.svg
+      manifest: context/qgis/manifests/rwalk-isocrones-tancat.yml

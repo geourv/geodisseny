@@ -1,0 +1,167 @@
+id: estadistica
+title: Centres, dispersió i densitat de l'inventari ICAEN
+source_prompt: context/qgis/estadistica.md
+plugins: [processing]
+compat: {qgis: '>=3.44'}
+data:
+  - {id: icaen-punts-simples, type: vector, path: icaen-punts-simples.gpkg}
+  - {id: icaen-ambit, type: vector, path: icaen-ambit.gpkg}
+  - {id: icaen-parametres-dispersio, type: vector, path: icaen-parametres-dispersio.gpkg}
+  - {id: icaen-circle, type: vector, path: icaen-circle.gpkg}
+  - {id: icaen-ellipse, type: vector, path: icaen-ellipse.gpkg}
+  - {id: icaen-grid, type: vector, path: icaen-grid.gpkg}
+  - {id: icaen-recompte, type: vector, path: icaen-recompte.gpkg}
+  - {id: icaen-densitat-1500, type: raster, path: icaen-densitat-1500.tif}
+  - {id: icaen-densitat-estil, type: file, path: icaen-densitat-1500.qml}
+setup:
+  - {action: set_project_crs, auth_id: 'EPSG:25831'}
+  - {action: load_vector, path: tmp/dades-docents/qgis/icaen-ambit.gpkg, name: Tarragonès}
+  - {action: load_vector, path: tmp/dades-docents/qgis/icaen-punts-simples.gpkg, name: ICAEN punts}
+  - {action: zoom_to_layer, layer: Tarragonès}
+  - {action: clear_message_bar}
+captures:
+  - id: icaen-parametres
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:native:meancoordinates'}
+    camera:
+      mode: crop
+      target: {object_name: 'unaltracapturaProcessingParameter:WEIGHT'}
+      output_size: {width: 760, height: 370}
+    steps:
+      - action: open_processing_algorithm_dialog
+        algorithm: native:meancoordinates
+        parameters: {INPUT: ICAEN punts, WEIGHT: POT_KW, OUTPUT: TEMPORARY_OUTPUT}
+    drawings:
+      - type: callout
+        target: {object_name: 'unaltracapturaProcessingParameter:WEIGHT'}
+        text: Pes de cada punt en kW
+        target_marker: box
+        colour: '#006699'
+        placement: right
+        max_width: 220
+    output:
+      path: assets/captures/icaen-parametres.png
+      annotations_svg: assets/captures/icaen-parametres.annotations.svg
+      manifest: context/qgis/manifests/icaen-parametres.yml
+  - id: dispersio-parametres
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:native:geometrybyexpression'}
+    camera:
+      mode: crop
+      target: {object_name: 'unaltracapturaProcessingParameter:INPUT'}
+      output_size: {width: 760, height: 400}
+    steps:
+      - {action: close_transients}
+      - {action: load_vector, path: tmp/dades-docents/qgis/icaen-parametres-dispersio.gpkg, name: Centre i dispersió}
+      - action: open_processing_algorithm_dialog
+        algorithm: native:geometrybyexpression
+        parameters:
+          INPUT: Centre i dispersió
+          OUTPUT_GEOMETRY: 0
+          WITH_Z: false
+          WITH_M: false
+          EXPRESSION: 'make_ellipse($geometry, "a_m", "b_m", "azimut", 72)'
+          OUTPUT: TEMPORARY_OUTPUT
+    drawings:
+      - type: callout
+        target: {object_name: 'unaltracapturaProcessingParameter:EXPRESSION'}
+        text: Semieixos i azimut
+        target_marker: box
+        colour: '#006699'
+        max_width: 190
+    output:
+      path: assets/captures/dispersio-parametres.png
+      annotations_svg: assets/captures/dispersio-parametres.annotations.svg
+      manifest: context/qgis/manifests/dispersio-parametres.yml
+  - id: dispersio-resultat
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: close_transients}
+      - {action: load_vector, path: tmp/dades-docents/qgis/icaen-circle.gpkg, name: Cercle · radi 8698 m}
+      - {action: load_vector, path: tmp/dades-docents/qgis/icaen-ellipse.gpkg, name: El·lipse · 8152 × 3033 m}
+      - {action: zoom_to_layer, layer: Tarragonès, scale: 1.12}
+      - {action: clear_message_bar}
+    drawings:
+      - type: callout
+        target: {item_text: El·lipse · 8152 × 3033 m}
+        text: La mateixa selecció, un resum direccional
+        target_marker: box
+        placement: right
+        colour: '#006699'
+        max_width: 240
+    output:
+      path: assets/captures/dispersio-resultat.png
+      annotations_svg: assets/captures/dispersio-resultat.annotations.svg
+      manifest: context/qgis/manifests/dispersio-resultat.yml
+  - id: graella-recompte
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:native:countpointsinpolygon'}
+    camera:
+      mode: crop
+      target: {object_name: 'unaltracapturaProcessingParameter:POINTS'}
+      output_size: {width: 760, height: 460}
+    steps:
+      - {action: load_vector, path: tmp/dades-docents/qgis/icaen-grid.gpkg, name: Graella 1 km}
+      - action: open_processing_algorithm_dialog
+        algorithm: native:countpointsinpolygon
+        parameters: {POLYGONS: Graella 1 km, POINTS: ICAEN punts, FIELD: n_punts, OUTPUT: TEMPORARY_OUTPUT}
+    drawings:
+      - type: callout
+        target: {object_name: 'unaltracapturaProcessingParameter:FIELD'}
+        text: Un recompte per quadrat
+        target_marker: box
+        colour: '#006699'
+        max_width: 220
+    output:
+      path: assets/captures/graella-recompte.png
+      annotations_svg: assets/captures/graella-recompte.annotations.svg
+      manifest: context/qgis/manifests/graella-recompte.yml
+  - id: kernel-parametres
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:qgis:heatmapkerneldensityestimation'}
+    camera:
+      mode: crop
+      target: {object_name: 'unaltracapturaProcessingParameter:RADIUS'}
+      output_size: {width: 760, height: 410}
+    steps:
+      - {action: close_transients}
+      - action: open_processing_algorithm_dialog
+        algorithm: qgis:heatmapkerneldensityestimation
+        parameters: {INPUT: ICAEN punts, RADIUS: 1500, PIXEL_SIZE: 100, KERNEL: 0, DECAY: 0, OUTPUT_VALUE: 0, OUTPUT: TEMPORARY_OUTPUT}
+    drawings:
+      - type: callout
+        target: {object_name: 'unaltracapturaProcessingParameter:RADIUS'}
+        text: Radi · 1500 m
+        target_marker: box
+        colour: '#006699'
+        max_width: 215
+    output:
+      path: assets/captures/kernel-parametres.png
+      annotations_svg: assets/captures/kernel-parametres.annotations.svg
+      manifest: context/qgis/manifests/kernel-parametres.yml
+  - id: kernel-resultat
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: close_transients}
+      - {action: set_layer_visible, layer: ICAEN punts, visible: false}
+      - {action: set_layer_visible, layer: Centre i dispersió, visible: false}
+      - {action: set_layer_visible, layer: Cercle · radi 8698 m, visible: false}
+      - {action: set_layer_visible, layer: El·lipse · 8152 × 3033 m, visible: false}
+      - {action: set_layer_visible, layer: Graella 1 km, visible: false}
+      - {action: load_raster, path: tmp/dades-docents/qgis/icaen-densitat-1500.tif, name: Kernel normalitzat · punts per km²}
+      - {action: zoom_to_layer, layer: Tarragonès, scale: 1.1}
+      - {action: clear_message_bar}
+    drawings:
+      - type: callout
+        target: {item_text: Kernel normalitzat · punts per km²}
+        text: Superfície suavitzada, no recompte per cel·la
+        target_marker: box
+        colour: '#006699'
+        placement: right
+        max_width: 240
+    output:
+      path: assets/captures/kernel-resultat.png
+      annotations_svg: assets/captures/kernel-resultat.annotations.svg
+      manifest: context/qgis/manifests/kernel-resultat.yml

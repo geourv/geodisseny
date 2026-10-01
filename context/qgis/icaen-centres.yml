@@ -1,0 +1,71 @@
+id: icaen-centres
+title: Centres reals d'autoconsum al Tarragonès
+source_prompt: context/qgis/icaen-centres.md
+plugins: [processing]
+compat:
+  qgis: '>=3.44'
+data:
+  - id: icaen-coneguda
+    type: vector
+    path: icaen-coneguda.gpkg
+  - id: icaen-ambit
+    type: vector
+    path: icaen-ambit.gpkg
+  - id: icaen-centres
+    type: vector
+    path: icaen-centres.gpkg
+setup:
+  - action: set_project_crs
+    auth_id: EPSG:25831
+  - action: load_vector
+    path: tmp/dades-docents/qgis/icaen-ambit.gpkg
+    name: Tarragonès · ICGC
+  - action: load_vector
+    path: tmp/dades-docents/qgis/icaen-coneguda.gpkg
+    name: ICAEN · 3762 potències conegudes
+  - action: zoom_to_layer
+    layer: Tarragonès · ICGC
+  - action: clear_message_bar
+captures:
+  - id: icaen-menu
+    title: Accés a les eines d'anàlisi vectorial
+    mode: screen
+    target:
+      object_name: QgisApp
+    camera:
+      mode: crop
+      target:
+        object_name: 'unaltracapturaVisibleMenu:Coordenades mitjanes...'
+        fallback:
+          - object_name: 'unaltracapturaVisibleMenu:Coordenades mitjanes…'
+      output_size:
+        width: 760
+        height: 270
+    steps:
+      - action: clear_message_bar
+      - action: open_menu_path
+        path: [Vectorial, Analysis Tools]
+        active_text: Coordenades mitjanes
+        wait_ms: 800
+    output:
+      path: assets/captures/icaen-menu.png
+      annotations_svg: assets/captures/icaen-menu.annotations.svg
+      manifest: context/qgis/manifests/icaen-menu.yml
+  - id: icaen-resultat
+    title: Comparació dels centres sobre la mateixa selecció
+    mode: window
+    target:
+      object_name: QgisApp
+    steps:
+      - action: close_transients
+      - action: load_vector
+        path: tmp/dades-docents/qgis/icaen-centres.gpkg
+        name: Centres · mateixa selecció ICAEN
+      - action: clear_message_bar
+      - action: zoom_to_layer
+        layer: Tarragonès · ICGC
+        scale: 1.08
+    output:
+      path: assets/captures/icaen-resultat.png
+      annotations_svg: assets/captures/icaen-resultat.annotations.svg
+      manifest: context/qgis/manifests/icaen-resultat.yml

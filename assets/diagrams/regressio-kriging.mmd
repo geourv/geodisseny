@@ -1,0 +1,9 @@
+%%{init: {"flowchart": {"htmlLabels": false, "curve": "linear", "nodeSpacing": 25, "rankSpacing": 28}, "themeVariables": {"fontSize": "20px"}}}%%
+flowchart TB
+  O["Estacions<br/>Temperatura i altitud"] --> R["Regressió<br/>Tendència amb altitud"]
+  R --> E["Residus<br/>Observat menys ajustat"]
+  E --> K["Variograma i kriging<br/>Predicció residual"]
+  R --> M["Tendència sobre el MDT"]
+  K --> T["Temperatura estimada<br/>Tendència + residu"]
+  M --> T
+  T --> V["Validació amb dades retirades<br/>Reajustar tota la cadena"]

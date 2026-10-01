@@ -1,0 +1,83 @@
+id: distancies
+title: Distàncies i pas de l'AP-7 a Vila-seca
+source_prompt: context/qgis/distancies.md
+plugins: [processing]
+compat: {qgis: '>=3.44'}
+data:
+  - {id: distancies-orto, type: raster, path: distancies-vilaseca-20261001/fonts/ortofoto-2025.tif}
+  - {id: distancies-xarxa, type: vector, path: distancies-vilaseca-20261001/dades/xarxa-oberta.gpkg}
+  - {id: distancies-origen, type: vector, path: distancies-vilaseca-20261001/dades/origen.gpkg}
+  - {id: distancies-desti, type: vector, path: distancies-vilaseca-20261001/dades/desti.gpkg}
+  - {id: distancies-extrems, type: vector, path: distancies-vilaseca-20261001/dades/extrems.gpkg}
+  - {id: distancies-pas-p2, type: vector, path: distancies-vilaseca-20261001/dades/pas-p2.gpkg}
+  - {id: distancies-linia, type: vector, path: distancies-vilaseca-20261001/resultats/linia-euclidiana.gpkg}
+setup:
+  - {action: set_project_crs, auth_id: 'EPSG:25831'}
+  - {action: load_raster, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/fonts/ortofoto-2025.tif, name: Ortofoto ICGC 2025}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/dades/xarxa-oberta.gpkg, name: Xarxa oberta}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/resultats/linia-euclidiana.gpkg, name: Línia recta}
+  - {action: set_layer_visible, layer: Línia recta, visible: false}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/dades/pas-p2.gpkg, name: Pas P2}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/dades/extrems.gpkg, name: Extrems O i D}
+  - {action: set_layer_visible, layer: Extrems O i D, visible: false}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/dades/origen.gpkg, name: Origen O}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/dades/desti.gpkg, name: Destí D}
+  - {action: zoom_to_layer, layer: Extrems O i D, scale: 0.9}
+  - {action: clear_message_bar}
+captures:
+  - id: distancies-dades
+    title: Dades del pas de l'AP-7
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: zoom_to_layer, layer: Extrems O i D, scale: 1.7}
+    drawings:
+      - type: callout
+        target: {layer_name: Pas P2}
+        text: Pas P2 del model
+        target_marker: box
+        colour: information
+        placement: left
+        max_width: 190
+    output:
+      path: assets/captures/distancies-dades.png
+      annotations_svg: assets/captures/distancies-dades.annotations.svg
+      manifest: context/qgis/manifests/distancies-dades.yml
+  - id: distancies-vector-parametres
+    title: Distància vectorial entre l'origen i el destí
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:native:shortestline'}
+    camera:
+      mode: crop
+      target: {object_name: 'unaltracapturaProcessingParameter:DESTINATION'}
+      output_size: {width: 850, height: 430}
+    steps:
+      - action: open_processing_algorithm_dialog
+        algorithm: native:shortestline
+        parameters: {SOURCE: Origen O, DESTINATION: Destí D, METHOD: 0, NEIGHBORS: 1, OUTPUT: TEMPORARY_OUTPUT}
+    drawings: []
+    output:
+      path: assets/captures/distancies-vector-parametres.png
+      annotations_svg: assets/captures/distancies-vector-parametres.annotations.svg
+      manifest: context/qgis/manifests/distancies-vector-parametres.yml
+  - id: distancies-vector-resultat
+    title: Segment recte i distància en metres
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: close_transients}
+      - {action: set_layer_visible, layer: Línia recta, visible: true}
+      - {action: zoom_to_layer, layer: Extrems O i D, scale: 1.7}
+      - {action: clear_message_bar}
+    drawings:
+      - type: callout
+        target: {item_text: Línia recta}
+        text: '368,3 m en línia recta'
+        target_marker: box
+        colour: information
+        placement: right
+        max_width: 205
+    output:
+      path: assets/captures/distancies-vector-resultat.png
+      annotations_svg: assets/captures/distancies-vector-resultat.annotations.svg
+      manifest: context/qgis/manifests/distancies-vector-resultat.yml

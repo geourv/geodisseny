@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="684pt" height="381.6pt" viewBox="0 0 684 381.6" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.5, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 381.6 
+L 684 381.6 
+L 684 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="line2d_1">
+    <path d="M 73.510565 198.977143 
+L 269.761993 198.977143 
+" clip-path="url(#p33d4629e17)" style="fill: none; stroke: #d4d9df; stroke-width: 15"/>
+   </g>
+   <g id="line2d_2">
+    <path d="M 171.636279 297.102857 
+L 171.636279 100.851429 
+" clip-path="url(#p33d4629e17)" style="fill: none; stroke: #d4d9df; stroke-width: 15"/>
+   </g>
+   <g id="line2d_3">
+    <defs>
+     <path id="med6d330998" d="M 0 3.5 
+C 0.928211 3.5 1.81853 3.131218 2.474874 2.474874 
+C 3.131218 1.81853 3.5 0.928211 3.5 0 
+C 3.5 -0.928211 3.131218 -1.81853 2.474874 -2.474874 
+C 1.81853 -3.131218 0.928211 -3.5 0 -3.5 
+C -0.928211 -3.5 -1.81853 -3.131218 -2.474874 -2.474874 
+C -3.131218 -1.81853 -3.5 -0.928211 -3.5 0 
+C -3.5 0.928211 -3.131218 1.81853 -2.474874 2.474874 
+C -1.81853 3.131218 -0.928211 3.5 0 3.5 
+z
+" style="stroke: #43515e"/>
+    </defs>
+    <g clip-path="url(#p33d4629e17)">
+     <use xlink:href="#med6d330998" x="171.636279" y="198.977143" style="fill: #43515e; stroke: #43515e"/>
+    </g>
+   </g>
+   <g id="line2d_4">
+    <path d="M 82.23285 198.977143 
+L 145.469422 198.977143 
+L 145.469422 198.977143 
+L 147.180816 198.921118 
+L 148.884882 198.753282 
+L 150.574323 198.474354 
+L 152.241903 198.085529 
+L 153.880482 197.588471 
+L 155.483045 196.985309 
+L 157.042727 196.278627 
+L 158.55285 195.471449 
+L 160.006949 194.567232 
+L 161.398795 193.569849 
+L 162.72243 192.483571 
+L 163.972184 191.313048 
+L 165.142707 190.063293 
+L 166.228985 188.739659 
+L 167.226368 187.347813 
+L 168.130585 185.893714 
+L 168.937763 184.383591 
+L 169.644446 182.823908 
+L 170.247607 181.221346 
+L 170.744665 179.582767 
+L 171.13349 177.915186 
+L 171.412418 176.225746 
+L 171.580254 174.52168 
+L 171.636279 172.810286 
+L 171.636279 116.115429 
+" clip-path="url(#p33d4629e17)" style="fill: none; stroke: #ba3d35; stroke-width: 3; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_5">
+    <path d="M 141.108279 183.713143 
+L 167.275136 157.546286 
+" clip-path="url(#p33d4629e17)" style="fill: none; stroke: #ba3d35; stroke-width: 4; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_6">
+    <path d="M 141.108279 157.546286 
+L 167.275136 183.713143 
+" clip-path="url(#p33d4629e17)" style="fill: none; stroke: #ba3d35; stroke-width: 4; stroke-linecap: square"/>
+   </g>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 14px; font-family: 'DejaVu Sans'; text-anchor: start" x="197.803136" y="214.241143" transform="rotate(-0 197.803136 214.241143)">C</text>
+   </g>
+   <g id="text_2">
+    <text style="font-weight: 700; font-size: 14px; font-family: 'DejaVu Sans'; text-anchor: start" x="93.135708" y="166.268571" transform="rotate(-0 93.135708 166.268571)">a</text>
+   </g>
+   <g id="text_3">
+    <text style="font-weight: 700; font-size: 14px; font-family: 'DejaVu Sans'; text-anchor: start" x="199.983708" y="124.837714" transform="rotate(-0 199.983708 124.837714)">b</text>
+   </g>
+   <g id="text_4">
+    <text style="font-weight: 700; font-size: 14px; font-family: 'DejaVu Sans'; text-anchor: start" x="197.803136" y="275.297143" transform="rotate(-0 197.803136 275.297143)">c</text>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 14px; font-family: 'DejaVu Sans'; text-anchor: middle" x="171.636279" y="83.406857" transform="rotate(-0 171.636279 83.406857)">Nord</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 14px; font-family: 'DejaVu Sans'; text-anchor: middle" x="171.636279" y="321.089143" transform="rotate(-0 171.636279 321.089143)">Sud</text>
+   </g>
+   <g id="text_7">
+    <text style="font-size: 14px; font-family: 'DejaVu Sans'" transform="translate(55.335002 215.185424) rotate(-90)">Oest</text>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: middle" x="171.636279" y="353.797714" transform="rotate(-0 171.636279 353.797714)">La regla afecta aquesta maniobra.</text>
+   </g>
+   <g id="text_9">
+    <text style="font-weight: 700; font-size: 16px; font-family: 'DejaVu Sans'; text-anchor: middle" x="171.636279" y="42.24" transform="rotate(-0 171.636279 42.24)">A · Gir a → b prohibit</text>
+   </g>
+   <g id="patch_2">
+    <path d="M 162.913993 120.476571 
+L 180.358565 120.476571 
+L 171.636279 100.851429 
+z
+" clip-path="url(#p33d4629e17)" style="fill: #ba3d35"/>
+   </g>
+  </g>
+  <g id="axes_2">
+   <g id="line2d_7">
+    <path d="M 421.078007 198.977143 
+L 617.329435 198.977143 
+" clip-path="url(#pb131d40b62)" style="fill: none; stroke: #d4d9df; stroke-width: 15"/>
+   </g>
+   <g id="line2d_8">
+    <path d="M 519.203721 297.102857 
+L 519.203721 100.851429 
+" clip-path="url(#pb131d40b62)" style="fill: none; stroke: #d4d9df; stroke-width: 15"/>
+   </g>
+   <g id="line2d_9">
+    <g clip-path="url(#pb131d40b62)">
+     <use xlink:href="#med6d330998" x="519.203721" y="198.977143" style="fill: #43515e; stroke: #43515e"/>
+    </g>
+   </g>
+   <g id="text_10">
+    <text style="font-weight: 700; font-size: 14px; font-family: 'DejaVu Sans'; text-anchor: start" x="545.370578" y="214.241143" transform="rotate(-0 545.370578 214.241143)">C</text>
+   </g>
+   <g id="text_11">
+    <text style="font-weight: 700; font-size: 14px; font-family: 'DejaVu Sans'; text-anchor: start" x="440.70315" y="166.268571" transform="rotate(-0 440.70315 166.268571)">a</text>
+   </g>
+   <g id="text_12">
+    <text style="font-weight: 700; font-size: 14px; font-family: 'DejaVu Sans'; text-anchor: start" x="547.55115" y="124.837714" transform="rotate(-0 547.55115 124.837714)">b</text>
+   </g>
+   <g id="text_13">
+    <text style="font-weight: 700; font-size: 14px; font-family: 'DejaVu Sans'; text-anchor: start" x="545.370578" y="275.297143" transform="rotate(-0 545.370578 275.297143)">c</text>
+   </g>
+   <g id="text_14">
+    <text style="font-size: 14px; font-family: 'DejaVu Sans'; text-anchor: middle" x="519.203721" y="83.406857" transform="rotate(-0 519.203721 83.406857)">Nord</text>
+   </g>
+   <g id="text_15">
+    <text style="font-size: 14px; font-family: 'DejaVu Sans'; text-anchor: middle" x="519.203721" y="321.089143" transform="rotate(-0 519.203721 321.089143)">Sud</text>
+   </g>
+   <g id="text_16">
+    <text style="font-size: 14px; font-family: 'DejaVu Sans'" transform="translate(402.902444 215.185424) rotate(-90)">Oest</text>
+   </g>
+   <g id="patch_3">
+    <path d="M 519.203721 290.741548 
+Q 519.203721 198.9778 519.203721 110.568153 
+" style="fill: none; stroke: #147b6b; stroke-width: 3; stroke-linecap: round"/>
+    <path d="M 515.203721 118.568153 
+L 519.203721 110.568153 
+L 523.203721 118.568153 
+z
+" style="fill: #147b6b; stroke: #147b6b; stroke-width: 3; stroke-linecap: round"/>
+   </g>
+   <g id="text_17">
+    <text style="font-size: 13px; font-family: 'DejaVu Sans'; text-anchor: middle" x="519.203721" y="353.797714" transform="rotate(-0 519.203721 353.797714)">El tram b continua obert.</text>
+   </g>
+   <g id="text_18">
+    <text style="font-weight: 700; font-size: 16px; font-family: 'DejaVu Sans'; text-anchor: middle" x="519.203721" y="42.24" transform="rotate(-0 519.203721 42.24)">B · Pas c → b permès</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p33d4629e17">
+   <rect x="40.801993" y="57.24" width="261.668571" height="305.28"/>
+  </clipPath>
+  <clipPath id="pb131d40b62">
+   <rect x="388.369435" y="57.24" width="261.668571" height="305.28"/>
+  </clipPath>
+ </defs>
+</svg>

@@ -20,3 +20,9 @@ __pycache__/
 # Generated unaltremanual publication outputs are never versioned.
 /assets/img/manual-cover-ca.png
 /assets/pdf/manual-ca.pdf
+
+# Local QGIS capture runtime state; recipes and reviewed figures are retained.
+/.unaltracaptura-qgis/jobs/
+/.unaltracaptura-qgis/probes/
+/.unaltracaptura-qgis/render-locks/
+/.unaltracaptura-qgis/runtime/

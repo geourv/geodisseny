@@ -1,11 +1,11 @@
 ---
 layout: manual-home
 title: "Anàlisi Espacial i Geodisseny"
-description: Manual de teoria aplicada, pràctiques i criteris d'anàlisi espacial i geodisseny amb QGIS.
+description: Fonaments d'anàlisi espacial i geodisseny per relacionar el coneixement geogràfic amb la diagnosi i les propostes territorials.
 lang: "ca"
 ref: home
 profiles: [unaltremanual]
-content_status: draft
+content_status: approved
 permalink: "/ca/"
 nav: false
 show_chapter_index: true
@@ -13,59 +13,38 @@ figure_captions: true
 manual_references: false
 ---
 
-Aquest manual forma part de l'assignatura **Anàlisi Espacial i Geodisseny** (codi `21234116`), de tercer curs del Grau en Geografia, Anàlisi Territorial i Sostenibilitat de la Universitat Rovira i Virgili. L'assignatura és obligatòria i combina sessions de teoria i pràctica a l'aula SIG. Professorat: Benito Zaragozí i Yolanda Pérez Albert.
+**Anàlisi Espacial i Geodisseny** continua l'aprenentatge iniciat a [TIGIT](https://geourv.github.io/tigit/ca/) i [TIG](https://geourv.github.io/tig/ca/) dins del Grau en Geografia, Anàlisi Territorial i Sostenibilitat de la Universitat Rovira i Virgili. Al llarg del grau, el treball amb dades i cartografia acompanya l'estudi del paisatge, la població, les activitats econòmiques i el medi físic. Les eines tècniques es van aprenent en relació amb les preguntes que sorgeixen d'aquests àmbits.
 
-L'objectiu del curs **no és memoritzar una col·lecció d'eines**. Es tracta d'entendre com es representa un problema territorial mitjançant dades, com condiciona el resultat cada tècnica d'anàlisi espacial i com es defensa una decisió amb mapa i números. [QGIS](https://qgis.org/) és l'eina principal de les pràctiques. El curs continua on acaba Tecnologies de la Informació Geogràfica: el model ràster i la calculadora de camps hi són el punt de partida, no el destí.
+A TIGIT es treballa amb dades, indicadors i representació cartogràfica; a TIG s'aprofundeix en els models de dades, les consultes i el geoprocessament. Aquests coneixements també es posen en pràctica en altres assignatures. Els SIG, els llenguatges R i Python i altres eines de tractament de dades serveixen per explorar informació, fer càlculs i comunicar resultats. L'experiència adquirida en una assignatura es pot recuperar i ampliar quan apareix una pregunta diferent en una altra.
 
->>>>> En acabar el curs, cal poder dissenyar i defensar una anàlisi espacial completa orientada a una decisió territorial.
->>>>>
->>>>> - Preparar un projecte QGIS reproduïble amb fonts oficials (ICGC, Cadastre, OSM).
->>>>> - Aplicar distàncies, visibilitat, patrons de punts, autocorrelació i interpolació sobre un mateix territori.
->>>>> - Construir una avaluació multicriteri amb pesos justificats i anàlisi de sensibilitat.
->>>>> - Comunicar el resultat en un pòster científic i defensar-lo oralment.
+Anàlisi Espacial i Geodisseny aprofundeix en els **fonaments geogràfics i estadístics de l'anàlisi**. S'hi estudia com representar les relacions entre llocs, descriure distribucions, estimar valors i comparar alternatives. També s'examina per què dos mètodes poden donar resultats diferents, quins supòsits expliquen aquestes diferències i com es poden contrastar. Aquesta base dona criteri per escollir una tècnica i interpretar allò que se n'obté.
 
-El manual desenvolupa més exemples i activitats que els exigits per superar l'assignatura. Les demostracions de classe es fan sobre el **Tarragonès**; el treball de síntesi s'aplica per grups a **comarques diferents**. Donat que l'estudiant ja ha superat TIG i TIGIT, les activitats se centren en les parts noves: en algunes rebreu dades preparades per no repetir neteges apreses i anar directes a l'anàlisi.
+## El coneixement geogràfic en l'anàlisi {#recorregut}
 
-Els lliuraments del curs segueixen un format únic: GeoPackage amb el projecte incrustat, còpia externa del projecte en `.qgz` i apunts breus en PDF amb captures. Les activitats lliurables estaran identificades de manera explícita; Moodle publicarà l'enunciat vigent, el termini i les condicions concretes de cada lliurament.
+Els SIG s'utilitzen en moltes disciplines i àmbits professionals. Les preguntes, la formació i l'experiència de qui els fa servir influeixen en l'ús que se'n fa. En la formació geogràfica, l'anàlisi relaciona processos físics, activitats humanes i formes d'ocupació del territori. Conèixer el paisatge, el relleu, els recursos hídrics o la distribució de les activitats econòmiques orienta la selecció de dades, l'escala de treball i la interpretació dels mapes.
 
-::: table "Dades identificatives de l'assignatura"
-| Camp | Valor |
-| --- | --- |
-| Assignatura | Anàlisi Espacial i Geodisseny |
-| Codi | `21234116` |
-| Ensenyament | Grau en Geografia, Anàlisi Territorial i Sostenibilitat |
-| Caràcter | Obligatòria |
-| Professorat | Benito Zaragozí i Yolanda Pérez Albert |
-:::
+Per estudiar un possible canvi d'ús del sòl, per exemple, un mapa de pendents descriu una part de les condicions del terreny. També interessa saber com drena l'aigua, quins usos hi ha, quines activitats en depenen i com es relaciona aquell lloc amb els espais veïns. Les problemàtiques conegudes i les observacions sobre el terreny poden assenyalar qüestions que encara no s'han incorporat al model. Comparar els càlculs amb aquest coneixement ajuda a precisar què s'ha representat i quina informació falta.
 
-## Manual, Moodle i guia docent
+Així, l'ús de les eines contribueix a la **diagnosi territorial**: estudiar les condicions d'un lloc, reconèixer patrons i processos i precisar els problemes que s'hi volen abordar. Un resultat estadístic o cartogràfic aporta evidència que es llegeix juntament amb altres dades, observacions i estudis. La seva interpretació necessita tant conèixer el mètode com entendre el fenomen que s'analitza.
 
-::: table "On es troba cada tipus d'informació"
-| Espai | Funció |
-| --- | --- |
-| Manual | Teoria, exemples, procediments, activitats i criteris per comprovar els resultats |
-| Moodle | Calendari del curs, avisos, enunciats vigents, fitxers, lliuraments i qualificacions |
-| Guia docent | Resultats d'aprenentatge, continguts, metodologies i condicions oficials de l'assignatura |
-:::
+El **geodisseny** relaciona aquesta diagnosi amb la formulació de propostes. A partir del coneixement del lloc es poden plantejar alternatives, estimar-ne els efectes i discutir amb quins criteris es comparen. Aquesta discussió pot requerir aportacions de diferents disciplines i de les persones implicades. Els mètodes d'anàlisi ajuden a fer explícites les conseqüències previstes, les preferències i les incerteses que intervenen en la decisió.
 
-**La guia docent és la referència normativa.** El manual acompanya l'assignatura però no és l'assignatura: explica el com, no fixa dates ni percentatges. El calendari sessió per sessió i els terminis viuen a Moodle i no es versionen aquí.
+## Aprendre sobre un territori proper {#camp-tarragona}
 
-## Avaluació
+El treball sobre una àrea propera, habitual a TIGIT, TIG i altres assignatures del grau, facilita la relació entre la part tècnica i el coneixement geogràfic. El **Camp de Tarragona**, amb molts exemples al **Tarragonès**, ofereix una referència compartida. Els seus espais agraris, nuclis urbans, activitats industrials, infraestructures i entorns litorals es poden estudiar des de les diverses qüestions que es tracten al llarg del grau. El [Catàleg de paisatge del Camp de Tarragona](https://www.catpaisatge.net/ca/catalegs/6-camp-de-tarragona) és una de les fonts per situar aquests elements i les seves relacions.
 
-L'avaluació combina pràctiques individuals continuades amb un treball de síntesi que es lliura com a document i es defensa oralment, amb preguntes de comprovació d'autoria i de comprensió de les eines. Cal un nivell mínim suficient en cada part per fer mitjana; una part no superada suspèn l'assignatura encara que la mitjana global arribi a l'aprovat.
+Sobre aquest territori, un mapa de pendents es pot interpretar amb coneixements de geomorfologia; la distribució d'equipaments, amb els de població i mobilitat; o una qüestió de drenatge, amb el que se sap del relleu i del funcionament de l'aigua. Les observacions de camp i els treballs d'altres assignatures ajuden a discutir els resultats del SIG. Alhora, un càlcul pot revelar una relació poc evident o suggerir una pregunta que mereixi una observació més detallada.
 
-Els lliuraments han de permetre verificar l'autoria i reconstruir el procés: projecte reproduïble, fonts declarades i captures que demostrin configuracions i comprovacions. No s'accepten lliuraments fora de termini i la còpia implica un 0. En cas d'usar eines d'intel·ligència artificial, cal un ús ètic i responsable: cal declarar-ne l'ús i ser capaç d'explicar-ne qualsevol resultat a l'exposició.
+Aquesta referència propera s'adapta a cada problema. Una xarxa de transport pot necessitar connexions que travessen el límit comarcal; una estimació climàtica, observacions d'un àmbit més ampli. Els temes, les àrees i les dades de les pràctiques poden variar. Treballar també en altres llocs permet reconèixer què es manté del mètode i què cal revisar segons les condicions del territori, la cobertura de les fonts o l'escala d'anàlisi.
 
-## Activitats
+## Treballar amb els exemples i ampliar-los {#projecte-reproduible}
 
-### Reconèixer els espais del curs
+Els [fonaments del primer capítol]({{ site.baseurl }}/ca/chapters/fonaments-geodisseny/) serveixen de referència per als mètodes que es desenvolupen després. Els exemples petits permeten seguir les operacions; les aplicacions amb dades territorials mostren les decisions que comporta treballar amb observacions i cartografia. Les explicacions indiquen la procedència de les dades i els supòsits, de manera que es pugui revisar el càlcul i entendre'n els límits.
 
-El resultat conservat serà una fitxa breu amb l'enllaç a la guia docent vigent, l'espai Moodle i el fòrum de dubtes. Per a cadascun, una informació que només correspongui a aquell espai i per què no convé buscar-la als altres dos.
+[QGIS](https://qgis.org/) és l'entorn principal dels procediments del manual, amb la versió 3.44 LTR com a referència documental. Les eines i els complements concrets es presenten quan intervenen en una anàlisi. Els conceptes també són útils per treballar amb altres programes o biblioteques de R i Python: en comparar implementacions, interessa comprovar que les dades, els paràmetres i les convencions de càlcul siguin equivalents.
 
-### Preparar una consulta reproduïble
+Guardar les fonts originals, les dades preparades i els resultats per separat facilita reprendre una anàlisi i compartir-la. Les notes sobre dates, unitats, sistemes de coordenades, transformacions i paràmetres expliquen les decisions preses. El projecte de QGIS conserva la configuració, però també necessita les capes i altres dependències que utilitza. Aquesta cura en l'organització permet aprofitar el treball en altres exercicis i assignatures.
 
-El resultat conservat serà una consulta breu sobre una incidència real o hipotètica de QGIS: objectiu, dades, passos, resultat esperat i obtingut. Si depèn d'un CRS, un camp, una ruta o un paràmetre, hi apareixerà explícitament.
+A mesura que avancis en el grau, pots recuperar una pregunta d'una altra assignatura, explorar un problema del teu entorn o provar una font de dades nova. Una tècnica estudiada per analitzar accessibilitat pot servir per comparar la cobertura d'un servei; un mètode d'interpolació pot donar peu a estudiar una altra variable ambiental, després de revisar-ne les condicions. Si un resultat sorprèn, contrastar-lo amb altres dades o discutir-ne la interpretació és una manera de continuar aprenent.
 
-### Anticipar el treball de síntesi
-
-Un cop assignada la comarca, el diari conservarà una pregunta d'anàlisi espacial que s'hi pugui estudiar: dades necessàries, organisme que les proporciona i resultat observable que permetria respondre-la. No resol l'anàlisi ni dona per verificada cap font.
+El manual acompanya l'assignatura obligatòria de tercer curs, amb codi `21234116`, impartida per Benito Zaragozí. Els enunciats vigents, els paquets de dades i les indicacions de lliurament es troben a Moodle; les condicions oficials de l'assignatura són a la guia docent. Els capítols enllacen també els catàlegs dels organismes productors per consultar les fonts o cercar dades d'altres territoris.

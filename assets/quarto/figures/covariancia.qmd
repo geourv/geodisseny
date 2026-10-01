@@ -1,0 +1,47 @@
+---
+title: Distància i temps en bus en dos territoris ficticis
+lang: ca
+ref: figura-covariancia
+format: gfm
+execute-dir: project
+execute: {echo: false, warning: false}
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  outputs: [assets/img/generated/covariancia.svg]
+---
+
+```{python}
+from pathlib import Path
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root==root.parent:raise RuntimeError('Projecte absent')
+    root=root.parent
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':14,'svg.fonttype':'none'})
+x=np.arange(1,6);positive=np.array([10,20,40,30,50])
+fig,axes=plt.subplots(1,2,figsize=(8.6,6.3),sharex=True,sharey=True)
+fig.subplots_adjust(left=.09,right=.99,bottom=.32,top=.91,wspace=.08)
+for ax,y,sign,title in zip(axes,[positive,60-positive],[1,-1],['A · Més lluny, més temps','B · Més lluny, menys temps']):
+    products=(x-x.mean())*(y-y.mean());cov=np.cov(x,y,ddof=1)[0,1]
+    assert products.sum()==sign*90 and np.isclose(cov,sign*22.5)
+    assert np.isclose(np.corrcoef(x,y)[0,1],sign*.9)
+    for a,b in [(0,0),(3,30)]:ax.add_patch(Rectangle((a,b),3,30,facecolor='#e7f1f6',edgecolor='none'))
+    for a,b in [(0,30),(3,0)]:ax.add_patch(Rectangle((a,b),3,30,facecolor='#fbefe1',edgecolor='none'))
+    ax.axvline(3,color='#626d76',ls='--');ax.axhline(30,color='#626d76',ls='--')
+    ax.scatter(x,y,s=65,color='#003366',zorder=4)
+    ax.add_patch(Rectangle((3,min(30,y[-1])),2,20,facecolor='#006699' if sign==1 else '#b55b24',alpha=.23,edgecolor='#333333'))
+    ax.text(4,40 if sign==1 else 20,'(+2) × (+20)\n= +40' if sign==1 else '(+2) × (−20)\n= −40',ha='center',va='center',fontsize=13)
+    for px,py in [(1.4,14),(4.7,47)]:
+        if sign==1 and px>3:continue
+        ax.text(px,py,'+',fontsize=24,color='#006699',alpha=.6,ha='center')
+    ax.set(xlim=(0,6),ylim=(0,60),xticks=[1,3,5],yticks=[10,30,50],xlabel='Distància al centre (km)',title=title)
+    ax.set_box_aspect(1)
+    ax.text(.5,-.22,f'Cinc trajectes en bus\nCovariància: {str(round(cov,2)).replace(".",",")} km·min',
+            transform=ax.transAxes,ha='center',va='top',fontsize=13)
+axes[0].set_ylabel('Temps en bus (min)')
+fig.supxlabel('Línies discontínues: mitjanes de 3 km i 30 minuts\nTrajectes ficticis en dos territoris',fontsize=13,y=.035)
+fig.savefig(root/'assets/img/generated/covariancia.svg',facecolor='white',metadata={'Date':None});plt.close(fig)
+```

@@ -1,0 +1,48 @@
+---
+title: Temperatura i resposta relativa de potència
+lang: ca
+ref: figura-temperatura-rendiment
+format: gfm
+execute-dir: project
+execute:
+  echo: false
+  warning: false
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  outputs:
+    - assets/img/generated/temperatura-rendiment.svg
+---
+
+```{python}
+from pathlib import Path
+import numpy as np
+import matplotlib.pyplot as plt
+
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root==root.parent: raise RuntimeError('No es troba el projecte')
+    root=root.parent
+out=root/'assets/img/generated/temperatura-rendiment.svg'
+out.parent.mkdir(parents=True,exist_ok=True)
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':12.5,'svg.fonttype':'none',
+                     'axes.spines.top':False,'axes.spines.right':False})
+air=np.linspace(20,45,100)
+cell=np.linspace(25,75,100)
+fig,axes=plt.subplots(1,2,figsize=(8.2,4.2),layout='constrained')
+for wind,color in [(1.,'#990000'),(3.,'#003366')]:
+    module=air+800/(25+6.84*wind)
+    axes[0].plot(air,module,color=color,lw=2,label=f'Vent {wind:g} m/s')
+axes[0].plot(air,air,':',color='#777777',label='Aire = mòdul')
+axes[0].set(xlabel='Aire (°C)',ylabel='Mòdul (°C)')
+axes[0].legend(frameon=False,fontsize=11.5)
+relative=100*(1-.004*(cell-25))
+axes[1].plot(cell,relative,color='#003366',lw=2)
+axes[1].scatter([55],[88],color='#990000',zorder=3)
+axes[1].annotate('55 °C → 88%',(55,88),xytext=(30,82),fontsize=12,
+                 arrowprops={'arrowstyle':'-','color':'#777777'})
+axes[1].set(xlabel='Cèl·lula (°C)',ylabel='Potència relativa (%)',ylim=(78,102))
+assert np.isclose(100*(1-.004*(55-25)),88)
+fig.savefig(out,facecolor='white',metadata={'Date':None})
+plt.close(fig)
+```

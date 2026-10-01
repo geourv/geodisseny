@@ -1,0 +1,47 @@
+---
+title: Falses alarmes i desajustos no detectats en la prova de la cinta
+lang: ca
+ref: figura-errors-contrast
+format: gfm
+execute-dir: project
+execute: {echo: false, warning: false}
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  outputs: [assets/img/generated/errors-contrast.svg]
+---
+
+```{python}
+from pathlib import Path
+from math import sqrt,erf
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle,Patch
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root==root.parent:raise RuntimeError('Projecte absent')
+    root=root.parent
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':14,'svg.fonttype':'none'})
+cdf=lambda x:.5*(1+erf(x/sqrt(2)))
+critical=1.959963984540054;delta=3;beta=cdf(critical-delta)-cdf(-critical-delta)
+assert np.isclose(2*(1-cdf(critical)),.05) and .149<beta<.150
+expected_errors=[5,round(100*beta)]
+assert expected_errors==[5,15]
+fig,axes=plt.subplots(1,2,figsize=(9,6.3),layout='constrained')
+titles=['A · Cinta ben ajustada\nDesajust mitjà real: 0 cm',
+        'B · Cinta que indica de més\nDesajust mitjà real: +3 cm']
+notes=['Unes 5 falses alarmes\ni 95 decisions correctes\nper cada 100 proves',
+       'Uns 15 problemes no detectats\ni 85 problemes detectats\nper cada 100 proves']
+for ax,errors,title,note in zip(axes,expected_errors,titles,notes):
+    for i in range(100):
+        row,col=divmod(i,10)
+        ax.add_patch(Rectangle((col,9-row),.83,.83,facecolor='#b86432' if i<errors else '#77a8c4',edgecolor='none'))
+    ax.set(xlim=(-.15,10),ylim=(-2.8,10.2),aspect='equal',xticks=[],yticks=[],title=title)
+    ax.text(4.9,-.45,note,ha='center',va='top',fontsize=14)
+    for spine in ax.spines.values():spine.set_visible(False)
+fig.suptitle('Una prova = 16 lectures del tram de 20 m',fontsize=16)
+fig.legend(handles=[Patch(facecolor='#b86432',label='Decisió equivocada'),Patch(facecolor='#77a8c4',label='Decisió correcta')],
+           loc='outside lower center',ncol=2,frameon=False,fontsize=14)
+print('Freqüències esperades, abans d’arrodonir:',{'tipus_I':5,'tipus_II':100*beta,'potencia':100*(1-beta)})
+fig.savefig(root/'assets/img/generated/errors-contrast.svg',facecolor='white',metadata={'Date':None});plt.close(fig)
+```

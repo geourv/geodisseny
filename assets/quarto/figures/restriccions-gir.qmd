@@ -1,0 +1,47 @@
+---
+title: La restricció depèn del tram pel qual s'arriba
+lang: ca
+ref: figura-restriccions-gir
+format: gfm
+execute-dir: project
+execute: {echo: false, warning: false}
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  outputs: [assets/img/generated/restriccions-gir.svg]
+---
+
+```{python}
+from pathlib import Path
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.patches import Polygon
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():root=root.parent
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':14,'svg.fonttype':'none'})
+fig,axes=plt.subplots(1,2,figsize=(9.5,5.3))
+fig.subplots_adjust(left=.03,right=.98,bottom=.05,top=.85,wspace=.15)
+for ax,i in zip(axes,[0,1]):
+    ax.set(xlim=(-10,110),ylim=(-25,115),aspect='equal');ax.axis('off')
+    ax.plot([5,95],[50,50],color='#d4d9df',lw=15,solid_capstyle='butt')
+    ax.plot([50,50],[5,95],color='#d4d9df',lw=15,solid_capstyle='butt')
+    ax.plot(50,50,'o',color='#43515e',ms=7)
+    ax.text(62,43,'C',weight='bold')
+    ax.text(14,65,'a',weight='bold');ax.text(63,84,'b',weight='bold');ax.text(62,15,'c',weight='bold')
+    ax.text(50,103,'Nord',ha='center');ax.text(50,-6,'Sud',ha='center');ax.text(-2,50,'Oest',ha='right',rotation=90,va='center')
+    if i==0:
+        theta=np.linspace(0,np.pi/2,25)
+        ax.plot(np.r_[9,38,38+12*np.sin(theta),50],np.r_[50,50,50+12*(1-np.cos(theta)),88],
+                color='#ba3d35',lw=3)
+        ax.add_patch(Polygon([[46,86],[54,86],[50,95]],facecolor='#ba3d35',edgecolor='none',zorder=4))
+        ax.plot([36,48],[57,69],color='#ba3d35',lw=4)
+        ax.plot([36,48],[69,57],color='#ba3d35',lw=4)
+        title='A · Gir a → b prohibit';text='La regla afecta aquesta maniobra.'
+    else:
+        ax.annotate('',xy=(50,93),xytext=(50,7),arrowprops={'arrowstyle':'-|>','lw':3,'color':'#147b6b','mutation_scale':20})
+        title='B · Pas c → b permès';text='El tram b continua obert.'
+    ax.set_title(title,fontsize=16,weight='bold',pad=15)
+    ax.text(50,-21,text,ha='center',fontsize=13)
+fig.savefig(root/'assets/img/generated/restriccions-gir.svg',facecolor='white',metadata={'Date':None})
+plt.close(fig)
+```

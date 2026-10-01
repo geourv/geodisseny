@@ -1,0 +1,76 @@
+runtime:
+  default_image: sha256:950ee7bf7cbab5163849415d4f7fd72dc400b1e81127913ff308244ae4a6ebdc
+  display_backend: offscreen
+  pull_policy: explicit
+  locale: ca
+paths:
+  recipes:
+    - context/qgis/centres.yml
+    - context/qgis/rutes.yml
+    - context/qgis/icaen-centres.yml
+    - context/qgis/accessibilitat.yml
+    - context/qgis/estadistica.yml
+    - context/qgis/visibilitat.yml
+    - context/qgis/autocorrelacio.yml
+    - context/qgis/temperatures.yml
+    - context/qgis/distancies.yml
+    - context/qgis/distancies-raster.yml
+    - context/qgis/distancies-xarxa.yml
+    - context/qgis/distancies-cost.yml
+    - context/qgis/distancies-pineda.yml
+    - context/qgis/rwalk.yml
+    - context/qgis/girs.yml
+  play_prompts: context/qgis
+  director_plans: tmp/qgis/plans
+  plays: tmp/qgis/plays
+  data_root: tmp/dades-docents/qgis
+  output_root: tmp/qgis/captures
+  cache_root: tmp/qgis/cache
+plugins: [processing, HotSpotAnalysis_v3, processing_saga_nextgen]
+data:
+  - id: xarxa-copia-impedancia
+    type: vector
+    path: xarxa-copia-impedancia.gpkg
+  - id: ruta-xarxa-base
+    type: vector
+    path: ruta-xarxa-base.gpkg
+  - id: ruta-xarxa-sentit
+    type: vector
+    path: ruta-xarxa-sentit.gpkg
+  - id: xarxa-detall
+    type: vector
+    path: xarxa-detall.gpkg
+  - id: icaen-coneguda
+    type: vector
+    path: icaen-coneguda.gpkg
+  - id: icaen-ambit
+    type: vector
+    path: icaen-ambit.gpkg
+  - id: icaen-centres
+    type: vector
+    path: icaen-centres.gpkg
+  - id: centres-ficticis
+    type: vector
+    path: centres.geojson
+  - id: xarxa-ficticia
+    type: vector
+    path: xarxa.geojson
+teaching_resources:
+  - id: centres-ficticis
+    kind: bundled
+    provider: local
+    type: vector
+    title: Quatre punts ficticis del capítol d'estadística espacial
+    path: centres.geojson
+    description: Exemple original, traslladat a coordenades mètriques per mostrar el diàleg real de QGIS.
+    licence: Exemple sintètic original del manual; no correspon a instal·lacions reals.
+    tags: [points, statistics, weights]
+  - id: xarxa-ficticia
+    kind: bundled
+    provider: local
+    type: vector
+    title: Xarxa fictícia de la figura de distàncies
+    path: xarxa.geojson
+    description: Arcs i nodes reproduïbles de la comparació conceptual, sense correspondència amb carreteres reals.
+    licence: Exemple sintètic original del manual.
+    tags: [lines, network, routing]

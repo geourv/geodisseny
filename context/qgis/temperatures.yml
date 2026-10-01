@@ -1,0 +1,118 @@
+id: temperatures
+title: Interpolació de temperatures XEMA
+source_prompt: context/qgis/temperatures.md
+plugins: [processing, processing_saga_nextgen]
+compat: {qgis: '>=3.44'}
+data:
+  - {id: tmax-estacions, type: vector, path: tmax-estacions.gpkg}
+  - {id: tmax-idw, type: raster, path: tmax-idw.tif}
+  - {id: tmax-kriging, type: raster, path: tmax-kriging.tif}
+  - {id: tmax-idw-estil, type: file, path: tmax-idw.qml}
+  - {id: tmax-kriging-estil, type: file, path: tmax-kriging.qml}
+setup:
+  - {action: set_project_crs, auth_id: 'EPSG:25831'}
+  - {action: load_vector, path: tmp/dades-docents/qgis/tmax-estacions.gpkg, name: XEMA · 182 estacions}
+  - {action: zoom_to_layer, layer: XEMA · 182 estacions}
+  - {action: clear_message_bar}
+captures:
+  - id: idw-parametres
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:qgis:idwinterpolation'}
+    steps:
+      - action: open_processing_algorithm_dialog
+        algorithm: qgis:idwinterpolation
+        parameters:
+          INTERPOLATION_DATA: 'XEMA · 182 estacions::~::0::~::4::~::0'
+          DISTANCE_COEFFICIENT: 2
+          EXTENT: '260000,530000,4486000,4752000 [EPSG:25831]'
+          PIXEL_SIZE: 2000
+          OUTPUT: TEMPORARY_OUTPUT
+    drawings:
+      - type: callout
+        target: {object_name: 'unaltracapturaProcessingParameter:DISTANCE_COEFFICIENT'}
+        text: Exponent 2 · més pes a les estacions properes
+        target_marker: box
+        colour: '#006699'
+        max_width: 250
+    output:
+      path: assets/captures/idw-parametres.png
+      annotations_svg: assets/captures/idw-parametres.annotations.svg
+      manifest: context/qgis/manifests/idw-parametres.yml
+  - id: variograma-parametres
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:sagang:variogram'}
+    steps:
+      - {action: close_transients}
+      - action: open_processing_algorithm_dialog
+        algorithm: sagang:variogram
+        parameters: {POINTS: XEMA · 182 estacions, FIELD: tx_c, DISTCOUNT: 12, DISTMAX: 150000, NSKIP: 1, RESULT: TEMPORARY_OUTPUT}
+    drawings:
+      - type: callout
+        target: {object_name: 'unaltracapturaProcessingParameter:DISTCOUNT'}
+        text: Agrupar parells per separació
+        target_marker: box
+        colour: '#006699'
+        max_width: 230
+    output:
+      path: assets/captures/variograma-parametres.png
+      annotations_svg: assets/captures/variograma-parametres.annotations.svg
+      manifest: context/qgis/manifests/variograma-parametres.yml
+  - id: kriging-parametres
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:sagang:ordinarykriging'}
+    steps:
+      - {action: close_transients}
+      - action: open_processing_algorithm_dialog
+        algorithm: sagang:ordinarykriging
+        parameters:
+          POINTS: XEMA · 182 estacions
+          FIELD: tx_c
+          TARGET_USER_XMIN TARGET_USER_XMAX TARGET_USER_YMIN TARGET_USER_YMAX: '260000,530000,4486000,4752000 [EPSG:25831]'
+          TARGET_USER_SIZE: 2000
+          TARGET_USER_FITS: 1
+          VAR_MAXDIST: 150000
+          VAR_NCLASSES: 12
+          VAR_NSKIP: 1
+          VAR_MODEL: a + b*x/100000
+          LOG: false
+          BLOCK: false
+          CV_METHOD: 0
+          SEARCH_RANGE: 1
+          SEARCH_POINTS_ALL: 1
+          TQUALITY: 1
+          PREDICTION: TEMPORARY_OUTPUT
+          VARIANCE: TEMPORARY_OUTPUT
+          CV_SUMMARY: TEMPORARY_OUTPUT
+          CV_RESIDUALS: TEMPORARY_OUTPUT
+    drawings:
+      - type: callout
+        target: {object_name: 'unaltracapturaProcessingParameter:TARGET_USER_SIZE'}
+        text: Mateixa graella de 2000 m que IDW
+        target_marker: box
+        colour: '#006699'
+        max_width: 230
+    output:
+      path: assets/captures/kriging-parametres.png
+      annotations_svg: assets/captures/kriging-parametres.annotations.svg
+      manifest: context/qgis/manifests/kriging-parametres.yml
+  - id: temperatures-resultat
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: close_transients}
+      - {action: load_raster, path: tmp/dades-docents/qgis/tmax-idw.tif, name: IDW · màxima del 15-08-2025}
+      - {action: load_raster, path: tmp/dades-docents/qgis/tmax-kriging.tif, name: Kriging · màxima del 15-08-2025}
+      - {action: zoom_to_layer, layer: Kriging · màxima del 15-08-2025}
+      - {action: clear_message_bar}
+    drawings:
+      - type: callout
+        target: {item_text: Kriging · màxima del 15-08-2025}
+        text: Predicció en °C · escala comuna amb IDW
+        target_marker: box
+        colour: '#006699'
+        placement: right
+        max_width: 230
+    output:
+      path: assets/captures/temperatures-resultat.png
+      annotations_svg: assets/captures/temperatures-resultat.annotations.svg
+      manifest: context/qgis/manifests/temperatures-resultat.yml

@@ -1,0 +1,61 @@
+---
+title: Temps d'accés per la xarxa de Vila-seca
+lang: ca
+ref: figura-isocrones-xarxa
+format: gfm
+execute-dir: project
+execute: {echo: false, warning: false}
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  inputs: [context/inputs/accessibilitat-ampliada.json]
+  outputs: [assets/img/generated/isocrones-xarxa.svg]
+---
+
+```{python}
+from pathlib import Path
+import json
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.patches import Polygon
+from matplotlib.lines import Line2D
+import matplotlib.patheffects as pe
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():root=root.parent
+d=json.loads((root/'context/inputs/accessibilitat-ampliada.json').read_text())
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':14,'svg.fonttype':'none'})
+colors=['#2365a4','#289d85','#e39d39']
+fig,axes=plt.subplots(1,2,figsize=(9.5,6.4))
+fig.subplots_adjust(left=.09,right=.98,bottom=.20,top=.87,wspace=.24)
+def lines(ax,features,colour,width):
+    for f in features:
+        g=f['geometry'];parts=g['coordinates'] if g['type']=='MultiLineString' else [g['coordinates']]
+        for coords in parts:
+            xy=np.array(coords)/1000;ax.plot(xy[:,0],xy[:,1],color=colour,lw=width)
+for ax,state,letter in zip(axes,['obert','tancat'],['A','B']):
+    ax.set_facecolor('#fafaf7')
+    for f in d['motorway']:
+        g=f['geometry'];parts=g['coordinates'] if g['type']=='MultiPolygon' else [g['coordinates']]
+        for polygon in parts:ax.add_patch(Polygon(np.array(polygon[0])/1000,facecolor='#d1d5db',edgecolor='none'))
+    lines(ax,d['network'],'#c4c8ca',.65)
+    for f in d['states'][state]['network_bands']:lines(ax,[f],colors[f['attributes']['classe']-1],2.8)
+    for label,key in [('O','origin'),('D','destination')]:
+        x,y=np.array(d[key])/1000;ax.plot(x,y,'o',ms=7,color='#96343f',mec='white',mew=1,zorder=5)
+        ax.text(x+.045,y+.025,label,weight='bold',path_effects=[pe.withStroke(linewidth=3,foreground='white')])
+    ax.annotate('P2',xy=(344.366,4553.74),xytext=(344.12,4553.85),
+                arrowprops={'arrowstyle':'-','color':'#713775'},color='#713775',weight='bold')
+    if state=='tancat':
+        ax.annotate('68,4 m de xarxa\nen tots tres límits',xy=np.array(d['origin'])/1000,
+                    xytext=(343.72,4553.27),fontsize=13,arrowprops={'arrowstyle':'->','color':'#43515e'},
+                    bbox={'facecolor':'white','edgecolor':'#c4c8ca','pad':4})
+    ax.set(xlim=(343.6,345.3),ylim=(4553,4554.7),aspect='equal',xlabel='Est UTM (km)')
+    ax.set_xticks([344,344.5,345]);ax.set_yticks([4553,4553.5,4554,4554.5])
+    ax.ticklabel_format(useOffset=False,style='plain');ax.tick_params(labelsize=12)
+    ax.set_title(f'{letter} · P2 {state}\nXarxa a 5 km/h',fontsize=16,weight='bold',pad=12)
+fig.text(.012,.55,'Nord UTM (km)',rotation=90,va='center',ha='center')
+fig.legend([Line2D([0],[0],color=c,lw=4) for c in colors]+[Line2D([0],[0],color='#c4c8ca',lw=2)],
+           ['0–3 min','>3–6 min','>6–12 min','Altres trams'],loc='lower center',ncol=4,frameon=False,bbox_to_anchor=(.5,.05),fontsize=13)
+fig.text(.5,.01,'Temps mínim des d’O · Els colors representen trams, no tota la superfície entre ells.',ha='center',fontsize=13)
+fig.savefig(root/'assets/img/generated/isocrones-xarxa.svg',facecolor='white',metadata={'Date':None})
+plt.close(fig)
+```

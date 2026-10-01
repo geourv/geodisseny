@@ -1,0 +1,8 @@
+%%{init: {"flowchart": {"htmlLabels": false, "curve": "linear", "nodeSpacing": 20, "rankSpacing": 28}, "themeVariables": {"fontSize": "20px"}}}%%
+flowchart TB
+  R["Restriccions<br/>Ambient · sòl agrari<br/>Aigua i litoral"] --> M["Domini conegut<br/>Admissible o exclòs"]
+  F["Factors<br/>Pendent · temperatura<br/>Estructura parcel·lària"] --> N["Funcions de valor<br/>Preferència 0–100"]
+  N --> P["Pesos justificats<br/>Suma ponderada"]
+  M --> S["Preselecció territorial"]
+  P --> S
+  S --> A["Alternatives concretes<br/>Accessos, visibilitat i efectes"]

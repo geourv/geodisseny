@@ -1,0 +1,51 @@
+---
+title: Llegir llavor, llindar i abast
+lang: ca
+ref: figura-semivariograma
+format: gfm
+execute-dir: project
+execute:
+  echo: false
+  warning: false
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  outputs:
+    - assets/img/generated/semivariograma.svg
+---
+
+```{python}
+from pathlib import Path
+import numpy as np
+import matplotlib.pyplot as plt
+
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root==root.parent:raise RuntimeError('No es troba el projecte')
+    root=root.parent
+out=root/'assets/img/generated/semivariograma.svg'
+out.parent.mkdir(parents=True,exist_ok=True)
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':14,'svg.fonttype':'none',
+                     'axes.spines.top':False,'axes.spines.right':False})
+residuals=np.array([1,.5,-.5,-1,0])
+empirical=[np.mean((residuals[:-lag]-residuals[lag:])**2)/2 for lag in range(1,5)]
+assert np.allclose(empirical,[.3125,4.75/6,1.0625,.5])
+h=np.linspace(.0001,6,400);ratio=np.minimum(h/4,1)
+gamma=.2+1.8*(1.5*ratio-.5*ratio**3)
+fig,ax=plt.subplots(figsize=(7.4,4.3),layout='constrained')
+ax.plot(h,gamma,color='#003366',lw=3)
+ax.plot([0,0],[0,.2],color='#990000',ls=':',lw=2)
+ax.scatter([0],[0],color='#003366',s=35,zorder=4)
+ax.scatter([0],[.2],facecolors='white',edgecolors='#003366',s=40,zorder=4)
+ax.axhline(2,color='#666666',ls='--',lw=1)
+ax.vlines(4,0,2,color='#39734d',ls='--',lw=1.5)
+ax.annotate('Llindar total: 2 °C²',(5.1,2),xytext=(3.45,2.38),fontsize=14,
+            arrowprops={'arrowstyle':'->','color':'#666666'})
+ax.annotate('Llavor: 0,2 °C²',(0,.2),xytext=(.55,.43),color='#990000',fontsize=14,
+            arrowprops={'arrowstyle':'->','color':'#990000'})
+ax.text(4,.13,'Abast: 4 km',ha='left',color='#39734d',fontsize=14)
+ax.set(xlim=(-.1,6),ylim=(-.05,2.6),xlabel='Separació entre localitzacions (km)',
+       ylabel='Semivariància (°C²)',xticks=range(7))
+fig.savefig(out,facecolor='white',metadata={'Date':None})
+plt.close(fig)
+```

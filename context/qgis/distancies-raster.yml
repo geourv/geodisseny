@@ -1,0 +1,79 @@
+id: distancies-raster
+title: Distància euclidiana amb cel·les de cinc metres
+source_prompt: context/qgis/distancies.md
+plugins: [processing]
+compat: {qgis: '>=3.44'}
+data:
+  - {id: distancies-proximitat, type: raster, path: distancies-vilaseca-20261001/resultats/distancia-euclidiana.tif}
+  - {id: distancies-origen-raster, type: raster, path: distancies-vilaseca-20261001/dades/origen-5m.tif}
+setup:
+  - {action: set_project_crs, auth_id: 'EPSG:25831'}
+  - {action: load_raster, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/fonts/ortofoto-2025.tif, name: Ortofoto ICGC 2025}
+  - {action: load_raster, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/resultats/distancia-euclidiana.tif, name: Distància euclidiana (m)}
+  - {action: set_layer_visible, layer: Distància euclidiana (m), visible: false}
+  - {action: load_raster, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/dades/origen-5m.tif, name: Origen rasteritzat 0-1}
+  - {action: set_layer_visible, layer: Origen rasteritzat 0-1, visible: false}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/dades/pas-p2.gpkg, name: Pas P2}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/dades/extrems.gpkg, name: Extrems O i D}
+  - {action: set_layer_visible, layer: Extrems O i D, visible: false}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/dades/origen.gpkg, name: Origen O}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/dades/desti.gpkg, name: Destí D}
+  - {action: zoom_to_layer, layer: Extrems O i D, scale: 0.9}
+  - {action: clear_message_bar}
+captures:
+  - id: distancies-raster-parametres
+    title: Proximitat GDAL en metres
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:gdal:proximity'}
+    camera:
+      mode: crop
+      target: {object_name: 'unaltracapturaProcessingParameter:UNITS'}
+      output_size: {width: 850, height: 510}
+    steps:
+      - action: open_processing_algorithm_dialog
+        algorithm: gdal:proximity
+        parameters: {INPUT: Origen rasteritzat 0-1, BAND: 1, VALUES: '1', UNITS: 0, NODATA: -9999, DATA_TYPE: 5, OUTPUT: TEMPORARY_OUTPUT}
+    drawings:
+      - type: callout
+        target: {object_name: 'unaltracapturaProcessingParameter:UNITS'}
+        text: Coordenades en metres
+        number: 2
+        number_style: label
+        target_marker: box
+        colour: information
+        placement: right
+        max_width: 190
+      - type: callout
+        target: {object_name: 'unaltracapturaProcessingParameter:VALUES'}
+        text: '1 identifica l’origen'
+        number: 1
+        number_style: label
+        target_marker: box
+        colour: ember
+        placement: right
+        max_width: 185
+    output:
+      path: assets/captures/distancies-raster-parametres.png
+      annotations_svg: assets/captures/distancies-raster-parametres.annotations.svg
+      manifest: context/qgis/manifests/distancies-raster-parametres.yml
+  - id: distancies-raster-resultat
+    title: La distància creix des de la cel·la origen
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: close_transients}
+      - {action: set_layer_visible, layer: Distància euclidiana (m), visible: true}
+      - {action: zoom_to_layer, layer: Extrems O i D, scale: 1.7}
+      - {action: clear_message_bar}
+    drawings:
+      - type: callout
+        target: {layer_name: Destí D}
+        text: 'D: 370,7 m entre centres de cel·la'
+        target_marker: point
+        colour: information
+        placement: top_left
+        max_width: 230
+    output:
+      path: assets/captures/distancies-raster-resultat.png
+      annotations_svg: assets/captures/distancies-raster-resultat.annotations.svg
+      manifest: context/qgis/manifests/distancies-raster-resultat.yml

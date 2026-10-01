@@ -1,0 +1,58 @@
+---
+title: Isòcrones de marxa amb el pas obert i tancat
+lang: ca
+ref: figura-isocrones-rwalk
+format: gfm
+execute-dir: project
+execute: {echo: false, warning: false}
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  inputs: [context/inputs/accessibilitat-ampliada.json]
+  outputs: [assets/img/generated/isocrones-rwalk.svg]
+---
+
+```{python}
+from pathlib import Path
+import json
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.colors import ListedColormap,BoundaryNorm
+from matplotlib.patches import Polygon,Patch
+import matplotlib.patheffects as pe
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():root=root.parent
+d=json.loads((root/'context/inputs/accessibilitat-ampliada.json').read_text())
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':14,'svg.fonttype':'none'})
+colors=['#2365a4','#289d85','#e39d39','#eeeeee']
+cmap=ListedColormap(colors);cmap.set_bad('#b9bec4')
+fig,axes=plt.subplots(1,2,figsize=(9.5,6.6))
+fig.subplots_adjust(left=.09,right=.98,bottom=.24,top=.85,wspace=.24)
+for ax,state,letter in zip(axes,['obert','tancat'],['A','B']):
+    classes=np.array(d['states'][state]['walking_classes'])
+    ax.imshow(np.ma.masked_equal(classes,0),origin='upper',extent=(343.6,345.3,4553,4554.7),
+              cmap=cmap,norm=BoundaryNorm([.5,1.5,2.5,3.5,4.5],4),interpolation='nearest')
+    for f in d['states'][state]['contours']:
+        g=f['geometry'];parts=g['coordinates'] if g['type']=='MultiLineString' else [g['coordinates']]
+        for coords in parts:
+            xy=np.array(coords)[:,:2]/1000;ax.plot(xy[:,0],xy[:,1],color='white',lw=.65,alpha=.9)
+    for label,key in [('O','origin'),('D','destination')]:
+        x,y=np.array(d[key])/1000;ax.plot(x,y,'o',ms=7,color='#96343f',mec='white',mew=1,zorder=5)
+        ax.text(x+.045,y+.025,label,weight='bold',path_effects=[pe.withStroke(linewidth=3,foreground='white')])
+    ax.annotate('P2',xy=(344.366,4553.74),xytext=(344.03,4553.96),
+                arrowprops={'arrowstyle':'-','color':'#713775'},color='#713775',weight='bold',
+                path_effects=[pe.withStroke(linewidth=3,foreground='white')])
+    m=d['controls']['models'][state+'-anada'];minutes=f"{m['minutes']:.2f}".replace('.',',')
+    area=f"{m['isochrones']['hectares_cumulative'][2]:.1f}".replace('.',',')
+    ax.set_title(f'{letter} · P2 {state}\nD: {minutes} min',fontsize=16,weight='bold',pad=12)
+    ax.text(.5,-.21,f'Fins a 12 min: {area} ha',transform=ax.transAxes,ha='center',fontsize=14)
+    ax.set(xlim=(343.6,345.3),ylim=(4553,4554.7),aspect='equal',xlabel='Est UTM (km)')
+    ax.set_xticks([344,344.5,345]);ax.set_yticks([4553,4553.5,4554,4554.5])
+    ax.ticklabel_format(useOffset=False,style='plain');ax.tick_params(labelsize=12)
+fig.text(.012,.55,'Nord UTM (km)',rotation=90,va='center',ha='center')
+fig.legend([Patch(facecolor=c) for c in colors]+[Patch(facecolor='#b9bec4')],
+           ['0–3 min','>3–6 min','>6–12 min','Més de 12 min','Barrera'],loc='lower center',ncol=3,
+           frameon=False,bbox_to_anchor=(.5,.02),fontsize=13)
+fig.savefig(root/'assets/img/generated/isocrones-rwalk.svg',facecolor='white',metadata={'Date':None})
+plt.close(fig)
+```

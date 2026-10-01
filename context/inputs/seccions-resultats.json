@@ -1,0 +1,328 @@
+{
+  "source_dates": {
+    "sections": "2024-01-01",
+    "cadastre_feed": "2026-08-21",
+    "icaen_download": "2026-09-28",
+    "icaen_metadata_revision": "2024-06-30",
+    "icaen_effective_date_verified": false,
+    "age_reference_year": 2026
+  },
+  "runtime": {
+    "gdal": "3100300",
+    "numpy": "2.2.4",
+    "libpysal": "4.13.0",
+    "esda": "2.7.1"
+  },
+  "sources_used": {
+    "seccions-20240101.zip": {
+      "url": "https://datacloud.icgc.cat/datacloud/bseccen_etrs89/shp/bseccenv10sh1f1_20240101_0.zip",
+      "sha256": "b6ca8bc53952f3276dc0775d80b31471f043310c97dabd55b970dcaea624c94d",
+      "bytes": 17479915,
+      "retrieved": "2026-09-29"
+    },
+    "catastro-tarragona-20260821.xml": {
+      "url": "https://www.catastro.hacienda.gob.es/INSPIRE/buildings/43/ES.SDGC.BU.atom_43.xml",
+      "sha256": "625b8121a100c84e488187f1781ab6ca94ff265bcdcb8202a40256da244498c7",
+      "bytes": 321130,
+      "retrieved": "2026-09-29"
+    },
+    "cadastre-dgc-43012.zip": {
+      "url": "https://www.catastro.hacienda.gob.es/INSPIRE/Buildings/43/43012-ALTAFULLA/A.ES.SDGC.BU.43012.zip",
+      "sha256": "c63b0f4611807c301ed0886466ca4c9aab34a9dc706260f0d7e52edfd4e10159",
+      "bytes": 1182064,
+      "retrieved": "2026-09-29"
+    },
+    "cadastre-dgc-43039.zip": {
+      "url": "https://www.catastro.hacienda.gob.es/INSPIRE/Buildings/43/43039-LA CANONJA/A.ES.SDGC.BU.43039.zip",
+      "sha256": "78d04b45686b6e0ed52f439b75897f74bb5910322eb6b93c62b5a390589a1c52",
+      "bytes": 892076,
+      "retrieved": "2026-09-29"
+    },
+    "cadastre-dgc-43044.zip": {
+      "url": "https://www.catastro.hacienda.gob.es/INSPIRE/Buildings/43/43044-EL CATLLAR/A.ES.SDGC.BU.43044.zip",
+      "sha256": "847e003d777f2ad5b644d21c2d525f4e8cf2d55317db1fe6700bcad0ba516ad5",
+      "bytes": 1503880,
+      "retrieved": "2026-09-29"
+    },
+    "cadastre-dgc-43048.zip": {
+      "url": "https://www.catastro.hacienda.gob.es/INSPIRE/Buildings/43/43048-CONSTANTI/A.ES.SDGC.BU.43048.zip",
+      "sha256": "45dac78a3fad7c4612847132fcfe8f22af06fabaff38857f39b076a143b85438",
+      "bytes": 793532,
+      "retrieved": "2026-09-29"
+    },
+    "cadastre-dgc-43051.zip": {
+      "url": "https://www.catastro.hacienda.gob.es/INSPIRE/Buildings/43/43051-CREIXELL/A.ES.SDGC.BU.43051.zip",
+      "sha256": "903867dec061d320e760d0c93a781afff4598881d8d44c76359eab041bb5ca3a",
+      "bytes": 1260932,
+      "retrieved": "2026-09-29"
+    },
+    "cadastre-dgc-43096.zip": {
+      "url": "https://www.catastro.hacienda.gob.es/INSPIRE/Buildings/43/43096-EL MORELL/A.ES.SDGC.BU.43096.zip",
+      "sha256": "b0cad40006c08accdf920c55c37067ed3fd3c975b177b60201ef560f8051e6ca",
+      "bytes": 499178,
+      "retrieved": "2026-09-29"
+    },
+    "cadastre-dgc-43099.zip": {
+      "url": "https://www.catastro.hacienda.gob.es/INSPIRE/Buildings/43/43099-LA NOU DE GAIA/A.ES.SDGC.BU.43099.zip",
+      "sha256": "5807190b365ea3f4bed431fbcf139c7bf08e584a4d3995ea08a7d64a02fc6ab3",
+      "bytes": 137962,
+      "retrieved": "2026-09-29"
+    },
+    "cadastre-dgc-43102.zip": {
+      "url": "https://www.catastro.hacienda.gob.es/INSPIRE/Buildings/43/43102-PALLARESOS ELS/A.ES.SDGC.BU.43102.zip",
+      "sha256": "29d54c8d4348e509ed05b3f85cc0c7917df5a0cf802758460758a4764348cfda",
+      "bytes": 900271,
+      "retrieved": "2026-09-29"
+    },
+    "cadastre-dgc-43105.zip": {
+      "url": "https://www.catastro.hacienda.gob.es/INSPIRE/Buildings/43/43105-PERAFORT/A.ES.SDGC.BU.43105.zip",
+      "sha256": "b911df0c1c44735d4f540585ea025c5adda77c4e7170cd2fbe776558c3a39945",
+      "bytes": 251202,
+      "retrieved": "2026-09-29"
+    },
+    "cadastre-dgc-43111.zip": {
+      "url": "https://www.catastro.hacienda.gob.es/INSPIRE/Buildings/43/43111-LA POBLA DE MAFUMET/A.ES.SDGC.BU.43111.zip",
+      "sha256": "24fe68c66ba425bad6cb1373340e842579447189f62862fb460d74fb235790c8",
+      "bytes": 333996,
+      "retrieved": "2026-09-29"
+    },
+    "cadastre-dgc-43113.zip": {
+      "url": "https://www.catastro.hacienda.gob.es/INSPIRE/Buildings/43/43113-LA POBLA DE MONTORNES/A.ES.SDGC.BU.43113.zip",
+      "sha256": "12ebf624da4e234486bba8f2b2c38f26703a468ba639b5b5648732b45f14afc5",
+      "bytes": 996922,
+      "retrieved": "2026-09-29"
+    },
+    "cadastre-dgc-43124.zip": {
+      "url": "https://www.catastro.hacienda.gob.es/INSPIRE/Buildings/43/43124-RENAU/A.ES.SDGC.BU.43124.zip",
+      "sha256": "dbc2e31d5c8fb15008003df8e4d5570ae10ff5e7391639264f69eca3f300069a",
+      "bytes": 54890,
+      "retrieved": "2026-09-29"
+    },
+    "cadastre-dgc-43128.zip": {
+      "url": "https://www.catastro.hacienda.gob.es/INSPIRE/Buildings/43/43128-LA RIERA DE GAIA/A.ES.SDGC.BU.43128.zip",
+      "sha256": "b33f7d5a10455a126926a055824417410d00e522d899e70a89e668e26a6d9ebf",
+      "bytes": 384919,
+      "retrieved": "2026-09-29"
+    },
+    "cadastre-dgc-43133.zip": {
+      "url": "https://www.catastro.hacienda.gob.es/INSPIRE/Buildings/43/43133-RODA DE BERA/A.ES.SDGC.BU.43133.zip",
+      "sha256": "25e44f8cc72dcd7c429482a026328a1ea0586b244043be1e6e150cc3da5edaff",
+      "bytes": 2426170,
+      "retrieved": "2026-09-29"
+    },
+    "cadastre-dgc-43137.zip": {
+      "url": "https://www.catastro.hacienda.gob.es/INSPIRE/Buildings/43/43137-SALOMO/A.ES.SDGC.BU.43137.zip",
+      "sha256": "7660c17ff062d803f25c4a13ab39219b28aef731dab3072d8297607a942a12b3",
+      "bytes": 201269,
+      "retrieved": "2026-09-29"
+    },
+    "cadastre-dgc-43185.zip": {
+      "url": "https://www.catastro.hacienda.gob.es/INSPIRE/Buildings/43/43185-SALOU/A.ES.SDGC.BU.43185.zip",
+      "sha256": "4664380a429abaa7ae68d662eea88732212121050dc2dfd79f82f3327844f524",
+      "bytes": 2986455,
+      "retrieved": "2026-09-29"
+    },
+    "cadastre-dgc-43146.zip": {
+      "url": "https://www.catastro.hacienda.gob.es/INSPIRE/Buildings/43/43146-LA SECUITA/A.ES.SDGC.BU.43146.zip",
+      "sha256": "a4b87973401c014da4ed3c087316cd0534670f19481ecfaaca271b6245f25a62",
+      "bytes": 486483,
+      "retrieved": "2026-09-29"
+    },
+    "cadastre-dgc-43900.zip": {
+      "url": "https://www.catastro.hacienda.gob.es/INSPIRE/Buildings/43/43900-TARRAGONA/A.ES.SDGC.BU.43900.zip",
+      "sha256": "3eff87d6fe9887bec29a8f380f4014aa34aa5472af9f04cfbcaa81fb936e5f73",
+      "bytes": 7826896,
+      "retrieved": "2026-09-29"
+    },
+    "cadastre-dgc-43155.zip": {
+      "url": "https://www.catastro.hacienda.gob.es/INSPIRE/Buildings/43/43155-TORREDEMBARRA/A.ES.SDGC.BU.43155.zip",
+      "sha256": "f1de25f1e877b83d21cc25b8f9079cff11018fce73c22245aa8e10e79c1ee603",
+      "bytes": 2460864,
+      "retrieved": "2026-09-29"
+    },
+    "cadastre-dgc-43166.zip": {
+      "url": "https://www.catastro.hacienda.gob.es/INSPIRE/Buildings/43/43166-VESPELLA DE GAIA/A.ES.SDGC.BU.43166.zip",
+      "sha256": "9d9213e29cf6bd14153e5091e80b116bbadb04997fc348e23a7355d3a3804614",
+      "bytes": 268513,
+      "retrieved": "2026-09-29"
+    },
+    "cadastre-dgc-43173.zip": {
+      "url": "https://www.catastro.hacienda.gob.es/INSPIRE/Buildings/43/43173-VILA SECA/A.ES.SDGC.BU.43173.zip",
+      "sha256": "7eb2767ac08c730e0fabce9df799de21e9b52731059266dfb5a2fcc9a4ad6a01",
+      "bytes": 1834640,
+      "retrieved": "2026-09-29"
+    },
+    "cadastre-dgc-43168.zip": {
+      "url": "https://www.catastro.hacienda.gob.es/INSPIRE/Buildings/43/43168-VILALLONGA DEL CAMP/A.ES.SDGC.BU.43168.zip",
+      "sha256": "b7ee96f1931eb796ea78a770cd82e7713db62876321cb5f90f8025f0298d56b2",
+      "bytes": 419661,
+      "retrieved": "2026-09-29"
+    }
+  },
+  "municipality_correspondence": {
+    "43012": [
+      "43012",
+      "ALTAFULLA"
+    ],
+    "43907": [
+      "43039",
+      "LA CANONJA"
+    ],
+    "43043": [
+      "43044",
+      "EL CATLLAR"
+    ],
+    "43047": [
+      "43048",
+      "CONSTANTI"
+    ],
+    "43050": [
+      "43051",
+      "CREIXELL"
+    ],
+    "43095": [
+      "43096",
+      "EL MORELL"
+    ],
+    "43097": [
+      "43099",
+      "LA NOU DE GAIA"
+    ],
+    "43100": [
+      "43102",
+      "PALLARESOS ELS"
+    ],
+    "43103": [
+      "43105",
+      "PERAFORT"
+    ],
+    "43109": [
+      "43111",
+      "LA POBLA DE MAFUMET"
+    ],
+    "43111": [
+      "43113",
+      "LA POBLA DE MONTORNES"
+    ],
+    "43122": [
+      "43124",
+      "RENAU"
+    ],
+    "43126": [
+      "43128",
+      "LA RIERA DE GAIA"
+    ],
+    "43131": [
+      "43133",
+      "RODA DE BERA"
+    ],
+    "43135": [
+      "43137",
+      "SALOMO"
+    ],
+    "43905": [
+      "43185",
+      "SALOU"
+    ],
+    "43144": [
+      "43146",
+      "LA SECUITA"
+    ],
+    "43148": [
+      "43900",
+      "TARRAGONA"
+    ],
+    "43153": [
+      "43155",
+      "TORREDEMBARRA"
+    ],
+    "43164": [
+      "43166",
+      "VESPELLA DE GAIA"
+    ],
+    "43171": [
+      "43173",
+      "VILA SECA"
+    ],
+    "43166": [
+      "43168",
+      "VILALLONGA DEL CAMP"
+    ]
+  },
+  "audit": {
+    "pv_input": 5102,
+    "pv_unmatched": 0,
+    "pv_ambiguous": 0,
+    "buildings_input": 40180,
+    "buildings_unmatched": 4,
+    "buildings_ambiguous": 0,
+    "buildings_invalid_geometry": 0,
+    "buildings_missing_geometry": 0,
+    "buildings_duplicate_id": 0,
+    "building_id_reused_in_distinct_municipal_entities": 1,
+    "building_date_missing_or_invalid": 19,
+    "building_municipality_mismatch": 32
+  },
+  "section_count": 151,
+  "totals": {
+    "pv_n": 5102,
+    "pv_known_n": 3762,
+    "pv_kw": 36633.0,
+    "pv_edifici_n": 5096,
+    "pv_edifici_known_n": 3757,
+    "pv_edifici_kw": 36058.0,
+    "buildings_n": 40176,
+    "functional_n": 38689,
+    "age_exact_n": 31302,
+    "date_interval_n": 7368
+  },
+  "moran": {
+    "variable": "log1p(known registered building kW per 100 functional cadastral buildings)",
+    "weights": "queen, full geometry, row standardised, county only",
+    "n": 150,
+    "excluded_islands": [],
+    "I": 0.1440467702872453,
+    "expected_I": -0.006711409395973154,
+    "p_sim": 0.0024,
+    "permutations": 9999,
+    "seed": 20260929,
+    "local_p_convention": "esda.Moran_Local.p_sim (one-tailed pseudo-p)",
+    "fdr_method": "Benjamini-Hochberg, alpha=0.05",
+    "fdr_cutoff": 0.0003,
+    "fdr_counts": {
+      "HH": 1,
+      "LH": 0,
+      "LL": 0,
+      "HL": 0
+    },
+    "fdr_sections": [
+      "4317101013"
+    ],
+    "excluded_data_sections": [
+      "4314806003"
+    ],
+    "knn4_I": 0.14876574482664912,
+    "knn4_p_sim": 0.0026
+  },
+  "association": {
+    "n": 126,
+    "x": "median age of functional buildings with beginning year = end year",
+    "y": "log1p(known registered building kW per 100 functional buildings)",
+    "selection": "at least 10 exact-date functional buildings and at least one known positive building PV power",
+    "pearson_r": -0.4009536718691836,
+    "R2": 0.16076384698538096,
+    "pearson_r_log_raw_kw": -0.27756259867881017,
+    "slope_per_year": -0.020925992383120255,
+    "intercept": 5.194206234868057,
+    "residual_moran_I": 0.1638614813381248,
+    "residual_moran_p_sim": 0.0026
+  },
+  "display_geometry_simplification_m": 5,
+  "limits": [
+    "Different source dates; ecological exploratory association, not causation.",
+    "ICAEN coordinates identify associated consumers, not panel footprints.",
+    "Missing PV power remains missing; known kW are an incomplete sum.",
+    "DGC beginning/end are the oldest/newest construction-unit years, not confidence bounds; multi-year objects are excluded from the single-year age indicator.",
+    "Cadastral buildings are not dwellings or building parts."
+  ]
+}

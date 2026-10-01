@@ -1,0 +1,84 @@
+---
+title: Perfil docent de visibilitat
+lang: ca
+ref: figura-perfil-visibilitat
+format: gfm
+execute-dir: project
+execute:
+  echo: false
+  warning: false
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  outputs:
+    - assets/img/generated/visibilitat.svg
+---
+
+```{python}
+from pathlib import Path
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.collections import LineCollection
+from matplotlib.lines import Line2D
+
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root==root.parent: raise RuntimeError('No es troba el projecte')
+    root=root.parent
+out=root/'assets/img/generated/visibilitat.svg'
+out.parent.mkdir(parents=True,exist_ok=True)
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':13,'svg.fonttype':'none',
+                     'axes.spines.top':False,'axes.spines.right':False})
+x=np.arange(0,1001,5,dtype=float)
+ground=100+8*x/1000-2*np.sin(np.pi*x/1000)
+screen=np.where((x>=460)&(x<=540),6.,0.)
+surface=ground+screen
+observer_ground=100.;observer_height=1.7;target_ground=108.;target_height=2.
+observer=observer_ground+observer_height;target=target_ground+target_height
+los=observer+(target-observer)*x/1000
+assert np.any(surface>los) and np.all(ground<los)
+assert np.all(surface<=observer+(115-observer)*x/1000)
+def visible(distance,height=0):
+    if distance==0:return True
+    sample=np.arange(0,distance,5)
+    target_z=np.interp(distance,x,surface)+height
+    ray=observer+(target_z-observer)*sample/distance
+    return np.all(np.interp(sample,x,surface)<=ray+1e-9)
+mid=(x[:-1]+x[1:])/2
+seen=np.array([visible(d) for d in mid])
+assert seen.any() and not seen.all() and not visible(1000,2)
+fig,(ax,bottom)=plt.subplots(2,1,figsize=(8.8,7.2),layout='constrained',sharex=True,
+                              gridspec_kw={'height_ratios':[1.35,1]})
+ax.fill_between(x,97,ground,color='#e7e0cf')
+ax.fill_between(x,ground,surface,color='#7c8783',alpha=.75)
+ax.plot(x,surface,color='#56605b',lw=2)
+ax.plot(x,los,color='#006699',lw=2,ls='--')
+ax.plot([0,0],[100,observer],color='black',lw=2.5)
+ax.plot([1000,1000],[108,target],color='black',lw=2.5)
+ax.scatter([0,1000],[observer,target],color=['#003366','#b6603a'],s=45,zorder=5)
+ax.annotate('O · ulls a 101,7 m',xy=(0,observer),xytext=(40,111.8),fontsize=13,
+            arrowprops={'arrowstyle':'-','color':'#003366'},color='#003366')
+ax.annotate('T · part superior a 110 m',xy=(1000,target),xytext=(655,114),fontsize=13,
+            arrowprops={'arrowstyle':'-','color':'#b6603a'},color='#91451a')
+ax.annotate('Pantalla a cota 108 m',xy=(500,108),xytext=(275,114),fontsize=13,
+            arrowprops={'arrowstyle':'-','color':'#56605b'})
+ax.text(30,99,'Sòl: 100 m\nAltura dels ulls: 1,7 m',fontsize=12)
+ax.text(775,99,'Sòl: 108 m\nAltura de T: 2 m',fontsize=12)
+ax.text(560,104.8,'Línia de visió\ninterrompuda',fontsize=13,color='#006699')
+ax.set(ylim=(97,116),ylabel='Cota (m)',title='A · Es veu el punt T des d’O?')
+bottom.fill_between(x,97,surface,color='#e7e0cf')
+segments=np.stack([np.column_stack([x[:-1],surface[:-1]]),
+                   np.column_stack([x[1:],surface[1:]])],axis=1)
+bottom.add_collection(LineCollection(segments,colors=np.where(seen,'#39734d','#b6603a'),linewidths=4))
+bottom.scatter([0],[observer],color='#003366',s=45,zorder=4)
+bottom.plot([0,0],[100,observer],color='#003366',lw=2)
+bottom.text(25,102.6,'O',color='#003366',weight='bold')
+bottom.set(ylim=(97,112),xlim=(-35,1035),ylabel='Cota (m)',xlabel='Distància des d’O (m)',
+           title='B · Quina part de la superfície es veu? (altura de l’objectiu: 0 m)')
+bottom.legend(handles=[Line2D([],[],color='#39734d',lw=4,label='Visible'),
+                       Line2D([],[],color='#b6603a',lw=4,label='Oculta')],
+              loc='upper left',bbox_to_anchor=(.07,1),ncol=2,frameon=False,fontsize=12)
+fig.supxlabel('Perfil O–T: 1.000 m · Mostres cada 5 m · Model pla, sense curvatura ni refracció',fontsize=12)
+fig.savefig(out,facecolor='white',metadata={'Date':None})
+plt.close(fig)
+```

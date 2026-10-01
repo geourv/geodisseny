@@ -1,0 +1,156 @@
+id: distancies-cost
+title: Fricció, cost acumulat i camí de menor cost
+source_prompt: context/qgis/distancies.md
+plugins: [processing]
+compat: {qgis: '>=3.44'}
+data:
+  - {id: distancies-friccio-tancada, type: raster, path: distancies-vilaseca-20261001/dades/friccio-tancat.tif}
+  - {id: distancies-cost-cella, type: raster, path: distancies-vilaseca-20261001/dades/cost-cella-obert.tif}
+  - {id: distancies-cost-acumulat, type: raster, path: distancies-vilaseca-20261001/resultats/cost-acumulat-obert.tif}
+  - {id: distancies-direccions, type: raster, path: distancies-vilaseca-20261001/resultats/direccions-obert.tif}
+  - {id: distancies-ruta-cost-obert, type: vector, path: distancies-vilaseca-20261001/resultats/ruta-cost-obert.gpkg}
+  - {id: distancies-ruta-cost-tancat, type: vector, path: distancies-vilaseca-20261001/resultats/ruta-cost-tancat.gpkg}
+setup:
+  - {action: set_project_crs, auth_id: 'EPSG:25831'}
+  - {action: load_raster, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/fonts/ortofoto-2025.tif, name: Ortofoto ICGC 2025}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/dades/barrera-ap7.gpkg, name: AP-7 · barrera}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/fonts/edificis.gpkg, name: Edificis · barrera}
+  - {action: load_raster, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/resultats/cost-acumulat-obert.tif, name: Cost acumulat (m ponderats)}
+  - {action: set_layer_visible, layer: Cost acumulat (m ponderats), visible: false}
+  - {action: load_raster, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/dades/friccio-tancat.tif, name: Fricció · pas tancat}
+  - {action: load_raster, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/dades/cost-cella-obert.tif, name: Cost per cel·la · pas obert}
+  - {action: set_layer_visible, layer: Cost per cel·la · pas obert, visible: false}
+  - {action: load_raster, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/resultats/direccions-obert.tif, name: Direccions de retorn}
+  - {action: set_layer_visible, layer: Direccions de retorn, visible: false}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/resultats/ruta-cost-tancat.gpkg, name: 'Tancat · cost 2217,7'}
+  - {action: set_layer_visible, layer: 'Tancat · cost 2217,7', visible: false}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/resultats/ruta-cost-obert.gpkg, name: 'Obert · cost 470,6'}
+  - {action: set_layer_visible, layer: 'Obert · cost 470,6', visible: false}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/dades/altres-passos.gpkg, name: Altres passos}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/dades/pas-p2.gpkg, name: Pas P2}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/dades/extrems.gpkg, name: Extrems O i D}
+  - {action: set_layer_visible, layer: Extrems O i D, visible: false}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/dades/origen.gpkg, name: Origen O}
+  - {action: load_vector, path: tmp/dades-docents/qgis/distancies-vilaseca-20261001/dades/desti.gpkg, name: Destí D}
+  - {action: zoom_to_layer, layer: Extrems O i D, scale: 0.9}
+  - {action: clear_message_bar}
+captures:
+  - id: distancies-friccio
+    title: El ràster de fricció amb barreres explícites
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: zoom_to_layer, layer: Extrems O i D, scale: 1.7}
+      - {action: clear_message_bar, wait_ms: 800}
+      - {action: clear_message_bar}
+    drawings:
+      - type: callout
+        target: {layer_name: Pas P2}
+        text: Pas tancat en aquest ràster
+        target_marker: box
+        colour: ember
+        placement: left
+        max_width: 220
+    output:
+      path: assets/captures/distancies-friccio.png
+      annotations_svg: assets/captures/distancies-friccio.annotations.svg
+      manifest: context/qgis/manifests/distancies-friccio.yml
+  - id: distancies-cost-parametres
+    title: Entrada de r.cost i punt d'inici
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:grass:r.cost'}
+    camera:
+      mode: crop
+      target: {object_name: 'unaltracapturaProcessingParameter:start_points'}
+      output_size: {width: 930, height: 580}
+    steps:
+      - action: open_processing_algorithm_dialog
+        algorithm: grass:r.cost
+        parameters:
+          input: Cost per cel·la · pas obert
+          start_points: Origen O
+          '-k': false
+          '-n': true
+          GRASS_REGION_PARAMETER: '343600,345300,4553000,4554700 [EPSG:25831]'
+          GRASS_REGION_CELLSIZE_PARAMETER: 5
+          output: TEMPORARY_OUTPUT
+          outdir: TEMPORARY_OUTPUT
+    drawings:
+      - type: callout
+        target: {object_name: 'unaltracapturaProcessingParameter:input'}
+        text: Cost de travessar una cel·la
+        number: 1
+        number_style: label
+        target_marker: box
+        colour: information
+        placement: right
+        max_width: 220
+      - type: callout
+        target: {object_name: 'unaltracapturaProcessingParameter:start_points'}
+        text: Començar a O
+        number: 2
+        number_style: label
+        target_marker: box
+        colour: ember
+        placement: right
+        max_width: 150
+    output:
+      path: assets/captures/distancies-cost-parametres.png
+      annotations_svg: assets/captures/distancies-cost-parametres.annotations.svg
+      manifest: context/qgis/manifests/distancies-cost-parametres.yml
+  - id: distancies-path-parametres
+    title: Reconstruir des de D el camí cap a O
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:grass:r.path'}
+    camera:
+      mode: crop
+      target: {object_name: 'unaltracapturaProcessingParameter:input'}
+      output_size: {width: 930, height: 590}
+    steps:
+      - {action: close_transients}
+      - action: open_processing_algorithm_dialog
+        algorithm: grass:r.path
+        parameters:
+          input: Direccions de retorn
+          format: 1
+          start_points: Destí D
+          vector_path: TEMPORARY_OUTPUT
+          raster_path: TEMPORARY_OUTPUT
+          GRASS_REGION_PARAMETER: '343600,345300,4553000,4554700 [EPSG:25831]'
+          GRASS_REGION_CELLSIZE_PARAMETER: 5
+    drawings:
+      - type: callout
+        target: {object_name: 'unaltracapturaProcessingParameter:start_points'}
+        text: Aquí es parteix de D
+        target_marker: box
+        colour: information
+        placement: right
+        max_width: 205
+    output:
+      path: assets/captures/distancies-path-parametres.png
+      annotations_svg: assets/captures/distancies-path-parametres.annotations.svg
+      manifest: context/qgis/manifests/distancies-path-parametres.yml
+  - id: distancies-cost-resultat
+    title: Cost acumulat i dos recorreguts fins al destí
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: close_transients}
+      - {action: set_layer_visible, layer: Fricció · pas tancat, visible: false}
+      - {action: set_layer_visible, layer: Cost acumulat (m ponderats), visible: true}
+      - {action: set_layer_visible, layer: 'Tancat · cost 2217,7', visible: true}
+      - {action: set_layer_visible, layer: 'Obert · cost 470,6', visible: true}
+      - {action: zoom_to_layer, layer: 'Tancat · cost 2217,7', scale: 1.15}
+      - {action: clear_message_bar}
+    drawings:
+      - type: callout
+        target: {layer_name: Pas P2}
+        text: Obrir el pas redueix el cost
+        target_marker: box
+        colour: information
+        placement: right
+        max_width: 220
+    output:
+      path: assets/captures/distancies-cost-resultat.png
+      annotations_svg: assets/captures/distancies-cost-resultat.annotations.svg
+      manifest: context/qgis/manifests/distancies-cost-resultat.yml

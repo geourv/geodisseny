@@ -1,0 +1,9 @@
+%%{init: {"flowchart": {"htmlLabels": false, "curve": "linear", "nodeSpacing": 24, "rankSpacing": 20}, "themeVariables": {"fontSize": "14px"}}}%%
+flowchart TB
+  D["Pregunta, fonts i diagnosi<br/>Lloc, objectius i persones"] --> R["Restriccions<br/>i cobertura"]
+  D --> F["Factors<br/>i preferències"]
+  R --> A["Dues propostes d'hort solar<br/>Petjada, accessos i connexions"]
+  F --> A
+  A --> I["Efectes i sensibilitat<br/>Paisatge, sòl, costos i incertesa"]
+  I --> C["Decisió argumentada<br/>Condicions i seguiment"]
+  C -->|Reformular| A

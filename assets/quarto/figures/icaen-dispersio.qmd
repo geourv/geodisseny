@@ -1,0 +1,43 @@
+---
+title: Centre, cercle i el·lipse de la distribució ICAEN
+lang: ca
+ref: figura-icaen-dispersio
+format: gfm
+execute-dir: project
+execute: {echo: false, warning: false}
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  inputs: [context/inputs/icaen-estadistica.json]
+  outputs: [assets/img/generated/icaen-dispersio.svg]
+---
+
+```{python}
+from pathlib import Path
+import json
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.patches import Polygon
+from matplotlib.lines import Line2D
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root==root.parent:raise RuntimeError('Projecte absent')
+    root=root.parent
+d=json.loads((root/'context/inputs/icaen-estadistica.json').read_text())
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':13,'svg.fonttype':'none'})
+fig,ax=plt.subplots(figsize=(8,5.7),layout='constrained')
+g=d['county'];parts=g['coordinates'] if g['type']=='MultiPolygon' else [g['coordinates']]
+for p in parts:ax.add_patch(Polygon(np.array(p[0])/1000,facecolor='#f2f5f7',edgecolor='#7a8791',lw=.7))
+xy=np.array(d['points'])/1000;ax.scatter(xy[:,0],xy[:,1],s=3,color='#708e9e',alpha=.65)
+for key,color,style in [('circle','#b87924','--'),('ellipse','#006699','-')]:
+    xy=np.array(d['geometries'][key]['coordinates'][0])/1000
+    ax.plot(xy[:,0],xy[:,1],color=color,ls=style,lw=2.3)
+x,y=np.array(d['summary']['centre'])/1000;ax.scatter([x],[y],marker='D',s=60,color='#992d3b',zorder=6)
+ax.annotate('Centre mitjà',xy=(x,y),xytext=(x+8,y+9),arrowprops={'arrowstyle':'-','color':'#992d3b'},color='#992d3b')
+ax.set(aspect='equal',xlabel='Est UTM (km)',ylabel='Nord UTM (km)',title='Mateixos 3.762 punts · dues lectures de la dispersió')
+ax.autoscale_view();ax.ticklabel_format(useOffset=False,style='plain')
+fig.legend(handles=[Line2D([],[],color='#b87924',ls='--',lw=2,label='Cercle: radi 8,70 km'),
+                    Line2D([],[],color='#006699',lw=2,label='El·lipse: semieixos 8,15 i 3,03 km')],
+           loc='outside lower center',frameon=False,fontsize=12,ncol=1)
+fig.savefig(root/'assets/img/generated/icaen-dispersio.svg',facecolor='white',metadata={'Date':None});plt.close(fig)
+```

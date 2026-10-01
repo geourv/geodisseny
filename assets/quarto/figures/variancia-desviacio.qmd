@@ -1,0 +1,50 @@
+---
+title: De les desviacions a la variància
+lang: ca
+ref: figura-variancia-desviacio
+format: gfm
+execute-dir: project
+execute: {echo: false, warning: false}
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  outputs: [assets/img/generated/variancia-desviacio.svg]
+---
+
+```{python}
+from pathlib import Path
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root==root.parent:raise RuntimeError('Projecte absent')
+    root=root.parent
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':14,'svg.fonttype':'none'})
+x=np.array([5,5,10,20,60]);d=x-x.mean();sq=d*d
+assert x.mean()==20 and d.sum()==0 and sq.sum()==2150 and np.var(x)==430
+fig=plt.figure(figsize=(8.8,8),layout='constrained');gs=fig.add_gridspec(2,2,height_ratios=[1,1.15])
+ax=fig.add_subplot(gs[0,:]);ax.axhline(20,color='#8a222d',ls='--',label='Mitjana: 20 kW')
+for i,(v,delta) in enumerate(zip(x,d),1):
+    color='#006699' if delta<0 else '#b55b24'
+    ax.plot([i,i],[20,v],color=color,lw=3)
+    ax.scatter(i,v,s=75,color='#003366',zorder=3)
+    ax.text(i+.08,(20+v)/2+(3 if delta==0 else 0),f'{delta:+.0f}' if delta else '0',color=color,va='center')
+ax.set(xticks=range(1,6),xticklabels=['A1','A2','A3','A4','A5'],ylim=(0,68),xlim=(.6,5.65),
+       ylabel='Potència (kW)',title='A · Separació de cada valor respecte de la mitjana')
+ax.legend(loc='upper left',frameon=False)
+ax=fig.add_subplot(gs[1,0]);ax.bar(range(1,6),sq,color=['#006699']*3+['#aaaaaa','#b55b24'])
+for i,v in enumerate(sq,1):ax.text(i,v+35,f'{v:.0f}',ha='center',fontsize=13)
+ax.axhline(430,color='#8a222d',ls='--');ax.text(.5,500,'Mitjana dels quadrats: 430',fontsize=13)
+ax.set(xticks=range(1,6),xticklabels=['A1','A2','A3','A4','A5'],ylim=(0,1830),
+       ylabel='Desviació al quadrat (kW²)',title='B · Els signes ja no es compensen')
+ax=fig.add_subplot(gs[1,1]);s=np.sqrt(430)
+ax.add_patch(Rectangle((0,0),s,s,facecolor='#dcebf2',edgecolor='#006699',lw=2))
+ax.text(s/2,s/2,'Àrea = variància\n430 kW²',ha='center',va='center')
+ax.annotate('',(0,-2),(s,-2),arrowprops={'arrowstyle':'<->','color':'#006699'})
+ax.text(s/2,-3,'Costat = √430\n20,74 kW',ha='center',va='top',color='#006699')
+ax.set(xlim=(-3,26),ylim=(-10,27),aspect='equal',xticks=[],yticks=[],title='C · Tornar a la unitat original')
+for spine in ax.spines.values():spine.set_visible(False)
+fig.savefig(root/'assets/img/generated/variancia-desviacio.svg',facecolor='white',metadata={'Date':None})
+plt.close(fig)
+```

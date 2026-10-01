@@ -1,0 +1,55 @@
+---
+title: Comprovar una cinta mètrica amb la regla i el resultat al mateix gràfic
+lang: ca
+ref: figura-contrast-hipotesi
+format: gfm
+execute-dir: project
+execute: {echo: false, warning: false}
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  outputs: [assets/img/generated/contrast-hipotesi.svg]
+---
+
+```{python}
+from pathlib import Path
+from math import sqrt,pi,erfc
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
+from matplotlib.patches import Patch
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root==root.parent:raise RuntimeError('Projecte absent')
+    root=root.parent
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':14,'svg.fonttype':'none'})
+data=np.array([-4,-2,-1,0,0,1,1,2,3,3,4,4,5,6,8,10]);sigma=4;n=len(data);se=sigma/sqrt(n)
+z=data.mean()/se;critical=1.959963984540054;p=erfc(abs(z)/sqrt(2))
+assert n==16 and data.mean()==2.5 and se==1 and np.isclose(p,.01241933065)
+x=np.linspace(-4.8,4.8,2401);density=np.exp(-.5*x*x)/sqrt(2*pi)
+fig,ax=plt.subplots(figsize=(9,5.7),layout='constrained')
+ax.plot(x,density,color='#555555',lw=2)
+ax.fill_between(x,0,density,where=abs(x)>=critical,color='#edcbb1')
+ax.fill_between(x,0,density,where=abs(x)>=z,color='#006699',alpha=.8)
+ax.vlines([-critical,critical],0,.415,color='#b64b29',ls='--',lw=1.7)
+ax.vlines(z,0,.48,color='#006699',lw=2.1)
+ax.vlines(-z,0,.285,color='#006699',ls=':',lw=1.8)
+ax.axvline(0,ymax=.69,color='#777777',ls=':',lw=1)
+ax.text(0,.465,'Regla: límits de ±1,96 cm',ha='center',color='#b64b29',fontsize=14)
+for bound in [-critical,critical]:
+    ax.annotate('',(bound,.418),(bound*.7,.448),arrowprops={'arrowstyle':'->','color':'#b64b29','lw':1.2})
+ax.annotate('Resultat observat\n+2,5 cm',(z,.46),xytext=(3.55,.48),ha='center',va='top',color='#006699',fontsize=14,
+            arrowprops={'arrowstyle':'->','color':'#006699'})
+ax.annotate('Igual de lluny del zero\na l’altre costat',(-z,.27),xytext=(-3.4,.35),ha='center',va='top',
+            color='#006699',fontsize=13,arrowprops={'arrowstyle':'->','color':'#006699'})
+ax.text(0,.14,'Mitjanes habituals\nprop de 0 cm',ha='center',fontsize=13,
+        bbox={'facecolor':'white','edgecolor':'none','pad':1})
+ax.set(xlim=(-4.8,4.8),ylim=(0,.53),yticks=[],xticks=[-4,-2,0,2,4],
+       xlabel='Error mitjà d’un grup de 16 lectures (cm)',
+       title='Comprovació d’una cinta sobre un tram de 20 m')
+ax.spines[['top','right','left']].set_visible(False)
+handles=[Line2D([],[],color='#b64b29',ls='--',lw=1.7,label='Límits escollits abans de mesurar'),
+         Patch(facecolor='#006699',alpha=.8,label='Zones blaves: 1,24% en total')]
+fig.legend(handles=handles,loc='outside lower center',ncol=1,frameon=False,fontsize=13)
+fig.savefig(root/'assets/img/generated/contrast-hipotesi.svg',facecolor='white',metadata={'Date':None});plt.close(fig)
+```

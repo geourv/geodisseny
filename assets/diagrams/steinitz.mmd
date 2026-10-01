@@ -1,0 +1,14 @@
+%%{init: {"flowchart": {"htmlLabels": false, "curve": "linear", "nodeSpacing": 24, "rankSpacing": 30}, "themeVariables": {"fontSize": "20px"}}}%%
+flowchart LR
+  subgraph DIAG[Comprendre el territori]
+    direction TB
+    R["1. Representació"] --> P["2. Procés"]
+    P --> E["3. Avaluació"]
+  end
+  subgraph PROP[Transformar el territori]
+    direction TB
+    C["4. Canvi"] --> I["5. Impacte"]
+    I --> D["6. Decisió"]
+  end
+  DIAG --> PROP
+  PROP -. "Revisió" .-> DIAG

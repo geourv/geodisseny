@@ -1,0 +1,1483 @@
+{
+  "records": {
+    "assets/quarto/figures/accessibilitat-territorial.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/accessibilitat-territorial.qmd",
+          "sha256": "50476ae20cca5631933d40694b8a7515db5a8255c00f57d436f1964becd95767"
+        },
+        {
+          "path": "context/inputs/practiques-mapes.json",
+          "sha256": "5d9dc2aaeb1499ac1ce5e6ce477509d719086b3394ef2e361f101eaf479b60eb"
+        },
+        {
+          "path": "context/inputs/ortofoto-pineda-2025.png",
+          "sha256": "3058210cf065ee884745b887f56c77d660068532dc8e425f9a70d4de23ae5b1a"
+        },
+        {
+          "path": "context/inputs/ortofoto-pineda-2025.json",
+          "sha256": "7c639b7223040807aaf406c86f361403939d415461d4f83985351feab6d05e70"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "7daa04797318c775785ac31736b2493dd29ced099bf4e06bdbf41a3542a4b716",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/accessibilitat-territorial.svg",
+          "sha256": "be1c60139aab3d987fe8b1fdb2e48159b17fa7f7ffb66fb4ff4ec318df74b68a",
+          "size": 689307
+        }
+      ],
+      "rendered_at": "2026-09-30T00:38:55+00:00"
+    },
+    "assets/quarto/figures/anisotropia-pendent.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/anisotropia-pendent.qmd",
+          "sha256": "9f174c56e53e000cd24e29ac26005a27da3044d1503e9ce44709d07d6b153da9"
+        },
+        {
+          "path": "context/inputs/accessibilitat-ampliada.json",
+          "sha256": "86359f870d1dc9cac695edf113f0ddb6897f7e405b51a52220730bb326d58659"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "535cf1da2d74ae5914ddf3b4b0216ce694a1d1d2f5ac64c2542f91490ec5d79d",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/anisotropia-pendent.svg",
+          "sha256": "3af6538b36782e0655a4c8b87610a570f8ed8c9cb35a3cb3fe0df657890c5f9f",
+          "size": 6373
+        }
+      ],
+      "rendered_at": "2026-10-01T19:30:04+00:00"
+    },
+    "assets/quarto/figures/centres-potencia.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/centres-potencia.qmd",
+          "sha256": "2efbe638d80eee421e9999a41960f313bb4af9dfcab8356fd51c9cba0cf8f7c7"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "e6f1ff8908df2200d1fbb37072a98eac0b63fa14f1302047d91600d575835711",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/centres-potencia.svg",
+          "sha256": "b0cba9bcb874536079e235ba2abf0e32f95c7c1191aec72d093e86317e6b4544",
+          "size": 20098
+        }
+      ],
+      "rendered_at": "2026-09-29T06:45:49+00:00"
+    },
+    "assets/quarto/figures/columbus-moran.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/columbus-moran.qmd",
+          "sha256": "9a789e99e9c1bc0386fd6026d93d3fbe1424401200d9e39f471656b1ec19c485"
+        },
+        {
+          "path": "context/inputs/columbus.geojson",
+          "sha256": "19a08191164f15a5575ee7b42e6c5d1947956480c6511a0e5090e1648b446ac2"
+        },
+        {
+          "path": "context/inputs/columbus-resultats.json",
+          "sha256": "a35883bfa0f07f201d996869afbea74c248cd7120b5945d1637430f4841f068c"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "454287a1032f5192f14198e9720d0e89cf31c0f96e2a7c76a091d801b84fb6be",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/columbus-moran.svg",
+          "sha256": "dfc2d631118d2f776eca145e3e9cf1c1a3ca9c4e220e6786910c59878e8b4125",
+          "size": 131541
+        }
+      ],
+      "rendered_at": "2026-09-30T00:39:03+00:00"
+    },
+    "assets/quarto/figures/contrast-hipotesi.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/contrast-hipotesi.qmd",
+          "sha256": "1f92cc72cc53970db7a9166d9f4c6cf0769c65d896e003b7f977af8ba1235db9"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "cc8375f554dda9fafc0d2e7cdb4446d3e6fd4bb44bf001b4b362191e1628dd7a",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/contrast-hipotesi.svg",
+          "sha256": "1420b4a8939973c04dff92eebd0ececb6c623f24c3762cbe069a32069b128383",
+          "size": 138524
+        }
+      ],
+      "rendered_at": "2026-09-30T23:50:15+00:00"
+    },
+    "assets/quarto/figures/covariancia.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/covariancia.qmd",
+          "sha256": "aafa0522f8e6d08ba12afb32f85b20edb27be001c0e48d33929b8d0214846947"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "59ba91cb4f97898f245a4a59dc0bac25b183e28656d865ec44209250e6266b56",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/covariancia.svg",
+          "sha256": "36a45ca5e693092dfe950c7f91a26b1ea498456f10aec4ca5e9cd58d893ac036",
+          "size": 15539
+        }
+      ],
+      "rendered_at": "2026-09-30T23:35:13+00:00"
+    },
+    "assets/quarto/figures/densitat-radi.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/densitat-radi.qmd",
+          "sha256": "0e348cb9d4178e271ccdd581673de132665b5ce832d0b5811f44db272c33d0c8"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "43b9b439e8c450d3a2adde2a166712edd35bdfbedb0975f592fee290ee3c84f7",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/densitat-radi.svg",
+          "sha256": "a325d04d0e43d50a870d179b28e54bf139ec357813147dbcd4797f9b8ef45483",
+          "size": 115266
+        }
+      ],
+      "rendered_at": "2026-09-29T07:07:21+00:00"
+    },
+    "assets/quarto/figures/distancies.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/distancies.qmd",
+          "sha256": "389ec2c2850a4b4321232e46590320d87f5865abe5cab66fcf5b5ec27620b0d0"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "47f3bb7785643a9ffe88cb3b58fe47f1d29bfb261d56f2533ef0e967f216e029",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/distancies.svg",
+          "sha256": "9079e399247738bb59e290d51f660dfd5567e9e970589b0826999cbd300247ba",
+          "size": 27582
+        }
+      ],
+      "rendered_at": "2026-09-30T01:00:34+00:00"
+    },
+    "assets/quarto/figures/distribucions.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/distribucions.qmd",
+          "sha256": "aaf65818156379de00f2fb4f3659ed327b9585acfac67b59cd4fe54b504df2aa"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "42bbde8efe6432ffe72db03e28c831076dbc8d009020a92cb6ad990a785a8601",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/distribucions.svg",
+          "sha256": "a83617385efb5be730c274a91e092f8ad040b4e20b8e27e9921eb3228a120184",
+          "size": 15454
+        }
+      ],
+      "rendered_at": "2026-09-30T21:38:51+00:00"
+    },
+    "assets/quarto/figures/errors-contrast.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/errors-contrast.qmd",
+          "sha256": "9d77915578d52ac6aed0d84176f5aabc9339930b8b5ed0b4387c237e8da46453"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "8a39dfb30c9bcee79de752c068b845e614b4f918854e702b153dc9672bb774ff",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/errors-contrast.svg",
+          "sha256": "ca538c4cbbb9e77b8f58c833956b68e12f0322f34f6452a5d59e067364009640",
+          "size": 44056
+        }
+      ],
+      "rendered_at": "2026-09-30T23:27:29+00:00"
+    },
+    "assets/quarto/figures/fal-lacia-ecologica.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/fal-lacia-ecologica.qmd",
+          "sha256": "49e330964be126be32cb9ddd624647058596b5d5480d9ce722b280b435fce488"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "67e36719fa322e453dc081c9c894afe8ea908d51213d3da2a32378b82c7fedb2",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/fal-lacia-ecologica.svg",
+          "sha256": "525f1b9ce5c62292a07325c8e97c662abe1be931e73ddaa0be76f72b671c408f",
+          "size": 29947
+        }
+      ],
+      "rendered_at": "2026-09-30T21:46:21+00:00"
+    },
+    "assets/quarto/figures/funcions-valor.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/funcions-valor.qmd",
+          "sha256": "e9b5d1e6b5f9bf63d0ea3cab43d3057a0b8f12bde885b26e34bdb78c2b04fdd4"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "dd991c5e3410a013369207ddc2ba625c5fc197d98d2c374a0f84e827ce9b6d8e",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/funcions-valor.svg",
+          "sha256": "dd529863328b043755b7c3afec158fa4699717392d473912a535ba98c1730cfa",
+          "size": 17508
+        }
+      ],
+      "rendered_at": "2026-09-29T06:46:23+00:00"
+    },
+    "assets/quarto/figures/gradient-adiabatic.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/gradient-adiabatic.qmd",
+          "sha256": "bb2e8706ab2d072474a48a587eab0d6301478b9b17ca04ca2127487c261c3507"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "970fb416f16a5c6e12933a29e79b29aa7336a76b52fc3475df339976c4acbba2",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/gradient-adiabatic.svg",
+          "sha256": "dc1f6d7e070caf8e4e520af57da9746a5e20b9be368b7bb3b2a1b2ed9e18dd48",
+          "size": 38154
+        }
+      ],
+      "rendered_at": "2026-09-30T22:03:00+00:00"
+    },
+    "assets/quarto/figures/icaen-densitat.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/icaen-densitat.qmd",
+          "sha256": "4f5d9159cbe8549127421f67937a2fb6706bb31d902a7b1d45715419f99f833e"
+        },
+        {
+          "path": "context/inputs/icaen-estadistica.json",
+          "sha256": "6ecc379bb3942ca4b1782fd6cc0dc91c07550b85c082b8d19e73d16f82fbe302"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "0b740811082be08ef75300ac412ebaba5f3ac05fb5abc73c4e840992f3c05451",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/icaen-densitat.svg",
+          "sha256": "ec24ad8275b5c38ebcb7c6f51943792be403c7bbfbbcd4e4fb54b35d36f18bf5",
+          "size": 1524705
+        }
+      ],
+      "rendered_at": "2026-09-30T01:00:57+00:00"
+    },
+    "assets/quarto/figures/icaen-dispersio.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/icaen-dispersio.qmd",
+          "sha256": "e826386713883a8dd891a539d1c2c5205839cc23517d4e6fe9502ad9a4c8bbbf"
+        },
+        {
+          "path": "context/inputs/icaen-estadistica.json",
+          "sha256": "6ecc379bb3942ca4b1782fd6cc0dc91c07550b85c082b8d19e73d16f82fbe302"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "151ae9b5624960e04095f79c210791796c8a7f38259a9f30c678ac2f7f7cf1ba",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/icaen-dispersio.svg",
+          "sha256": "29e45dda6d74931e5ff2a3cd8130286b7c22190b50c7a887b8ad15dcd4cc172f",
+          "size": 984178
+        }
+      ],
+      "rendered_at": "2026-09-30T00:39:40+00:00"
+    },
+    "assets/quarto/figures/impedancies-xarxa.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/impedancies-xarxa.qmd",
+          "sha256": "f8737f44e3fac1a88ae6d24e61166108dc854af51a749c36f288255935eacdde"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "becc1f7f96494e44a140ca44be6aa4eb101ea66a6997bf7d017fa716e9f182f0",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/impedancies-xarxa.svg",
+          "sha256": "e69bd4c61d2eea09b0e37e61fef31f4e2728159f8bf740a1d974d34b63433c1b",
+          "size": 20010
+        }
+      ],
+      "rendered_at": "2026-09-30T01:01:14+00:00"
+    },
+    "assets/quarto/figures/interpolacio-comparada.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/interpolacio-comparada.qmd",
+          "sha256": "35ed703882c7862406f0c72c8b67bdb5dac5e11eb9aa1a4c85852a8aba780520"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "111b8502aec0c74ec547b7c8f1748f3a0640e090aaa2a1270967018853ff5c47",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/interpolacio-comparada.svg",
+          "sha256": "9f4991696f36f47fdc01f9591c2e9f5146d3111dea63277d85fbfebf1b124901",
+          "size": 188442
+        }
+      ],
+      "rendered_at": "2026-09-29T06:46:32+00:00"
+    },
+    "assets/quarto/figures/intervals-confianca.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/intervals-confianca.qmd",
+          "sha256": "7268b52cc78fb4ede64a90c555049eb21e288ae9959c4cff94152afd3d3db9ff"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "b618d47db23ba96e855965d129fdd71536e1d095f997db16030264ac06cd8196",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/intervals-confianca.svg",
+          "sha256": "0dba88fbdd9746d52f9ae46a1c35a73515c575bf26b00442ad78101736802cd7",
+          "size": 35789
+        }
+      ],
+      "rendered_at": "2026-09-30T23:27:39+00:00"
+    },
+    "assets/quarto/figures/intervisibilitat.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/intervisibilitat.qmd",
+          "sha256": "060b96af311791ee28ca557dbe42c48fdde7833d72f954a12057be233277f1d2"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "e963a889431c2665af94d9f0480026691515adb8f594db9661d81742b70964d2",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/intervisibilitat.svg",
+          "sha256": "a9adfe97f678296d6b20011845853290394d030485046d930079b34dfb32d60a",
+          "size": 20613
+        }
+      ],
+      "rendered_at": "2026-09-30T01:01:24+00:00"
+    },
+    "assets/quarto/figures/isocrones-rwalk.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/isocrones-rwalk.qmd",
+          "sha256": "a4d1f837d3dfd423c4d0316266cfac02eedb25f4a462030c985b70932ffc2dbf"
+        },
+        {
+          "path": "context/inputs/accessibilitat-ampliada.json",
+          "sha256": "86359f870d1dc9cac695edf113f0ddb6897f7e405b51a52220730bb326d58659"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "cd9b3baac6e6d6e00add192b826441958df4d6de4beb76d1a15991815b286655",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/isocrones-rwalk.svg",
+          "sha256": "b6804520e3eb562571d56e47b20d01a50f3d94fb9776c15d4624689a5d1b16b5",
+          "size": 132360
+        }
+      ],
+      "rendered_at": "2026-10-01T19:36:59+00:00"
+    },
+    "assets/quarto/figures/isocrones-xarxa.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/isocrones-xarxa.qmd",
+          "sha256": "6b8ee62b8b7ee2bb080b13ce8ba8e5972c44fc69801fd14c88c78906add714e0"
+        },
+        {
+          "path": "context/inputs/accessibilitat-ampliada.json",
+          "sha256": "86359f870d1dc9cac695edf113f0ddb6897f7e405b51a52220730bb326d58659"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "dcbded1d5747bcc15491168a35ba86a06bd7668913016c728d733e582c40bdcd",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/isocrones-xarxa.svg",
+          "sha256": "aa55e636b26e1888c14fb1b29c341381da4b083be00c63adb9a544108ace543a",
+          "size": 302802
+        }
+      ],
+      "rendered_at": "2026-10-01T19:37:11+00:00"
+    },
+    "assets/quarto/figures/maup.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/maup.qmd",
+          "sha256": "eb768dd67267cf92bd2cb793d1b33510569cfb87b132c5ab86cdb1bc28002bcb"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "a6782b20d7e5456f3e13584b6398eb2dfe2558ae24f73aefd4c571e57a19b29b",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/maup.svg",
+          "sha256": "5f43bf2dea2a1c898c3a2b785a0820e47a4796b55cb0cf8e45310c8fae80628e",
+          "size": 48653
+        }
+      ],
+      "rendered_at": "2026-09-30T23:35:22+00:00"
+    },
+    "assets/quarto/figures/metriques-distancia.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/metriques-distancia.qmd",
+          "sha256": "fcab7de4402d1ce04428ac27f7f498fbbeae5eaa09caf10db29cf6bcc23b3e68"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "63ca8095493e7f3de4f4cfbcaa1da71652c4110007a5c5eab6b8c47a3cc7676a",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/metriques-distancia.svg",
+          "sha256": "1fe8d1e6db3962674181ca2f6ceb830ab2c44c33f1c76c687d44a1c07b7286fd",
+          "size": 328429
+        }
+      ],
+      "rendered_at": "2026-09-30T00:40:15+00:00"
+    },
+    "assets/quarto/figures/moran-patrons.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/moran-patrons.qmd",
+          "sha256": "4683270c54369bf936f99e91d92a1a51b7a6405657edc7c859fb2d892319364d"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "e4d453bcf56649d2b6cfa3d9ea43ddf73116992cfbe7cc101aea5b75a9360758",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/moran-patrons.svg",
+          "sha256": "170c4e998208466f9f05b6d9d746acfc60f8c24a6725422c967ab96c3c253e0d",
+          "size": 7364
+        }
+      ],
+      "rendered_at": "2026-09-29T20:43:35+00:00"
+    },
+    "assets/quarto/figures/moran-tarragones.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/moran-tarragones.qmd",
+          "sha256": "11c4b3f03909fb767726b7968db6c073e764b8a1ec06f05cbe1684f9ab0e78c7"
+        },
+        {
+          "path": "context/dades/cartografia_figures.py",
+          "sha256": "07fa3bbbe659ceaa4c73dc87052e723f1a2b07476a33ab05b570634be89c901f"
+        },
+        {
+          "path": "context/inputs/seccions-tarragones.geojson",
+          "sha256": "754123e02429ab5a118b9a9d16770f64f2d9ce44209409e5ad68cfdc822d32ed"
+        },
+        {
+          "path": "context/inputs/seccions-resultats.json",
+          "sha256": "9a1efe7517513837879dd99e6279ee1933c7916c1a441d1342696252794246c0"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "4f0f5144aa888cc37da3d71e23d4a1f5bcbe041e05987d901c66e1e51f0e9eaf",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/moran-tarragones.svg",
+          "sha256": "4345e0e22aff739f62d8630cccb5c6378d054b4c112cd61196171cc5811efcae",
+          "size": 221639
+        }
+      ],
+      "rendered_at": "2026-09-29T21:36:00+00:00"
+    },
+    "assets/quarto/figures/normal-mitjanes.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/normal-mitjanes.qmd",
+          "sha256": "6a99d2949b04deabd570e0afa6cff6a7ce63f490bd4c09cbb31004336737f76f"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "aa1e4c39fd8a62a6aa2c3fb37ce7de3fa46e93797b3928814f8fe2763dcc838a",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/normal-mitjanes.svg",
+          "sha256": "4f3db6631e1c94005b422ee706c8c3a5229b65f72eee68577c74b66db923f0b0",
+          "size": 166042
+        }
+      ],
+      "rendered_at": "2026-09-30T23:27:59+00:00"
+    },
+    "assets/quarto/figures/patrons-espacials.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/patrons-espacials.qmd",
+          "sha256": "543f962e0b38828f87b8cad793335545d897eb2f72fba2e56fc348bfcbcb8d19"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "4aff5083288009e2866fa598358ffa253c4cc876370f817a50d24c609e1c78cd",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/patrons-espacials.svg",
+          "sha256": "a18ff128b91dafde975bb89869c03a146d3067d61210f0628bec03a00dd8b1f4",
+          "size": 6187
+        }
+      ],
+      "rendered_at": "2026-09-29T06:46:59+00:00"
+    },
+    "assets/quarto/figures/potencia-antiguitat.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/potencia-antiguitat.qmd",
+          "sha256": "3215cf9f355445c09869bf3ef08f80dd8c9b1c4ee0d97598d6be2e67b1e4cfc1"
+        },
+        {
+          "path": "context/dades/cartografia_figures.py",
+          "sha256": "07fa3bbbe659ceaa4c73dc87052e723f1a2b07476a33ab05b570634be89c901f"
+        },
+        {
+          "path": "context/inputs/seccions-tarragones.geojson",
+          "sha256": "754123e02429ab5a118b9a9d16770f64f2d9ce44209409e5ad68cfdc822d32ed"
+        },
+        {
+          "path": "context/inputs/seccions-resultats.json",
+          "sha256": "9a1efe7517513837879dd99e6279ee1933c7916c1a441d1342696252794246c0"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "51039f50babb307465237da5c807545ef36e23eb3c0551826c12a314b3c10c03",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/potencia-antiguitat.svg",
+          "sha256": "7f1ac33b8cd3387efe97ffc519b34fdfa22c38d92503bd7e527eb07f8f4daa4a",
+          "size": 61422
+        }
+      ],
+      "rendered_at": "2026-09-30T07:00:03+00:00"
+    },
+    "assets/quarto/figures/regressio-residus.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/regressio-residus.qmd",
+          "sha256": "b585b3932c651c1b141fa7a8e9bdbc7e27c72b3990c3025b3a816085a6f447b2"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "72b2de9885d3deb3a86bf2cf27db24a50a95941d3596e504d8b1e78e6e6e45a2",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/regressio-residus.svg",
+          "sha256": "c6367f98e712c3e17f434502564173d346a0f2c87ede7f6e250ba9a243fa5d85",
+          "size": 22889
+        }
+      ],
+      "rendered_at": "2026-09-30T22:03:10+00:00"
+    },
+    "assets/quarto/figures/restriccions-gir.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/restriccions-gir.qmd",
+          "sha256": "3e00992854182250062ecfe06fde6e66c5d1fa48065cdb1cb1fd51d61d6ec6da"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "1332a369db942d71d851707e4f5a166bf4253304a83fd04821fc719c99d8d980",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/restriccions-gir.svg",
+          "sha256": "886e7cf3c12b051b6614e996d6fadb30ff7015f2fa85fb4f98c385f8c0c6d03c",
+          "size": 8343
+        }
+      ],
+      "rendered_at": "2026-10-01T19:57:35+00:00"
+    },
+    "assets/quarto/figures/seccions-tarragones.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/seccions-tarragones.qmd",
+          "sha256": "fe5b6f8bf7bdeaa3a93854b0804e58adf9369508489cc089a68148dc04153a27"
+        },
+        {
+          "path": "context/dades/cartografia_figures.py",
+          "sha256": "07fa3bbbe659ceaa4c73dc87052e723f1a2b07476a33ab05b570634be89c901f"
+        },
+        {
+          "path": "context/inputs/seccions-tarragones.geojson",
+          "sha256": "754123e02429ab5a118b9a9d16770f64f2d9ce44209409e5ad68cfdc822d32ed"
+        },
+        {
+          "path": "context/inputs/seccions-resultats.json",
+          "sha256": "9a1efe7517513837879dd99e6279ee1933c7916c1a441d1342696252794246c0"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "f396a50a316aaab3806a113342e951f8bb3f26980e43474bc62e2d0f2cd6bb4b",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/seccions-tarragones.svg",
+          "sha256": "15bdd8c33720be1e5bc5d094f2704d405b74f93a7fabbcf57459fdecbae9dccb",
+          "size": 390611
+        }
+      ],
+      "rendered_at": "2026-09-29T21:36:56+00:00"
+    },
+    "assets/quarto/figures/semivariograma.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/semivariograma.qmd",
+          "sha256": "3551ef25e6c3eae5bb97192edd9399da1c31de5e6e105e9a178c2ec013d7af6e"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "2b498929534298a2268d42e5e02d8acfb48ced13af16513edd45038599db1336",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/semivariograma.svg",
+          "sha256": "e2a3256af89d1a62dd18c8f1aba15577755ad50ad11551ddb2e4aa1f6af63e73",
+          "size": 11979
+        }
+      ],
+      "rendered_at": "2026-09-29T06:47:19+00:00"
+    },
+    "assets/quarto/figures/steinitz-abocador-exemple.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/steinitz-abocador-exemple.qmd",
+          "sha256": "6415e32d11cfc14385c54b1f99f4d110868ba78a2cc4c5525bb55b2dde74a265"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "738d978362c9e5f8a290adc875852d62b24dad27ce75c1edf6774823610c57f9",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/steinitz-abocador-exemple.svg",
+          "sha256": "9c85b1dd5bbc99787354b8bf5e5507b3b608e11bf9079a615b03283dad4d55fb",
+          "size": 58553
+        }
+      ],
+      "rendered_at": "2026-09-30T23:35:31+00:00"
+    },
+    "assets/quarto/figures/steinitz-solar-exemple.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/steinitz-solar-exemple.qmd",
+          "sha256": "e2be5a98ed4b23baaaeb004218c9dc16cdaec2b9eec480eb280a2c14e9da1e01"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "b81b38bad0a82a8a03ed5765ef1a01c6ede546bb30321bb090d682e0b11cab0c",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/steinitz-solar-exemple.svg",
+          "sha256": "03c9082f98592f9524a86cd10f24857b96d65ada818b95812f6ee33c092ddbf9",
+          "size": 65824
+        }
+      ],
+      "rendered_at": "2026-09-30T23:35:41+00:00"
+    },
+    "assets/quarto/figures/temperatura-rendiment.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/temperatura-rendiment.qmd",
+          "sha256": "3c3b540a70e433319ad799b729b3b634ea3e845cf20c4ee976ac8f766c14e32f"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "6e1a9a8b85b3623e69e16aa31c6a01325ba7bd50bcc90e0935437dc6eb1d7d43",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/temperatura-rendiment.svg",
+          "sha256": "26847614d68f88a8eb2abc9076de1aa12551ee1b0a68871a1920ac7a82050a07",
+          "size": 25062
+        }
+      ],
+      "rendered_at": "2026-09-28T21:35:51+00:00"
+    },
+    "assets/quarto/figures/temperatures-catalunya.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/temperatures-catalunya.qmd",
+          "sha256": "55277040119a6a565949b5098a501cba5f3ca108bb8744f9d3b02bf4f79bfa5a"
+        },
+        {
+          "path": "context/inputs/temperatures-catalunya.json",
+          "sha256": "8dfeee3108608ead85fd4aac433a80436a3fdeea6dd63ae947d52bc3367258b6"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "82fa430f22625cf6ea6f25b8afc70b56d580e27953d4d372bd5f6593f4b995bc",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/temperatures-catalunya.svg",
+          "sha256": "1aaddcd6e083b6d5b0e20e5cfbc89dfccc2ff7f42fb44d5c1656f863dd48afa5",
+          "size": 1509170
+        }
+      ],
+      "rendered_at": "2026-09-30T01:01:43+00:00"
+    },
+    "assets/quarto/figures/variancia-desviacio.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/variancia-desviacio.qmd",
+          "sha256": "aa30ae22137135da139ddc130c2d87fb1bffb41c46001b3c7f2609b337c564c1"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "807fee4cc265dec10ffa10543bc5f894d7f94b6db10a14f3499185a7046d9b38",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/variancia-desviacio.svg",
+          "sha256": "235e081522b7c458f848456ce17aa10e4f924b685795aa776a274b2f139ead99",
+          "size": 23053
+        }
+      ],
+      "rendered_at": "2026-09-30T22:03:21+00:00"
+    },
+    "assets/quarto/figures/veinatges.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/veinatges.qmd",
+          "sha256": "31f50fa453f8fd96b8b5fd7e76c45fb8fb5fed231bed4179df08cbf635b6b3cf"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "36a1b63d08a7b6aca64d7fec36116761be10ec7ace5e7515f214eb6c586b24b1",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/veinatges.svg",
+          "sha256": "82212df9cf98b2c62e44e0596ca24f39f1ea9290d346868ae779c181cfaf7f04",
+          "size": 6888
+        }
+      ],
+      "rendered_at": "2026-09-28T21:36:04+00:00"
+    },
+    "assets/quarto/figures/visibilitat-acumulada.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/visibilitat-acumulada.qmd",
+          "sha256": "3cbe8b235d3ef4bea48e080db124ddce9fc9be17f959cb2b0de22c6e9cbcef4d"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "f932b7fa5aa233f63a2650bad6ca1c2e14ac3884b56f8c81a4e6b9fbcad57f6c",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/visibilitat-acumulada.svg",
+          "sha256": "d31fe6f2cfc791bfa20327c883aab3c96c344a3bfee0301e89bcee0fb3cc4950",
+          "size": 144392
+        }
+      ],
+      "rendered_at": "2026-09-30T01:01:56+00:00"
+    },
+    "assets/quarto/figures/visibilitat-petroquimica.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/visibilitat-petroquimica.qmd",
+          "sha256": "683b7ee5076b7ded42d07d3809d35a3410179191dd258132283dad7655ee999d"
+        },
+        {
+          "path": "context/inputs/practiques-mapes.json",
+          "sha256": "5d9dc2aaeb1499ac1ce5e6ce477509d719086b3394ef2e361f101eaf479b60eb"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "1193b51a9df1f17a6c1b5732f7af54e6b94732c9c2ad1e9fcee8671e1e1e4333",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/visibilitat-petroquimica.svg",
+          "sha256": "00ead1b690176bb22f211063aa002c483ab6e21c5e120be54ccebfe84a3ac904",
+          "size": 567877
+        }
+      ],
+      "rendered_at": "2026-09-30T00:41:01+00:00"
+    },
+    "assets/quarto/figures/visibilitat.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/visibilitat.qmd",
+          "sha256": "1a43dde5f9b9f15f6477d87cc7c282f29f4498b07f1810b87d3973ad80b8d7e4"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "a555ac7d00c7a529dce0c8083d1c779967935bb0be762e4cd3ddd10d1a30c9e0",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/visibilitat.svg",
+          "sha256": "5562bd3bd3a7a056304653eb65756721902ca995a89b1c2e53b1687d5d934499",
+          "size": 81437
+        }
+      ],
+      "rendered_at": "2026-09-30T00:41:13+00:00"
+    }
+  },
+  "version": 1
+}

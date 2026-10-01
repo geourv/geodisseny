@@ -1,0 +1,72 @@
+---
+title: Comparar interpolacions en un camp sintètic conegut
+lang: ca
+ref: figura-interpolacio-comparada
+format: gfm
+execute-dir: project
+execute:
+  echo: false
+  warning: false
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  outputs:
+    - assets/img/generated/interpolacio-comparada.svg
+---
+
+```{python}
+from pathlib import Path
+import numpy as np
+import matplotlib.pyplot as plt
+
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root==root.parent:raise RuntimeError('No es troba el projecte')
+    root=root.parent
+out=root/'assets/img/generated/interpolacio-comparada.svg'
+out.parent.mkdir(parents=True,exist_ok=True)
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':14,'svg.fonttype':'none'})
+
+def elevation(x,y):return 100*x+60*y
+def temperature(x,y):return 32-.006*elevation(x,y)+1.4*np.sin(x)*np.cos(y/1.5)
+xy=np.array([[.5,.5],[2,.6],[4.7,.8],[1,2.6],[3,2.5],[5.5,2.8],[.7,4.3],[3.3,4.5],[5.3,4.4]])
+observed=temperature(xy[:,0],xy[:,1]);alt=elevation(xy[:,0],xy[:,1])
+xx,yy=np.meshgrid(np.linspace(0,6,151),np.linspace(0,5,126))
+targets=np.column_stack([xx.ravel(),yy.ravel()])
+dist=np.linalg.norm(xy[:,None,:]-targets[None,:,:],axis=2)
+weights=1/np.maximum(dist,1e-12)**2;weights/=weights.sum(axis=0)
+assert np.allclose(weights.sum(axis=0),1)
+idw=(observed@weights).reshape(xx.shape)
+b,a=np.polyfit(alt,observed,1)
+trend=a+b*elevation(xx,yy);residual=observed-(a+b*alt)
+
+# Ordinary kriging of residuals with a prescribed, valid spherical variogram.
+# Distances are kilometres; semivariances are degrees Celsius squared.
+def variogram(distance):
+    q=np.minimum(distance/3.,1.)
+    return np.where(distance<1e-12,0.,.05+.8*(1.5*q-.5*q**3))
+n=len(xy)
+pair_dist=np.linalg.norm(xy[:,None,:]-xy[None,:,:],axis=2)
+system=np.ones((n+1,n+1));system[:n,:n]=variogram(pair_dist);system[-1,-1]=0
+rhs=np.vstack([variogram(dist),np.ones(dist.shape[1])])
+solution=np.linalg.solve(system,rhs);kw=solution[:n]
+assert np.allclose(kw.sum(axis=0),1)
+training_solution=np.linalg.solve(system,np.vstack([variogram(pair_dist),np.ones(n)]))[:n]
+assert np.allclose(training_solution,np.eye(n),atol=1e-10)
+combined=trend+(residual@kw).reshape(xx.shape)
+truth=temperature(xx,yy)
+surfaces=[truth,trend,idw,combined]
+lo=min(s.min() for s in surfaces);hi=max(s.max() for s in surfaces)
+fig,axes=plt.subplots(2,2,figsize=(8,7.4),layout='constrained',sharex=True,sharey=True)
+titles=['A · Camp sintètic conegut','B · Regressió amb altitud','C · IDW: distància, p = 2','D · Regressió + kriging residual']
+for ax,surface,title in zip(axes.ravel(),surfaces,titles):
+    image=ax.imshow(surface,origin='lower',extent=(0,6,0,5),cmap='YlOrRd',vmin=lo,vmax=hi)
+    ax.scatter(xy[:,0],xy[:,1],color='#003366',edgecolor='white',lw=.8,s=28)
+    ax.set(title=title,xticks=[0,2,4,6],yticks=[0,2,4])
+for ax in axes[-1]:ax.set_xlabel('Est (km)')
+for ax in axes[:,0]:ax.set_ylabel('Nord (km)')
+bar=fig.colorbar(image,ax=axes,orientation='horizontal',shrink=.8,pad=.04,fraction=.06)
+bar.set_label('Temperatura (°C) · escala comuna als quatre panells')
+fig.savefig(out,facecolor='white',metadata={'Date':None})
+plt.close(fig)
+```

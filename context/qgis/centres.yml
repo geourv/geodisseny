@@ -1,0 +1,43 @@
+id: centres-ficticis
+title: Configuració del centre ponderat
+source_prompt: context/qgis/centres.md
+compat:
+  qgis: '>=3.28'
+data:
+  - id: centres-ficticis
+    type: vector
+    path: centres.geojson
+setup:
+  - action: set_project_crs
+    auth_id: EPSG:25831
+  - action: load_vector
+    path: tmp/dades-docents/qgis/centres.geojson
+    name: Quatre punts ficticis
+  - action: zoom_to_layer
+    layer: Quatre punts ficticis
+  - action: clear_message_bar
+captures:
+  - id: centres-parametres
+    title: Pes i agrupació de les coordenades mitjanes
+    mode: window
+    target:
+      object_name: unaltracapturaProcessingDialog:native:meancoordinates
+    steps:
+      - action: open_processing_algorithm_dialog
+        algorithm: native:meancoordinates
+        parameters:
+          INPUT: Quatre punts ficticis
+          WEIGHT: POT_KW
+          OUTPUT: TEMPORARY_OUTPUT
+        wait_ms: 900
+    drawings:
+      - type: rect
+        colour: information
+        fill: false
+        stroke: 2
+        target:
+          object_name: unaltracapturaProcessingParameter:WEIGHT
+    output:
+      path: assets/captures/centres-parametres.png
+      annotations_svg: assets/captures/centres-parametres.annotations.svg
+      manifest: context/qgis/manifests/centres-parametres.yml

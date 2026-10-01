@@ -1,0 +1,143 @@
+---
+title: Distància euclidiana, graf i graella de fricció
+lang: ca
+ref: figura-distancies-costos
+format: gfm
+execute-dir: project
+execute:
+  echo: false
+  warning: false
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  outputs:
+    - assets/img/generated/distancies.svg
+---
+
+```{python}
+from pathlib import Path
+import heapq
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.colors import ListedColormap, BoundaryNorm
+from matplotlib.patches import Rectangle
+from matplotlib.lines import Line2D
+
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root==root.parent: raise RuntimeError('No es troba el projecte')
+    root=root.parent
+out=root/'assets/img/generated/distancies.svg'
+out.parent.mkdir(parents=True,exist_ok=True)
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':14,'svg.fonttype':'none',
+                     'figure.facecolor':'white'})
+
+def shortest(adjacency, start, goal):
+    distances={start:0.}; previous={}; queue=[(0.,start)]
+    while queue:
+        cost,node=heapq.heappop(queue)
+        if cost != distances[node]: continue
+        if node==goal: break
+        for neighbor,weight in adjacency[node]:
+            trial=cost+weight
+            if trial < distances.get(neighbor,np.inf):
+                distances[neighbor]=trial;previous[neighbor]=node
+                heapq.heappush(queue,(trial,neighbor))
+    path=[goal]
+    while path[-1]!=start: path.append(previous[path[-1]])
+    return path[::-1],distances[goal]
+
+nodes={'O':(1,2),'A':(1,5),'B':(7,5),'D':(7,2),
+       'E':(1,6),'F':(7,6),'G':(3,2),'H':(8,2),'C':(0,2),'I':(0,0),'J':(8,0)}
+edges=[('O','A'),('A','B'),('B','D'),('A','E'),('E','F'),('F','B'),
+       ('O','G'),('D','H'),('O','C'),('C','I'),('I','J'),('J','H')]
+graph={key:[] for key in nodes}
+for u,v in edges:
+    length=100*np.linalg.norm(np.array(nodes[u])-nodes[v])
+    graph[u].append((v,length));graph[v].append((u,length))
+route,net_length=shortest(graph,'O','D')
+assert route==['O','A','B','D'] and net_length==1200
+lower=['O','C','I','J','H','D']
+assert sum(100*np.linalg.norm(np.array(nodes[u])-nodes[v]) for u,v in zip(lower,lower[1:]))==1400
+
+friction=np.full((7,9),4.);friction[0,:]=.5;friction[1:5,4]=np.inf
+grid={}
+for y,x in np.ndindex(friction.shape):
+    if not np.isfinite(friction[y,x]): continue
+    grid[(y,x)]=[]
+    for dy,dx in ((-1,0),(1,0),(0,-1),(0,1)):
+        yy,xx=y+dy,x+dx
+        if 0<=yy<7 and 0<=xx<9 and np.isfinite(friction[yy,xx]):
+            grid[(y,x)].append(((yy,xx),100*(friction[y,x]+friction[yy,xx])/2))
+path,cost=shortest(grid,(2,1),(2,7))
+assert len(path)-1==10 and cost==1550
+
+fig,axes=plt.subplots(2,2,figsize=(8.5,8),layout='constrained')
+chosen='#006699';available='#8b969f';direct='#bf5960'
+def terrain(ax):
+    ax.set(xlim=(-.5,8.5),ylim=(-.5,6.8),aspect='equal',xticks=[],yticks=[])
+    ax.add_patch(Rectangle((3.5,.5),1,4,facecolor='#434343',edgecolor='#666666',zorder=2))
+    ax.text(4,2.55,'Barrera',color='white',rotation=90,ha='center',va='center',fontsize=13,zorder=6)
+    for label in ['O','D']:
+        x,y=nodes[label];ax.scatter([x],[y],s=85,color='black',zorder=7)
+        ax.text(x-.4,y+.38,label,fontsize=15,weight='bold',zorder=8)
+    for spine in ax.spines.values():spine.set_visible(False)
+
+ax=axes[0,0];terrain(ax)
+ax.plot([1,7],[2,2],color=chosen,lw=3,zorder=5)
+ax.set_title('A · Distance euclidiana'.replace('Distance','Distància'))
+ax.set_xlabel('600 m · ignora la barrera',fontsize=14)
+ax.plot([.2,2.2],[.1,.1],color='black',lw=2)
+ax.text(1.2,.4,'200 m',ha='center',fontsize=13)
+
+ax=axes[0,1];terrain(ax)
+for u,v in edges:
+    xy=np.array([nodes[u],nodes[v]])
+    ax.plot(xy[:,0],xy[:,1],color=available,lw=2,zorder=3)
+ax.plot([1,7],[2,2],ls='--',color=direct,lw=1.5,zorder=3)
+xy=np.array([nodes[n] for n in route]);ax.plot(xy[:,0],xy[:,1],color=chosen,lw=3,zorder=4)
+for label,(x,y) in nodes.items():
+    if label not in ['O','D']:
+        ax.scatter([x],[y],facecolors='white',edgecolors=available,s=40,zorder=5)
+    if label in ['A','B']:ax.text(x+(.25 if label=='A' else -.65),y-.55,label,fontsize=14)
+ax.text(4,.55,'Per baix: 1.400 m',
+        ha='center',fontsize=12,bbox={'facecolor':'white','edgecolor':'none','pad':1})
+ax.set_title('B · Xarxa vectorial')
+ax.set_xlabel('1.200 m · només pels arcs',fontsize=14)
+
+ax=axes[1,0]
+display=np.where(np.isfinite(friction),friction,np.nan)
+ax.imshow(display,origin='lower',cmap=ListedColormap(['#d4ead5','#f3e1bd']),
+          norm=BoundaryNorm([0,1,5],2),extent=(-.5,8.5,-.5,6.5),zorder=0)
+for i in np.arange(-.5,9,1):ax.axvline(i,color='white',lw=.8,zorder=1)
+for i in np.arange(-.5,7,1):ax.axhline(i,color='white',lw=.8,zorder=1)
+terrain(ax)
+ax.plot([1,7],[2,2],ls='--',color=direct,lw=1.5,zorder=3)
+ax.plot([p[1] for p in path],[p[0] for p in path],color=chosen,lw=3,
+        marker='o',markersize=3.5,zorder=4)
+ax.text(4,5.6,'Fricció 4',ha='center',fontsize=13)
+ax.text(4,-1.0,'Fricció 0,5 · cel·les de 100 m',ha='center',fontsize=13)
+ax.set_title('C · Graella ràster: 4 veïns')
+ax.set_xlabel('1.000 m · cost: 1.550 unitats',labelpad=28,fontsize=14)
+
+ax=axes[1,1]
+ax.set(xlim=(0,9),ylim=(0,7),aspect='equal',xticks=[],yticks=[])
+ax.set_title('D · El paper de la topologia')
+for x in [2,7]:
+    ax.plot([x-1.4,x+1.4],[4,4],color=available,lw=3)
+    ax.plot([x,x],[2.6,5.4],color=available,lw=3)
+ax.scatter([2],[4],s=95,facecolor='white',edgecolor=available,lw=2,zorder=4)
+ax.plot([6.5,7.5],[4,4],color='white',lw=9,zorder=4)
+ax.plot([6.5,7.5],[4,4],color=available,lw=3,zorder=5)
+ax.text(2,1.65,'Cruïlla\namb node',ha='center',va='center',fontsize=14)
+ax.text(7,1.65,'Pas a diferent\nnivell',ha='center',va='center',fontsize=14)
+ax.text(4.5,.15,'Només a l’esquerra es pot girar',ha='center',fontsize=13)
+for spine in ax.spines.values():spine.set_visible(False)
+fig.legend(handles=[Line2D([],[],color=chosen,lw=3,label='Recorregut escollit'),
+                    Line2D([],[],color=direct,ls='--',lw=1.5,label='Segment directe de referència'),
+                    Line2D([],[],color=available,lw=2,label='Altres connexions'),
+                    Line2D([],[],color='black',marker='o',ls='none',label='Origen i destinació')],
+           loc='outside lower center',ncol=2,frameon=False,fontsize=12)
+fig.savefig(out,facecolor='white',metadata={'Date':None})
+plt.close(fig)
+```
