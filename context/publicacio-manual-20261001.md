@@ -38,3 +38,22 @@ Els SVG generats per Matplotlib i algunes captures contenen espais finals
 propis de la serialització XML. Es conserven els bytes dels proveïdors i els
 seus hashes; el control d'espais dels fitxers d'autoria exclou aquests dos
 grups de sortides generades. No s'han retocat artefactes per silenciar l'avís.
+
+## Fusió i vinculació del workflow PDF
+
+La PR https://github.com/geourv/geodisseny/pull/2 s'ha fusionat en
+`0bf16fb5a33e1cc28f7e62c904dc424b1713ec53`, amb el mateix arbre de contingut
+que el commit revisat `e31bcfdd03c978b8c6814ecaf416986a7cdacd65`.
+
+El primer desplegament, run36928642568, ha detectat una vinculació inconsistent
+del scaffold: el workflow esperava que la seva revisió fos la mateixa que
+l'etiqueta OCI del PDF. La release oficial0.5.0 confirma que el PDF fixat
+es va construir independentment a `d857f8c9f5fea90cf450c0b30b4e77a37b541275`.
+
+La incidència https://github.com/geourv/geodisseny/issues/3 corregeix només
+el commit del workflow reutilitzable perquè coincideixi amb aquest origen.
+El fitxer és idèntic en les revisions02af700 i d857f8c: blob Git
+`b81f2c26f286c334f4f590035a65e2caf50edd3e`,12.516bytes, verificat mitjançant
+metadades GitHub. Es mantenen tots els digests i la implementació del workflow;
+la comprovació de procedència continua activa. No s'ha llegit ni modificat
+codi del proveïdor per aplicar aquesta vinculació.
