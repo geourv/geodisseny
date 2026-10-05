@@ -1,0 +1,28 @@
+{
+  "source": "assets/img/historia/john-snow-1855.jpg",
+  "source_sha256": "0ff06d6af2045f20f730b5cf00c134173807c4cba9380823e26a66fa3e62ef1c",
+  "width": 3045,
+  "height": 2840,
+  "rights": "Public domain; PD-Art / PD-old-100-expired",
+  "rights_url": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "coordinate_space": "Original image pixels; centres of the black pump symbols labelled PUMP",
+  "purpose": "Visual identification only; circles are not geographical buffers or influence radii",
+  "stroke": "#0072B2",
+  "stroke_width": 6,
+  "radius": 31,
+  "pumps": [
+    {"id": "pump-01", "x": 1448, "y": 58},
+    {"id": "pump-02", "x": 1022, "y": 159},
+    {"id": "pump-03", "x": 2149, "y": 201},
+    {"id": "pump-04", "x": 1876, "y": 273},
+    {"id": "pump-05", "x": 1017, "y": 700},
+    {"id": "pump-06", "x": 1034, "y": 1088},
+    {"id": "broad-street", "x": 1702, "y": 1292},
+    {"id": "pump-08", "x": 2848, "y": 1669},
+    {"id": "pump-09", "x": 2403, "y": 1744},
+    {"id": "pump-10", "x": 1861, "y": 1960},
+    {"id": "pump-11", "x": 1340, "y": 2046},
+    {"id": "pump-12", "x": 1020, "y": 2460},
+    {"id": "pump-13", "x": 2304, "y": 2492}
+  ]
+}

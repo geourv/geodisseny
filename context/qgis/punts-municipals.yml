@@ -1,0 +1,83 @@
+id: punts-municipals
+title: Constantí, registres i escenaris de potència
+source_prompt: context/qgis/punts-municipals.md
+plugins: [processing]
+runtime: {display_backend: x11, locale: ca}
+compat: {qgis: '>=3.44'}
+data:
+  - {id: municipal-data, type: gpkg, path: punts-municipals-20261004/municipis.gpkg}
+  - {id: municipal-ortho, type: raster, path: punts-municipals-20261004/ortofoto.tif}
+  - {id: municipal-ortho-style, type: file, path: punts-municipals-20261004/ortofoto.qml}
+connections:
+  - {id: municipal-data, type: gpkg, name: municipis.gpkg, path: tmp/dades-docents/qgis/punts-municipals-20261004/municipis.gpkg}
+setup:
+  - {action: set_project_crs, auth_id: 'EPSG:25831'}
+  - {action: trigger_action, name: mActionRefresh, wait_ms: 300}
+  - {action: expand_tree_item, target: {class_name: QgsDockBrowserTreeView, item_text: GeoPackage}, wait_ms: 200}
+  - {action: expand_tree_item, target: {class_name: QgsDockBrowserTreeView, item_text: municipis.gpkg}, wait_ms: 300}
+  - {action: load_raster, path: tmp/dades-docents/qgis/punts-municipals-20261004/ortofoto.tif, name: Ortofoto ICGC 2025}
+  - {action: load_vector, path: "tmp/dades-docents/qgis/punts-municipals-20261004/municipis.gpkg|layername=limits|subset=\"CODIMUNI\" = '430477'", name: Límit de Constantí}
+  - {action: load_vector, path: 'tmp/dades-docents/qgis/punts-municipals-20261004/municipis.gpkg|layername=punts_base|subset="CODI_MUN" = 430477', name: Constantí}
+  - {action: zoom_to_layer, layer: Ortofoto ICGC 2025}
+  - {action: clear_message_bar}
+captures:
+  - id: dades
+    mode: window
+    target: {object_name: QgisApp}
+    drawings:
+      - {type: rect, target: {class_name: QgsDockBrowserTreeView, item_text: punts_base}, colour: information, margin: 0, shadow: false}
+    output: {path: assets/captures/municipals-dades.png, annotations_svg: assets/captures/municipals-dades.annotations.svg, manifest: context/qgis/manifests/municipals-dades.yml}
+  - id: camp
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:native:fieldcalculator'}
+    camera: {mode: crop, target: {object_name: 'unaltracapturaProcessingParameter:FIELD_NAME'}, output_size: {width: 780, height: 530}}
+    steps:
+      - action: open_processing_algorithm_dialog
+        algorithm: native:fieldcalculator
+        parameters:
+          INPUT: Constantí
+          FIELD_NAME: w_mid
+          FIELD_TYPE: 0
+          FIELD_LENGTH: 20
+          FIELD_PRECISION: 2
+          FORMULA: 'CASE WHEN "POT_KW" IS NOT NULL THEN "POT_KW" WHEN "INTERVAL" = ''Pot <= 5kW'' THEN 2.5 WHEN "INTERVAL" = ''5 < Pot <= 25 kW'' THEN 15 WHEN "INTERVAL" = ''25 < Pot <= 100 kW'' THEN 62.5 ELSE NULL END'
+          OUTPUT: TEMPORARY_OUTPUT
+    drawings:
+      - {type: rect, target: {object_name: 'unaltracapturaProcessingParameter:FIELD_NAME'}, colour: information, margin: 0, shadow: false}
+      - {type: rect, target: {object_name: 'unaltracapturaProcessingParameter:FIELD_TYPE'}, colour: example, margin: 0, shadow: false}
+    output: {path: assets/captures/municipals-camp.png, annotations_svg: assets/captures/municipals-camp.annotations.svg, manifest: context/qgis/manifests/municipals-camp.yml}
+  - id: centre
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:native:meancoordinates'}
+    camera: {mode: crop, target: {object_name: 'unaltracapturaProcessingParameter:WEIGHT'}, output_size: {width: 780, height: 440}}
+    steps:
+      - {action: close_transients}
+      - {action: load_vector, path: 'tmp/dades-docents/qgis/punts-municipals-20261004/municipis.gpkg|layername=punts_escenaris|subset="CODI_MUN" = 430477', name: Constantí · pesos}
+      - action: open_processing_algorithm_dialog
+        algorithm: native:meancoordinates
+        parameters: {INPUT: Constantí · pesos, WEIGHT: w_mid, OUTPUT: TEMPORARY_OUTPUT}
+    drawings:
+      - {type: rect, target: {object_name: 'unaltracapturaProcessingParameter:WEIGHT'}, colour: information, margin: 0, shadow: false}
+      - {type: rect, target: {object_name: 'unaltracapturaProcessingParameter:UID'}, colour: example, margin: 0, shadow: false}
+    output: {path: assets/captures/municipals-centre.png, annotations_svg: assets/captures/municipals-centre.annotations.svg, manifest: context/qgis/manifests/municipals-centre.yml}
+  - id: resultat
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: close_transients}
+      - {action: set_layer_visible, layer: Constantí, visible: false}
+      - {action: load_vector, path: "tmp/dades-docents/qgis/punts-municipals-20261004/municipis.gpkg|layername=centres|subset=\"CODI_MUN\" = 430477 AND \"tipus\" IN ('Registres','Central')", name: Centres · registres i escenari central}
+      - {action: clear_message_bar}
+    output: {path: assets/captures/municipals-resultat.png, annotations_svg: assets/captures/municipals-resultat.annotations.svg, manifest: context/qgis/manifests/municipals-resultat.yml}
+  - id: ellipse
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:native:geometrybyexpression'}
+    camera: {mode: crop, target: {object_name: 'unaltracapturaProcessingParameter:EXPRESSION'}, output_size: {width: 780, height: 500}}
+    steps:
+      - {action: load_vector, path: 'tmp/dades-docents/qgis/punts-municipals-20261004/municipis.gpkg|layername=dispersio', name: Centre i dispersió de Constantí}
+      - action: open_processing_algorithm_dialog
+        algorithm: native:geometrybyexpression
+        parameters: {INPUT: Centre i dispersió de Constantí, OUTPUT_GEOMETRY: 0, WITH_Z: false, WITH_M: false, EXPRESSION: 'make_ellipse($geometry, "a_m", "b_m", "azimut", 72)', OUTPUT: TEMPORARY_OUTPUT}
+    drawings:
+      - {type: rect, target: {object_name: 'unaltracapturaProcessingParameter:EXPRESSION'}, colour: information, margin: 0, shadow: false}
+    output: {path: assets/captures/municipals-ellipse.png, annotations_svg: assets/captures/municipals-ellipse.annotations.svg, manifest: context/qgis/manifests/municipals-ellipse.yml}

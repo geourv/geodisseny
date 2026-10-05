@@ -1,11 +1,63 @@
 # Pràctiques territorials: dades, controls i reproducció
 
-Preparacions locals del 29 de setembre a l'1 d'octubre de 2026. Els ZIP es lliuren per Moodle;
+Preparacions locals del 29 de setembre al 4 d'octubre de 2026. Els ZIP es lliuren per Moodle;
 no formen part dels assets del web. Les instruccions conceptuals i els passos
 QGIS són als capítols de connectivitat, visibilitat, estadística descriptiva i
 autocorrelació. Cal mantenir còpies originals de les dades en treballar-hi.
 
 ## Paquets
+
+- Suplement municipal amb imputació explícita:
+  `practica-punts-municipals-20261004.zip`,15.255.627bytes,30fitxers,
+  SHA `b7ed57dc62db492c8dfd620449eb8dfa4f652a8efbd3096cc976e5f4247f767f`.
+  Un projecte de8capes,672registres de tres municipis, tres escenaris,
+  ortofoto local,5captures,3figures i controls. Punt mitjà com a convenció
+  docent i comparació amb límits. Comprovat offline/readonly i segellat
+  localment; no pujat a Moodle. Fonts a `context/dades/escenaris_potencia.py`.
+
+- Punts del Tarragonès, nova pràctica de C4:
+  `practica-punts-tarragones-20261004.zip`,13.853.420bytes,82fitxers,
+  SHA `ee421cdc2ff89db787ea13ea7f032930cf5ae4c66da850c42bca8944cc9bebf7`.
+  Sis projectes de18capes,14captures, GUIA14p/SOLUCIONS2p. Centres, dispersió,
+  graella, kernels amb/sense pes i seccions. Connexions GeoPackage visibles,
+  càlculs contrastats i portabilitat readonly/offline. Segellat localment;
+  sense pujada a Moodle. Detall a `context/dades/punts-tarragones.md`.
+
+- Revisió costa r3, recinte compacte, lots i ortofoto/MDS:
+  `practica-visibilitat-costa-20261002-r3.zip`,161.155.091bytes,250fitxers,
+  SHA `b7f2c5f38c8ee45cca592ce35db4aaeac77a413f6ace210948e47e338c3369cc`.
+  Deu projectes,37capes,17captures,5SVG; GUIA26p i SOLUCIONS3p. Recinte
+  petroquímic de222,94ha amb buffers +150/−150m. Inclou el lot executable
+  des de QGIS, amb179execucions contrastades contra els controls.
+  CRC/hashes i portabilitat verificats. Versió activa per a revisió:
+  `context/dades/visibilitat-costa-r3.md`.
+
+- Revisió costa r2 anterior, perímetre i accessos a eines:
+  `practica-visibilitat-costa-20261002-r2.zip`,149.293.723bytes,231fitxers,
+  SHA `afbce1dfcf05f300bb39e442c79a18da08bbcbe003765fa4ba5bb919bf165501`.
+  Deu projectes,36capes,12captures,5SVG; GUIA19p i SOLUCIONS3p. Perímetre
+  sense forats de184,44ha, font original i alternatives conservades.
+  CRC/hashes i portabilitat QGIS verificats. Detalls i fonts històriques a
+  `context/dades/visibilitat-costa-r2.md`; lliurament anterior conservat.
+
+- Versió costa anterior: torxa de la Canonja → TV-3148 → àrea del
+  MCSC2024. Preparació a `tmp/dades-docents/qgis/visibilitat-costa-20261002/`,
+  font `context/dades/preparar_visibilitat_costa.py` i controls documentats
+  a `context/dades/visibilitat-costa.md`. Nou projectes de34capes,37conques
+  MDT de carretera i57mostres d'àrea més la torxa. Distribució per Moodle;
+  dades i intermedis fora de Git.
+  ZIP `practica-visibilitat-costa-20261002.zip`,149.167.797bytes,211fitxers,
+  SHA `a5130ad5221a21e8e86350c485731c4384b44c720f1ce3a879815d65577946c1`.
+  Guió16p i notes3p, CRC i hashes correctes; paquet segellat sense pujada.
+
+- `practica-visibilitat-nord-20261001.zip`:152fitxers,119.669.778bytes; SHA-256
+  `f760e14effcb88d51858d24a7d8c2261c1de0d9b206e510e465be7ac25bf0520`.
+  Nou projectes,32capes,9captures i4figures; guió14p i notes3p. Punt interior,
+  perímetre i àrea d'un sector cadastral de la refineria nord, amb MDT/MDS5m i
+  extrems absoluts fixats. Verificació QGIS offline/readonly, càlculs natius,
+  CRC i hashes correctes. Versió substituïda a petició de l'autor; les fonts
+  no versionades del bundle s'han arxivat privadament, amb comprovació contra
+  el ZIP. Detalls a `context/dades/visibilitat-nord.md`.
 
 - `practica-distancies-vilaseca-20261001-ampliada.zip`: 307 fitxers,
   69.936.621 bytes; SHA-256
@@ -39,10 +91,11 @@ autocorrelació. Cal mantenir còpies originals de les dades en treballar-hi.
 
 Cada arxiu conté `MANIFEST.json`, amb paths del paquet, font al projecte,
 SHA-256 i mida. El manifest de fonts conserva URLs, edicions i transformacions.
-Els scripts inclosos a `reproduccio/` són les fonts d'aquesta preparació:
-esperen l'estructura del repositori geodisseny i les seves rutes privades,
-no són un instal·lador autònom del programari. Les activitats QGIS es poden
-fer obrint directament les dades del paquet, sense executar aquests scripts.
+Els preparadors generals de `reproduccio/` esperen l'estructura del repositori
+geodisseny i les seves rutes privades; no són un instal·lador autònom del
+programari. Les activitats QGIS es poden fer obrint directament les dades.
+El nou `lots_visibilitat.py` sí que reexecuta els lots dins de QGIS amb el
+paquet de visibilitat, sense el repositori font; el guió n'explica l'ús.
 
 ## Ampliació: marxa anisòtropa i isòcrones
 
@@ -244,7 +297,7 @@ o un graf ampliat. No afirmar que aquesta prova els ha executat.
 - L'MDS és una entrada de contrast, no la superfície dels controls anteriors.
   Cal conservar les cotes absolutes dels extrems en comparar-lo amb l'MDT.
 
-### Execució vigent al manual: 28 mostres
+### Execució històrica del primer manual publicat: 28 mostres
 
 `preparar_practiques.py --models --sample-spacing 250 --models-dir models-20260930`.
 Mateixos inputs, 28 punts interiors i centre; domini comú d'1.570.262 cel·les.

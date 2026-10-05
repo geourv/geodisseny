@@ -1,0 +1,42 @@
+---
+title: Bombes d'aigua al mapa de John Snow
+lang: ca
+ref: figura-john-snow-pous
+format: gfm
+execute-dir: project
+execute: {echo: false, warning: false}
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  inputs:
+    - assets/img/historia/john-snow-1855.jpg
+    - context/inputs/snow-pous.json
+  outputs: [assets/img/generated/john-snow-pous.svg]
+---
+
+```{python}
+from pathlib import Path
+import base64,hashlib,json
+from xml.sax.saxutils import escape
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root==root.parent:raise RuntimeError('Projecte absent')
+    root=root.parent
+d=json.loads((root/'context/inputs/snow-pous.json').read_text())
+source=(root/d['source']).read_bytes()
+assert hashlib.sha256(source).hexdigest()==d['source_sha256']
+assert len(d['pumps'])==13 and len({p['id'] for p in d['pumps']})==13
+w,h=d['width'],d['height'];r=d['radius']
+parts=[f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="{w}" height="{h}" viewBox="0 0 {w} {h}">',
+    '<title>Mapa de John Snow amb les bombes d’aigua assenyalades</title>',
+    '<desc>Mapa de 1855 conservat com a imatge de fons. Tretze cercles blaus afegits identifiquen els símbols PUMP; no representen distàncies ni àrees d’influència.</desc>',
+    '<metadata>'+escape(json.dumps({'source':d['source'],'source_sha256':d['source_sha256'],'rights':d['rights'],'annotation':'Blue visual callouts added for the manual'},ensure_ascii=False))+'</metadata>',
+    f'<rect width="{w}" height="{h}" fill="white"/>',
+    '<g id="mapa-original"><image width="'+str(w)+'" height="'+str(h)+'" xlink:href="data:image/jpeg;base64,'+base64.b64encode(source).decode()+'"/></g>',
+    f'<g id="bombes-aigua" fill="none" stroke="{d["stroke"]}" stroke-width="{d["stroke_width"]}">']
+for pump in d['pumps']:
+    x,y=pump['x'],pump['y'];assert r<=x<=w-r and r<=y<=h-r
+    parts.append(f'<circle id="{pump["id"]}" cx="{x}" cy="{y}" r="{r}"><title>Bomba d’aigua</title></circle>')
+parts+=['</g>','</svg>']
+(root/'assets/img/generated/john-snow-pous.svg').write_text('\n'.join(parts)+'\n')
+```

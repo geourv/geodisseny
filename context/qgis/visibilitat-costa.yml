@@ -1,0 +1,228 @@
+id: visibilitat-costa
+title: Torxa, carretera i polígon amb MDT i MDS
+source_prompt: context/qgis/visibilitat-costa.md
+plugins: [processing]
+runtime: {display_backend: x11}
+compat: {qgis: '>=3.44'}
+data:
+  - {id: costa-mdt, type: raster, path: visibilitat-costa-20261002-r3/dades/mdt-calcul.tif}
+  - {id: costa-mds, type: raster, path: visibilitat-costa-20261002-r3/dades/mds-calcul.tif}
+  - {id: costa-poligon, type: vector, path: visibilitat-costa-20261002-r3/dades/poligon.gpkg}
+  - {id: costa-carretera, type: vector, path: visibilitat-costa-20261002-r3/dades/carretera.gpkg}
+setup:
+  - {action: set_project_crs, auth_id: 'EPSG:25831'}
+  - {action: trigger_action, name: Explorador}
+  - {action: load_raster, path: tmp/dades-docents/qgis/visibilitat-costa-20261002-r3/fonts/ortofoto-context-2025.tif, name: Ortofoto · context}
+  - {action: load_raster, path: tmp/dades-docents/qgis/visibilitat-costa-20261002-r3/fonts/ortofoto-torxa-2025.tif, name: Ortofoto · torxa}
+  - {action: set_layer_visible, layer: Ortofoto · torxa, visible: false}
+  - {action: load_raster, path: tmp/dades-docents/qgis/visibilitat-costa-20261002-r3/dades/mdt-calcul.tif, name: MDT}
+  - {action: set_layer_visible, layer: MDT, visible: false}
+  - {action: load_raster, path: tmp/dades-docents/qgis/visibilitat-costa-20261002-r3/dades/mds-calcul.tif, name: MDS · cotes superficials (m)}
+  - {action: set_layer_visible, layer: MDS · cotes superficials (m), visible: false}
+  - {action: load_vector, path: tmp/dades-docents/qgis/visibilitat-costa-20261002-r3/dades/poligon.gpkg, name: Recinte petroquímic d’estudi}
+  - {action: load_vector, path: tmp/dades-docents/qgis/visibilitat-costa-20261002-r3/dades/carretera.gpkg, name: TV-3148 · recorregut}
+  - {action: load_vector, path: tmp/dades-docents/qgis/visibilitat-costa-20261002-r3/dades/torxa.gpkg, name: T · Torxa}
+captures:
+  - id: visibilitat-costa-dades
+    title: Presentar la torxa, la carretera i el recinte sobre ortofoto
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: zoom_to_layer, layer: Recinte petroquímic d’estudi, scale: 1.8}
+      - {action: clear_message_bar, wait_ms: 800}
+      - {action: clear_message_bar}
+    drawings:
+      - {type: callout, target: {object_name: theLayerTreeView, item_text: Recinte petroquímic d’estudi}, text: Recinte petroquímic d’estudi, target_marker: box, colour: information, placement: right, max_width: 220}
+    output: {path: assets/captures/visibilitat-costa-dades.png, annotations_svg: assets/captures/visibilitat-costa-dades.annotations.svg, manifest: context/qgis/manifests/visibilitat-costa-dades.yml}
+  - id: visibilitat-costa-mds
+    title: Presentar el model de superfície amb el mateix enquadrament
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: set_layer_visible, layer: MDS · cotes superficials (m), visible: true}
+      - {action: expand_tree_item, name: theLayerTreeView, target: {object_name: theLayerTreeView, item_text: MDS · cotes superficials (m)}, text: MDS · cotes superficials (m)}
+      - {action: select_tree_item, name: theLayerTreeView, target: {object_name: theLayerTreeView, item_text: MDS · cotes superficials (m)}, text: MDS · cotes superficials (m), wait_ms: 600}
+      - {action: clear_message_bar}
+    drawings:
+      - {type: callout, target: {object_name: theLayerTreeView, item_text: MDS · cotes superficials (m)}, text: Cotes en metres · cel·la de 5 m, target_marker: box, colour: information, placement: right, max_width: 220}
+    output: {path: assets/captures/visibilitat-costa-mds.png, annotations_svg: assets/captures/visibilitat-costa-mds.annotations.svg, manifest: context/qgis/manifests/visibilitat-costa-mds.yml}
+  - id: visibilitat-costa-torxa
+    title: Identificar la torxa abans de calcular
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: load_raster, path: tmp/dades-docents/qgis/visibilitat-costa-20261002-r3/dades/domini-valid.tif, name: Domini}
+      - {action: set_layer_visible, layer: Domini, visible: false}
+      - {action: load_raster, path: tmp/dades-docents/qgis/visibilitat-costa-20261002-r3/resultats/cota-minima-mds.tif, name: Cota mínima MDS}
+      - {action: set_layer_visible, layer: Cota mínima MDS, visible: false}
+      - {action: load_raster, path: tmp/dades-docents/qgis/visibilitat-costa-20261002-r3/resultats/carretera-mdt-totes-nombre.tif, name: Carretera · suma de 37 conques MDT}
+      - {action: set_layer_visible, layer: Carretera · suma de 37 conques MDT, visible: false}
+      - {action: load_raster, path: tmp/dades-docents/qgis/visibilitat-costa-20261002-r3/resultats/poligon-mds-alguna.tif, name: Polígon · alguna part amb MDS}
+      - {action: set_layer_visible, layer: Polígon · alguna part amb MDS, visible: false}
+      - {action: load_vector, path: tmp/dades-docents/qgis/visibilitat-costa-20261002-r3/dades/ambit.gpkg, name: Àmbit calculat}
+      - {action: set_layer_visible, layer: Àmbit calculat, visible: false}
+      - {action: load_vector, path: tmp/dades-docents/qgis/visibilitat-costa-20261002-r3/dades/coberta-original.gpkg, name: Coberta original MCSC}
+      - {action: set_layer_visible, layer: Coberta original MCSC, visible: false}
+      - {action: load_vector, path: tmp/dades-docents/qgis/visibilitat-costa-20261002-r3/dades/buffer-positiu.gpkg, name: Buffer intermedi +150 m}
+      - {action: set_layer_visible, layer: Buffer intermedi +150 m, visible: false}
+      - {action: load_vector, path: tmp/dades-docents/qgis/visibilitat-costa-20261002-r3/dades/fragments-area.gpkg, name: Fragments de 250 m}
+      - {action: set_layer_visible, layer: Fragments de 250 m, visible: false}
+      - {action: load_vector, path: tmp/dades-docents/qgis/visibilitat-costa-20261002-r3/dades/mostres-carretera.gpkg, name: C · 37 mostres de carretera}
+      - {action: set_layer_visible, layer: C · 37 mostres de carretera, visible: false}
+      - {action: load_vector, path: tmp/dades-docents/qgis/visibilitat-costa-20261002-r3/dades/mostres-area.gpkg, name: A · 57 mostres interiors}
+      - {action: set_layer_visible, layer: A · 57 mostres interiors, visible: false}
+      - {action: load_vector, path: tmp/dades-docents/qgis/visibilitat-costa-20261002-r3/resultats/intervisibilitat.gpkg, name: Intervisibilitat · MDS}
+      - {action: set_layer_visible, layer: Intervisibilitat · MDS, visible: false}
+      - {action: load_vector, path: tmp/dades-docents/qgis/visibilitat-costa-20261002-r3/dades/receptors.gpkg, name: Receptors R1–R5}
+      - {action: set_layer_visible, layer: Receptors R1–R5, visible: false}
+      - {action: set_layer_visible, layer: MDS · cotes superficials (m), visible: false}
+      - {action: set_layer_visible, layer: Ortofoto · torxa, visible: true}
+      - {action: set_layer_visible, layer: Recinte petroquímic d’estudi, visible: false}
+      - {action: set_layer_visible, layer: TV-3148 · recorregut, visible: false}
+      - {action: zoom_to_layer, layer: Ortofoto · torxa, scale: 1.0}
+      - {action: clear_message_bar}
+    drawings:
+      - {type: callout, target: {layer_name: T · Torxa}, text: T · Torxa identificada, target_marker: point, colour: information, placement: left, max_width: 190}
+    output: {path: assets/captures/visibilitat-costa-torxa.png, annotations_svg: assets/captures/visibilitat-costa-torxa.annotations.svg, manifest: context/qgis/manifests/visibilitat-costa-torxa.yml}
+  - id: visibilitat-costa-punt
+    title: Conca del punt T sobre MDT
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:gdal:viewshed'}
+    camera: {mode: crop, target: {object_name: 'unaltracapturaProcessingParameter:OBSERVER_HEIGHT'}, output_size: {width: 960, height: 620}}
+    steps:
+      - action: open_processing_algorithm_dialog
+        algorithm: gdal:viewshed
+        parameters:
+          INPUT: MDT
+          BAND: 1
+          OBSERVER: '346892.5,4552507.5 [EPSG:25831]'
+          OBSERVER_HEIGHT: 131.36999702453613
+          TARGET_HEIGHT: 1.7
+          MAX_DISTANCE: 0
+          EXTRA: '-vv 1 -iv 0 -ov 255 -a_nodata 255 -cc 0.85714'
+          OUTPUT: TEMPORARY_OUTPUT
+    drawings:
+      - {type: callout, target: {object_name: 'unaltracapturaProcessingParameter:OBSERVER_HEIGHT'}, text: Altura sobre MDT, target_marker: box, colour: information, placement: right, max_width: 180}
+    output: {path: assets/captures/visibilitat-costa-punt.png, annotations_svg: assets/captures/visibilitat-costa-punt.annotations.svg, manifest: context/qgis/manifests/visibilitat-costa-punt.yml}
+  - id: visibilitat-costa-intervisibilitat
+    title: Relacionar la torxa amb punts de consulta
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: close_transients}
+      - {action: set_layer_visible, layer: Ortofoto · torxa, visible: false}
+      - {action: set_layer_visible, layer: Recinte petroquímic d’estudi, visible: true}
+      - {action: set_layer_visible, layer: TV-3148 · recorregut, visible: true}
+      - {action: set_layer_visible, layer: Intervisibilitat · MDS, visible: true}
+      - {action: set_layer_visible, layer: Receptors R1–R5, visible: true}
+      - {action: set_layer_visible, layer: Àmbit calculat, visible: true}
+      - {action: zoom_to_layer, layer: Àmbit calculat, scale: 1.2}
+      - {action: clear_message_bar}
+    output: {path: assets/captures/visibilitat-costa-intervisibilitat.png, annotations_svg: assets/captures/visibilitat-costa-intervisibilitat.annotations.svg, manifest: context/qgis/manifests/visibilitat-costa-intervisibilitat.yml}
+  - id: visibilitat-costa-cota-minima
+    title: Mantenir els receptors sobre el terreny i conservar NoData
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:native:rastercalc'}
+    camera: {mode: crop, target: {object_name: 'unaltracapturaProcessingParameter:EXPRESSION'}, output_size: {width: 1050, height: 630}}
+    steps:
+      - action: open_processing_algorithm_dialog
+        algorithm: native:rastercalc
+        parameters:
+          LAYERS: [MDT, Cota mínima MDS, Domini]
+          EXPRESSION: '"Domini@1" * (("MDT@1" + 1.7) >= "Cota mínima MDS@1")'
+          EXTENT: '342000,352000,4549000,4559000 [EPSG:25831]'
+          CELL_SIZE: 5
+          CRS: 'EPSG:25831'
+          OUTPUT: TEMPORARY_OUTPUT
+    drawings:
+      - {type: callout, target: {object_name: 'unaltracapturaProcessingParameter:EXPRESSION'}, text: Mateixes cotes absolutes, target_marker: box, colour: information, placement: right, max_width: 200}
+    output: {path: assets/captures/visibilitat-costa-cota-minima.png, annotations_svg: assets/captures/visibilitat-costa-cota-minima.annotations.svg, manifest: context/qgis/manifests/visibilitat-costa-cota-minima.yml}
+  - id: visibilitat-costa-carretera
+    title: Mostrejar un recorregut de carretera
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:native:pointsalonglines'}
+    camera: {mode: crop, target: {object_name: 'unaltracapturaProcessingParameter:DISTANCE'}, output_size: {width: 960, height: 550}}
+    steps:
+      - {action: close_transients}
+      - action: open_processing_algorithm_dialog
+        algorithm: native:pointsalonglines
+        parameters: {INPUT: TV-3148 · recorregut, DISTANCE: 98.71007115541471, START_OFFSET: 49.355035577707355, END_OFFSET: 0, OUTPUT: TEMPORARY_OUTPUT}
+    drawings:
+      - {type: callout, target: {object_name: 'unaltracapturaProcessingParameter:DISTANCE'}, text: 37 intervals iguals, target_marker: box, colour: information, placement: right, max_width: 190}
+    output: {path: assets/captures/visibilitat-costa-carretera.png, annotations_svg: assets/captures/visibilitat-costa-carretera.annotations.svg, manifest: context/qgis/manifests/visibilitat-costa-carretera.yml}
+  - id: visibilitat-costa-acumulada
+    title: Sumar les 37 conques visuals de carretera
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: close_transients}
+      - {action: set_layer_visible, layer: Intervisibilitat · MDS, visible: false}
+      - {action: set_layer_visible, layer: Receptors R1–R5, visible: false}
+      - {action: set_layer_visible, layer: Carretera · suma de 37 conques MDT, visible: true}
+      - {action: set_layer_visible, layer: C · 37 mostres de carretera, visible: true}
+      - {action: zoom_to_layer, layer: Àmbit calculat, scale: 1.08}
+      - {action: clear_message_bar}
+    drawings:
+      - {type: callout, target: {object_name: theLayerTreeView, item_text: Carretera · suma de 37 conques MDT}, text: Nombre de posicions amb visió, target_marker: box, colour: information, placement: right, max_width: 210}
+    output: {path: assets/captures/visibilitat-costa-acumulada.png, annotations_svg: assets/captures/visibilitat-costa-acumulada.annotations.svg, manifest: context/qgis/manifests/visibilitat-costa-acumulada.yml}
+  - id: visibilitat-costa-buffer-positiu
+    title: Primera operació del tancament amb buffer positiu
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:native:buffer'}
+    camera: {mode: crop, target: {object_name: 'unaltracapturaProcessingParameter:DISTANCE'}, output_size: {width: 1020, height: 650}}
+    steps:
+      - action: open_processing_algorithm_dialog
+        algorithm: native:buffer
+        parameters: {INPUT: Coberta original MCSC, DISTANCE: 150, SEGMENTS: 32, END_CAP_STYLE: 0, JOIN_STYLE: 0, MITER_LIMIT: 2, DISSOLVE: true, OUTPUT: TEMPORARY_OUTPUT}
+    drawings:
+      - {type: rect, target: {object_name: 'unaltracapturaProcessingParameter:DISTANCE'}, colour: information, fill: false}
+    output: {path: assets/captures/visibilitat-costa-buffer-positiu.png, annotations_svg: assets/captures/visibilitat-costa-buffer-positiu.annotations.svg, manifest: context/qgis/manifests/visibilitat-costa-buffer-positiu.yml}
+  - id: visibilitat-costa-perimetre
+    title: Segona operació sobre el buffer intermedi
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:native:buffer'}
+    camera: {mode: crop, target: {object_name: 'unaltracapturaProcessingParameter:DISTANCE'}, output_size: {width: 1020, height: 650}}
+    steps:
+      - {action: close_transients}
+      - action: open_processing_algorithm_dialog
+        algorithm: native:buffer
+        parameters: {INPUT: Buffer intermedi +150 m, DISTANCE: -150, SEGMENTS: 32, END_CAP_STYLE: 0, JOIN_STYLE: 0, MITER_LIMIT: 2, DISSOLVE: true, OUTPUT: TEMPORARY_OUTPUT}
+    drawings:
+      - {type: rect, target: {object_name: 'unaltracapturaProcessingParameter:DISTANCE'}, colour: information, fill: false}
+    output: {path: assets/captures/visibilitat-costa-perimetre.png, annotations_svg: assets/captures/visibilitat-costa-perimetre.annotations.svg, manifest: context/qgis/manifests/visibilitat-costa-perimetre.yml}
+  - id: visibilitat-costa-area
+    title: Preparar les mostres de l'àrea industrial
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:native:creategrid'}
+    camera: {mode: crop, target: {object_name: 'unaltracapturaProcessingParameter:HSPACING'}, output_size: {width: 960, height: 620}}
+    steps:
+      - {action: close_transients}
+      - action: open_processing_algorithm_dialog
+        algorithm: native:creategrid
+        parameters:
+          TYPE: 2
+          EXTENT: '345250,350000,4551750,4552750 [EPSG:25831]'
+          HSPACING: 250
+          VSPACING: 250
+          HOVERLAY: 0
+          VOVERLAY: 0
+          CRS: 'EPSG:25831'
+          OUTPUT: TEMPORARY_OUTPUT
+    drawings:
+      - {type: callout, target: {object_name: 'unaltracapturaProcessingParameter:HSPACING'}, text: Retalla després amb el polígon, target_marker: box, colour: information, placement: right, max_width: 220}
+    output: {path: assets/captures/visibilitat-costa-area.png, annotations_svg: assets/captures/visibilitat-costa-area.annotations.svg, manifest: context/qgis/manifests/visibilitat-costa-area.yml}
+  - id: visibilitat-costa-poligon
+    title: Territori des d'on es veu algun objectiu del polígon
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: close_transients}
+      - {action: set_layer_visible, layer: Carretera · suma de 37 conques MDT, visible: false}
+      - {action: set_layer_visible, layer: C · 37 mostres de carretera, visible: false}
+      - {action: set_layer_visible, layer: Polígon · alguna part amb MDS, visible: true}
+      - {action: set_layer_visible, layer: A · 57 mostres interiors, visible: true}
+      - {action: zoom_to_layer, layer: Àmbit calculat, scale: 1.08}
+      - {action: clear_message_bar}
+    drawings:
+      - {type: callout, target: {object_name: theLayerTreeView, item_text: Polígon · alguna part amb MDS}, text: 57 mostres d’àrea o la torxa T, target_marker: box, colour: information, placement: right, max_width: 220}
+    output: {path: assets/captures/visibilitat-costa-poligon.png, annotations_svg: assets/captures/visibilitat-costa-poligon.annotations.svg, manifest: context/qgis/manifests/visibilitat-costa-poligon.yml}

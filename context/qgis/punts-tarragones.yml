@@ -1,0 +1,209 @@
+id: punts-tarragones
+title: Distribucions puntuals del Tarragonès
+source_prompt: context/qgis/punts-tarragones.md
+plugins: [processing]
+runtime: {display_backend: x11, locale: ca}
+compat: {qgis: '>=3.44'}
+data:
+  - {id: punts-dades, type: gpkg, path: punts-tarragones-20261004/dades.gpkg}
+  - {id: punts-resultats, type: gpkg, path: punts-tarragones-20261004/resultats.gpkg}
+  - {id: punts-kernel, type: raster, path: punts-tarragones-20261004/densitat-punts-1500.tif}
+  - {id: punts-kernel-estil, type: file, path: punts-tarragones-20261004/densitat-punts-1500.qml}
+connections:
+  - {id: punts-dades, type: gpkg, name: dades.gpkg, path: tmp/dades-docents/qgis/punts-tarragones-20261004/dades.gpkg}
+  - {id: punts-resultats, type: gpkg, name: resultats.gpkg, path: tmp/dades-docents/qgis/punts-tarragones-20261004/resultats.gpkg}
+setup:
+  - {action: set_project_crs, auth_id: 'EPSG:25831'}
+  - {action: trigger_action, name: mActionRefresh, wait_ms: 500}
+  - {action: expand_tree_item, target: {class_name: QgsDockBrowserTreeView, item_text: GeoPackage}, wait_ms: 300}
+  - {action: expand_tree_item, target: {class_name: QgsDockBrowserTreeView, item_text: dades.gpkg}, wait_ms: 300}
+  - {action: load_vector, path: 'tmp/dades-docents/qgis/punts-tarragones-20261004/dades.gpkg|layername=tarragones', name: Tarragonès}
+  - {action: load_vector, path: 'tmp/dades-docents/qgis/punts-tarragones-20261004/dades.gpkg|layername=icaen_coneguda', name: ICAEN coneguda}
+  - {action: zoom_to_layer, layer: Tarragonès, scale: 1.08}
+  - {action: clear_message_bar}
+captures:
+  - id: dades
+    title: Connexions i capes del GeoPackage
+    mode: window
+    target: {object_name: QgisApp}
+    camera: {mode: crop, target: {object_name: Browser}, output_size: {width: 780, height: 640}}
+    drawings:
+      - {type: rect, target: {class_name: QgsDockBrowserTreeView, item_text: icaen_coneguda}, colour: information, fill: false, margin: 0, shadow: false}
+    output: {path: assets/captures/punts-dades.png, annotations_svg: assets/captures/punts-dades.annotations.svg, manifest: context/qgis/manifests/punts-dades.yml}
+  - id: centres-menu
+    title: Coordenades mitjanes al menú Vectorial
+    mode: screen
+    target: {object_name: QgisApp}
+    camera: {mode: crop, target: {object_name: 'unaltracapturaVisibleMenu:Coordenades mitjanes...'}, output_size: {width: 850, height: 380}}
+    steps:
+      - {action: open_menu_path, path: [Vectorial, Analysis Tools], active_text: Coordenades mitjanes, wait_ms: 500}
+    drawings:
+      - {type: rect, target: {object_name: 'unaltracapturaVisibleMenu:Coordenades mitjanes...'}, colour: information, fill: false, margin: 0, shadow: false}
+    output: {path: assets/captures/punts-centres-menu.png, annotations_svg: assets/captures/punts-centres-menu.annotations.svg, manifest: context/qgis/manifests/punts-centres-menu.yml}
+  - id: centres-caixa
+    title: Coordenades mitjanes a la caixa oberta
+    mode: window
+    target: {object_name: QgisApp}
+    camera: {mode: crop, target: {object_name: ProcessingToolbox}, output_size: {width: 700, height: 740}}
+    steps:
+      - {action: close_transients}
+      - {action: trigger_action, name: "Caixa d'eines", wait_ms: 500}
+      - {action: select_tree_item, target: {object_name: algorithmTree, item_text: Coordenades mitjanes}, wait_ms: 400}
+    drawings:
+      - {type: rect, target: {object_name: algorithmTree, item_text: Coordenades mitjanes}, colour: information, fill: false, margin: 0, shadow: false}
+    output: {path: assets/captures/punts-centres-caixa.png, annotations_svg: assets/captures/punts-centres-caixa.annotations.svg, manifest: context/qgis/manifests/punts-centres-caixa.yml}
+  - id: centres-parametres
+    title: Pes i agrupació de les coordenades mitjanes
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:native:meancoordinates'}
+    camera: {mode: crop, target: {object_name: 'unaltracapturaProcessingParameter:WEIGHT'}, output_size: {width: 790, height: 440}}
+    steps:
+      - action: open_processing_algorithm_dialog
+        algorithm: native:meancoordinates
+        parameters: {INPUT: ICAEN coneguda, WEIGHT: POT_KW, OUTPUT: TEMPORARY_OUTPUT}
+    drawings:
+      - {type: rect, target: {object_name: 'unaltracapturaProcessingParameter:WEIGHT'}, colour: information, fill: false, margin: 0, shadow: false}
+      - {type: rect, target: {object_name: 'unaltracapturaProcessingParameter:UID'}, colour: example, fill: false, margin: 0, shadow: false}
+    output: {path: assets/captures/punts-centres-parametres.png, annotations_svg: assets/captures/punts-centres-parametres.annotations.svg, manifest: context/qgis/manifests/punts-centres-parametres.yml}
+  - id: centres-resultat
+    title: Centres de la mateixa selecció i centroide comarcal
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: close_transients}
+      - {action: trigger_action, name: "Caixa d'eines"}
+      - {action: expand_tree_item, target: {class_name: QgsDockBrowserTreeView, item_text: resultats.gpkg}, wait_ms: 300}
+      - {action: load_vector, path: 'tmp/dades-docents/qgis/punts-tarragones-20261004/resultats.gpkg|layername=centroide', name: Centroide comarcal}
+      - {action: load_vector, path: 'tmp/dades-docents/qgis/punts-tarragones-20261004/resultats.gpkg|layername=centre_total', name: Centre complet}
+      - {action: load_vector, path: 'tmp/dades-docents/qgis/punts-tarragones-20261004/resultats.gpkg|layername=centre_mitja', name: Centre mitjà}
+      - {action: load_vector, path: 'tmp/dades-docents/qgis/punts-tarragones-20261004/resultats.gpkg|layername=centre_ponderat', name: Centre ponderat}
+      - {action: clear_message_bar}
+    drawings:
+      - {type: rect, target: {class_name: QgsLayerTreeView, item_text: Centre ponderat}, colour: information, fill: false, margin: 0, shadow: false}
+    output: {path: assets/captures/punts-centres-resultat.png, annotations_svg: assets/captures/punts-centres-resultat.annotations.svg, manifest: context/qgis/manifests/punts-centres-resultat.yml}
+  - id: dispersio-parametres
+    title: Dibuixar l'el·lipse a partir dels atributs del centre
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:native:geometrybyexpression'}
+    camera: {mode: crop, target: {object_name: 'unaltracapturaProcessingParameter:EXPRESSION'}, output_size: {width: 820, height: 520}}
+    steps:
+      - {action: load_vector, path: 'tmp/dades-docents/qgis/punts-tarragones-20261004/resultats.gpkg|layername=centre_dispersio', name: Centre i dispersió}
+      - action: open_processing_algorithm_dialog
+        algorithm: native:geometrybyexpression
+        parameters: {INPUT: Centre i dispersió, OUTPUT_GEOMETRY: 0, WITH_Z: false, WITH_M: false, EXPRESSION: 'make_ellipse($geometry, "a_m", "b_m", "azimut", 72)', OUTPUT: TEMPORARY_OUTPUT}
+    drawings:
+      - {type: rect, target: {object_name: 'unaltracapturaProcessingParameter:EXPRESSION'}, colour: information, fill: false, margin: 0, shadow: false}
+    output: {path: assets/captures/punts-dispersio-parametres.png, annotations_svg: assets/captures/punts-dispersio-parametres.annotations.svg, manifest: context/qgis/manifests/punts-dispersio-parametres.yml}
+  - id: dispersio-resultat
+    title: Cercle i el·lipse sobre els mateixos punts
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: close_transients}
+      - {action: set_layer_visible, layer: Centroide comarcal, visible: false}
+      - {action: set_layer_visible, layer: Centre complet, visible: false}
+      - {action: set_layer_visible, layer: Centre ponderat, visible: false}
+      - {action: set_layer_visible, layer: Centre i dispersió, visible: false}
+      - {action: load_vector, path: 'tmp/dades-docents/qgis/punts-tarragones-20261004/resultats.gpkg|layername=cercle', name: Cercle · radi 8698 m}
+      - {action: load_vector, path: 'tmp/dades-docents/qgis/punts-tarragones-20261004/resultats.gpkg|layername=ellipse', name: El·lipse · 8152 × 3033 m}
+      - {action: clear_message_bar}
+    output: {path: assets/captures/punts-dispersio-resultat.png, annotations_svg: assets/captures/punts-dispersio-resultat.annotations.svg, manifest: context/qgis/manifests/punts-dispersio-resultat.yml}
+  - id: graella-parametres
+    title: Graella rectangular de 1000 metres
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:native:creategrid'}
+    camera: {mode: crop, target: {object_name: 'unaltracapturaProcessingParameter:HSPACING'}, output_size: {width: 820, height: 560}}
+    steps:
+      - action: open_processing_algorithm_dialog
+        algorithm: native:creategrid
+        parameters: {TYPE: 2, EXTENT: '340000,374000,4546000,4566000 [EPSG:25831]', HSPACING: 1000, VSPACING: 1000, HOVERLAY: 0, VOVERLAY: 0, CRS: 'EPSG:25831', OUTPUT: TEMPORARY_OUTPUT}
+    drawings:
+      - {type: rect, target: {object_name: 'unaltracapturaProcessingParameter:HSPACING'}, colour: information, fill: false, margin: 0, shadow: false}
+      - {type: rect, target: {object_name: 'unaltracapturaProcessingParameter:VSPACING'}, colour: information, fill: false, margin: 0, shadow: false}
+    output: {path: assets/captures/punts-graella-parametres.png, annotations_svg: assets/captures/punts-graella-parametres.annotations.svg, manifest: context/qgis/manifests/punts-graella-parametres.yml}
+  - id: recompte-parametres
+    title: Recompte sense camp de pes
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:native:countpointsinpolygon'}
+    camera: {mode: crop, target: {object_name: 'unaltracapturaProcessingParameter:WEIGHT'}, output_size: {width: 820, height: 490}}
+    steps:
+      - {action: close_transients}
+      - {action: load_vector, path: 'tmp/dades-docents/qgis/punts-tarragones-20261004/resultats.gpkg|layername=graella', name: Graella 1 km}
+      - action: open_processing_algorithm_dialog
+        algorithm: native:countpointsinpolygon
+        parameters: {POLYGONS: Graella 1 km, POINTS: ICAEN coneguda, FIELD: n_punts, OUTPUT: TEMPORARY_OUTPUT}
+    drawings:
+      - {type: rect, target: {object_name: 'unaltracapturaProcessingParameter:WEIGHT'}, colour: information, fill: false, margin: 0, shadow: false}
+      - {type: rect, target: {object_name: 'unaltracapturaProcessingParameter:FIELD'}, colour: example, fill: false, margin: 0, shadow: false}
+    output: {path: assets/captures/punts-recompte-parametres.png, annotations_svg: assets/captures/punts-recompte-parametres.annotations.svg, manifest: context/qgis/manifests/punts-recompte-parametres.yml}
+  - id: recompte-resultat
+    title: Recompte sobre quadrats d'un quilòmetre quadrat
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: close_transients}
+      - {action: set_layer_visible, layer: ICAEN coneguda, visible: false}
+      - {action: set_layer_visible, layer: Centre mitjà, visible: false}
+      - {action: set_layer_visible, layer: Cercle · radi 8698 m, visible: false}
+      - {action: set_layer_visible, layer: El·lipse · 8152 × 3033 m, visible: false}
+      - {action: set_layer_visible, layer: Graella 1 km, visible: false}
+      - {action: load_vector, path: 'tmp/dades-docents/qgis/punts-tarragones-20261004/resultats.gpkg|layername=recompte', name: Recompte · registres per km²}
+      - {action: load_vector, path: 'tmp/dades-docents/qgis/punts-tarragones-20261004/dades.gpkg|layername=tarragones', name: Contorn comarcal}
+      - {action: style_layer, layer: Contorn comarcal, color: '#68716d', fill_color: '#ffffff', fill_opacity: 0, outline_width: 0.55}
+      - {action: clear_message_bar}
+    output: {path: assets/captures/punts-recompte-resultat.png, annotations_svg: assets/captures/punts-recompte-resultat.annotations.svg, manifest: context/qgis/manifests/punts-recompte-resultat.yml}
+  - id: kernel-parametres
+    title: Radi, píxel i camp de pes del kernel
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:qgis:heatmapkerneldensityestimation'}
+    camera: {mode: crop, target: {object_name: 'unaltracapturaProcessingParameter:RADIUS'}, output_size: {width: 840, height: 610}}
+    steps:
+      - action: open_processing_algorithm_dialog
+        algorithm: qgis:heatmapkerneldensityestimation
+        parameters: {INPUT: ICAEN coneguda, RADIUS: 1500, PIXEL_SIZE: 100, KERNEL: 0, DECAY: 0, OUTPUT_VALUE: 0, OUTPUT: TEMPORARY_OUTPUT}
+    drawings:
+      - {type: rect, target: {object_name: 'unaltracapturaProcessingParameter:RADIUS'}, colour: information, fill: false, margin: 0, shadow: false}
+      - {type: rect, target: {object_name: mCellXSpinBox}, colour: example, fill: false, margin: 0, shadow: false}
+      - {type: rect, target: {object_name: mCellYSpinBox}, colour: example, fill: false, margin: 0, shadow: false}
+    output: {path: assets/captures/punts-kernel-parametres.png, annotations_svg: assets/captures/punts-kernel-parametres.annotations.svg, manifest: context/qgis/manifests/punts-kernel-parametres.yml}
+  - id: kernel-resultat
+    title: Densitat normalitzada amb radi de 1500 metres
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: close_transients}
+      - {action: set_layer_visible, layer: Recompte · registres per km², visible: false}
+      - {action: load_raster, path: tmp/dades-docents/qgis/punts-tarragones-20261004/densitat-punts-1500.tif, name: Kernel · registres per km²}
+      - {action: load_vector, path: 'tmp/dades-docents/qgis/punts-tarragones-20261004/dades.gpkg|layername=tarragones', name: Límit sobre el kernel}
+      - {action: style_layer, layer: Límit sobre el kernel, color: '#68716d', fill_color: '#ffffff', fill_opacity: 0, outline_width: 0.55}
+      - {action: clear_message_bar}
+    output: {path: assets/captures/punts-kernel-resultat.png, annotations_svg: assets/captures/punts-kernel-resultat.annotations.svg, manifest: context/qgis/manifests/punts-kernel-resultat.yml}
+  - id: seccions-parametres
+    title: Sumar potència de categoria Edifici per secció
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:native:countpointsinpolygon'}
+    camera: {mode: crop, target: {object_name: 'unaltracapturaProcessingParameter:WEIGHT'}, output_size: {width: 820, height: 490}}
+    steps:
+      - {action: load_vector, path: 'tmp/dades-docents/qgis/punts-tarragones-20261004/dades.gpkg|layername=seccions', name: Seccions censals}
+      - action: load_vector
+        path: "tmp/dades-docents/qgis/punts-tarragones-20261004/dades.gpkg|layername=registre_icaen|subset=\"UBICACIO\" = 'Edifici' AND \"POT_KW\" > 0"
+        name: ICAEN Edifici coneguda
+      - action: open_processing_algorithm_dialog
+        algorithm: native:countpointsinpolygon
+        parameters: {POLYGONS: Seccions censals, POINTS: ICAEN Edifici coneguda, WEIGHT: POT_KW, FIELD: kw_coneguts, OUTPUT: TEMPORARY_OUTPUT}
+    drawings:
+      - {type: rect, target: {object_name: 'unaltracapturaProcessingParameter:WEIGHT'}, colour: information, fill: false, margin: 0, shadow: false}
+    output: {path: assets/captures/punts-seccions-parametres.png, annotations_svg: assets/captures/punts-seccions-parametres.annotations.svg, manifest: context/qgis/manifests/punts-seccions-parametres.yml}
+  - id: seccions-resultat
+    title: Potència coneguda per cent edificis funcionals
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: close_transients}
+      - {action: set_layer_visible, layer: Kernel · registres per km², visible: false}
+      - {action: set_layer_visible, layer: Seccions censals, visible: false}
+      - {action: set_layer_visible, layer: ICAEN Edifici coneguda, visible: false}
+      - {action: load_vector, path: 'tmp/dades-docents/qgis/punts-tarragones-20261004/resultats.gpkg|layername=seccions_resum', name: Potència · kW per 100 edificis}
+      - {action: select_tree_item, target: {class_name: QgsDockBrowserTreeView, item_text: resum}, wait_ms: 300}
+      - {action: clear_message_bar}
+    output: {path: assets/captures/punts-seccions-resultat.png, annotations_svg: assets/captures/punts-seccions-resultat.annotations.svg, manifest: context/qgis/manifests/punts-seccions-resultat.yml}

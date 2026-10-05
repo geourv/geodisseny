@@ -1,0 +1,179 @@
+{
+  "ok": true,
+  "capture_id": "visibilitat-acces-barra",
+  "provenance": {
+    "recipe_id": "visibilitat-acces",
+    "recipe_title": "Men\u00fas, caixa d'eines i algorismes desplegats",
+    "recipe_path": "/workspace/context/qgis/visibilitat-acces.yml",
+    "capture_title": "Obrir la caixa de Processament des de la barra d'eines",
+    "source_prompt": "context/qgis/visibilitat-acces.md",
+    "recipe_source_prompt": "context/qgis/visibilitat-acces.md",
+    "capture_source_prompt": null
+  },
+  "image": "sha256:950ee7bf7cbab5163849415d4f7fd72dc400b1e81127913ff308244ae4a6ebdc",
+  "image_digest": "sha256:950ee7bf7cbab5163849415d4f7fd72dc400b1e81127913ff308244ae4a6ebdc",
+  "probe": {
+    "ok": true,
+    "python_version": "3.13.7",
+    "qgis_version": "3.44.11",
+    "qt_version": "5.15.17",
+    "gdal_version": "3.10.3",
+    "qgis_process": {
+      "ok": true,
+      "path": "/usr/bin/qgis_process",
+      "version": "QGIS 3.44.11-Solothurn 'Solothurn' (f8f5812197f)\nQGIS code revision f8f5812197f\nQt version 5.15.17\nPython version 3.13.7\nGDAL/OGR version 3.10.3\nPROJ version 9.6.0\nEPSG Registry database version v12.004 (2025-03-02)\nGEOS version 3.13.1-CAPI-1.19.2\nSQLite version 3.46.1\nOS Ubuntu 25.10",
+      "returncode": 0
+    },
+    "analysis_checked": false,
+    "image": "sha256:950ee7bf7cbab5163849415d4f7fd72dc400b1e81127913ff308244ae4a6ebdc",
+    "digest": "sha256:950ee7bf7cbab5163849415d4f7fd72dc400b1e81127913ff308244ae4a6ebdc",
+    "raw": "{\"ok\": true, \"python_version\": \"3.13.7\", \"qgis_version\": \"3.44.11-Solothurn\", \"qt_version\": \"5.15.17\", \"gdal_version\": \"3.10.3\", \"qgis_process\": {\"ok\": true, \"path\": \"/usr/bin/qgis_process\", \"version\": \"QGIS 3.44.11-Solothurn 'Solothurn' (f8f5812197f)\\nQGIS code revision f8f5812197f\\nQt version 5.15.17\\nPython version 3.13.7\\nGDAL/OGR version 3.10.3\\nPROJ version 9.6.0\\nEPSG Registry database version v12.004 (2025-03-02)\\nGEOS version 3.13.1-CAPI-1.19.2\\nSQLite version 3.46.1\\nOS Ubuntu 25.10\", \"returncode\": 0}, \"analysis_checked\": false}\n",
+    "returncode": 0
+  },
+  "output": "/workspace/assets/captures/visibilitat-acces-barra.png",
+  "annotation_svg": "/workspace/assets/captures/visibilitat-acces-barra.annotations.svg",
+  "annotation_svg_background": {
+    "mode": "embedded_png_data_uri",
+    "width": 640,
+    "height": 260
+  },
+  "manifest": "/workspace/context/qgis/manifests/visibilitat-acces-barra.yml",
+  "backend": "x11",
+  "locale": {
+    "requested": "ca",
+    "qsettings_user_locale": "ca",
+    "qsettings_override": true
+  },
+  "device_pixel_ratio": 1.0,
+  "coordinate_space": "logical pixels in the captured image; recipe relative coordinates share this space for PNG and SVG annotations",
+  "camera": {
+    "mode": "crop",
+    "requested": {
+      "mode": "crop",
+      "target": {
+        "object_name": null,
+        "class_name": "QToolButton",
+        "text": "Caixa d'eines",
+        "item_text": null,
+        "layer_name": null,
+        "target_part": null,
+        "title": null,
+        "parent_window": null,
+        "fallback": []
+      },
+      "padding": 0,
+      "output_size": {
+        "width": 640,
+        "height": 260
+      }
+    },
+    "full_capture": {
+      "width": 1440,
+      "height": 900
+    },
+    "scale": 1.0,
+    "target": {
+      "object_name": null,
+      "class_name": "QToolButton",
+      "text": "Caixa d'eines",
+      "item_text": null,
+      "layer_name": null,
+      "target_part": null,
+      "title": null,
+      "parent_window": null,
+      "fallback": []
+    },
+    "target_bbox": {
+      "x": 1033,
+      "y": 24,
+      "width": 32,
+      "height": 31
+    },
+    "padding": 0,
+    "crop_bbox": {
+      "x": 729,
+      "y": 0,
+      "width": 640,
+      "height": 260
+    },
+    "output_size": {
+      "width": 640,
+      "height": 260
+    },
+    "requested_output_size": {
+      "width": 640,
+      "height": 260
+    }
+  },
+  "layout_policy": {
+    "reading_direction": "left_to_right",
+    "prefer_local_empty_space": true,
+    "prefer_leaderless_labels": true,
+    "avoid_diagonal_leaders": true,
+    "allow_diagonal_leaders": "when_no_clear_local_candidate",
+    "protect_text": true,
+    "protect_controls": true,
+    "obstacle_padding": 4.0
+  },
+  "project_crs": "EPSG:25831",
+  "canvas_crs": "EPSG:25831",
+  "warnings": [],
+  "target": {
+    "object_name": "QgisApp",
+    "class_name": null,
+    "text": null,
+    "item_text": null,
+    "layer_name": null,
+    "target_part": null,
+    "title": null,
+    "parent_window": null,
+    "fallback": []
+  },
+  "annotations": [
+    {
+      "type": "input",
+      "source": "target",
+      "colour": {
+        "mode": "auto_contrast",
+        "token": "ember",
+        "hex": "#b84200",
+        "score": 20.46,
+        "family": "warm"
+      },
+      "shadow": true,
+      "target": {
+        "object_name": null,
+        "class_name": "QToolButton",
+        "text": "Caixa d'eines",
+        "item_text": null,
+        "layer_name": null,
+        "target_part": null,
+        "title": null,
+        "parent_window": null,
+        "fallback": []
+      },
+      "input": "mouse",
+      "button": "left",
+      "text": "Caixa de Processament",
+      "bbox": {
+        "x": 347,
+        "y": 82,
+        "width": 239,
+        "height": 62
+      },
+      "leader_from": {
+        "x": 352,
+        "y": 87
+      },
+      "leader_label_edge": {
+        "x": 347,
+        "y": 82
+      },
+      "leader_stroke_width": 3,
+      "target_anchor": {
+        "x": 319,
+        "y": 54
+      }
+    }
+  ]
+}

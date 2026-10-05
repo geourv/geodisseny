@@ -7,7 +7,144 @@ Les captures QGIS mostren on es prenen decisions a la interfície. Una captura
 de diàleg no acredita haver validat un resultat territorial. Conservar idioma,
 versió real, prompt, recepta, paràmetres, selectors i manifest.
 
-## Integració actual — r.walk i isòcrones, 1 d'octubre de 2026
+### Connexions GeoPackage a l'Explorador
+
+Criteri de l'autor del3d'octubre de2026 per a les properes captures:
+quan hi hagi GeoPackage, crear les connexions als fitxers i desplegar el node
+GeoPackage, les connexions pertinents i les seves capes a l'Explorador de la
+part superior esquerra. Els noms han de permetre relacionar les fonts amb
+les capes utilitzades en el pas. Registrar aquest estat als prompts i receptes
+de la propera preparació i comprovar-lo a la captura, amb selectors reals.
+
+L'autor permet ajornar la regeneració de les captures actuals. Els17bundles
+de r3 es conserven; el nou criteri s'aplicarà en preparar o regenerar captures.
+
+## Integració actual — pràctica municipal de Constantí
+
+`punts-municipals.yml` afegeix cinc captures: `municipals-dades`,
+`municipals-camp`, `municipals-centre`, `municipals-resultat` i `municipals-ellipse`.
+Mateixos124punts, potència publicada conservada, camps d'escenari decimals.
+L'ortofoto WMS ICGC2025 a8m/píxel dona context; el resultat utilitza àrees
+proporcionals a w_mid i colors per distingir pesos publicats/assignats.
+
+La connexió municipis.gpkg queda desplegada a l'Explorador. Cinc manifests
+correctes, x11/DPR1, català, sense warnings; PNG/SVG revisats. Captures
+configurades i càlculs verificats es documenten per separat. Dades i projecte
+portable al suplement privat municipal; detall a `context/dades/punts-tarragones.md`.
+Les captures comarcals d'accés i de les ampliacions continuen com a referència.
+
+## Integració anterior — punts del Tarragonès, 4 d'octubre de 2026
+
+14captures noves de `punts-tarragones.yml`, amb prompt propi, dades i resultats
+verificats. GeoPackage i connexions visibles a l'Explorador: declaració
+`connections` de tipus `gpkg`, refresc amb `mActionRefresh` i desplegament
+amb `expand_tree_item`. Els noms dels dos fitxers i les capes són reals.
+
+Menú Vectorial/Analysis Tools i caixa Anàlisi vectorial oberts; controls
+de centres, geometria per expressió, malla, recompte, kernel i seccions.
+Requadres amb `margin: 0`, sense ombra, per respectar els textos veïns.
+Els píxels X/Y del kernel es resolen amb els widgets natius, no amb el títol.
+Selector «resum» verificat per evitar la coincidència aproximada amb «seccions».
+
+Tots els manifests: x11/DPR1, català, sense warnings. Els diàlegs mostren
+configuració; els càlculs i la portabilitat s'acrediten independentment.
+C4:21imatges,14captures; revisió1440/390px i PDF231p. Fonts, controls,
+incidències i hashes a `context/dades/punts-tarragones.md`.
+
+## Integració de visibilitat — recinte compacte, caixa d'eines i MDS, r3
+
+Disset captures: dotze de visibilitat-costa i cinc de visibilitat-acces.
+Nom visible «Recinte petroquímic d'estudi», amb222,94ha; buffers +150/−150m
+en dos diàlegs, distàncies emmarcades sense cobrir l'ajuda. Ortofoto WMS i
+MDS inicials amb el mateix enquadrament i llegenda de cotes.
+
+Caixa oberta amb trigger_action «Caixa d'eines»; expand_tree_item i
+select_tree_item mostren Viewshed dins de GDAL/Miscel·lània ràster. Menú
+Vectorial/Geoprocessing Tools/Àrea d'influència realment desplegat, i fila
+correcta d'Àrea d'influència al panell. El selector per àlies havia apuntat
+a Create wedge buffers: corregit amb el prefix «Àrea d'influ» i inspecció
+visual. Requadres als botons i files;17manifests sense warnings, x11/DPR1.
+
+La recepta de probes privats s'ha desregistrat. No s'ha publicat el menú
+contextual de lots bloquejat; el text explica l'accés segons la documentació
+QGIS i la cadena executable ha reproduït179càlculs amb controls exactes.
+
+C3 té25imatges i24figures, revisades a1440/390px i al PDF219p. GUIA26p,
+SOLUCIONS3p, cinc SVG regenerats. Deu projectes de37capes; registre i hashes
+a `context/dades/visibilitat-costa-r3.md`. Material en draft per a l'autor.
+
+## Integració anterior — accessos i perímetre, 2 d'octubre de 2026
+
+Receptes `visibilitat-acces.yml` i `visibilitat-costa.yml`:12captures totals.
+Accés a Procés → Caixa d'eines i al botó de la barra, amb glif de clic;
+diàleg nou Suprimeix els forats. Dades de la revisió r2, amb el perímetre
+de184,44ha sense forats i36capes en deu projectes.
+
+Backend x11 explícit, DPR1, mateixa imatge QGIS3.44.11. S'ha corregit el
+desplaçament del marcador que apareixia en el crop offscreen amb DPR1,04268.
+L'etiqueta del llindar s'ha escurçat a «0=tots»; controls i captures inspeccionats.
+No s'ha editat codi del proveïdor ni cap sortida manualment.
+
+El probe d'una cerca no oberta, amb warning d'acció ignorada, es conserva
+privadament a `tmp/dades-docents/arxiu-prova-acces-20261002/`; no és material
+docent. Els12manifests finals són correctes i no tenen warnings.
+
+C3:20imatges en19figures, revisades al web1440/390px i al PDF215p. Guió19p,
+notes3p. Nova figura QMD/SVG que compara original, deleteholes, convexa,
+còncava0,3 i tancament25m. Registre complet a `context/dades/visibilitat-costa-r2.md`.
+Passada web final repetida després de corregir la metadada de la referència
+bibliogràfica:20imatges carregades, cap ancoratge perdut ni overflow. Inspecció
+directa de `_site`: el probe de cerca rebutjat no forma part del preview.
+
+## Integració anterior — torxa, carretera i polígon, 2 d'octubre de 2026
+
+Nou captures de `context/qgis/visibilitat-costa.yml`, prompt homònim:
+identificació de dades i torxa, Viewshed puntual, intervisibilitat, Calculadora
+ràster amb Domini, mostreig de carretera, suma de37conques MDT, graella d'àrea
+i mapa d'alguna part del polígon (57A o T). Imatge QGIS3.44.11 fixada.
+
+El client MCP va expirar mentre acabava el prefix de nou captures. Els nou
+PNG/SVG/manifests s'han completat; manifests ok:true, sense avisos de selectors,
+i contenidors de render retirats. Captures inspeccionades. La prova de càlcul
+continua a controls/verificacio-qgis.json; els diàlegs només mostren paràmetres.
+
+Quatre QMD/SVG actualitzats; perfils amb ampliació dels últims80m per veure
+la intercepció prop del receptor. Corregit l'espai entre eixos i llegendes.
+El capítol conserva16figures, ara16imatges, i substitueix l'assaig cadastral.
+La recepta nord s'ha desregistrat i els seus bundles no versionats s'han
+arxivat després de contrastar-los amb el ZIP immutable. Registre a
+`context/dades/visibilitat-costa.md`.
+
+Revisió final:16imatges/16figures de C3 al web1440/390px, cap incidència de
+càrrega, MathJax, ancoratges o overflow. Manual PDF209p, guió16p i notes3p
+inspeccionats. Controls QGIS natius i portabilitat de34capes per projecte
+documentats al paquet segellat de211fitxers, sense pujada a Moodle.
+
+## Integració substituïda — visibilitat nord, 1 d'octubre de 2026
+
+Nou captures de `context/qgis/visibilitat-nord.yml`, prompt homònim, produïdes
+pel MCP amb QGIS3.44.11. Crida final `visibilitat-nord.visibilitat-nord-mostreig`:
+dades, punts lineals, graella, Viewshed, Calculadora ràster de cota mínima,
+mapes MDT/MDS, acumulació ponderada i mostreig als receptors.
+
+Bundles complets a `assets/captures/visibilitat-nord-*.png` i `.annotations.svg`,
+amb manifests individuals. Cap avís de selectors. El capítol referencia els PNG.
+R8 quedava massa prop del marge superior: ampliat l'enquadrament comparatiu a1,2.
+Escurçada l'anotació «Cotes absolutes» per evitar el retall lateral del diàleg.
+Labels de mapa20pt; cap canvi manual a les imatges generades.
+
+Quatre figures QMD/SVG: mostreig, comparació MDT/MDS, taula de receptors i perfils.
+Corregits marges i solapaments de llegendes a les fonts. Comparació amb cotes
+absolutes fixes, no només els mateixos nombres d'altura relativa.
+
+Capítol3:17imatges dins de16figures, revisió web a1440/390px, sense imatges
+trencades, errors MathJax, ancoratges perduts ni overflow. Revisats els SVG,
+captures i taules del PDF local213p, i els guions14/3p. Un enllaç intern a la
+ponderació es va corregir afegint l'ancoratge estable a l'apartat corresponent.
+L'auditoria HTML conserva avisos d'opacitat/inspecció limitada del proveïdor;
+la revisió visual dels recursos nous està completada.
+
+## Integració anterior — r.walk i isòcrones, 1 d'octubre de 2026
 
 Sis captures addicionals amb unaltracaptura, totes amb PNG, SVG i manifest:
 

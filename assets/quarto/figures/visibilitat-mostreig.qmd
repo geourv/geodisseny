@@ -1,0 +1,51 @@
+---
+title: Una torxa, una carretera i una àrea industrial
+lang: ca
+ref: figura-visibilitat-mostreig
+format: gfm
+execute-dir: project
+execute: {echo: false, warning: false}
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  inputs: [context/inputs/visibilitat-costa.json]
+  outputs: [assets/img/generated/visibilitat-mostreig.svg]
+---
+
+```{python}
+from pathlib import Path
+import json,numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.patches import Polygon
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():root=root.parent
+d=json.loads((root/'context/inputs/visibilitat-costa.json').read_text())
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':13,'svg.fonttype':'none'})
+fig,ax=plt.subplots(figsize=(9.5,6.1))
+fig.subplots_adjust(left=.12,right=.98,bottom=.22,top=.90)
+def polygons(ax,g,fill,edge,lw):
+    parts=g['coordinates'] if g['type']=='MultiPolygon' else [g['coordinates']]
+    for rings in parts:
+        ax.add_patch(Polygon(np.array(rings[0])[:,:2]/1000,facecolor=fill,edgecolor=edge,lw=lw))
+        for hole in rings[1:]:ax.add_patch(Polygon(np.array(hole)[:,:2]/1000,facecolor='white',edgecolor=edge,lw=lw))
+polygons(ax,d['sector'],'#f3ede3','#bb741d',1.4)
+for tile in d['tiles']:polygons(ax,tile,'none','#b8abc9',.45)
+xy=np.array(d['road']['coordinates'])[:,:2]/1000
+ax.plot(xy[:,0],xy[:,1],color='#176e78',lw=1.6)
+for group,colour,marker,label in [('punt','#a23557','^','T · Torxa'),
+    ('carretera','#176e78','o','C · 37 posicions del recorregut'),('area','#6f51a6','s','A · 57 fragments d’àrea')]:
+    pts=[s for s in d['sources'] if s['grup']==group]
+    xy=np.array([[s['x'],s['y']] for s in pts])/1000
+    ax.scatter(xy[:,0],xy[:,1],c=colour,marker=marker,s=95 if group=='punt' else 23,
+        edgecolors='white',linewidths=.5,zorder=5 if group=='punt' else 4,label=label)
+    if group=='punt':ax.annotate('T',xy=xy[0],xytext=(7,8),textcoords='offset points',weight='bold',color=colour)
+ax.text(344.48,4552.60,'Vila-seca',fontsize=13)
+ax.text(347.48,4550.13,'Enllaç de\nla Pineda',fontsize=13)
+area=f"{d['controls']['industrial_area_m2']/10000:.2f}".replace('.',',')
+ax.text(348.30,4553.02,f'Recinte petroquímic · {area} ha',ha='center',fontsize=13,color='#935c18')
+ax.set(xlim=(344.3,350.0),ylim=(4549.95,4553.25),aspect='equal',xlabel='Est UTM (km)',ylabel='Nord UTM (km)')
+ax.set_xticks([345,347,349]);ax.set_yticks([4550,4551,4552,4553]);ax.ticklabel_format(useOffset=False,style='plain')
+ax.tick_params(labelsize=12);ax.grid(alpha=.16)
+fig.legend(*ax.get_legend_handles_labels(),loc='lower center',bbox_to_anchor=(.5,.03),ncol=2,frameon=False,fontsize=13)
+fig.savefig(root/'assets/img/generated/visibilitat-mostreig.svg',facecolor='white',metadata={'Date':None});plt.close(fig)
+```

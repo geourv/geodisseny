@@ -112,6 +112,22 @@ Els valors absents s'han de distingir dels zeros. Una potència desconeguda no �
 
 >>> Tres registres tenen potències 10 kW, 20 kW i una potència desconeguda. La mitjana dels **dos valors coneguts** és 15 kW. Substituir el desconegut per zero donaria 10 kW, però afegiria una observació que no existeix. Tampoc es poden atribuir 15 kW al tercer registre sense un model d'imputació. La conclusió correcta conserva «2 de 3 registres amb potència coneguda».
 
+### Biaix de supervivència: els avions que tornaven {#biaix-supervivencia}
+
+Durant la Segona Guerra Mundial, Abraham Wald, del *Statistical Research Group*, va estudiar com estimar la vulnerabilitat dels avions a partir dels danys dels aparells que retornaven de les missions. El problema era que es podien inspeccionar els supervivents, però no observar de la mateixa manera els avions perduts. Mangel i Samaniego descriuen aquest treball i el tractament estadístic de les dades que faltaven {% cite mangel1984wald %}.
+
+Imagina que es dibuixen els impactes observats sobre la silueta d'un avió. Una concentració de marques a les ales pot fer pensar que són les zones més problemàtiques. Però aquells impactes corresponen a avions que **han pogut tornar**. Si un impacte en una altra zona impedeix el retorn amb més freqüència, aquesta zona pot tenir poques marques a la mostra disponible, precisament perquè els casos més greus han quedat fora de l'observació.
+
+![Silueta d'un avió amb marques vermelles distribuïdes sobretot per les ales i el fuselatge]({{ site.baseurl }}/assets/img/historia/biaix-supervivencia.svg "Il·lustració moderna amb impactes hipotètics sobre avions que han retornat. Les marques mostren els danys que poden aparèixer entre els supervivents; falten els avions perduts. El dibuix no reprodueix un registre d'impactes de 1943."){: data-figure-width-web="36rem" data-figure-width-pdf="78%" data-caption-source="Martin Grandjean (vector), McGeddon (imatge) i US Air Force (concepte del diagrama); [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Survivorship-bias.svg), [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/), sense retocs."}
+
+La interpretació necessita supòsits sobre l'exposició als impactes i la probabilitat de retorn; comptar marques, per si sol, no resol aquestes dues qüestions.
+
+El **biaix de supervivència** (*survivorship bias*) apareix quan s'estenen les característiques dels casos que han superat un filtre als casos del conjunt d'origen, inclosos els que no l'han superat. És una forma de **biaix de selecció**: la possibilitat d'entrar a la mostra està relacionada amb allò que es vol estudiar. Aquí el filtre és tornar de la missió. Un mapa més detallat dels mateixos supervivents no recuperaria la informació dels avions perduts.
+
+En una anàlisi territorial pot passar una cosa semblant amb els **comerços que continuen oberts**. Les seves coordenades permeten descriure l'oferta actual. Per investigar si una localització afavoreix la continuïtat dels negocis, també caldria conèixer els establiments que han tancat, les dates d'obertura i tancament i les condicions de l'entorn. Estudiar només els actius podria fer semblar favorables unes ubicacions de les quals han desaparegut molts negocis.
+
+>> Abans d'interpretar un patró, pregunta **quins casos han pogut entrar a la base de dades i quins n'han quedat fora**. Que un lloc no tingui punts pot respondre a una absència del fenomen o a una manca d'observació. La concentració de registres prop de vies accessibles, per exemple, pot ser un biaix de selecció per l'esforç de mostreig, sense ser necessàriament un cas de supervivència.
+
 ## Centre, distribució i dispersió {#estadistica-descriptiva}
 
 Quan es disposa de moltes dades, una taula completa pot ser difícil de llegir. L'**estadística descriptiva** (*descriptive statistics*) en facilita el resum. Es poden fer tres preguntes: quin valor representa el centre del conjunt?, quant s'allunyen els valors d'aquest centre?, hi ha valors molt més grans o petits que la resta? La manera com es reparteixen els valors és la seva **distribució**.
@@ -250,7 +266,7 @@ $$
 
 En els trajectes anteriors, el producte de les desviacions estàndard és 25 km·min. Per això $r=22,5/25=0,9$ en A i $r=-0,9$ en B. Són relacions lineals marcades en aquests conjunts petits. La correlació descriu els punts, però no demostra per què el transport funciona així.
 
-### De descriure una relació a fer una estimació
+### Regressió lineal {#de-descriure-una-relació-a-fer-una-estimació}
 
 Ara podem preguntar-nos si la temperatura d'una estació es pot estimar a partir de la seva altitud. La **regressió lineal** (*linear regression*) busca una recta que resumeixi aquesta relació. Cada altitud introdueix un valor a la recta i n'obté una temperatura estimada. Abans d'aplicar-la, es dibuixen els punts per comprovar si una recta té sentit {% cite diez2019openintro %}.
 
@@ -556,7 +572,7 @@ Ian L. McHarg va publicar *Design with Nature* el 1969. Va proposar estudiar el 
 
 Per exemple, proposar una nova zona residencial només a partir de la distància al centre urbà podria ignorar inundabilitat, sòls o continuïtat d'hàbitats. La lectura conjunta pot suggerir una ubicació diferent o una altra forma d'ocupació. El valor de la superposició no és que moltes capes produeixin automàticament una resposta correcta: cal interpretar els processos, la qualitat de les dades i els criteris amb què es qualifiquen els llocs.
 
-### De la superposició al model cartogràfic
+### Modelització cartogràfica i àlgebra de mapes {#de-la-superposició-al-model-cartogràfic}
 
 La modelització cartogràfica desenvolupa maneres de combinar aquestes representacions de forma explícita. C. Dana Tomlin sistematitza l'**àlgebra de mapes** (*map algebra*) a *Geographic Information Systems and Cartographic Modeling* (1990). Les operacions poden relacionar valors en una mateixa posició, resumir un veïnatge o calcular propietats dins d'una zona. Aquesta distinció ajuda a expressar models com una seqüència d'operacions i a revisar què significa cada resultat {% cite tomlin1990cartographic %}.
 
@@ -688,6 +704,12 @@ Dibuixa també els boxplots amb $Q_1=5$, mediana 10 i $Q_3=20$ en el primer conj
 ### Observació, suport i representació
 
 Considera tres dades: una instal·lació amb 10 kW de potència registrada, una parcel·la de 2 ha i una estació que mesura una màxima de 31 °C en un dia. Fes una taula amb què s'observa, què es mesura, en quines unitats i a quin espai o període correspon. Quina informació temporal falta en els dos primers casos? Explica per què posar les tres dades en punts sobre un mapa no les fa equivalents.
+
+### Un inventari de supervivents
+
+En un exemple fictici, es disposa de les coordenades i l'any d'obertura dels comerços que continuen actius avui. Es vol investigar en quins carrers han tingut més continuïtat els negocis oberts durant els últims deu anys. Identifica la població d'interès, els casos observats i els que falten. Quines dades sobre obertures i tancaments permetrien reformular l'anàlisi?
+
+Conserva una taula amb aquests tres conjunts i les dades necessàries. Escriu també una pregunta sobre l'oferta actual que sí que es pugui respondre amb l'inventari disponible. Relaciona la diferència amb els avions que tornaven: quina condició ha hagut de complir un cas per aparèixer a cada mostra?
 
 ### Relació, residu i validació
 

@@ -1,0 +1,28 @@
+{
+  "producer": "ICGC",
+  "url": "https://geoserveis.icgc.cat/servei/catalunya/orto-territorial/wms?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=ortofoto_25cm_color_2025&STYLES=&CRS=EPSG%3A25831&BBOX=343500%2C4554000%2C353500%2C4563000&WIDTH=1250&HEIGHT=1125&FORMAT=image%2Fpng",
+  "edition": 2025,
+  "request": {
+    "SERVICE": "WMS",
+    "VERSION": "1.3.0",
+    "REQUEST": "GetMap",
+    "LAYERS": "ortofoto_25cm_color_2025",
+    "STYLES": "",
+    "CRS": "EPSG:25831",
+    "BBOX": "343500,4554000,353500,4563000",
+    "WIDTH": 1250,
+    "HEIGHT": 1125,
+    "FORMAT": "image/png"
+  },
+  "bounds": [
+    343500,
+    4554000,
+    353500,
+    4563000
+  ],
+  "requested_resolution_m": 8,
+  "source_product_resolution_m": 0.25,
+  "sha256": "87a1b6507d0cd345a2e6a4497a4313be3a083cf608825ac9b70366dbdaafd9b5",
+  "licence_url": "https://www.icgc.cat/condicions",
+  "derivation": "WMS GetMap rendered at 8 m/pixel; not a native 25 cm tile."
+}

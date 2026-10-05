@@ -1,0 +1,64 @@
+---
+title: Torxa, carretera i polígon amb MDT i MDS
+lang: ca
+ref: figura-visibilitat-mdt-mds
+format: gfm
+execute-dir: project
+execute: {echo: false, warning: false}
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  inputs: [context/inputs/visibilitat-costa.json]
+  outputs: [assets/img/generated/visibilitat-mdt-mds.svg]
+---
+
+```{python}
+from pathlib import Path
+import base64,json,zlib,numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.colors import ListedColormap,BoundaryNorm
+from matplotlib.patches import Polygon,Patch
+import matplotlib.patheffects as pe
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():root=root.parent
+d=json.loads((root/'context/inputs/visibilitat-costa.json').read_text())
+def decode(record):
+    raw=zlib.decompress(base64.b64decode(record['data']))
+    assert len(raw)==2*np.prod(record['shape'])
+    codes=np.frombuffer(raw,dtype='<u2').reshape(record['shape'])
+    return np.ma.masked_where(codes==record['nodata'],codes.astype(float)/record['scale'])
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':13,'svg.fonttype':'none'})
+colors=['#eeeeee','#d1e5f0','#92c5de','#4393c3','#08519c']
+norm=BoundaryNorm([-.001,.0000001,5,25,50,100.001],5)
+fig,axes=plt.subplots(3,2,figsize=(9.5,10.9),sharex=True,sharey=True)
+fig.subplots_adjust(left=.10,right=.98,bottom=.22,top=.95,hspace=.30,wspace=.17)
+for row,(group,title) in enumerate([('punt','T · Torxa'),('carretera','C · 28 posicions'),('poligon','G · Polígon')]):
+    for col,surface in enumerate(['mdt','mds']):
+        ax=axes[row,col]
+        key=group+'-'+surface+('-alguna' if group=='poligon' else '')
+        cmap=ListedColormap(colors if group=='carretera' else ['#eeeeee','#168164'])
+        cmap.set_bad('white')
+        chosen_norm=norm if group=='carretera' else BoundaryNorm([-.001,.1,100.001],2)
+        ax.imshow(decode(d['maps'][key]),origin='upper',extent=(342,352,4549,4559),cmap=cmap,norm=chosen_norm,interpolation='nearest')
+        g=d['sector'];parts=g['coordinates'] if g['type']=='MultiPolygon' else [g['coordinates']]
+        for rings in parts:
+            xy=np.array(rings[0])[:,:2]/1000;ax.plot(xy[:,0],xy[:,1],color='#b35c16',lw=1.1)
+        road=np.array(d['road']['coordinates'])/1000;ax.plot(road[:,0],road[:,1],color='#176e78',lw=.8)
+        t=d['controls']['torch'];ax.plot(t['x']/1000,t['y']/1000,'^',color='#a23557',ms=5)
+        count=(d['controls']['polygon_any'][surface]['visible_cells'] if group=='poligon'
+            else d['controls']['groups'][group][surface]['visible_any_cells'])
+        pct=100*count/d['controls']['valid_receiver_cells']
+        ax.text(.03,.03,f'Territori amb visió: {pct:.2f}%'.replace('.',','),transform=ax.transAxes,fontsize=12,
+                bbox={'facecolor':'white','edgecolor':'none','alpha':.95,'pad':3})
+        ax.set_title(title+' · '+surface.upper(),fontsize=14,weight='bold',pad=9)
+        ax.set(xlim=(342,352),ylim=(4549,4559),aspect='equal')
+        ax.set_xticks([343,347,351]);ax.set_yticks([4550,4554,4558]);ax.tick_params(labelsize=12)
+        ax.ticklabel_format(useOffset=False,style='plain')
+        if col==0:ax.set_ylabel('Nord (km)')
+        if row==2:ax.set_xlabel('Est UTM (km)')
+fig.legend([Patch(facecolor=c) for c in colors],['0%','>0–5%','>5–25%','>25–50%','>50–100%'],
+           loc='lower center',bbox_to_anchor=(.5,.025),ncol=5,frameon=False,fontsize=12)
+fig.text(.5,.115,'T i G: verd = visible · gris = ocult · blanc = no calculat',ha='center',fontsize=13)
+fig.text(.5,.075,'C: fracció de les 28 posicions comparables (de 37 mostres)',ha='center',fontsize=13)
+fig.savefig(root/'assets/img/generated/visibilitat-mdt-mds.svg',facecolor='white',metadata={'Date':None});plt.close(fig)
+```

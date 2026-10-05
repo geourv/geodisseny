@@ -1,0 +1,46 @@
+---
+title: Veure la torxa, algun element o les mostres d'àrea
+lang: ca
+ref: figura-visibilitat-matriu-real
+format: gfm
+execute-dir: project
+execute: {echo: false, warning: false}
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  inputs: [context/inputs/visibilitat-costa.json]
+  outputs: [assets/img/generated/visibilitat-matriu-real.svg]
+---
+
+```{python}
+from pathlib import Path
+import json,numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():root=root.parent
+d=json.loads((root/'context/inputs/visibilitat-costa.json').read_text())
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':13,'svg.fonttype':'none'})
+fig,axes=plt.subplots(1,2,figsize=(9.5,4.8),sharey=True)
+fig.subplots_adjust(left=.23,right=.98,bottom=.26,top=.78,wspace=.23)
+cmap=LinearSegmentedColormap.from_list('visibility',['#f8fbfd','#3182bd','#08306b']);cmap.set_bad('#d0d0d0')
+receivers=d['receivers'];labels=[r['id']+' · '+r['mostra'] for r in receivers]
+for ax,surface in zip(axes,['mdt','mds']):
+    values=np.array([[np.nan if r['T_'+surface] is None else 100*r['T_'+surface],
+                      np.nan if r['G_'+surface] is None else 100*r['G_'+surface],
+                      np.nan if r['A_'+surface+'_pct'] is None else r['A_'+surface+'_pct']] for r in receivers])
+    ax.imshow(np.ma.masked_invalid(values),cmap=cmap,vmin=0,vmax=100,aspect='auto')
+    for row,r in enumerate(receivers):
+        for col,value in enumerate(values[row]):
+            text='—' if not np.isfinite(value) else (str(int(value/100)) if col<2 else f'{value:.1f}'.replace('.',','))
+            ax.text(col,row,text,ha='center',va='center',fontsize=13,color='white' if value>55 else '#202020')
+    ax.set_xticks([0,1,2],['T (0/1)','G (0/1)','A (%)']);ax.xaxis.tick_top()
+    ax.set_yticks(range(len(labels)),labels);ax.tick_params(axis='both',length=0,pad=8,labelsize=13)
+    ax.set_title(surface.upper(),fontsize=16,weight='bold',pad=34)
+    ax.set_xticks(np.arange(-.5,3,1),minor=True);ax.set_yticks(np.arange(-.5,len(labels),1),minor=True)
+    ax.grid(which='minor',color='white',lw=1.2);ax.tick_params(which='minor',length=0)
+fig.text(.5,.12,'T: torxa · G: alguna de les 57 mostres A o T',ha='center',fontsize=13)
+fig.text(.5,.065,'A: percentatge ponderat dels 57 fragments d’àrea',ha='center',fontsize=13)
+fig.text(.5,.01,'R5: fora del retall · Els receptors són exemples de contrast',ha='center',fontsize=13)
+fig.savefig(root/'assets/img/generated/visibilitat-matriu-real.svg',facecolor='white',metadata={'Date':None});plt.close(fig)
+```

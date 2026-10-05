@@ -1,0 +1,41 @@
+---
+title: Sensibilitat dels centres a la imputació
+lang: ca
+ref: figura-punts-escenaris
+format: gfm
+execute-dir: project
+execute: {echo: false, warning: false}
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  inputs: [context/inputs/punts-escenaris.json]
+  outputs: [assets/img/generated/punts-escenaris.svg]
+---
+
+```{python}
+from pathlib import Path
+import json
+import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root==root.parent:raise RuntimeError('Projecte absent')
+    root=root.parent
+d=json.loads((root/'context/inputs/punts-escenaris.json').read_text())
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':18,'svg.fonttype':'none','svg.hashsalt':'punts-escenaris'})
+fig,axes=plt.subplots(1,2,figsize=(11.5,4.7),layout='constrained',sharey=True)
+colours=['#0072b2','#009e73','#d55e00'];markers=['s','o','^'];labels=['Inferior','Central','Superior']
+for i,row in enumerate(d['municipalities']):
+    for ax,key in zip(axes,['sum_weights','shift_m']):
+        values=[row['scenarios'][f][key] for f in ['w_inf','w_mid','w_sup']]
+        ax.plot(values,[i]*3,color='#aaaaaa',lw=2,zorder=1)
+        for j,(value,colour,marker) in enumerate(zip(values,colours,markers)):
+            ax.scatter(value,i,s=100,marker=marker,color=colour,edgecolors='white',linewidths=.5,zorder=3)
+axes[0].set_yticks(range(3),[row['name'] for row in d['municipalities']]);axes[0].invert_yaxis()
+axes[0].set(xlabel='Suma amb valors assignats (kW)',title='A · Quantitat total',xlim=(0,3300))
+axes[1].set(xlabel='Distància al centre sense pes (m)',title='B · Canvi de posició',xlim=(-70,2100))
+for ax in axes:ax.grid(axis='x',alpha=.2);ax.set_ylim(2.6,-.6)
+fig.legend(handles=[Line2D([],[],marker=m,color=c,ls='',markersize=10,label=l) for m,c,l in zip(markers,colours,labels)],
+    loc='outside lower center',ncol=3,frameon=False,fontsize=18)
+fig.savefig(root/'assets/img/generated/punts-escenaris.svg',facecolor='white',metadata={'Date':None});plt.close(fig)
+```

@@ -1,0 +1,80 @@
+id: visibilitat-acces
+title: Menús, caixa d'eines i algorismes desplegats
+source_prompt: context/qgis/visibilitat-acces.md
+plugins: [processing]
+runtime: {display_backend: x11}
+compat: {qgis: '>=3.44'}
+data:
+  - {id: acces-mdt, type: raster, path: visibilitat-costa-20261002-r3/dades/mdt-calcul.tif}
+  - {id: acces-poligon, type: vector, path: visibilitat-costa-20261002-r3/dades/poligon.gpkg}
+setup:
+  - {action: set_project_crs, auth_id: 'EPSG:25831'}
+  - {action: load_raster, path: tmp/dades-docents/qgis/visibilitat-costa-20261002-r3/fonts/ortofoto-context-2025.tif, name: Ortofoto ICGC 2025}
+  - {action: load_raster, path: tmp/dades-docents/qgis/visibilitat-costa-20261002-r3/dades/mdt-calcul.tif, name: MDT}
+  - {action: set_layer_visible, layer: MDT, visible: false}
+  - {action: load_vector, path: tmp/dades-docents/qgis/visibilitat-costa-20261002-r3/dades/poligon.gpkg, name: Recinte petroquímic d’estudi}
+  - {action: zoom_to_layer, layer: Recinte petroquímic d’estudi, scale: 1.8}
+  - {action: clear_message_bar}
+captures:
+  - id: visibilitat-acces-menu
+    title: Obrir la caixa d'eines des del menú Procés
+    mode: screen
+    target: {object_name: QgisApp}
+    camera:
+      mode: crop
+      target: {object_name: "unaltracapturaVisibleMenu:Caixa d'eines"}
+      output_size: {width: 640, height: 280}
+    steps:
+      - {action: open_menu_path, path: [Procés], active_text: Caixa, wait_ms: 500}
+    drawings:
+      - {type: rect, target: {object_name: "unaltracapturaTopMenu:Procés"}, colour: information, fill: false}
+      - {type: rect, target: {object_name: "unaltracapturaVisibleMenu:Caixa d'eines"}, colour: information, fill: false}
+    output: {path: assets/captures/visibilitat-acces-menu.png, annotations_svg: assets/captures/visibilitat-acces-menu.annotations.svg, manifest: context/qgis/manifests/visibilitat-acces-menu.yml}
+  - id: visibilitat-acces-barra
+    title: Obrir la caixa de Processament des de la barra d'eines
+    mode: window
+    target: {object_name: QgisApp}
+    camera:
+      mode: crop
+      target: {class_name: QToolButton, text: "Caixa d'eines"}
+      output_size: {width: 640, height: 260}
+    steps:
+      - {action: close_transients}
+    drawings:
+      - {type: input, input: mouse, button: left, target: {class_name: QToolButton, text: "Caixa d'eines"}, text: Caixa de Processament, placement: below, target_marker: box, max_width: 190}
+    output: {path: assets/captures/visibilitat-acces-barra.png, annotations_svg: assets/captures/visibilitat-acces-barra.annotations.svg, manifest: context/qgis/manifests/visibilitat-acces-barra.yml}
+  - id: visibilitat-acces-caixa-viewshed
+    title: GDAL i Viewshed a la caixa de Processament oberta
+    mode: window
+    target: {object_name: QgisApp}
+    camera: {mode: crop, target: {object_name: ProcessingToolbox}, padding: 24, output_size: {width: 740, height: 820}}
+    steps:
+      - {action: trigger_action, name: "Caixa d'eines", wait_ms: 500}
+      - {action: expand_tree_item, name: algorithmTree, target: {object_name: algorithmTree, item_text: GDAL}, text: GDAL, wait_ms: 200}
+      - {action: select_tree_item, name: algorithmTree, target: {object_name: algorithmTree, item_text: Viewshed}, text: Viewshed, wait_ms: 400}
+      - {action: clear_message_bar}
+    drawings:
+      - {type: callout, target: {object_name: algorithmTree, item_text: Viewshed}, text: GDAL · Viewshed, target_marker: box, colour: information, placement: left, max_width: 190}
+    output: {path: assets/captures/visibilitat-acces-caixa-viewshed.png, annotations_svg: assets/captures/visibilitat-acces-caixa-viewshed.annotations.svg, manifest: context/qgis/manifests/visibilitat-acces-caixa-viewshed.yml}
+  - id: visibilitat-acces-menu-buffer
+    title: Menú Vectorial desplegat fins a Àrea d'influència
+    mode: screen
+    target: {object_name: QgisApp}
+    camera: {mode: crop, target: {object_name: "unaltracapturaVisibleMenu:Àrea d'influència...", fallback: [{class_name: QAction, text: "Àrea d'influència"}]}, output_size: {width: 800, height: 300}}
+    steps:
+      - {action: open_menu_path, path: [Vectorial, Geoprocessing Tools], active_text: "Àrea d'influència", wait_ms: 500}
+    drawings:
+      - {type: rect, target: {object_name: "unaltracapturaTopMenu:Vectorial"}, colour: information, fill: false}
+      - {type: rect, target: {object_name: "unaltracapturaVisibleMenu:Àrea d'influència...", fallback: [{class_name: QAction, text: "Àrea d'influència"}]}, colour: information, fill: false}
+    output: {path: assets/captures/visibilitat-acces-menu-buffer.png, annotations_svg: assets/captures/visibilitat-acces-menu-buffer.annotations.svg, manifest: context/qgis/manifests/visibilitat-acces-menu-buffer.yml}
+  - id: visibilitat-acces-caixa-buffer
+    title: Àrea d'influència dins de Geometria vectorial
+    mode: window
+    target: {object_name: QgisApp}
+    camera: {mode: crop, target: {object_name: ProcessingToolbox}, padding: 24, output_size: {width: 740, height: 820}}
+    steps:
+      - {action: close_transients}
+      - {action: select_tree_item, name: algorithmTree, target: {object_name: algorithmTree, item_text: "Àrea d'influ"}, text: "Àrea d'influ", wait_ms: 400}
+    drawings:
+      - {type: callout, target: {object_name: algorithmTree, item_text: "Àrea d'influ"}, text: Àrea d’influència · Buffer, target_marker: box, colour: information, placement: left, max_width: 220}
+    output: {path: assets/captures/visibilitat-acces-caixa-buffer.png, annotations_svg: assets/captures/visibilitat-acces-caixa-buffer.annotations.svg, manifest: context/qgis/manifests/visibilitat-acces-caixa-buffer.yml}

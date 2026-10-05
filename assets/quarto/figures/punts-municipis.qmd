@@ -1,0 +1,63 @@
+---
+title: Centres i dispersió de tres municipis del Tarragonès
+lang: ca
+ref: figura-punts-municipis
+format: gfm
+execute-dir: project
+execute: {echo: false, warning: false}
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  inputs: [context/inputs/punts-municipis.json]
+  outputs: [assets/img/generated/punts-municipis.svg]
+---
+
+```{python}
+from pathlib import Path
+import json
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.patches import Polygon, Circle, Ellipse
+from matplotlib.lines import Line2D
+from matplotlib.ticker import MaxNLocator
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root==root.parent:raise RuntimeError('Projecte absent')
+    root=root.parent
+d=json.loads((root/'context/inputs/punts-municipis.json').read_text())
+stats={row['code']:row for row in d['municipalities']}
+names={'430957':'El Morell','430430':'El Catllar','430477':'Constantí'}
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':21,'svg.fonttype':'none','svg.hashsalt':'punts-municipis'})
+fig,axes=plt.subplots(1,3,figsize=(14,6.2),layout='constrained')
+half=0
+for record in d['maps']:
+    g=record['boundary'];parts=g['coordinates'] if g['type']=='MultiPolygon' else [g['coordinates']]
+    coordinates=np.concatenate([np.asarray(part[0])[:,:2] for part in parts])/1000
+    centre=np.asarray(stats[record['code']]['all']['centre'])/1000
+    half=max(half,float(np.max(np.abs(coordinates-centre))))
+half=np.ceil((half+.25)*2)/2
+for ax,record in zip(axes,d['maps']):
+    row=stats[record['code']];s=row['all'];g=record['boundary']
+    parts=g['coordinates'] if g['type']=='MultiPolygon' else [g['coordinates']]
+    for part in parts:
+        ax.add_patch(Polygon(np.asarray(part[0])[:,:2]/1000,facecolor='#f2f5f7',edgecolor='#9aa5ae',lw=1.1))
+        for hole in part[1:]:ax.add_patch(Polygon(np.asarray(hole)[:,:2]/1000,facecolor='white',edgecolor='#9aa5ae',lw=1.1))
+    xy=np.asarray(record['points'])/1000;centre=np.asarray(s['centre'])/1000
+    ax.scatter(xy[:,0],xy[:,1],s=13,color='#597b8b',alpha=.75,zorder=3)
+    ax.add_patch(Circle(centre,s['sd_m']/1000,fill=False,edgecolor='#b87924',ls='--',lw=2.2,zorder=4))
+    a,b=np.asarray(s['semiaxes_m'])/1000
+    ax.add_patch(Ellipse(centre,2*a,2*b,angle=s['angle_east_deg'],fill=False,edgecolor='#006699',lw=2.4,zorder=5))
+    ax.scatter(*centre,s=75,marker='D',color='#a73543',edgecolor='white',linewidth=.6,zorder=6)
+    radius=f"{s['sd_m']/1000:.2f}".replace('.',',')
+    ax.set_title(f"{names[record['code']]}\nn = {s['n']} · D = {radius} km",fontsize=22,pad=15)
+    ax.set(xlim=(centre[0]-half,centre[0]+half),ylim=(centre[1]-half,centre[1]+half),aspect='equal',xlabel='Est UTM (km)')
+    ax.xaxis.set_major_locator(MaxNLocator(3));ax.yaxis.set_major_locator(MaxNLocator(3))
+    ax.tick_params(labelsize=21);ax.ticklabel_format(useOffset=False,style='plain');ax.grid(alpha=.13)
+axes[0].set_ylabel('Nord UTM (km)')
+fig.legend(handles=[Line2D([],[],marker='D',color='#a73543',ls='',label='Centre mitjà'),
+    Line2D([],[],color='#b87924',ls='--',lw=2,label='Distància estàndard'),
+    Line2D([],[],color='#006699',lw=2,label='El·lipse, k = 1')],
+    loc='outside lower center',ncol=3,frameon=False,fontsize=21)
+fig.savefig(root/'assets/img/generated/punts-municipis.svg',facecolor='white',metadata={'Date':None})
+plt.close(fig)
+```

@@ -1,0 +1,161 @@
+{
+  "ok": true,
+  "capture_id": "visibilitat-costa-buffer-positiu",
+  "provenance": {
+    "recipe_id": "visibilitat-costa",
+    "recipe_title": "Torxa, carretera i pol\u00edgon amb MDT i MDS",
+    "recipe_path": "/workspace/context/qgis/visibilitat-costa.yml",
+    "capture_title": "Primera operaci\u00f3 del tancament amb buffer positiu",
+    "source_prompt": "context/qgis/visibilitat-costa.md",
+    "recipe_source_prompt": "context/qgis/visibilitat-costa.md",
+    "capture_source_prompt": null
+  },
+  "image": "sha256:950ee7bf7cbab5163849415d4f7fd72dc400b1e81127913ff308244ae4a6ebdc",
+  "image_digest": "sha256:950ee7bf7cbab5163849415d4f7fd72dc400b1e81127913ff308244ae4a6ebdc",
+  "probe": {
+    "ok": true,
+    "python_version": "3.13.7",
+    "qgis_version": "3.44.11",
+    "qt_version": "5.15.17",
+    "gdal_version": "3.10.3",
+    "qgis_process": {
+      "ok": true,
+      "path": "/usr/bin/qgis_process",
+      "version": "QGIS 3.44.11-Solothurn 'Solothurn' (f8f5812197f)\nQGIS code revision f8f5812197f\nQt version 5.15.17\nPython version 3.13.7\nGDAL/OGR version 3.10.3\nPROJ version 9.6.0\nEPSG Registry database version v12.004 (2025-03-02)\nGEOS version 3.13.1-CAPI-1.19.2\nSQLite version 3.46.1\nOS Ubuntu 25.10",
+      "returncode": 0
+    },
+    "analysis_checked": false,
+    "image": "sha256:950ee7bf7cbab5163849415d4f7fd72dc400b1e81127913ff308244ae4a6ebdc",
+    "digest": "sha256:950ee7bf7cbab5163849415d4f7fd72dc400b1e81127913ff308244ae4a6ebdc",
+    "raw": "{\"ok\": true, \"python_version\": \"3.13.7\", \"qgis_version\": \"3.44.11-Solothurn\", \"qt_version\": \"5.15.17\", \"gdal_version\": \"3.10.3\", \"qgis_process\": {\"ok\": true, \"path\": \"/usr/bin/qgis_process\", \"version\": \"QGIS 3.44.11-Solothurn 'Solothurn' (f8f5812197f)\\nQGIS code revision f8f5812197f\\nQt version 5.15.17\\nPython version 3.13.7\\nGDAL/OGR version 3.10.3\\nPROJ version 9.6.0\\nEPSG Registry database version v12.004 (2025-03-02)\\nGEOS version 3.13.1-CAPI-1.19.2\\nSQLite version 3.46.1\\nOS Ubuntu 25.10\", \"returncode\": 0}, \"analysis_checked\": false}\n",
+    "returncode": 0
+  },
+  "output": "/workspace/assets/captures/visibilitat-costa-buffer-positiu.png",
+  "annotation_svg": "/workspace/assets/captures/visibilitat-costa-buffer-positiu.annotations.svg",
+  "annotation_svg_background": {
+    "mode": "embedded_png_data_uri",
+    "width": 760,
+    "height": 650
+  },
+  "manifest": "/workspace/context/qgis/manifests/visibilitat-costa-buffer-positiu.yml",
+  "backend": "x11",
+  "locale": {
+    "requested": "ca",
+    "qsettings_user_locale": "ca",
+    "qsettings_override": true
+  },
+  "device_pixel_ratio": 1.0,
+  "coordinate_space": "logical pixels in the captured image; recipe relative coordinates share this space for PNG and SVG annotations",
+  "camera": {
+    "mode": "crop",
+    "requested": {
+      "mode": "crop",
+      "target": {
+        "object_name": "unaltracapturaProcessingParameter:DISTANCE",
+        "class_name": null,
+        "text": null,
+        "item_text": null,
+        "layer_name": null,
+        "target_part": null,
+        "title": null,
+        "parent_window": null,
+        "fallback": []
+      },
+      "padding": 0,
+      "output_size": {
+        "width": 1020,
+        "height": 650
+      }
+    },
+    "full_capture": {
+      "width": 760,
+      "height": 690
+    },
+    "scale": 1.0,
+    "target": {
+      "object_name": "unaltracapturaProcessingParameter:DISTANCE",
+      "class_name": null,
+      "text": null,
+      "item_text": null,
+      "layer_name": null,
+      "target_part": null,
+      "title": null,
+      "parent_window": null,
+      "fallback": []
+    },
+    "target_bbox": {
+      "x": 15,
+      "y": 126,
+      "width": 458,
+      "height": 51
+    },
+    "padding": 0,
+    "crop_bbox": {
+      "x": 0,
+      "y": 0,
+      "width": 760,
+      "height": 650
+    },
+    "output_size": {
+      "width": 760,
+      "height": 650
+    },
+    "requested_output_size": {
+      "width": 1020,
+      "height": 650
+    }
+  },
+  "layout_policy": {
+    "reading_direction": "left_to_right",
+    "prefer_local_empty_space": true,
+    "prefer_leaderless_labels": true,
+    "avoid_diagonal_leaders": true,
+    "allow_diagonal_leaders": "when_no_clear_local_candidate",
+    "protect_text": true,
+    "protect_controls": true,
+    "obstacle_padding": 4.0
+  },
+  "project_crs": "EPSG:25831",
+  "canvas_crs": "EPSG:25831",
+  "warnings": [],
+  "target": {
+    "object_name": "unaltracapturaProcessingDialog:native:buffer",
+    "class_name": null,
+    "text": null,
+    "item_text": null,
+    "layer_name": null,
+    "target_part": null,
+    "title": null,
+    "parent_window": null,
+    "fallback": []
+  },
+  "annotations": [
+    {
+      "type": "rect",
+      "source": "target",
+      "colour": {
+        "mode": "explicit",
+        "token": "information",
+        "hex": "#0072b2"
+      },
+      "shadow": true,
+      "target": {
+        "object_name": "unaltracapturaProcessingParameter:DISTANCE",
+        "class_name": null,
+        "text": null,
+        "item_text": null,
+        "layer_name": null,
+        "target_part": null,
+        "title": null,
+        "parent_window": null,
+        "fallback": []
+      },
+      "bbox": {
+        "x": 9,
+        "y": 120,
+        "width": 470,
+        "height": 63
+      }
+    }
+  ]
+}
