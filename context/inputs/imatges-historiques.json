@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "owner": "context/dades/preparar_imatges_historiques.py",
+  "images": [
+    {
+      "id": "john-snow-1855",
+      "path": "assets/img/historia/john-snow-1855.jpg",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/archive/2/27/20200506141216%21Snow-cholera-map-1.jpg",
+      "source_page": "https://commons.wikimedia.org/w/index.php?title=File:Snow-cholera-map-1.jpg&oldid=1188845148",
+      "file_timestamp": "2007-06-22T13:53:35Z",
+      "expected_sha1": "5dedf1bc755d6034005024a29c54bcf3a85293ef",
+      "expected_bytes": 1183741,
+      "commons_dimensions_px": [
+        3045,
+        2840
+      ],
+      "creators": [
+        "John Snow",
+        "C. F. Cheffins (lithography)"
+      ],
+      "depicted_event_year": 1854,
+      "publication_year": 1855,
+      "rights": "Public domain; Commons PD-Art / PD-old-100-expired",
+      "rights_url": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "note": "Archived 2007 file, before the much larger 2020 replacement. Date of the outbreak and date of the second edition are distinguished.",
+      "sha256": "0ff06d6af2045f20f730b5cf00c134173807c4cba9380823e26a66fa3e62ef1c",
+      "retained_on": "2026-10-04",
+      "changes": "None; exact file bytes copied, display size set by the chapter."
+    },
+    {
+      "id": "biaix-supervivencia",
+      "path": "assets/img/historia/biaix-supervivencia.svg",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/archive/b/b2/20220825203351%21Survivorship-bias.svg",
+      "source_page": "https://commons.wikimedia.org/w/index.php?title=File:Survivorship-bias.svg&oldid=1176240698",
+      "file_timestamp": "2021-03-21T12:47:29Z",
+      "expected_sha1": "8ef03131e553ea14ce028921ac72ebd74f91f98a",
+      "expected_bytes": 107968,
+      "commons_dimensions_px": [
+        1338,
+        997
+      ],
+      "creators": [
+        "Martin Grandjean (vector)",
+        "McGeddon (picture)",
+        "US Air Force (hit plot concept)"
+      ],
+      "creation_year": 2021,
+      "rights": "CC BY-SA 4.0",
+      "rights_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "note": "Modern illustration with hypothetical impacts, not an original 1943 damage record. The SVG includes its white background.",
+      "sha256": "6f49564ea8e32f9d3f20860a2ee109fe3cb9cebf1d2d89b118a4566066e0b543",
+      "retained_on": "2026-10-04",
+      "changes": "None; exact file bytes copied, display size set by the chapter."
+    }
+  ]
+}

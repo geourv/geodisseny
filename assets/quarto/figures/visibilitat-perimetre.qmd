@@ -1,0 +1,49 @@
+---
+title: Delimitar un recinte compacte amb tancament morfològic
+lang: ca
+ref: figura-visibilitat-perimetre
+format: gfm
+execute-dir: project
+execute: {echo: false, warning: false}
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  inputs: [context/inputs/visibilitat-costa.json]
+  outputs: [assets/img/generated/visibilitat-perimetre.svg]
+---
+
+```{python}
+from pathlib import Path
+import json,numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.patches import Polygon
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():root=root.parent
+d=json.loads((root/'context/inputs/visibilitat-costa.json').read_text())
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':13,'svg.fonttype':'none'})
+fig,axes=plt.subplots(5,1,figsize=(9.5,10.0),sharex=True,sharey=True)
+fig.subplots_adjust(left=.13,right=.77,bottom=.09,top=.95,hspace=.47)
+ids=['original','tancament-50m','tancament-100m','tancament-150m','tancament-250m']
+titles=['A · Coberta original','B · Buffers: +50 m i −50 m','C · Buffers: +100 m i −100 m',
+        'D · Recinte: +150 m i −150 m','E · Buffers: +250 m i −250 m']
+colours=['#ced5da','#f1d2a0','#eebcc5','#d9c6ee','#b4dadd']
+reference=np.array(d['original_sector']['coordinates'][0])[:,:2]/1000
+rows=[next(row for row in d['geometry_alternatives'] if row['id']==key) for key in ids]
+for ax,row,title,colour in zip(axes,rows,titles,colours):
+    g=row['geometry'];parts=g['coordinates'] if g['type']=='MultiPolygon' else [g['coordinates']]
+    for rings in parts:
+        ax.add_patch(Polygon(np.array(rings[0])[:,:2]/1000,facecolor=colour,edgecolor='#424242',lw=.8))
+        for hole in rings[1:]:ax.add_patch(Polygon(np.array(hole)[:,:2]/1000,facecolor='white',edgecolor='#777777',lw=.5))
+    ax.plot(reference[:,0],reference[:,1],color='#444444',lw=.7,ls='--')
+    ax.set(xlim=(345.2,350),ylim=(4551.7,4553.0),aspect='equal')
+    ax.set_yticks([4552,4553]);ax.ticklabel_format(useOffset=False,style='plain');ax.tick_params(labelsize=12)
+    ax.set_title(title,loc='left',fontsize=13,weight='bold',pad=8)
+    area=f"{row['area_m2']/10000:.2f}".replace('.',',')
+    outside=f"{row['added_outside_original_perimeter_m2']/10000:.2f}".replace('.',',')
+    ax.text(1.04,.68,f"{area} ha · {row['holes']} forats",transform=ax.transAxes,fontsize=12,va='center')
+    ax.text(1.04,.27,f"Exterior afegit:\n{outside} ha",transform=ax.transAxes,fontsize=12,va='center')
+axes[-1].set_xlabel('Est UTM (km)');axes[-1].set_xticks([346,347,348,349])
+fig.text(.015,.53,'Nord UTM (km)',rotation=90,va='center',fontsize=13)
+fig.text(.5,.025,'Línia discontínua: contorn exterior original · Mateixa escala als cinc panells',ha='center',fontsize=12)
+fig.savefig(root/'assets/img/generated/visibilitat-perimetre.svg',facecolor='white',metadata={'Date':None});plt.close(fig)
+```

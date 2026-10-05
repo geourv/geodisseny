@@ -1,0 +1,509 @@
+{
+  "runtime_image": "sha256:950ee7bf7cbab5163849415d4f7fd72dc400b1e81127913ff308244ae4a6ebdc",
+  "qgis": "3.44.11-Solothurn",
+  "gdal": "3100300",
+  "manual_click_by_click": false,
+  "sources": {
+    "icaen-original.gpkg": {
+      "source": "tmp/dades-docents/moodle/autoconsum-tarragona-20260928.gpkg",
+      "sha256": "1c8b4bda31ac5bfa35fd8ac4b1fbf36990d01065590c673b579e0670291ac9c8"
+    },
+    "ambit-original.gpkg": {
+      "source": "tmp/dades-docents/qgis/icaen-ambit.gpkg",
+      "sha256": "2acf61341b97e3120a6668aed34973b1238daa413efd5f281513f0e8948fa709"
+    },
+    "seccions-preparades.gpkg": {
+      "source": "tmp/dades-docents/seccions/seccions-analisi.gpkg",
+      "sha256": "84d7a33bfa8dab8089bb852e447947c92a95da3bf733161663e24a2be98523af"
+    }
+  },
+  "n_all": 5102,
+  "n_known": 3762,
+  "power_kw": 36633,
+  "centres": {
+    "centre_total": [
+      357272.517728702,
+      4556675.776713502
+    ],
+    "centre_mitja": [
+      357387.9674347699,
+      4556891.17089248
+    ],
+    "centre_ponderat": [
+      354528.51811634644,
+      4556391.868967531
+    ]
+  },
+  "centre_shift_m": 2902.7147322618093,
+  "covariance": [
+    [
+      63847660.549469836,
+      11942063.437619366
+    ],
+    [
+      11942063.437619366,
+      11811095.805278722
+    ]
+  ],
+  "dispersion": {
+    "Sxx": 63847660.54946984,
+    "Syy": 11811095.80527872,
+    "Sxy": 11942063.43761937,
+    "D_m": 8698.20420287,
+    "delta": 57256052.84132756,
+    "a_m": 8152.14110514,
+    "b_m": 3033.37299993,
+    "azimut": 77.672737
+  },
+  "field_expressions": {
+    "Sxx": "with_variable('cx',x($geometry),aggregate('ICAEN coneguda','mean',(x($geometry)-@cx)^2))",
+    "Syy": "with_variable('cy',y($geometry),aggregate('ICAEN coneguda','mean',(y($geometry)-@cy)^2))",
+    "Sxy": "with_variable('cx',x($geometry),with_variable('cy',y($geometry),aggregate('ICAEN coneguda','mean',(x($geometry)-@cx)*(y($geometry)-@cy))))",
+    "D_m": "sqrt(\"Sxx\" + \"Syy\")",
+    "delta": "sqrt((\"Sxx\" - \"Syy\")^2 + 4 * \"Sxy\"^2)",
+    "a_m": "sqrt((\"Sxx\" + \"Syy\" + \"delta\") / 2)",
+    "b_m": "sqrt((\"Sxx\" + \"Syy\" - \"delta\") / 2)",
+    "azimut": "90 - degrees(atan2(2 * \"Sxy\", \"Sxx\" - \"Syy\")) / 2"
+  },
+  "grid_extent": [
+    340000.0,
+    374000.0,
+    4546000.0,
+    4566000.0
+  ],
+  "grid_cells": 680,
+  "grid_points": 3762,
+  "grid_kw": 36633,
+  "kernels": [
+    {
+      "path": "densitat-punts-500.tif",
+      "radius_m": 500,
+      "pixel_m": 100,
+      "weight": null,
+      "unit": "registres/km²",
+      "factor": 3.8197186342054885,
+      "integrated_mass": 3762.002336819116,
+      "expected_mass": 3762,
+      "maximum": 307.6367492675781,
+      "geotransform": [
+        340257.687119691,
+        100.0,
+        0.0,
+        4566270.76426549,
+        0.0,
+        -100.0
+      ],
+      "shape": [
+        202,
+        341
+      ],
+      "nodata": -9999
+    },
+    {
+      "path": "densitat-punts-1500.tif",
+      "radius_m": 1500,
+      "pixel_m": 100,
+      "weight": null,
+      "unit": "registres/km²",
+      "factor": 0.4244131815783876,
+      "integrated_mass": 3761.9997643887987,
+      "expected_mass": 3762,
+      "maximum": 81.40288543701172,
+      "geotransform": [
+        339257.687119691,
+        100.0,
+        0.0,
+        4567270.76426549,
+        0.0,
+        -100.0
+      ],
+      "shape": [
+        222,
+        361
+      ],
+      "nodata": -9999
+    },
+    {
+      "path": "densitat-kw-500.tif",
+      "radius_m": 500,
+      "pixel_m": 100,
+      "weight": "POT_KW",
+      "unit": "kW coneguts/km²",
+      "factor": 3.8197186342054885,
+      "integrated_mass": 36633.58727058654,
+      "expected_mass": 36633,
+      "maximum": 6108.1943359375,
+      "geotransform": [
+        340257.687119691,
+        100.0,
+        0.0,
+        4566270.76426549,
+        0.0,
+        -100.0
+      ],
+      "shape": [
+        202,
+        341
+      ],
+      "nodata": -9999
+    },
+    {
+      "path": "densitat-kw-1500.tif",
+      "radius_m": 1500,
+      "pixel_m": 100,
+      "weight": "POT_KW",
+      "unit": "kW coneguts/km²",
+      "factor": 0.4244131815783876,
+      "integrated_mass": 36633.01460962671,
+      "expected_mass": 36633,
+      "maximum": 742.9297485351562,
+      "geotransform": [
+        339257.687119691,
+        100.0,
+        0.0,
+        4567270.76426549,
+        0.0,
+        -100.0
+      ],
+      "shape": [
+        222,
+        361
+      ],
+      "nodata": -9999
+    }
+  ],
+  "sections": 151,
+  "section_records": 5096,
+  "section_known": 3757,
+  "section_kw": 36058.0,
+  "section_indicator_expression": "CASE WHEN \"functional_n\" > 0 AND (\"n_reg\" = 0 OR \"n_coneguts\" > 0) THEN 100.0 * \"kw_coneguts\" / \"functional_n\" END",
+  "prepared_cadastral_denominators": true,
+  "projects": [
+    "01-inventari",
+    "02-centres",
+    "03-dispersio",
+    "04-recompte",
+    "05-kernel",
+    "06-seccions"
+  ],
+  "operations": [
+    {
+      "id": "native:multiparttosingleparts",
+      "parameters": {
+        "INPUT": "autoconsum_tarragones",
+        "OUTPUT": "memory:"
+      }
+    },
+    {
+      "id": "native:extractbyexpression",
+      "parameters": {
+        "INPUT": "ICAEN complet · 5102",
+        "EXPRESSION": "\"POT_KW\" > 0",
+        "OUTPUT": "memory:"
+      }
+    },
+    {
+      "id": "native:retainfields",
+      "parameters": {
+        "INPUT": "seccions",
+        "FIELDS": "['cusec', 'functional_n', 'age_exact_n', 'age_median_exact']",
+        "OUTPUT": "memory:"
+      }
+    },
+    {
+      "id": "native:meancoordinates",
+      "parameters": {
+        "INPUT": "ICAEN complet · 5102",
+        "WEIGHT": "None",
+        "OUTPUT": "memory:"
+      }
+    },
+    {
+      "id": "native:meancoordinates",
+      "parameters": {
+        "INPUT": "ICAEN coneguda",
+        "WEIGHT": "None",
+        "OUTPUT": "memory:"
+      }
+    },
+    {
+      "id": "native:meancoordinates",
+      "parameters": {
+        "INPUT": "ICAEN coneguda",
+        "WEIGHT": "POT_KW",
+        "OUTPUT": "memory:"
+      }
+    },
+    {
+      "id": "native:centroids",
+      "parameters": {
+        "INPUT": "Tarragonès",
+        "ALL_PARTS": "False",
+        "OUTPUT": "memory:"
+      }
+    },
+    {
+      "id": "native:fieldcalculator",
+      "parameters": {
+        "INPUT": "Centre mitjà · mateixa selecció",
+        "FIELD_NAME": "Sxx",
+        "FIELD_TYPE": "0",
+        "FIELD_LENGTH": "20",
+        "FIELD_PRECISION": "8",
+        "FORMULA": "with_variable('cx',x($geometry),aggregate('ICAEN coneguda','mean',(x($geometry)-@cx)^2))",
+        "OUTPUT": "memory:"
+      }
+    },
+    {
+      "id": "native:fieldcalculator",
+      "parameters": {
+        "INPUT": "output",
+        "FIELD_NAME": "Syy",
+        "FIELD_TYPE": "0",
+        "FIELD_LENGTH": "20",
+        "FIELD_PRECISION": "8",
+        "FORMULA": "with_variable('cy',y($geometry),aggregate('ICAEN coneguda','mean',(y($geometry)-@cy)^2))",
+        "OUTPUT": "memory:"
+      }
+    },
+    {
+      "id": "native:fieldcalculator",
+      "parameters": {
+        "INPUT": "output",
+        "FIELD_NAME": "Sxy",
+        "FIELD_TYPE": "0",
+        "FIELD_LENGTH": "20",
+        "FIELD_PRECISION": "8",
+        "FORMULA": "with_variable('cx',x($geometry),with_variable('cy',y($geometry),aggregate('ICAEN coneguda','mean',(x($geometry)-@cx)*(y($geometry)-@cy))))",
+        "OUTPUT": "memory:"
+      }
+    },
+    {
+      "id": "native:fieldcalculator",
+      "parameters": {
+        "INPUT": "output",
+        "FIELD_NAME": "D_m",
+        "FIELD_TYPE": "0",
+        "FIELD_LENGTH": "20",
+        "FIELD_PRECISION": "8",
+        "FORMULA": "sqrt(\"Sxx\" + \"Syy\")",
+        "OUTPUT": "memory:"
+      }
+    },
+    {
+      "id": "native:fieldcalculator",
+      "parameters": {
+        "INPUT": "output",
+        "FIELD_NAME": "delta",
+        "FIELD_TYPE": "0",
+        "FIELD_LENGTH": "20",
+        "FIELD_PRECISION": "8",
+        "FORMULA": "sqrt((\"Sxx\" - \"Syy\")^2 + 4 * \"Sxy\"^2)",
+        "OUTPUT": "memory:"
+      }
+    },
+    {
+      "id": "native:fieldcalculator",
+      "parameters": {
+        "INPUT": "output",
+        "FIELD_NAME": "a_m",
+        "FIELD_TYPE": "0",
+        "FIELD_LENGTH": "20",
+        "FIELD_PRECISION": "8",
+        "FORMULA": "sqrt((\"Sxx\" + \"Syy\" + \"delta\") / 2)",
+        "OUTPUT": "memory:"
+      }
+    },
+    {
+      "id": "native:fieldcalculator",
+      "parameters": {
+        "INPUT": "output",
+        "FIELD_NAME": "b_m",
+        "FIELD_TYPE": "0",
+        "FIELD_LENGTH": "20",
+        "FIELD_PRECISION": "8",
+        "FORMULA": "sqrt((\"Sxx\" + \"Syy\" - \"delta\") / 2)",
+        "OUTPUT": "memory:"
+      }
+    },
+    {
+      "id": "native:fieldcalculator",
+      "parameters": {
+        "INPUT": "output",
+        "FIELD_NAME": "azimut",
+        "FIELD_TYPE": "0",
+        "FIELD_LENGTH": "20",
+        "FIELD_PRECISION": "8",
+        "FORMULA": "90 - degrees(atan2(2 * \"Sxy\", \"Sxx\" - \"Syy\")) / 2",
+        "OUTPUT": "memory:"
+      }
+    },
+    {
+      "id": "native:geometrybyexpression",
+      "parameters": {
+        "INPUT": "Centre i dispersió",
+        "OUTPUT_GEOMETRY": "0",
+        "WITH_Z": "False",
+        "WITH_M": "False",
+        "EXPRESSION": "make_circle($geometry, \"D_m\", 72)",
+        "OUTPUT": "memory:"
+      }
+    },
+    {
+      "id": "native:geometrybyexpression",
+      "parameters": {
+        "INPUT": "Centre i dispersió",
+        "OUTPUT_GEOMETRY": "0",
+        "WITH_Z": "False",
+        "WITH_M": "False",
+        "EXPRESSION": "make_ellipse($geometry, \"a_m\", \"b_m\", \"azimut\", 72)",
+        "OUTPUT": "memory:"
+      }
+    },
+    {
+      "id": "native:creategrid",
+      "parameters": {
+        "TYPE": "2",
+        "EXTENT": "340000.0,374000.0,4546000.0,4566000.0 [EPSG:25831]",
+        "HSPACING": "1000",
+        "VSPACING": "1000",
+        "HOVERLAY": "0",
+        "VOVERLAY": "0",
+        "CRS": "<QgsCoordinateReferenceSystem: EPSG:25831>",
+        "OUTPUT": "memory:"
+      }
+    },
+    {
+      "id": "native:countpointsinpolygon",
+      "parameters": {
+        "POLYGONS": "Graella · 1 km²",
+        "POINTS": "ICAEN coneguda",
+        "FIELD": "n_punts",
+        "OUTPUT": "memory:"
+      }
+    },
+    {
+      "id": "native:countpointsinpolygon",
+      "parameters": {
+        "POLYGONS": "output",
+        "POINTS": "ICAEN coneguda",
+        "WEIGHT": "POT_KW",
+        "FIELD": "kw_coneguts",
+        "OUTPUT": "memory:"
+      }
+    },
+    {
+      "id": "native:extractbyexpression",
+      "parameters": {
+        "INPUT": "ICAEN complet · 5102",
+        "EXPRESSION": "\"UBICACIO\" = 'Edifici'",
+        "OUTPUT": "memory:"
+      }
+    },
+    {
+      "id": "native:extractbyexpression",
+      "parameters": {
+        "INPUT": "output",
+        "EXPRESSION": "\"POT_KW\" > 0",
+        "OUTPUT": "memory:"
+      }
+    },
+    {
+      "id": "native:countpointsinpolygon",
+      "parameters": {
+        "POLYGONS": "Seccions censals",
+        "POINTS": "output",
+        "WEIGHT": "None",
+        "FIELD": "n_reg",
+        "OUTPUT": "memory:"
+      }
+    },
+    {
+      "id": "native:countpointsinpolygon",
+      "parameters": {
+        "POLYGONS": "output",
+        "POINTS": "output",
+        "WEIGHT": "None",
+        "FIELD": "n_coneguts",
+        "OUTPUT": "memory:"
+      }
+    },
+    {
+      "id": "native:countpointsinpolygon",
+      "parameters": {
+        "POLYGONS": "output",
+        "POINTS": "output",
+        "WEIGHT": "POT_KW",
+        "FIELD": "kw_coneguts",
+        "OUTPUT": "memory:"
+      }
+    },
+    {
+      "id": "native:fieldcalculator",
+      "parameters": {
+        "INPUT": "output",
+        "FIELD_NAME": "kw_100ed",
+        "FIELD_TYPE": "0",
+        "FIELD_LENGTH": "20",
+        "FIELD_PRECISION": "8",
+        "FORMULA": "CASE WHEN \"functional_n\" > 0 AND (\"n_reg\" = 0 OR \"n_coneguts\" > 0) THEN 100.0 * \"kw_coneguts\" / \"functional_n\" END",
+        "OUTPUT": "memory:"
+      }
+    },
+    {
+      "id": "qgis:heatmapkerneldensityestimation",
+      "parameters": {
+        "INPUT": "ICAEN coneguda",
+        "RADIUS": "500",
+        "PIXEL_SIZE": "100",
+        "WEIGHT_FIELD": "None",
+        "KERNEL": "0",
+        "DECAY": "0",
+        "OUTPUT_VALUE": "0",
+        "OUTPUT": "/workspace/tmp/dades-docents/qgis/punts-tarragones-20261004/kernel-punts-500-raw.tif"
+      }
+    },
+    {
+      "id": "qgis:heatmapkerneldensityestimation",
+      "parameters": {
+        "INPUT": "ICAEN coneguda",
+        "RADIUS": "1500",
+        "PIXEL_SIZE": "100",
+        "WEIGHT_FIELD": "None",
+        "KERNEL": "0",
+        "DECAY": "0",
+        "OUTPUT_VALUE": "0",
+        "OUTPUT": "/workspace/tmp/dades-docents/qgis/punts-tarragones-20261004/kernel-punts-1500-raw.tif"
+      }
+    },
+    {
+      "id": "qgis:heatmapkerneldensityestimation",
+      "parameters": {
+        "INPUT": "ICAEN coneguda",
+        "RADIUS": "500",
+        "PIXEL_SIZE": "100",
+        "WEIGHT_FIELD": "POT_KW",
+        "KERNEL": "0",
+        "DECAY": "0",
+        "OUTPUT_VALUE": "0",
+        "OUTPUT": "/workspace/tmp/dades-docents/qgis/punts-tarragones-20261004/kernel-kw-500-raw.tif"
+      }
+    },
+    {
+      "id": "qgis:heatmapkerneldensityestimation",
+      "parameters": {
+        "INPUT": "ICAEN coneguda",
+        "RADIUS": "1500",
+        "PIXEL_SIZE": "100",
+        "WEIGHT_FIELD": "POT_KW",
+        "KERNEL": "0",
+        "DECAY": "0",
+        "OUTPUT_VALUE": "0",
+        "OUTPUT": "/workspace/tmp/dades-docents/qgis/punts-tarragones-20261004/kernel-kw-1500-raw.tif"
+      }
+    }
+  ],
+  "incident": "The final live iterator returned no rows after project/style writes. Reopened SQLite totals verified; subsequent builds cache the validated features before styling.",
+  "section_null_indicators": 1,
+  "sqlite_integrity": "ok"
+}

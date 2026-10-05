@@ -14,7 +14,7 @@ manual_references: true
 
 Els barris veïns tenen valors semblants? Els valors alts d'una variable es concentren en determinats sectors o apareixen barrejats amb valors baixos? L'autocorrelació espacial ajuda a respondre aquestes preguntes comparant cada valor amb els del seu entorn. Cal començar amb una variable per unitat i una regla que indiqui quines unitats són veïnes.
 
-El recorregut va d'una cadena de quatre unitats, que es pot calcular a mà, al conjunt clàssic de barris de Columbus distribuït amb PySAL. Després s'estudia una sola variable a les seccions censals del Tarragonès i es representen els resultats amb QGIS. Al final, el mateix raonament es transfereix a parcel·les agràries, recuperant la diferència entre atribut d'un polígon i observació puntual.
+Dos mapes poden contenir els mateixos valors i presentar disposicions molt diferents: en un, els valors alts poden estar junts; en l'altre, poden alternar-se amb els baixos. La mitjana de la variable no distingeix aquestes situacions. Per descriure-les s'han de conservar les relacions entre les unitats i comparar els valors de cada lloc amb els dels seus veïns.
 
 >>>>> En acabar el capítol, cal poder interpretar associació espacial amb unitats, veïnatge i inferència explícits.
 >>>>>
@@ -60,7 +60,7 @@ En molts càlculs de Moran es fixa $w_{ii}=0$ per evitar que una unitat sigui ve
 
 La normalització per files divideix cada pes per la suma de la seva fila. El **retard espacial** passa a ser una mitjana ponderada dels veïns quan la fila té suma positiva. Una matriu binària de contacte pot ser simètrica i deixar de ser-ho numèricament després de normalitzar si les unitats tenen nombres de veïns diferents.
 
-### De quatre peces a una matriu llegible {#exemple-matriu}
+### Matriu de pesos d'una cadena de quatre àrees {#exemple-matriu}
 
 En la cadena A–B–C–D, A només té B com a veí i D només té C. B té A i C; C té B i D. Amb pesos binaris, cada relació valdria 1. En normalitzar per files, els dos veïns d'una peça interior reben 1/2 cadascun, mentre que el veí únic d'un extrem rep 1. La taula representa exactament aquesta regla.
 
@@ -172,7 +172,7 @@ El quadern de GeoDa d'Anselin aplica Moran local a donacions per habitant dels d
 
 ## Un exemple clàssic: els barris de Columbus {#columbus}
 
-El conjunt **Columbus**, inclòs a la [biblioteca d'exemples de libpysal](https://pysal.org/libpysal/generated/libpysal.examples.available.html), conté 49 barris d'Ohio l'any 1980. La variable `CRIME` resumeix robatoris en domicilis i de vehicles per 1.000 llars. No és el nombre brut d'incidències: el denominador permet comparar barris amb nombres diferents de llars. Les metadades remeten a la taula 12.1, pàgina 189, d'Anselin {% cite anselin1988spatial %}.
+El conjunt clàssic [**Columbus**](https://pysal.org/libpysal/generated/libpysal.examples.available.html) conté 49 barris d'Ohio l'any 1980. La variable `CRIME` resumeix robatoris en domicilis i de vehicles per 1.000 llars. No és el nombre brut d'incidències: el denominador permet comparar barris amb nombres diferents de llars. Les metadades remeten a la taula 12.1, pàgina 189, d'Anselin {% cite anselin1988spatial %}.
 
 La figura recorre quatre lectures de les mateixes dades. Primer es representa la variable; després es dibuixen els veïns queen d'un barri. El tercer panell compara el valor de cada barri amb la mitjana dels seus veïns. Perquè tots dos eixos siguin comparables, s'ha restat la mitjana i s'ha dividit per la desviació estàndard: són **valors estandarditzats**, sense les unitats originals.
 
@@ -194,7 +194,7 @@ De les 151 seccions de 2024, una només té potències absents i queda fora del 
 
 ### Resultat global i contrast local
 
-L'execució amb `libpysal` 4.13.0 i `esda` 2.7.1 dona $I=0,144$, amb esperança de referència $-1/149\simeq-0,0067$. Amb 9.999 permutacions i llavor 20260929, el pseudo-p retornat pel motor és 0,0024. Hi ha associació positiva sota aquesta referència, sense que això impliqui que tot el territori formi un únic clúster. Com a contrast, quatre veïns més propers entre centroides donen $I=0,149$ i pseudo-p de 0,0026.
+El càlcul de referència dona $I=0,144$, amb esperança de referència $-1/149\simeq-0,0067$. Amb 9.999 permutacions i llavor 20260929, el pseudo-p retornat pel motor és 0,0024. Hi ha associació positiva sota aquesta referència, sense que això impliqui que tot el territori formi un únic clúster. Com a contrast, quatre veïns més propers entre centroides donen $I=0,149$ i pseudo-p de 0,0026.
 
 ![Diagrama de Moran i mapa dels resultats locals amb correcció de comparacions múltiples]({{ site.baseurl }}/assets/quarto/figures/moran-tarragones.qmd "A: el pendent del retard espacial sobre la variable estandarditzada correspon a I amb aquesta normalització. B: Moran local, pseudo-p de permutació d'esda i procediment Benjamini–Hochberg a 0,05 sobre 150 contrastos; només una secció queda destacada com a HH. Gris clar no significa absència demostrada de patró."){: data-figure-width-web="52rem" data-figure-width-pdf="100%" data-caption-source="Fonts i agregació: mateix conjunt ICGC/Idescat–Cadastre–ICAEN del capítol d'estadística descriptiva."}
 

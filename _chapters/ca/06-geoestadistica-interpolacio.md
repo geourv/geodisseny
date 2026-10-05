@@ -131,7 +131,7 @@ L'exponent és 2. S'estableixen EPSG:25831 i l'extensió est 260.000–530.000 m
 
 Després del càlcul es comproven el CRS, l'extensió i la mida de cel·la a la informació del ràster. El retall amb el límit de Catalunya facilita la presentació; no recalcula el model. Per comparar-lo amb kriging es conserva la mateixa graella i la mateixa escala de colors.
 
-## Del parell d'estacions al semivariograma {#kriging-residus}
+## Semivariograma i dependència espacial {#kriging-residus}
 
 La geoestadística estudia com canvien les diferències entre observacions quan augmenta la separació. Matheron en va formalitzar fonaments i Cressie desenvolupa el tractament estadístic dels camps {% cite matheron1963principles cressie1993statistics %}. El **semivariograma experimental** resumeix la meitat de les diferències quadràtiques entre parells d'observacions d'una classe de distància:
 
@@ -308,7 +308,7 @@ $T_m$ és temperatura del mòdul i $T_a$, de l'aire; $G$ és irradiància al pla
 
 ## Activitats
 
-### Del pes a l'estimació
+### Pesos i prediccions IDW {#del-pes-a-lestimació}
 
 Cal reconstruir les prediccions IDW de 21,2 °C i 22 °C del primer exemple i repetir el càlcul quan totes dues distàncies són 1 km. La comprovació és obtenir llavors 23 °C amb tots dos exponents. S'ha d'explicar quina informació fa servir IDW i quina dada addicional incorporaria una regressió amb altitud.
 

@@ -57,3 +57,37 @@ El fitxer és idèntic en les revisions02af700 i d857f8c: blob Git
 metadades GitHub. Es mantenen tots els digests i la implementació del workflow;
 la comprovació de procedència continua activa. No s'ha llegit ni modificat
 codi del proveïdor per aplicar aquesta vinculació.
+
+## Publicació confirmada
+
+La PR4 s'ha fusionat a `e7f41e9bfe6c9d652fe1bbf48c51936057b2c369`.
+El desplegament https://github.com/geourv/geodisseny/actions/runs/36929459366
+ha acabat correctament, amb procedència PDF, controls de figures, contingut,
+compilació i publicació Pages. Les branques de les PR2 i4 s'han retirat després
+de comprovar la fusió i la igualtat de l'arbre revisat.
+
+- Web: https://geourv.github.io/geodisseny/ca/.
+- PDF: https://geourv.github.io/geodisseny/assets/pdf/manual-ca.pdf.
+- PDF publicat:199pàgines, autor Benito Zaragozí; SHA-256
+  `1bb9e96893116785e01f032fd37297266b0132319b1cd3e8b061cfda980eab72`.
+- `manual-release.json` públic confirma latest. Presentació i capítol2 revisats
+  al web publicat a1440/390px;29figures, sense errors ni desbordaments.
+
+La preparació posterior de visibilitat pertany a la incidència5 i a la branca
+`content/5-visibilitat-mdt-mds`. El capítol3 torna a draft en aquella branca;
+la previsualització ampliada local no és una segona publicació autoritzada.
+
+El 2 d'octubre, l'autor ha demanat revisar aquesta pràctica amb torxa,
+carretera Vila-seca–la Pineda i polígon de cobertes. Es manté en la mateixa
+branca de la incidència5, en draft. Els paquets i intermedis són per a Moodle,
+fora de Git; el nou treball no amplia l'autorització de publicació anterior.
+
+La revisió r2 posterior incorpora perímetre sense forats, accessos a les eines
+i context històric del complex. El capítol3 i la bibliografia queden en draft;
+el PDF local de215pàgines i el paquet r2 són per a la revisió de l'autor.
+El registre de comprovacions és `context/dades/visibilitat-costa-r2.md`.
+
+La revisió r3 de la mateixa tasca substitueix l'àmbit per un recinte compacte
+obtingut amb buffers i afegeix eines desplegades, lots i MDS inicial. El PDF
+local té219pàgines; registre a `context/dades/visibilitat-costa-r3.md`.
+Continua pendent de revisió de l'autor, amb el mateix abast d'aprovació anterior.

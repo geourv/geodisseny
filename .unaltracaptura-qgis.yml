@@ -20,6 +20,10 @@ paths:
     - context/qgis/distancies-pineda.yml
     - context/qgis/rwalk.yml
     - context/qgis/girs.yml
+    - context/qgis/visibilitat-costa.yml
+    - context/qgis/visibilitat-acces.yml
+    - context/qgis/punts-tarragones.yml
+    - context/qgis/punts-municipals.yml
   play_prompts: context/qgis
   director_plans: tmp/qgis/plans
   plays: tmp/qgis/plays

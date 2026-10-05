@@ -1,6 +1,289 @@
 # Historial de revisió d'Anàlisi Espacial i Geodisseny
 
-## Estat actual — r.walk, girs i isòcrones, 1 d'octubre de 2026
+## Autorització de publicació — 5 d'octubre de 2026
+
+L'autor ha demanat commit, push, PR, fusió i publicació de l'última versió
+del manual a GitHub Pages. Les set fonts pendents passen a approved sobre
+aquesta autorització humana. Abast, evidència i procediment registrats a
+`context/publicacio-manual-20261005.md`. Els estats draft que consten a
+continuació descriuen les etapes anteriors a aquesta aprovació.
+
+## Estat actual — Constantí com a cas principal i imputació explícita
+
+A petició de l'autor, la pràctica principal utilitza els124punts de Constantí,
+amb ortofoto i símbols proporcionals que permeten interpretar la influència
+dels pesos. El Morell i el Catllar són comparacions; la comarca queda com a
+referència i ampliació. C4 no introdueix PySAL. C5 ajorna la presentació de
+biblioteques fins a les dependències necessàries, conservant atribucions i fonts.
+
+Tres escenaris d'imputació amb POT_KW preservat; tractament separat del cas
+obert de Torredembarra. Camps i12centres natius contrastats. A Constantí,
+2970kW centrals,1832m de canvi del centre i194m entre els altres dos escenaris.
+Cinc captures noves, dues figures interpretatives i projecte de8capes verificat
+en ruta independent readonly/offline. Nou suplement privat de30fitxers;
+el paquet anterior es conserva intacte.
+
+Web C4/C5 a1440/390px,31imatges, sense errors ni desbordament. PDF235p,
+SHA `6d29bba2ea6c5e2967d518636580fb115d1b28cbfd466c75d0a5b289954840ca`.
+Filtres amb cometes comprovats en blocs SQL després de detectar una conversió
+tipogràfica incorrecta en codi inline. Source/site-check i límits correctes.
+Reviews52–54 i resolucions55/56; no equivalen a aprovació humana.
+Fonts, hashes i detalls a `context/dades/punts-tarragones.md`.
+
+## Historial — introducció, cobertura ICAEN i municipis, 4 d'octubre de 2026
+
+La introducció de C4 explica què aporta descriure la disposició dels elements;
+no pressuposa conèixer Snow, ICAEN o els procediments del capítol. Criteri
+incorporat al perfil i troballa resolta a revisions43–45.
+
+Contrastats la pàgina i les metadades ICAEN i el GML original: el93% és
+cobertura cartogràfica de Catalunya. Els5102registres del Tarragonès tenen
+geometria;1340tenen POT_KW buit però conserven interval. El text diferencia
+els denominadors i assumeix la capa disponible com a univers docent, sense
+inventar potències. Centres municipals contrastats amb l'eina nativa.
+
+Nova figura del Morell, el Catllar i Constantí, a escala comuna i amb tots
+els punts. Taula separada de ponderació sobre els mateixos registres amb kW;
+interpretació del resum comarcal i de les diferències municipals desenvolupada.
+Clarificat QGIS/PyQGIS per al kernel i PySAL per a Moran/LISA.
+
+Mapa de Snow en SVG amb el JPEG original intacte i13cercles blaus sobre
+les bombes PUMP. Drets i anotacions al peu.48computacions fresques,
+C4amb22imatges revisat a1440/390px; PDF233p sense desbordaments, SHA
+`84b0f29cfab223419f7bee878f816b96a789e2160562bb1ce536054899aec9f9`.
+L'avís dimensional de la figura municipal s'ha revisat: PDF9,62pt correcte,
+web18px lleugerament més gran que el cos per fer llegibles els tres panells.
+
+Reviews d'evidència/línia a revisions47/48; troballes de denominadors i
+interpretació resoltes a49/50. Estat50, sense aprovació humana. Paquet
+docent anterior intacte; cap commit ni publicació. Detall a
+`context/dades/punts-tarragones.md` i `context/dades/snow-wald.md`.
+
+## Historial — progressió de C4 i exercicis QGIS, 4 d'octubre de 2026
+
+Reorganitzat C4: introducció general, Snow com a cas motivador, distribucions
+puntuals, exemple numèric de centres i aplicacions ICAEN. Procediments detallats
+per a connexions, filtres, centres, dispersió, graella, kernel i seccions.
+Títols conceptuals/funcionals a C1/C4/C5/C6/C7, amb ancoratges preservats.
+Autoria i drets de les figures històriques als peus; versions QGIS redundants
+retirades de C3/C4. Criteri de redacció reforçat.
+
+14captures noves, GeoPackage desplegat a l'Explorador, menús i caixa oberts,
+requadres ajustats. Càlculs i projectes comprovats offline/readonly, inclosa
+la fórmula nativa de Calculadora ràster. Paquet docent de82fitxers, sis
+projectes de18capes, GUIA14p i SOLUCIONS2p, segellat localment.
+
+Web dels sis capítols modificats i bibliografia a1440/390px:14vistes i82imatges,
+sense errors ni desbordament. Fonts i site-check correctes; únic avís de prosa
+conegut «I i». PDF231p, límits i contingut inspeccionats, SHA
+`d81ced19bd53c5914814e173dbc010444df6d056d7a2251d9c25b03a45c3c210`.
+Captions amb enllaços de drets i imatges històriques idèntiques.
+
+Quatre troballes ancorades resoltes amb motius a revisions32–35. Reviews
+d'estructura/evidència C4 i còpia dels altres cinc capítols a revisions36–42.
+Estat42,35reviews,28stale per canvis de font/perfil; l'historial es conserva.
+Els capítols modificats són draft, sense aprovació de l'autor, commit ni
+publicació. Preview32768 obert. Detalls, fonts i hashes del paquet a
+`context/dades/punts-tarragones.md`.
+
+## Historial — John Snow i biaix de supervivència, 4 d'octubre de 2026
+
+Incorporat John Snow a C4: mapa del brot de1854 publicat el1855, significat
+de les barres, unitat d'observació, ponderació, població exposada, consum
+d'aigua, distància per carrers i cobertura del registre. La font primària
+documenta la disminució anterior a la retirada de la maneta; no s'explica
+com una descoberta sobtada ni com una prova causal aïllada.
+
+Incorporat Wald a C1, després de població/mostra/registre: selecció condicionada
+al retorn dels avions i transferència a inventaris de comerços actius.
+Activitats als dos capítols i enllaç de C4 a C1. Mapa de Commons en domini
+públic; esquema modern dels avions CC BY-SA4.0, declarat hipotètic. Autors,
+versions, drets, hashes i fonts a `context/dades/snow-wald.md`.
+
+Les imatges són còpies exactes; importador i manifest de procedència propis
+del consumidor.54referències sense duplicats. Prosa, qualitat i site-check
+correctes, amb l'avís conegut del nombre romà «I i» conservat. Web C1/C4 i
+bibliografia a1440/390px sense errors ni desbordaments;29imatges dels capítols.
+PDF225p, figures, textos, activitats i fonts inspeccionats; límits correctes
+després d'ajustar una frase amb native:meancoordinates.
+
+PDF SHA `62d9cc42e35920dbabbe834bad49d3f2fe689e4562e0133ae195041d86d8b2ef`;
+rebut preview `78d3cff16f1ee55f920ad1005183849c3ec2e5c5a5111d8bdddd1e204c5f095b`.
+Còpia servida idèntica i estat fresh/artifacts_valid. Reviews d'evidència C1/C4
+i de còpia de bibliografia a revisions28/29/30; cap troballa nova ni aprovació
+humana. Detall a `context/dades/snow-wald.md`.
+
+Serve32768 obert. C1 i C4 tornen a draft; també ho són C3 i bibliografia.
+Sense commit ni publicació; main públic continua amb199pàgines.
+
+## Historial — títols descriptius i criteri GeoPackage, 3 d'octubre de 2026
+
+A petició de l'autor, substituïts els tres títols «Començar…», «Continuar…»
+i «Acabar…» per «Visibilitat puntual: torxa de la Canonja», «Visibilitat al
+llarg de la carretera Vila-seca–la Pineda» i «Visibilitat del recinte
+petroquímic». Quatre subtítols també identifiquen directament el contingut:
+complex de Tarragona, dades de la torxa i l'entorn, intervisibilitat i conca
+visual. Ancoratges conservats, inclòs passar-de-les-parelles-al-mapa explícit.
+
+Criteris permanents a context/writing-profile.md i context/qgis-captures.md:
+títols informatius i connexions GeoPackage desplegades a l'Explorador superior
+esquerre en les captures futures. L'autor permet ajornar la regeneració
+actual: aquest detall de l'Explorador queda per a la propera preparació QGIS.
+
+Prosa, qualitat de fonts i site-check correctes; web a1440/390px amb25imatges,
+sense errors, ancoratges perduts ni overflow. PDF219p, títols inspeccionats i
+límits correctes. SHA
+`441bb4e6c2cb5b47bb57ab84493c039e8af28c925229bfb3310164ad12a1f6df`;
+rebut preview `8c66bd43a008b18d6ab960bb0847176481f1f2d9321927ac300b2612c4e6322e`.
+Estat fresh/artifacts_valid; còpia servida idèntica. Paquet r3 amb el mateix
+hash b7f2c5f3…69cc, sense recalcular dades ni regenerar captures.
+
+Review copy `visibilitat-titols-copia-20261003`, revisió27, digest
+`52fcbc367827be6348405edd26ed900c28c3ebfa99702a8b686b0d18f3bdac19`,
+cap troballa nova.24reviews/23stale després del canvi del perfil; es conserva
+l'historial i aquesta passada no confereix aprovació humana.
+Serve32768 obert; contingut en draft, sense commit ni publicació.
+El comentari final de seguiment a la incidència5 ha retornat499 i els intents
+de consultar-lo, EOF. No se'n confirma l'enviament; el registre local és complet.
+
+## Historial — recinte compacte, lots i dades inicials, r3
+
+Aplicades les correccions de l'autor sobre el nom del recinte, tancament amb
+buffers, caixa d'eines/menús oberts i requadres, automatització i presentació
+d'ortofoto/MDS. Recinte de222,94ha amb +150/−150m,32segments per quadrant;
+57fragments recalculats. Ortos WMS GetMap locals, resolucions explícites.
+
+Disset captures i cinc SVG;10projectes de37capes. Verificació nativa de les
+geometries i resultats, portabilitat readonly/offline i179execucions de lots
+amb igualtat cel·la a cel·la. ZIP250fitxers,161.155.091bytes, SHA
+`b7f2c5f38c8ee45cca592ce35db4aaeac77a413f6ace210948e47e338c3369cc`.
+GUIA26p/SOLUCIONS3p, segellat i hashes correctes. Les versions anteriors es
+conserven; paquets i intermedis continuen fora de Git i del web.
+
+Prosa, qualitat i site-check correctes;25imatges de C3 al web1440/390px,
+sense errors o overflow. PDF219p i24figures, revisats després de corregir
+dos passatges amb paths/nombres llargs. SHA
+`506ad1461d61dd3c0cccf4d007951029e4ab1d3ee08db76661a83084151a6193`;
+rebut preview `53fc57cf7e426f7e4a1a8ebd4c76dece145e488098c7b801ea2322f4be0fbad1`.
+Estat fresh/artifacts_valid i còpia servida idèntica. Bibliografia correcta;
+avisos coneguts d'auditoria HTML coberts per inspecció visual.
+
+Reviews C3/bibliografia a revisions25/26, cap troballa nova i cap aprovació
+humana. Detalls i digests a `context/dades/visibilitat-costa-r3.md`.
+Serve32768 obert; C3/bibliografia en draft, sense commit ni publicació.
+Main públic e7f41e9 continua amb199pàgines.
+
+## Historial — perímetre, accessos i context del complex, 2 d'octubre de 2026
+
+Revisió r2 de la mateixa incidència5, amb captures de menú/barra, història i
+nomenclatura del complex petroquímic de Tarragona i comparació de perímetres.
+S'han eliminat19forats conservant l'exterior:184,44ha. Malla57fragments
+recalculada; relació entre Nord, Sud i port documentada amb fonts verificades.
+
+Deu projectes de36capes,12captures,5SVG; verificació QGIS offline/readonly
+correcta. ZIP231fitxers,149.293.723bytes, SHA
+`afbce1dfcf05f300bb39e442c79a18da08bbcbe003765fa4ba5bb919bf165501`.
+Guió19p i notes3p. Paquets/intermedis fora de Git; v1 conservada immutable.
+
+Prosa, qualitat i site-check correctes; web20imatges a1440/390px sense errors
+ni overflow. PDF215p,19captions de C3 i pàgines de context/bibliografia
+inspeccionades; límits correctes. SHA
+`2ca8078fd7853e785900c486b58eee983c6af38ce59ba971b488ae36f296cd13`,
+rebut preview `dc76b7bdef1764cff64b2e2c7107f8b0be365bfcf0cd95ae1e70c4b54f7af8a5`.
+Protegida la majúscula de Tarragona al títol BibTeX;52referències.
+
+La passada final detectava una comprovació fallida de Farnós a la bibliografia
+HTML, encara que apareixia al PDF. Afegit `manual_selected = {false}` a la font;
+web i PDF regenerats. Referència, nom propi i enllaç IEC comprovats visualment
+a1440/390px i al PDF. C3 continua sense errors; PDF fresh/artifacts_valid.
+La inspecció directa de `_site` confirma que no incorpora dades privades,
+fonts QMD ni la captura de cerca rebutjada.
+
+Reviews C3/bibliografia a revisions22/24, sense troballes noves ni aprovació
+humana. Registre, digests i evidències a `context/dades/visibilitat-costa-r2.md`.
+C3 i bibliografia en draft; cap commit o publicació. Serve32768 obert;
+main públic continua a e7f41e9,199p. Sense lectura/modificació de codi intern
+dels proveïdors; només eines, metadades i documentació.
+
+## Historial — revisió de visibilitat demanada per l'autor, 2 d'octubre de 2026
+
+La publicació de main continua a e7f41e9,199pàgines. La branca local de la
+incidència5 substitueix el cas cadastral per torxa identificada, carretera
+Vila-seca–la Pineda i àrea industrial del MCSC2024. Fonts i controls a
+`context/dades/visibilitat-costa.md`; capítol3 en draft.
+
+Càlcul verificat amb QGIS natiu i perfils independents; nou projectes de34capes
+oberts offline/readonly. Nou captures i quatre figures regenerades, amb
+guions nous. Les fonts i visuals no versionats de l'assaig nord s'han arxivat
+privadament després de comparar-los byte a byte amb el ZIP segellat.
+
+Reafirmada la política de Moodle: paquets i intermedis fora de Git. Índex i
+història accessible sense ZIP/GPKG/TIFF ni directoris temporals versionats.
+No es configura LFS ni es canvia el pla de GitHub.
+
+- Paquet costa segellat:149.167.797bytes,211fitxers, SHA
+  `a5130ad5221a21e8e86350c485731c4384b44c720f1ce3a879815d65577946c1`.
+  GUIA16p i SOLUCIONS3p; CRC i tots els hashes comprovats.
+- Prosa i qualitat de fonts correctes. Site-check abans del build; C3 amb
+  16imatges a1440/390px, sense errors ni overflow. PDF209p,16captions
+  localitzades i figures/taules inspeccionades; límits de text correctes.
+- PDF SHA `278cc6448d96fd8f7ea98cc0437da49f5b551b0f01356e99212f9f6945490e11`;
+  rebut preview `980e2b15eecd23c2e5f416f77e5c05a028297a93040702decdf5fe80188fdd52`.
+  Còpia servida idèntica i estat fresh/artifacts_valid. Avisos coneguts d'HTML
+  sobre logos/SVG conservats amb revisió visual, sense editar generats.
+- Review `visibilitat-torxa-carretera-poligon-linia-20261002`, revisió21,
+  digest `9cff7cb27ba31a46860e60fb720e534ef7a8b30a5759857aa75a5c3dfc8ea4ad`,
+  zero troballes noves; no és aprovació humana. Cap font privada al lloc;
+  originals amb hashes previs i metrics.yml sense diff. Serve32768 obert.
+- Canvis locals sense commit ni publicació. Lectura de l'autor pendent;
+  el main públic continua a la versió199p autoritzada.
+
+## Historial — publicació i pràctica de visibilitat nord
+
+El manual revisat s'ha publicat després de l'autorització expressa de l'autor.
+PR2 de contingut i PR4 de vinculació del workflow; main publicat:
+`e7f41e9bfe6c9d652fe1bbf48c51936057b2c369`. Run36929459366 correcte, web i PDF
+verificats. PDF públic199p, SHA
+`1bb9e96893116785e01f032fd37297266b0132319b1cd3e8b061cfda980eab72`.
+Detall a `context/publicacio-manual-20261001.md`.
+
+L'ampliació següent és local i en draft, branca `content/5-visibilitat-mdt-mds`,
+incidència5. Cas escollit entre les alternatives de l'autor: sector cadastral
+de la refineria nord a la Pobla de Mafumet. No representa tot el polígon industrial.
+
+- Retall10×10km a5m,4.000.000cel·les, amb MDT natiu i MDS1m agregat pel màxim.
+  Sense NoData d'entrada; MDS≥MDT comprovat. Punt interior P perquè el centroide
+  cau fora del contorn;49mostres de perímetre i46fragments d'àrea amb pesos.
+- Cotes absolutes fixades: objectius MDT+30m, receptors MDT+1,7m. Cota mínima
+  en mode DEM, Float64 i comparació ràster;192conques més controls.
+- Receptors municipals ajustats i tres controls construïts; R8 fora del domini.
+  R10 mostra el contrast entre P ocult i parts del perímetre/àrea visibles.
+- Verificació independent del perfil amb pantalla128m i perfils reals clars;
+  comprovació de monotonia MDS/MDT, geometria, pesos, unitats i correspondències.
+- QGIS natiu reprodueix49posicions,46fragments, cota mínima i totes les cel·les
+  del binari; mostreig concordant amb els controls, inclosos nuls. Nou projectes
+  oberts offline/readonly sense muntar el repositori;32capes vàlides cadascun.
+- Nou captures amb unaltracaptura i quatre QMD/SVG nous.45computacions vigents.
+  Fonts i guions a context/dades, context/qgis i context/practiques.
+- Paquet privat119.669.778bytes,152fitxers, SHA
+  `f760e14effcb88d51858d24a7d8c2261c1de0d9b206e510e465be7ac25bf0520`.
+  Guió14p i notes3p; CRC/hashes i integritat SQLite verificats. Cap pujada a Moodle.
+- Prosa i qualitat de fonts sense incidències. Site-check abans del build;
+  corregit l'ancoratge de ponderació. Web C3 a1440/390px:17imatges, cap error
+  MathJax, imatge trencada, ancoratge absent ni desbordament.
+- PDF local213p, figures i captures revisades; corregits desbordaments de nombres
+  i salts als guions. SHA `e79b7af607735f54dcdfc6ef17733b09360b4aff8c0ba4be3d430653ed4110e3`;
+  rebut preview `395fa07f5caeef018b3fa3111a2fb5446daa56b36aed43d37279b3b31965ce9a`.
+  La còpia servida coincideix. Auditoria HTML correcta, amb avisos del proveïdor
+  sobre logos transparents, XML dels SVG i pressupost d'inspecció; no s'han
+  alterat marques ni sortides gestionades per silenciar-los.
+- Review de línia `visibilitat-nord-mdt-mds-linia-20261001`, revisió20, digest
+  `d3407ed52494d85e1f6e504fdf7a55142046817cb3377f624971d3a4f902b130`.
+  Sense troballes noves; no és aprovació humana del capítol ampliat.
+- Dades privades i fonts executables absents de `_site`; metrics.yml sense diff.
+  Serve local32768 obert. Canvis de visibilitat sense commit, pendents de revisió.
+
+## Historial — r.walk, girs i isòcrones, 1 d'octubre de 2026
 
 L'autor ha valorat positivament el capítol anterior i ha demanat completar-lo
 amb marxa anisòtropa, aclariment dels girs i mapes temporals entenedors, amb

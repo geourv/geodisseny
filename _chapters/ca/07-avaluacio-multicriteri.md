@@ -262,7 +262,7 @@ Les classes de puntuació han de mantenir llindars comparables entre escenaris. 
 
 La taula de sensibilitat ha de conservar superfície coneguda, admissible i seleccionada, a més de diferències de puntuació i canvis de rànquing. El denominador ha de ser el mateix o quedar justificat. La freqüència amb què una candidata resulta preferida és una descripció dels escenaris provats, no una probabilitat d'error sense un model addicional.
 
-## Del mapa al procés de geodisseny {#retorn-geodisseny}
+## Alternatives, impactes i decisió en el geodisseny {#retorn-geodisseny}
 
 El marc de Steinitz exigeix més que seleccionar el màxim d'un ràster {% cite steinitz2012framework %}. Cal concretar alternatives, estimar efectes respecte de la referència i explicar com intervenen actors i criteris. La millor cel·la pot formar part d'una proposta pitjor si accessos, connexions o fragmentació augmenten els efectes totals.
 

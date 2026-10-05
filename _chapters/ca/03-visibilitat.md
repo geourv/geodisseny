@@ -14,7 +14,7 @@ manual_references: true
 
 Una instal·lació pot ser visible des d'un camí i quedar oculta des d'un nucli més proper. Un llom, un edifici o una pantalla vegetal poden tapar-la. Per entendre-ho cal situar des d'on es mira, què es vol veure i què hi ha entremig. Després es podrà preguntar quin significat té aquella vista per al paisatge i per a les persones.
 
-Primer es comprova una línia entre dos punts. A continuació es repeteix el càlcul cap a moltes posicions per construir una conca visual, i des de diversos llocs per comparar vistes. Els exemples d'una carretera i d'un sector de la refineria ajuden a passar del perfil del terreny als mapes i a les eines de QGIS.
+Primer es comprova una línia entre dos punts. A continuació es repeteix el càlcul cap a moltes posicions per construir una conca visual, i des de diversos llocs per comparar vistes. Una torxa industrial de la Canonja, la carretera Vila-seca–la Pineda i una àrea industrial permeten avançar de punt a línia i a polígon amb les eines de QGIS.
 
 >>>>> En acabar el capítol, cal poder calcular i explicar una estimació de visibilitat.
 >>>>>
@@ -156,7 +156,7 @@ $$
 
 N és el nombre d'observadors, sis en aquesta figura. Per exemple, una cel·la amb resultats 1, 0, 1, 1, 0 i 1 acumula 4; dividir per sis dona una proporció de posicions del mostreig de 2/3. No s'han comptat persones, vehicles ni minuts. Si es duplica un observador, la suma augmenta encara que el territori no hagi canviat: cal mantenir el mateix disseny de mostreig quan es comparen alternatives.
 
-### Donar significat a la freqüència acumulada
+### Donar significat a la freqüència acumulada {#visibilitat-ponderada}
 
 La suma simple tracta totes les posicions igual. Amb mostreig regular i una convenció per als extrems es pot aproximar quina part d'un itinerari ofereix visió. Si els intervals són desiguals, cal ponderar per la longitud de carretera que representa cada mostra. Per estudiar temps d'exposició, els pesos han de representar temps, que també depèn de la velocitat; per estudiar persones, caldrien dades d'ús i una regla que evités duplicacions.
 
@@ -195,94 +195,221 @@ La possibilitat de veure un panell no equival a rebre un reflex molest. L'enllue
 
 L'anàlisi docent d'aquest capítol tracta exposició geomètrica potencial. La valoració paisatgística posterior pot incorporar distància, durada de l'exposició, mida aparent, caràcter i efectes acumulats. Si una decisió depèn d'enlluernament, caldrà un model específic i dades adequades, no una reclassificació improvisada del viewshed.
 
-## Calcular una conca i consultar-la als receptors amb QGIS {#procediment-visibilitat}
+## Visibilitat puntual: torxa de la Canonja {#procediment-visibilitat}
 
-El treball amb QGIS combina dues operacions: **Conca visual / Viewshed** calcula un mapa des d'un punt, i **Mostreja els valors ràster** consulta aquell mapa a les posicions dels receptors. Repetir el primer càlcul per a cada punt P i el segon sobre els mateixos receptors R permet construir les columnes d'una matriu com l'anterior.
+### El complex petroquímic de Tarragona {#context-petroquimic}
 
-Els polígons de sol·licituds de parcs solars permeten estudiar alternatives amb extensió explícita, però cal llegir-ne `ESTAT` i la documentació. Una superfície autoritzada o en tramitació no és una prova que els panells ja estiguin construïts. Per estudiar una proposta es conserva aquesta condició; per estudiar una instal·lació existent cal contrastar construcció, data, altura i disposició.
+El **complex petroquímic de Tarragona** és un conjunt d'instal·lacions i empreses relacionades, distribuïdes principalment entre el **Polígon Nord**, el **Polígon Sud** i el **Port de Tarragona**. No és una única fàbrica ni una sola parcel·la. El sector d'aquest exercici se situa al Polígon Sud, a l'entorn de la Canonja; no és la refineria del Polígon Nord. La distinció importa quan es dona nom a una capa i quan s'interpreta què representa el seu perímetre {% cite farnos2025petroquimica %}.
 
-### Preparar extrems i paràmetres
+La implantació petroquímica s'intensificà durant els **anys seixanta**. La síntesi històrica de [Jordi Rosell a Enciclopèdia.cat](https://www.enciclopedia.cat/tecnics-i-tecnologia-en-el-desenvolupament-de-la-catalunya-contemporania/el-complex-petroquimic-de) situa l'entrada en funcionament de Dow i d'Indústries Químiques Associades el **1967**, i la producció de poliestirè de BASF el **1969**. La construcció de la refineria començà el **1973** i l'activitat s'inicià el **1976**, segons la [cronologia de Repsol](https://tarragona.repsol.es/ca/sobre-complejo/nuestra-historia/index.cshtml). Són etapes d'una implantació successiva, no una inauguració simultània de tot el conjunt.
 
-Cal crear una capa de receptors amb identificador, funció i altura relativa, i una capa de punts de la proposta amb el criteri de mostreig. Si una geometria prové d'una comprovació de l'inventari ICAEN, s'ha de conservar la relació amb el registre sense substituir la coordenada original. Les altures s'han de documentar com a mesurades, derivades o assumides.
+El port ajuda a explicar aquesta localització. Les primeres plantes necessitaven rebre grans volums de matèries primeres: Dow importava etilè per via marítima abans de disposar dels subministraments de la refineria. El [Museu del Port de Tarragona](https://visitmuseum.gencat.cat/ca/museu/museu-del-port-de-tarragona/objecte/la-petroquimica) relaciona l'expansió petroquímica amb nous tràfics de vaixells tanc i amb la construcció de canonades. A l'accés marítim s'hi afegeixen les decisions d'inversió i la proximitat entre plantes que utilitzen productes d'altres processos.
 
-Una fitxa de paràmetres ha d'incloure resolució, superfície, altures, abast, correcció de curvatura/refracció i codis de sortida. La primera execució hauria de correspondre a un parell d'extrems amb un perfil conegut. Això permet detectar una altura referida a la superfície incorrecta o una interpretació inversa de la sortida.
+La relació entre Nord, Sud i port és, per tant, també productiva i logística. La refineria i les plantes de química de base proporcionen matèries que es transformen en altres instal·lacions, i els **racks** —estructures que agrupen conduccions— permeten transportar matèries primeres i productes entre àmbits. L'[AEQT documenta el rack compartit Dixquímics](https://www.aeqtonline.com/qui-som/#sinergies), que connecta empreses entre elles i amb el port. El paisatge visible de torres, dipòsits, canonades i molls expressa aquestes relacions; el mapa de visibilitat només n'estudia una dimensió, que s'ha de distingir dels fluxos, els riscos o la valoració social.
 
-::: table "Del concepte al paràmetre d'una conca visual"
-| Decisió | Entrada que cal revisar | Comprovació observable |
-| --- | --- | --- |
-| Què pot ocultar la visió? | MDT o MDS, banda i nuls | L'obstacle del perfil és present a la superfície |
-| Des d'on es mira? | Coordenades de l'observador i CRS | El punt coincideix amb el receptor previst |
-| A quina altura? | Altura d'observador i d'objectiu | No s'ha duplicat la cota del sòl |
-| Fins on es calcula? | Abast màxim i extensió | Fora de l'abast es conserva «no calculat» |
-| Què vol dir cada valor? | Codis visible, ocult i nul | La llegenda coincideix amb la sortida real |
+### Dades de la torxa i de l'entorn {#dades-visibilitat-nord}
+
+La primera pregunta és concreta: **es veu la part alta d'una torxa des d'un punt de la carretera?** El cas se situa a la Canonja, al polígon químic sud, prop del recorregut entre Vila-seca i la Pineda. Les torxes són les estructures on es poden observar flames de combustió. Per identificar-ne una es contrasta el [punt d'OpenStreetMap classificat com a torxa](https://www.openstreetmap.org/node/7682543312) amb l'ortofoto ICGC de 2025 i les elevacions LiDAR de 2021–2023.
+
+L'ortofoto s'ha obtingut amb peticions **GetMap al servei WMS de l'ICGC**, capa de 2025, i s'ha desat localment com a GeoTIFF georeferenciat. La vista general té 10 m per píxel; els retalls industrial i de la torxa, 2,5 i 0,5 m per píxel. Són resolucions de les imatges demanades al servei, que ofereix una ortofoto d'origen de 25 cm. L'extensió i la resolució de cada petició es conserven a `fonts/fonts.json`.
+
+![Torxa, carretera i recinte petroquímic sobre l'ortofoto]({{ site.baseurl }}/assets/captures/visibilitat-costa-dades.png "T és la torxa; la línia blava segueix la TV-3148. El contorn taronja delimita el recinte petroquímic d'estudi, generalitzat a partir de la coberta industrial. Són els tres objectes que s'estudiaran successivament."){: data-figure-width-web="52rem" data-figure-width-pdf="100%" data-caption-source="Fonts: ICGC, RTT i MCSC 2024, ortofoto 2025 obtinguda per WMS; col·laboradors d'OpenStreetMap."}
+
+El càlcul de visibilitat necessita també elevacions. L'**MDT** representa el terreny, mentre que l'**MDS** incorpora les superfícies d'edificis, instal·lacions i vegetació. La captura següent mostra l'MDS amb el mateix enquadrament que l'ortofoto: permet relacionar les estructures reconegudes a la imatge amb les cotes que intervenen en el model.
+
+![Model digital de superfície, recinte i carretera amb el mateix enquadrament que l'ortofoto]({{ site.baseurl }}/assets/captures/visibilitat-costa-mds.png "Els colors representen cotes superficials en metres. L'MDS LiDAR d'1 m s'ha agregat pel màxim a cel·les de 5 m; el recinte, la carretera i T mantenen la mateixa posició que a l'ortofoto. La llegenda d'elevacions és al panell de capes."){: data-figure-width-web="52rem" data-figure-width-pdf="100%" data-caption-source="Font: model digital de superfície ICGC, LiDAR 2021–2023; derivació a 5 m."}
+
+El punt T es representa al centre de la cel·la de 5 m situada a **(346892,5;4552507,5) m**, en EPSG:25831. Les coordenades vectorials originals es conserven als atributs; l'ajust a la graella és de 2,48 m. A l'emplaçament, l'MDT indica una cota d'uns 20,94 m i el pic de l'MDS, comprovat també en el retall natiu d'1 m, arriba a 151,31 m: aproximadament **130,4 m sobre el terreny**.
+
+![Detall de la torxa identificada en l'ortofoto de QGIS]({{ site.baseurl }}/assets/captures/visibilitat-costa-torxa.png "La posició de T correspon a una estructura identificable, no al centroide d'una parcel·la. L'estimació vertical prové del LiDAR; l'ortofoto aporta el contrast de localització."){: data-figure-width-web="52rem" data-figure-width-pdf="100%" data-caption-source="Fonts: ortofoto ICGC 2025 i col·laboradors d'OpenStreetMap."}
+
+Per al càlcul es fixa T **1 m per damunt del pic representat**, a cota 152,311996 m. És una separació de model respecte de la superfície digital, no una mesura de l'altura de la flama. Les flames varien; les elevacions tampoc no certifiquen per si soles l'altura física exacta de l'estructura.
+
+### Intervisibilitat entre la torxa i la carretera {#perfils-visibilitat-nord}
+
+R1, R2 i R3 són posicions de consulta al recorregut, amb els ulls a **1,7 m sobre l'MDT**. S'han triat per il·lustrar respostes diferents: no són una mostra representativa de persones. La capa `resultats/intervisibilitat.gpkg` relaciona aquests receptors amb T i permet seguir cada parella sobre el mapa.
+
+::: table "Tres parelles amb la mateixa torxa"
+| Receptor | Mostra del recorregut | MDT | MDS | Lectura |
+| --- | --- | ---: | ---: | --- |
+| R1 | C05 | 1 | 1 | Hi ha visió en tots dos models |
+| R2 | C11 | 0 | 0 | El relleu ja intercepta la línia |
+| R3 | C13 | 1 | 0 | Els obstacles de l'MDS canvien la resposta |
 :::
 
-### Calcular i contrastar
+![Línies entre T i receptors de carretera, amb R5 fora del retall]({{ site.baseurl }}/assets/captures/visibilitat-costa-intervisibilitat.png "Amb MDS, el verd indica visió de T i les línies discontínues, ocultació. R5 queda fora de l'àmbit i conserva una resposta no calculada. Les línies representen relacions visuals, no trajectes d'accés."){: data-figure-width-web="52rem" data-figure-width-pdf="100%"}
 
-QGIS incorpora `gdal:viewshed`; GRASS ofereix `r.viewshed` quan està disponible. Cal consultar l'ajuda de la versió utilitzada i conservar les convencions dels paràmetres {% cite qgisUserGuide %}. El càlcul per lots permet repetir el mateix model per diversos punts, però exigeix revisar la correspondència entre identificadors, altures i noms de sortida.
+El perfil explica la classificació. A R1, la línia queda per damunt de les dues superfícies. A R3, passa per sobre del terreny, però un obstacle pròxim al receptor representat a l'MDS la supera. El detall dels últims 80 m ajuda a veure una diferència que quedaria amagada en un perfil de més d'un quilòmetre.
 
-En l'exemple de QGIS es pren un retall del MDT de l'entorn de la refineria nord. El punt central de la instal·lació se situa a (350.900,88;4.560.059,92) m. S'hi assumeix una altura de 30 m, mentre que a les cel·les del territori s'avaluen receptors a 1,7 m. L'«observador» de la interfície és aquí el punt de la instal·lació: la línia de visió es comprova en sentit invers per respondre des d'on es podria veure.
+![Perfils complets T–R1 i T–R3 amb ampliació dels últims vuitanta metres]({{ site.baseurl }}/assets/quarto/figures/visibilitat-perfils.qmd "R1 conserva visió amb MDT i MDS; a R3, l'MDS intercepta la línia. Cada fila comparteix escala vertical entre els dos casos. Els detalls inferiors es llegeixen cap al receptor, de 80 a 0 m, i mostren els obstacles propers."){: data-figure-width-web="50rem" data-figure-width-pdf="100%"}
 
-![Diàleg de conca visual amb model d'elevacions, origen i altures assenyalats]({{ site.baseurl }}/assets/captures/visibilitat-parametres.png "Viewshed, de GDAL: superfície, posició, altures i abast. El primer càlcul produeix el mapa visible/ocult del punt central."){: data-figure-width-web="43rem" data-figure-width-pdf="100%"}
+### Conca visual de la torxa {#passar-de-les-parelles-al-mapa}
 
-Després es carrega la capa de caps de municipi. L'eina `native:rastersampling`, **Mostreja els valors ràster**, rep la capa de punts i la conca visual. El prefix identifica de quin punt de la instal·lació prové la nova columna.
+Una conca repeteix la comprovació cap a les cel·les de l'entorn. El paquet de Moodle inclou les fonts, les còpies de càlcul, els resultats de referència i deu projectes QGIS amb rutes relatives. `00-inici.qgz` situa el cas; `01-torxa.qgz` i `02-intervisibilitat.qgz` permeten començar pels punts. Les sortides pròpies es desen a `treball`.
 
-![Mostreig d'una conca visual als punts dels receptors]({{ site.baseurl }}/assets/captures/intervisibilitat-mostreig.png "Mostreja els valors ràster afegeix la resposta del mapa a la taula de punts. La banda 1 i el prefix centre_ produeixen el camp centre_1."){: data-figure-width-web="43rem" data-figure-width-pdf="100%"}
+La graella comuna té **2.000 × 2.000 cel·les de 5 m**, amb límits X 342000–352000 i Y 4549000–4559000. L'MDT conserva la resolució nativa; l'MDS d'1 m s'ha agregat pel màxim a 5 m. Aquesta operació reté cotes altes, però pot eixamplar arbres, fanals i altres obstacles estrets.
 
-Amb codis de sortida 1 per a visible i 0 per a ocult, el mostreig dona 1 al punt de Perafort i 0 al de Constantí. La nova columna es pot anomenar `centre_1`. No s'està classificant tot el municipi: és la resposta en el punt representatiu carregat. Per afegir una altra columna es calcula la conca d'un altre punt de la instal·lació i es repeteix el mostreig sobre la mateixa capa de receptors.
+El mar i els buits d'elevació es tracten abans del càlcul. Les còpies preparades representen els buits del mar cartografiat a 0 m i exclouen les línies afectades per altres elevacions desconegudes. La capa **Domini** val 1 a les **3.490.455 cel·les comparables** i NoData a la resta. Els originals es conserven a `fonts`; les còpies i la màscara, a `dades`.
 
->> A l'eina de GDAL, distància màxima 0 significa calcular sobre tota l'extensió del ràster, no una visió de radi zero. La llegenda també ha de correspondre als codis escollits: en aquesta execució es configura visible=1, ocult=0 i no calculat=255.
+Per localitzar l'eina, obre **Procés → Caixa d'eines**, prem el botó corresponent de la barra o utilitza **Ctrl+Alt+T**. A la cerca de la caixa de Processament, escriu **Viewshed** i comprova que el resultat correspon al proveïdor **GDAL**. Els noms traduïts i els identificadors permeten reconèixer la mateixa eina entre instal·lacions {% cite qgisUserGuide %}.
 
-La primera sortida s'inspecciona com a valors, no només com a colors. Amb l'eina d'identificació de QGIS es consulta un lloc que el perfil prediu com a visible, un d'ocult i un de fora d'abast. Després es configura una simbologia categòrica amb etiquetes explícites. Una rampa contínua entre 0 i 1 podria suggerir una gradació que el resultat binari no conté.
+::: subfigures a/b "Dos accessos a la caixa d'eines de Processament"
+![Menú Procés amb l'opció Caixa d'eines i la drecera]({{ site.baseurl }}/assets/captures/visibilitat-acces-menu.png "El menú Procés mostra Caixa d'eines i la drecera disponible."){: data-figure-width-web="44rem" data-figure-width-pdf="90%"}
+![Botó de la barra que obre la caixa de Processament]({{ site.baseurl }}/assets/captures/visibilitat-acces-barra.png "El botó de la barra obre el mateix panell. Després s'hi cerca el nom de l'algorisme."){: data-figure-width-web="44rem" data-figure-width-pdf="90%"}
+:::
 
-Les conques es combinen només quan comparteixen graella i domini vàlid. Un remostreig de visibilitat binària ha de respectar el significat categòric: la interpolació bilineal de 0 i 1 no produeix una probabilitat de visió. Si cal canviar resolució, convé recalcular o definir explícitament una proporció de cel·les, que és una magnitud diferent.
+A **Conca visual / Viewshed**, `gdal:viewshed`, es trien l'MDT de càlcul, banda 1, T com a origen, altura **131,369997 m** sobre MDT i altura de destinació **1,7 m**. S'aprofita la reciprocitat per preguntar des d'on es veu T. Distància màxima 0 significa tota la finestra ràster; es fixen els codis 1/0, NoData separat i curvatura/refracció **0,85714**.
 
-La intersecció amb receptors es pot resoldre mostrejant el ràster als punts, amb identificadors estables. Cal registrar no visible, visible i no calculat. Per a trams o superfícies, el resum ha d'explicar si es basa en punts, longitud o àrea. El perfil entre un receptor i una part de la proposta ajuda a interpretar els resultats i a localitzar l'obstacle determinant.
+![Caixa de Processament oberta amb GDAL, Miscel·lània ràster i Viewshed desplegats]({{ site.baseurl }}/assets/captures/visibilitat-acces-caixa-viewshed.png "A la versió capturada, Viewshed és dins de GDAL → Miscel·lània ràster. El requadre identifica la fila que obre l'algorisme. La cerca pel nom també permet arribar-hi."){: data-figure-width-web="40rem" data-figure-width-pdf="90%"}
 
-### Controls mínims de lectura
+![Diàleg Viewshed amb les coordenades i les altures de T]({{ site.baseurl }}/assets/captures/visibilitat-costa-punt.png "El camp demana altura relativa: 131,37 m sobre l'MDT, no la cota absoluta de 152,31 m. L'altre extrem se situa a 1,7 m sobre el terreny. Després s'aplica la màscara del domini comú."){: data-figure-width-web="42rem" data-figure-width-pdf="90%"}
 
-El mapa ha d'identificar proposta, receptors, domini i font d'elevacions. La llegenda no hauria de dir «impacte nul» on el model només diu «no visible». Cal inspeccionar almenys un cas visible, un d'ocult i un de pròxim al límit de visió, perquè aquest últim és més sensible a errors d'altura o resolució.
+La Calculadora ràster aplica `"Domini@1" * "Conca T MDT@1"`. Això conserva la resposta 0/1 dins del domini i NoData fora. El resultat de referència, `resultats/torxa-mdt.tif`, conté **2.962.199 cel·les visibles**, el **84,87%** del domini comparable. És superfície territorial, no nombre de persones.
 
-Una comprovació sobre ortofoto o terreny pot confirmar obstacles que el model omet. La discrepància s'ha d'utilitzar per revisar el model, no per ajustar els paràmetres fins que coincideixin amb una resposta desitjada. Si manca informació, es conserva com a incertesa del resultat.
+## Comparar MDT i MDS amb els mateixos extrems {#mdt-mds-controlat}
 
-## Representar un sector petroquímic amb un punt o amb moltes mostres {#cas-petroquimica}
+Canviar de superfície no ha de moure la torxa ni els ulls. T continua a cota 152,311996 m: sobre l'MDS necessita una altura relativa d'1 m, mentre que sobre l'MDT en necessita 131,369997.
 
-Un centre és una primera simplificació d'una instal·lació extensa. Però una part situada uns centenars de metres més enllà pot aparèixer per darrere d'un turó que n'ocultava el centre. Per observar aquest efecte es comparen un punt central i un conjunt de mostres, sobre **Tarragonès i Baix Camp**.
+::: table "Cotes i altures del punt T"
+| Magnitud | Valor aproximat |
+| --- | ---: |
+| MDT a T | 20,941999 m |
+| Pic MDS a T | 151,311996 m |
+| Cota de T en el model | 152,311996 m |
+| Altura sobre MDT | 131,369997 m |
+| Altura equivalent sobre MDS | 1 m |
+:::
 
-Les elevacions provenen dels [models territorials de l'ICGC](https://www.icgc.cat/ca/Geoinformacio-i-mapes/Dades-i-productes/Elevacions/Elevacions-territorial/Models-delevacions): MDT LiDAR de 5 m i MDS LiDAR d'1 m, període 2021–2023. El paquet conté versions regionals reduïdes a 25 m, alineades en EPSG:25831. Aquesta reducció facilita l'experiment comarcal, però pot suavitzar edificis, vegetació i estructures estretes. No s'ha d'interpretar el MDS de 25 m com un inventari d'altures de torres.
+Els receptors conserven la cota **MDT + 1,7 m**. El mode **DEM** de [GDAL Viewshed](https://gdal.org/en/stable/programs/gdal_viewshed.html), activat amb `-om DEM`, retorna la **cota absoluta mínima** necessària a cada destinació. Es calcula amb MDS, les coordenades de T i altura d'origen 1 m. L'altura de destinació queda ignorada en aquest mode; **GROUND** expressaria una altra magnitud, l'altura addicional sobre la superfície.
 
-### Representar la instal·lació i les altures
+Amb el resultat **Cota mínima MDS**, la Calculadora ràster compara cotes i aplica el mateix domini:
 
-S'utilitza la parcel·la `1406801CF5610C`, de 171,63 ha, a la Pobla de Mafumet. Representa un sector de la refineria nord. El seu centre geomètric es compara amb **28 punts** d'una malla de 250 m que queden dins del polígon. Són posicions de mostreig; no s'han identificat com a torres.
+```text
+"Domini@1" * (("MDT@1" + 1.7) >= "Cota mínima MDS@1")
+```
 
-L'escenari base assumeix objectius a 30 m sobre el terreny i receptors a 1,7 m. Per calcular el mapa s'aprofita la reciprocitat geomètrica de la línia de visió: es llança la conca des del punt de la instal·lació, a 30 m, cap a possibles receptors a 1,7 m. Les altures es mantenen associades als extrems físics quan s'inverteix la pregunta. El resultat és numèric i depèn del mètode discret emprat; no és una comprovació visual de camp.
+![Calculadora ràster amb la màscara i la comparació de cotes absolutes]({{ site.baseurl }}/assets/captures/visibilitat-costa-cota-minima.png "La comparació manté els ulls sobre l'MDT. Domini conserva els llocs no calculats com a NoData. El resultat és binari; la cota mínima intermèdia, en metres absoluts, es conserva en Float64."){: data-figure-width-web="44rem" data-figure-width-pdf="94%"}
 
-El càlcul incorpora el coeficient de curvatura i refracció **0,85714** de [GDAL](https://gdal.org/en/stable/programs/gdal_viewshed.html). A diferència del perfil curt inicial, aquí les distàncies comarcals fan rellevant considerar la forma de la Terra.
+La conca MDS de T conté **447.860 cel·les visibles**, el **12,83%** del domini. La reducció correspon a una superfície opaca i agregada pel màxim. No representa transparència de capçades, intensitat de la flama ni condicions atmosfèriques; els marges petits dels perfils requereixen una lectura especialment prudent.
 
-### Cobertura abans de comptar visibilitat
+## Visibilitat al llarg de la carretera Vila-seca–la Pineda {#mostreig-punt-linia-area}
 
-Quan falta una elevació, no se sap si aquell lloc tapa una línia de visió. Les posicions afectades queden fora de la comparació i s'utilitza la mateixa zona calculable en tots els escenaris. El mar es representa com una superfície plana a 0 m. Així es pot comparar la proporció visible sense canviar inadvertidament què es compta.
+### Representar un recorregut amb observadors
 
->>>> «Ocult» significa que s'ha calculat una línia i hi ha un obstacle. «No calculat» significa que falta una condició per decidir-ho. Convertir totes dues situacions en zero faria semblar menys visible un lloc simplement perquè hi ha menys informació.
+Ara canvia la pregunta: **quines posicions del territori es veuen al llarg d'una carretera?** El recorregut segueix els eixos de la **TV-3148** del [Referencial Topogràfic Territorial de l'ICGC](https://www.icgc.cat/ca/Geoinformacio-i-mapes/Dades-i-productes/Geoinformacio-cartografica/Referencial-Topografic-Territorial). Va de la sortida de Vila-seca a l'enllaç amb la TV-3146, a l'entrada de la Pineda, i fa **3.652,272633 m**. Se'n prepara una trajectòria cartogràfica única per evitar sumar dues vegades les dues calçades.
 
-![Dos mapes disposats verticalment comparen la conca del centre i l'acumulació de vint-i-vuit mostres]({{ site.baseurl }}/assets/quarto/figures/visibilitat-petroquimica.qmd "A: visibilitat d'un únic centre. B: nombre de punts visibles entre les 28 mostres del sector. La gradació permet distingir veure'n una petita part de veure'n moltes posicions. Objectius a 30 m i receptors a 1,7 m sobre el terreny, amb el mateix àmbit calculable."){: data-figure-width-web="38.5rem" data-figure-width-pdf="91%" data-caption-source="Fonts: elevacions i límits ICGC; parcel·la de la Dirección General del Catastro. Càlcul a 25 m, representació a 100 m."}
+El recorregut es divideix en **37 intervals iguals de 98,710071 m**. A **Punts al llarg de la geometria**, `native:pointsalonglines`, s'introdueix aquest pas i un desplaçament inicial de **49,355036 m**. Cada punt C se situa al mig de la longitud que representa. La capa conserva les posicions originals i les coordenades de centre de cel·la utilitzades en el càlcul.
 
-::: table "Què canvia en ampliar les mostres o modificar l'altura?"
-| Representació | Altura d'objectiu | Altura de receptor | Proporció visible de l'àmbit calculable |
+![Mostreig de la TV-3148 amb intervals regulars i mig interval inicial]({{ site.baseurl }}/assets/captures/visibilitat-costa-carretera.png "Cada mostra representa 98,71 m del recorregut. La separació es mesura al llarg de la línia; no és un radi de visió. La suma dels 37 pesos recupera els 3.652,27 m analitzats."){: data-figure-width-web="42rem" data-figure-width-pdf="90%"}
+
+### Sumar les conques, no les superfícies totals
+
+**Viewshed calcula una conca per punt i execució.** Per comprendre el procediment es poden repetir individualment C05, C11 i C13. Per obtenir les 37 conques, QGIS ofereix **execució per lots**: una taula amb una fila per observador. Quan s'executa el lot, QGIS repeteix automàticament l'algorisme amb els paràmetres de cada fila; el lot no suma les conques per si sol.
+
+S'hi accedeix amb clic dret sobre **Viewshed → Execute as batch process…**, o des del botó equivalent del diàleg de l'algorisme. Les opcions d'emplenament automàtic permeten afegir les coordenades dels 37 punts a partir dels camps `x` i `y`, copiar els paràmetres comuns a tota la columna i generar una ruta de sortida diferent per fila. El [manual de QGIS descriu el funcionament dels lots](https://docs.qgis.org/3.44/en/docs/user_manual/processing/batch.html).
+
+En aquest lot MDT, les altures d'origen i destinació són **1,7 m sobre el terreny**. També són comuns l'MDT, banda 1, abast 0, curvatura 0,85714 i codis de resposta. Canvien **les coordenades i el fitxer de sortida**. Cal comprovar 37 files i 37 noms diferents abans d'executar-lo; escollir la capa de punts no fa que un paràmetre de coordenada individual recorri tots els seus objectes automàticament.
+
+Els 37 ràsters de referència, ja emmascarats amb Domini, són a `resultats/conques-carretera-mdt`. Si el lot produeix conques crues, es poden sumar primer i aplicar la màscara comuna al resultat: amb nom **Suma C bruta**, la fórmula és `"Domini@1" * "Suma C bruta@1"`. Dins del domini és equivalent a emmascarar cada conca abans de sumar-la.
+
+**Estadístiques de cel·la**, `native:cellstatistics`, amb estadística **Suma**, combina els 37 ràsters. Es pren una de les entrades com a referència de graella i es desactiva **Ignora NoData**. El resultat compta des de quantes posicions de carretera es veu cada destinació del model.
+
+![Conca acumulada de les trenta-set posicions de carretera amb MDT]({{ site.baseurl }}/assets/captures/visibilitat-costa-acumulada.png "Un valor 12 significa visió des de 12 dels 37 observadors, no 12 persones. El màxim observat és 33. El mar i les zones sense comparació queden fora del recompte; el gris dins del domini correspon a zero."){: data-figure-width-web="52rem" data-figure-width-pdf="100%"}
+
+>>> Amb pesos iguals, una cel·la amb 12 representa aproximadament $12\times98,710071=1.184,52$ m de recorregut amb visió: el **32,43%** dels 3.652,27 m analitzats. És una aproximació per mostreig, no una digitalització de tots els canvis de visió entre punts.
+
+La pregunta inversa, **des de quina part de la carretera es veu T**, es resol mostrejant la conca de la torxa als punts C amb `native:rastersampling`. Amb MDT, 34 de les 37 mostres donen 1: representen uns **3.356,14 m**. Aquesta longitud d'itinerari no s'obté sumant les àrees visibles de les 37 conques.
+
+>> El paquet inclou `reproduccio/lots_visibilitat.py` per executar tota la cadena des de QGIS: llegeix cada observador, crida `gdal:viewshed`, aplica les cotes i Domini i desa els recomptes i percentatges. És un guió d'automatització amb les mateixes operacions, no una introducció manual de punts. El guió de pràctica mostra tant l'emplenament del lot gràfic com la invocació d'aquesta cadena.
+
+## Visibilitat del recinte petroquímic {#cas-petroquimica}
+
+### Delimitar una coberta funcional
+
+La tercera pregunta és **des de quines parts del territori es veu algun element del polígon**. S'utilitza el polígon **1459998** del [Mapa de cobertes del sòl de Catalunya de 2024](https://www.icgc.cat/ca/Geoinformacio-i-mapes/Mapes/Mapa-de-cobertes-del-sol-de-Catalunya), classe 347, «Zones industrials, comercials i/o de serveis». L'ortofoto permet reconèixer l'àrea industrial seleccionada de **162,59 ha**.
+
+La geometria original representa una coberta del sòl, amb **19 forats** i entrants que separen parts de la instal·lació. Per tractar el sector com una unitat es delimita un **recinte petroquímic d'estudi** més compacte, que inclou patis i alguns espais entre peces industrials. La coberta original es manté a `dades/coberta-original.gpkg`; el recinte derivat, a `dades/poligon.gpkg`. La generalització no modifica els usos classificats pel MCSC.
+
+### Construir un recinte compacte amb dos buffers {#perimetre-estudi}
+
+Un **buffer positiu de n metres seguit d'un buffer negatiu de n metres sobre el resultat anterior** és un **tancament morfològic**. El primer expandeix la geometria; el segon en retreu el contorn. Les parts separades per passos estrets poden quedar unides i alguns buits es tanquen. La segona operació no desfà necessàriament la primera: els espais que s'han tancat poden romandre incorporats al recinte.
+
+La distància expressa l'escala dels espais que es volen incorporar. En un pas aproximadament paral·lel, una amplada inferior a **2n** pot arribar a tancar-se durant l'expansió; la forma i la connexió amb l'exterior també condicionen el resultat. Per això es comparen diversos valors sobre l'ortofoto abans d'escollir-ne un.
+
+A QGIS, l'eina **Àrea d'influència / Buffer**, `native:buffer`, es pot obrir des de **Vectorial → Geoprocessing Tools → Àrea d'influència…**. La traducció del submenú es conserva en anglès a la versió capturada. També és a **Geometria vectorial** dins de la caixa de Processament.
+
+![Menú Vectorial i submenú de geoprocessament oberts fins a Àrea d'influència]({{ site.baseurl }}/assets/captures/visibilitat-acces-menu-buffer.png "Els menús estan desplegats. Els requadres indiquen Vectorial i l'entrada Àrea d'influència, que correspon a native:buffer."){: data-figure-width-web="46rem" data-figure-width-pdf="100%"}
+
+![Àrea d'influència seleccionada dins de la caixa de Processament]({{ site.baseurl }}/assets/captures/visibilitat-acces-caixa-buffer.png "La caixa d'eines també dona accés a Àrea d'influència. Cal triar aquesta eina de geometria vectorial; altres algorismes amb buffer al nom tenen funcions diferents."){: data-figure-width-web="40rem" data-figure-width-pdf="90%"}
+
+La primera execució utilitza **Coberta original MCSC**, distància **+150 m**, **32 segments per quadrant**, unions arrodonides i dissolució activada. La segona execució utilitza **aquest intermedi**, distància **−150 m** i els mateixos altres paràmetres. El resultat es desa com **Recinte petroquímic d'estudi**.
+
+El paquet conserva l'intermedi a `dades/buffer-positiu.gpkg`.
+
+![Buffer positiu de cent cinquanta metres sobre la coberta original]({{ site.baseurl }}/assets/captures/visibilitat-costa-buffer-positiu.png "Primer s'expandeix la coberta original 150 m i es dissol el resultat. Els 32 segments per quadrant aproximen els arcs de les unions arrodonides."){: data-figure-width-web="42rem" data-figure-width-pdf="94%"}
+
+![Buffer negatiu de cent cinquanta metres sobre el buffer intermedi]({{ site.baseurl }}/assets/captures/visibilitat-costa-perimetre.png "El segon buffer s'aplica a Buffer intermedi +150 m. El signe negatiu retreu aquest resultat 150 m; no s'aplica de nou a la coberta original."){: data-figure-width-web="42rem" data-figure-width-pdf="94%"}
+
+::: table "Comparació de geometries per al mateix sector"
+| Mètode | Àrea, ha | Forats | Àrea afegida fora del contorn original, ha |
 | --- | ---: | ---: | ---: |
-| Centre | 30 m | 1,7 m | 15,8% |
-| Almenys una de 28 mostres | 30 m | 1,7 m | 19,8% |
-| Centre més alt | 60 m | 1,7 m | 23,6% |
-| Centre, receptors elevats | 30 m | 15 m | 31,7% |
+| Coberta original | 162,59 | 19 | 0 |
+| Tancament +50/−50 m | 181,33 | 5 | 4,85 |
+| Tancament +100/−100 m | 199,97 | 2 | 15,52 |
+| Tancament +150/−150 m | 222,94 | 0 | 38,50 |
+| Tancament +250/−250 m | 224,49 | 0 | 40,04 |
 :::
 
-Augmentar l'altura de l'objectiu o la del receptor amplia la superfície potencialment visible en aquests escenaris. Això no quantifica població exposada ni afirma que existeixin torres de 60 m o receptors a 15 m en totes les cel·les. Per estudiar edificis concrets caldria situar receptors, obtenir altures i diferenciar carrer, finestres i coberta. Tampoc no es pot traduir l'àrea visible directament en magnitud d'impacte paisatgístic.
+![Coberta original i quatre distàncies de tancament comparades a la mateixa escala]({{ site.baseurl }}/assets/quarto/figures/visibilitat-perimetre.qmd "Amb 50 i 100 m encara queden buits. El tancament de 150 m produeix el recinte compacte utilitzat en l'exercici; passar a 250 m incorpora poca superfície addicional. La línia discontínua conserva el contorn exterior original."){: data-figure-width-web="50rem" data-figure-width-pdf="100%" data-caption-source="Font: MCSC ICGC 2024; buffers natius de QGIS, amb 32 segments per quadrant."}
 
-### Com ampliar la prova amb el MDS
+S'adopta **150 m**, després de contrastar les formes amb l'ortofoto. El recinte té **222,94 ha** i incorpora **38,50 ha fora del contorn exterior original**. És una delimitació generalitzada d'estudi, no el límit oficial de tot el Polígon Sud. La discretització dels arcs retira també uns 3,77 m² de la font en punts de vora; el resultat no s'ha de tractar com una operació cadastral exacta. Les alternatives es conserven per poder revisar la decisió.
 
-Els controls anteriors corresponen al **MDT**. El MDS regional s'inclou com a entrada de contrast. Per comparar obstacles cal mantenir les altures absolutes dels extrems: un receptor a 1,7 m sobre el terreny no passa automàticament a estar a 1,7 m sobre una teulada. Si l'eina només admet una altura relativa constant sobre el ràster d'entrada, cal modificar el plantejament o seleccionar receptors amb correccions individuals; reutilitzar els mateixos dos nombres no garanteix una comparació controlada.
+### Mostrejar l'interior i conservar els elements destacats
 
-Tornar al perfil ajuda a interpretar els canvis: es pot triar un lloc visible, un d'ocult i un de proper al límit, i comprovar quin obstacle és determinant. Aquesta lectura connecta els colors del mapa amb el raonament de la primera figura.
+Una graella rectangular de **250 × 250 m** es retalla amb el **recinte petroquímic d'estudi** mitjançant `native:clip`. **Punt sobre la superfície**, `native:pointonsurface`, situa una mostra A dins de cada fragment. En resulten **57 fragments**.
+
+La suma dels pesos és **2.229.408,741960 m²**. La malla representa també els espais incorporats al recinte; els fragments de vora tenen menys pes que els quadrats complets.
+
+![Graella de dos-cents cinquanta metres per preparar el mostreig d'àrea]({{ site.baseurl }}/assets/captures/visibilitat-costa-area.png "La graella es retalla amb el recinte abans d'obtenir punts i pesos. Una mostra interior representa el seu fragment; no cal situar totes les mostres al perímetre."){: data-figure-width-web="42rem" data-figure-width-pdf="90%"}
+
+Les mostres A se situen **1 m sobre l'MDS local**. La cota absoluta resultant es manté també al càlcul MDT: cada fila té les seves altures `h_mdt_m` i `h_mds_m`. Així es mostreja una superfície amb altures diferents, no s'assigna una mateixa torre hipotètica a tot el recinte.
+
+![Mapa amb T, trenta-set punts de carretera i cinquanta-set mostres dins del recinte petroquímic]({{ site.baseurl }}/assets/quarto/figures/visibilitat-mostreig.qmd "La torxa és un objectiu singular, C mostreja posicions d'observació i A representa fragments del recinte. Les tres geometries responen preguntes diferents. Les cotes provenen dels models d'elevació i dels desplaçaments verticals definits a l'exercici."){: data-figure-width-web="52rem" data-figure-width-pdf="100%" data-caption-source="Fonts: ICGC, RTT i MCSC 2024; col·laboradors d'OpenStreetMap."}
+
+També aquí es repeteix el càlcul per lots: **57 execucions per superfície**, una per A. Amb MDT, l'altura d'origen varia segons `h_mdt_m`; amb MDS és 1 m i s'utilitza la cota mínima per mantenir els receptors a MDT + 1,7 m. El guió d'automatització del paquet encadena aquestes operacions, aplica Domini i acumula els pesos de cada fragment. Un lot de Viewshed, tot sol, només produeix les sortides individuals.
+
+Una graella regular pot passar per alt una estructura estreta i alta. Per això **T es conserva com a objectiu addicional**. El mapa d'alguna part visible combina «es veu almenys una de les 57 mostres A» **o** «es veu T». No s'atribueixen a la torxa els metres quadrats de tot un fragment.
+
+```text
+("Nombre A@1" > 0) OR ("Torxa T@1" = 1)
+```
+
+![Mapa del territori amb visió d'alguna mostra industrial, inclosa la torxa]({{ site.baseurl }}/assets/captures/visibilitat-costa-poligon.png "El verd identifica visió d'algun dels 57 objectius d'àrea o de T, amb MDS. La conca de T queda inclosa en aquest resultat. Veure almenys una part no significa veure tot el polígon ni conèixer-ne l'impacte paisatgístic."){: data-figure-width-web="52rem" data-figure-width-pdf="100%"}
+
+Amb MDS, el resultat conté **470.444 cel·les visibles**, el **13,48%** del domini comparable. Amb MDT en conté **2.977.704**, el **85,31%**. Són estimacions condicionades pels punts seleccionats, la superfície, les altures i la resolució; les estructures que no s'han mostrejat poden modificar-les.
+
+## Llegir conjuntament els resultats {#resultats-visibilitat-nord}
+
+La comparació controlada de carretera requereix una comprovació addicional. En **9 de les 37 posicions**, els ulls a MDT + 1,7 m quedarien sota la superfície opaca de l'MDS. Es conserven aquestes files com a no calculades per a aquest contrast, i es comparen els dos models amb les mateixes **28 posicions**. Representen **2.763,88 m**, el 75,68% del recorregut. El càlcul inicial MDT amb les 37 mostres continua disponible.
+
+![Comparació de la torxa, les posicions comunes de carretera i algun objectiu del polígon amb MDT i MDS]({{ site.baseurl }}/assets/quarto/figures/visibilitat-mdt-mds.qmd "T i G són mapes binaris. C representa la fracció de les 28 posicions comparables amb visió, no les 37 del primer exercici MDT. Els requadres expressen percentatge del territori calculable. El blanc conserva les zones no calculades."){: data-figure-width-web="48rem" data-figure-width-pdf="100%" data-caption-source="Fonts: elevacions ICGC 2021–2023, RTT i MCSC 2024, col·laboradors d'OpenStreetMap. Càlcul a 5 m; representació gràfica cada 25 m."}
+
+La fracció ponderada d'àrea és una altra sortida. Suma els metres quadrats dels fragments representats per mostres visibles i divideix pel pes total dels **57 fragments**. La torxa addicional intervé en la resposta «alguna part», però no s'hi afegeix un pes superficial inventat.
+
+::: table "Magnituds que no s'han de confondre"
+| Sortida | Valor | Què respon |
+| --- | --- | --- |
+| Conca de T | 0/1 | Es veu la torxa des d'aquesta posició? |
+| Carretera MDT, 37 conques | 0–37 | Quantes posicions de carretera veuen la destinació? |
+| Alguna part del polígon | 0/1 | Es veu T o almenys una mostra A? |
+| Àrea ponderada A | 0–100% | Quina fracció dels fragments representats té mostra visible? |
+:::
+
+`native:rastersampling` consulta cadascun dels mapes als receptors. R1–R4 corresponen a C05, C11, C13 i C37; R5, a **(352100;4552000) m**, queda fora del retall. La taula preparada és `resultats/receptors-resultats.gpkg`.
+
+![Matriu de la torxa, algun element del polígon i fracció d'àrea als cinc receptors]({{ site.baseurl }}/assets/quarto/figures/visibilitat-matriu-real.qmd "T i G es llegeixen com 0/1; A és un percentatge ponderat de les 57 mostres interiors. Amb MDS, R1 veu la torxa i, per tant, algun element industrial, encara que cap mostra A sigui visible. R5 conserva un guió, no zero."){: data-figure-width-web="52rem" data-figure-width-pdf="100%"}
+
+>>> **Llegir R1.** T = 1, G = 1 i A = 0% amb MDS és una combinació coherent. La torxa identificada es veu, però la graella interior no l'havia mostrejada. Aquesta diferència explica per què la representació geomètrica necessita coneixement del lloc, i per què «cap mostra visible» no sempre equival a «cap element visible».
 
 ## Comparar alternatives i revisar el disseny
 
@@ -292,7 +419,7 @@ Un indicador agregat pot resumir percentatge de receptors visibles o longitud d'
 
 La recomanació pot ser reduir una peça, modificar un límit o investigar una pantalla. Qualsevol mesura correctora també té efectes i manteniment: una plantació no és una barrera instantània ni immutable. La síntesi ha d'expressar quina millora s'espera, sota quines condicions i com es comprovaria.
 
-## Activitats
+## Activitats {#activitats-visibilitat}
 
 ### Tres lectures d'una mateixa matriu
 
@@ -306,11 +433,33 @@ Cal seleccionar un receptor i un punt verificat de la proposta, construir-ne el 
 
 ### MDT i MDS amb extrems controlats
 
-Cal comparar una representació de sòl i una de superfície, mantenint justificades les posicions absolutes dels extrems. El resultat ha de distingir l'efecte dels obstacles del que produiria situar l'observador damunt d'una coberta. No s'accepta una conclusió basada només en el recompte de cel·les visibles.
+Amb el paquet local, calcula T sobre MDT i compara'l amb MDS mantenint T a cota 152,311996 m i els receptors a MDT + 1,7 m. T és a (346892,5;4552507,5) m; les altures relatives són 131,369997 m sobre MDT i 1 m sobre MDS. Conserva els dos ràsters binaris, la cota mínima absoluta i la màscara Domini.
 
-### Mostreig de la instal·lació
+Comprova aproximadament 2.962.199 cel·les visibles amb MDT i 447.860 amb MDS, dins de les 3.490.455 cel·les comparables de 5 m. Explica l'efecte de l'agregació màxima i per què 130,4 m estimats d'estructura no són una mesura de la flama.
 
-Cal comparar un únic punt amb un conjunt justificat de punts de la proposta. La matriu receptor–punt ha de mostrar quines parts generen visibilitat addicional. El resultat serà una proposta de modificació geomètrica i la seva nova estimació d'exposició.
+### Acumulació i longitud de carretera
+
+Suma les 37 conques MDT i conserva un ràster de nombre d'observadors i un de percentatge. Cada mostra representa 98,710071 m d'un total de 3.652,272633 m. Interpreta una cel·la amb valor 12: calcula longitud representada i fracció del recorregut. Comprova que no has sumat hectàrees dels mapes individuals.
+
+Per a la visió de T amb MDS, cada mostra de la taula representa els mateixos **98,710071 m** de recorregut:
+
+::: table "Dades per interpretar la cobertura de carretera"
+| Estat en el contrast MDS | Nombre de mostres | Valor de T |
+| --- | ---: | --- |
+| Visible | 7 | 1 |
+| Ocult | 21 | 0 |
+| No calculat | 9 | Nul |
+:::
+
+Calcula 7/28 i explica per què expressa la fracció de les posicions comparables, no de tota la carretera. Si les nou desconegudes fossin ocultes o visibles, respectivament, quins límits donarien 7/37 i 16/37? Conserva les tres proporcions amb denominadors i interpretacions.
+
+### Mostreig d'àrea i objectius singulars
+
+Parteix de la coberta de 162,59 ha i prepara el recinte amb buffers +150 m i −150 m. Compara'n les 222,94 ha amb els resultats de 100 i 250 m. Explica per què la segona operació no recupera necessàriament la geometria original i justifica quins espais s'incorporen al recinte.
+
+Prepara els 57 fragments d'àrea i comprova que els pesos sumen 2.229.408,741960 m². Compara el nombre de mostres visibles amb el percentatge ponderat: un fragment de vora no representa el mateix que un quadrat complet de 62.500 m².
+
+Construeix «alguna part visible» com la unió de les mostres A i la torxa T. Amb MDS, comprova 470.444 cel·les visibles i que totes les 447.860 cel·les de la conca de T hi queden incloses. Interpreta R1, a (344977,5;4552147,5) m, amb T = 1, G = 1 i A = 0%. Explica què es perdria si s'utilitzés només la graella d'àrea.
 
 ### Exposició i valoració paisatgística
 
