@@ -19,7 +19,43 @@ de la propera preparació i comprovar-lo a la captura, amb selectors reals.
 L'autor permet ajornar la regeneració de les captures actuals. Els17bundles
 de r3 es conserven; el nou criteri s'aplicarà en preparar o regenerar captures.
 
-## Integració actual — pràctica municipal de Constantí
+## Integració actual — seqüència pedagògica de Constantí
+
+19bundles actius:12de `constanti-pedagogia.yml` al capítol4i7de
+`autocorrelacio-exemples.yml` al5. Context municipal també als accessos:
+recompte, centres i kernel visibles a la Caixa d'eines; menú Vectorial
+desplegat sobre Constantí. Cercle i el·lipse visibles al mapa amb124punts,
+centre dels registres, límit i ortofoto. Registres de450i3kW etiquetats
+en el capítol5; les potències dels vuit veïns es poden llegir en una ampliació.
+
+La sessió d'autocorrelació arrenca amb només les capes pertinents: llegenda
+local completa, sense totes les capes descriptives acumulades. Renda amb
+municipi/codi i xifres veïnes, sense lletres de cas. Tots els manifests
+x11/DPR1,català,sense avisos. Explorador amb GeoPackage desplegat.
+Font/controls i paquet: `context/dades/constanti-pedagogia.md`.
+
+## Integració anterior — autocorrelació, 5 d'octubre de 2026
+
+`autocorrelacio-exemples.yml` incorpora nou bundles `c5-…`: eines,
+renda-parametres, renda-resultat, renda-veins, constanti-dades,
+constanti-parametres, constanti-resultat, gi-parametres i gi-resultat.
+Explorador amb `autocorrelacio.gpkg` desplegat, català, x11/DPR1 i
+nou manifests sense avisos. Quatre figures analítiques QMD complementen
+les captures; C5 conté17imatges.
+
+S'ha revisat el selector del grup LISA perquè «Local Moran's I» també
+coincidia amb l'eina bivariant. L'accés mostra les tres eines i el peu
+identifica la univariant. Les caselles de normalització s'han comprovat
+visualment després de l'espera del diàleg: marcades a Moran, desmarcada a Gi*.
+No s'han retocat PNG, SVG ni manifests; les captures surten de la recepta.
+
+Processing ha executat els dos Moran i Gi* sobre les entrades corresponents.
+Els diàlegs acrediten configuració, no un recorregut manual clic a clic.
+Quadrants contrastats i Z de Gi* verificats amb fórmula independent.
+Casos de renda A/B/C i punt A de450kW desenvolupats al text i als peus.
+Controls, limitacions i paquet privat: `context/dades/autocorrelacio-exemples.md`.
+
+## Integració anterior — pràctica municipal de Constantí
 
 `punts-municipals.yml` afegeix cinc captures: `municipals-dades`,
 `municipals-camp`, `municipals-centre`, `municipals-resultat` i `municipals-ellipse`.

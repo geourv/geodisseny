@@ -1,0 +1,152 @@
+id: constanti-pedagogia
+title: Seqüència municipal de recompte, dispersió, densitat i Moran
+source_prompt: context/qgis/constanti-pedagogia.md
+plugins: [processing, HotSpotAnalysis_v3]
+runtime: {display_backend: x11, locale: ca}
+compat: {qgis: '>=3.44'}
+data:
+  - {id: constanti-dades, type: gpkg, path: constanti-pedagogia-20261005/constanti.gpkg}
+  - {id: constanti-orto, type: raster, path: constanti-pedagogia-20261005/ortofoto.tif}
+  - {id: constanti-orto-estil, type: file, path: constanti-pedagogia-20261005/ortofoto.qml}
+  - {id: constanti-kernel, type: raster, path: constanti-pedagogia-20261005/densitat-500.tif}
+  - {id: constanti-kernel-estil, type: file, path: constanti-pedagogia-20261005/densitat-500.qml}
+connections:
+  - {id: constanti-dades, type: gpkg, name: constanti.gpkg, path: tmp/dades-docents/qgis/constanti-pedagogia-20261005/constanti.gpkg}
+setup:
+  - {action: set_project_crs, auth_id: 'EPSG:25831'}
+  - {action: trigger_action, name: mActionRefresh, wait_ms: 300}
+  - {action: expand_tree_item, target: {class_name: QgsDockBrowserTreeView, item_text: GeoPackage}, wait_ms: 200}
+  - {action: expand_tree_item, target: {class_name: QgsDockBrowserTreeView, item_text: constanti.gpkg}, wait_ms: 300}
+  - {action: load_raster, path: tmp/dades-docents/qgis/constanti-pedagogia-20261005/ortofoto.tif, name: Ortofoto ICGC 2025}
+  - {action: load_vector, path: 'tmp/dades-docents/qgis/constanti-pedagogia-20261005/constanti.gpkg|layername=limit', name: Límit de Constantí}
+  - {action: load_vector, path: 'tmp/dades-docents/qgis/constanti-pedagogia-20261005/constanti.gpkg|layername=punts', name: Constantí · 124 punts}
+  - {action: zoom_to_layer, layer: Ortofoto ICGC 2025}
+  - {action: clear_message_bar}
+captures:
+  - id: dades
+    mode: window
+    target: {object_name: QgisApp}
+    output: {path: assets/captures/c4-constanti-dades.png, annotations_svg: assets/captures/c4-constanti-dades.annotations.svg, manifest: context/qgis/manifests/c4-constanti-dades.yml}
+  - id: recompte-caixa
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: trigger_action, name: "Caixa d'eines", wait_ms: 400}
+      - {action: select_tree_item, target: {object_name: algorithmTree, item_text: Compta}, wait_ms: 300}
+    drawings:
+      - {type: rect, target: {object_name: algorithmTree, item_text: Compta}, colour: information, margin: 0, shadow: false}
+    output: {path: assets/captures/c4-recompte-caixa.png, annotations_svg: assets/captures/c4-recompte-caixa.annotations.svg, manifest: context/qgis/manifests/c4-recompte-caixa.yml}
+  - id: recompte-parametres
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:native:countpointsinpolygon'}
+    steps:
+      - {action: load_vector, path: 'tmp/dades-docents/qgis/constanti-pedagogia-20261005/constanti.gpkg|layername=malla', name: Quadrats d’1 km²}
+      - action: open_processing_algorithm_dialog
+        algorithm: native:countpointsinpolygon
+        parameters: {POLYGONS: Quadrats d’1 km², POINTS: Constantí · 124 punts, FIELD: n_punts, OUTPUT: TEMPORARY_OUTPUT}
+        wait_ms: 500
+    drawings:
+      - {type: rect, target: {object_name: 'unaltracapturaProcessingParameter:POLYGONS'}, colour: information, margin: 0, shadow: false}
+      - {type: rect, target: {object_name: 'unaltracapturaProcessingParameter:POINTS'}, colour: example, margin: 0, shadow: false}
+    output: {path: assets/captures/c4-recompte-parametres.png, annotations_svg: assets/captures/c4-recompte-parametres.annotations.svg, manifest: context/qgis/manifests/c4-recompte-parametres.yml}
+  - id: recompte-resultat
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: close_transients}
+      - {action: trigger_action, name: "Caixa d'eines"}
+      - {action: set_layer_visible, layer: Quadrats d’1 km², visible: false}
+      - {action: set_layer_visible, layer: Constantí · 124 punts, visible: false}
+      - {action: load_vector, path: 'tmp/dades-docents/qgis/constanti-pedagogia-20261005/constanti.gpkg|layername=recompte', name: Recompte · 124 registres}
+      - {action: load_vector, path: 'tmp/dades-docents/qgis/constanti-pedagogia-20261005/constanti.gpkg|layername=punts', name: Punts sobre el recompte}
+      - {action: clear_message_bar}
+    output: {path: assets/captures/c4-recompte-resultat.png, annotations_svg: assets/captures/c4-recompte-resultat.annotations.svg, manifest: context/qgis/manifests/c4-recompte-resultat.yml}
+  - id: centres-menu
+    mode: screen
+    target: {object_name: QgisApp}
+    camera: {mode: crop, target: {object_name: 'unaltracapturaVisibleMenu:Coordenades mitjanes...'}, output_size: {width: 850, height: 390}}
+    steps:
+      - {action: set_layer_visible, layer: Recompte · 124 registres, visible: false}
+      - {action: set_layer_visible, layer: Punts sobre el recompte, visible: false}
+      - {action: set_layer_visible, layer: Constantí · 124 punts, visible: true}
+      - {action: open_menu_path, path: [Vectorial, Analysis Tools], active_text: Coordenades mitjanes, wait_ms: 500}
+    drawings:
+      - {type: rect, target: {object_name: 'unaltracapturaVisibleMenu:Coordenades mitjanes...'}, colour: information, margin: 0, shadow: false}
+    output: {path: assets/captures/c4-centres-menu.png, annotations_svg: assets/captures/c4-centres-menu.annotations.svg, manifest: context/qgis/manifests/c4-centres-menu.yml}
+  - id: centres-caixa
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: close_transients}
+      - {action: trigger_action, name: "Caixa d'eines", wait_ms: 300}
+      - {action: select_tree_item, target: {object_name: algorithmTree, item_text: Coordenades mitjanes}, wait_ms: 300}
+    drawings:
+      - {type: rect, target: {object_name: algorithmTree, item_text: Coordenades mitjanes}, colour: information, margin: 0, shadow: false}
+    output: {path: assets/captures/c4-centres-caixa.png, annotations_svg: assets/captures/c4-centres-caixa.annotations.svg, manifest: context/qgis/manifests/c4-centres-caixa.yml}
+  - id: centre-parametres
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:native:meancoordinates'}
+    steps:
+      - {action: load_vector, path: 'tmp/dades-docents/qgis/constanti-pedagogia-20261005/constanti.gpkg|layername=pesos', name: Pesos de Constantí}
+      - action: open_processing_algorithm_dialog
+        algorithm: native:meancoordinates
+        parameters: {INPUT: Pesos de Constantí, WEIGHT: w_mid, OUTPUT: TEMPORARY_OUTPUT}
+    drawings:
+      - {type: rect, target: {object_name: 'unaltracapturaProcessingParameter:WEIGHT'}, colour: information, margin: 0, shadow: false}
+    output: {path: assets/captures/c4-centre-parametres.png, annotations_svg: assets/captures/c4-centre-parametres.annotations.svg, manifest: context/qgis/manifests/c4-centre-parametres.yml}
+  - id: centres-resultat
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: close_transients}
+      - {action: trigger_action, name: "Caixa d'eines"}
+      - {action: set_layer_visible, layer: Constantí · 124 punts, visible: false}
+      - {action: load_vector, path: 'tmp/dades-docents/qgis/constanti-pedagogia-20261005/constanti.gpkg|layername=centres', name: Centres de Constantí}
+      - {action: clear_message_bar}
+    output: {path: assets/captures/c4-centres-resultat.png, annotations_svg: assets/captures/c4-centres-resultat.annotations.svg, manifest: context/qgis/manifests/c4-centres-resultat.yml}
+  - id: cercle-ellipse
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: set_layer_visible, layer: Pesos de Constantí, visible: false}
+      - {action: set_layer_visible, layer: Centres de Constantí, visible: false}
+      - {action: set_layer_visible, layer: Constantí · 124 punts, visible: true}
+      - {action: load_vector, path: 'tmp/dades-docents/qgis/constanti-pedagogia-20261005/constanti.gpkg|layername=centre_registres', name: Centre dels registres}
+      - {action: load_vector, path: 'tmp/dades-docents/qgis/constanti-pedagogia-20261005/constanti.gpkg|layername=cercle', name: Cercle · radi 2.001 m}
+      - {action: load_vector, path: 'tmp/dades-docents/qgis/constanti-pedagogia-20261005/constanti.gpkg|layername=ellipse', name: El·lipse · 1.934 i 510 m}
+      - {action: clear_message_bar}
+    output: {path: assets/captures/c4-cercle-ellipse.png, annotations_svg: assets/captures/c4-cercle-ellipse.annotations.svg, manifest: context/qgis/manifests/c4-cercle-ellipse.yml}
+  - id: kernel-caixa
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: set_layer_visible, layer: Cercle · radi 2.001 m, visible: false}
+      - {action: set_layer_visible, layer: El·lipse · 1.934 i 510 m, visible: false}
+      - {action: set_layer_visible, layer: Centre dels registres, visible: false}
+      - {action: trigger_action, name: "Caixa d'eines", wait_ms: 300}
+      - {action: select_tree_item, target: {object_name: algorithmTree, item_text: Mapa de calor}, wait_ms: 300}
+    drawings:
+      - {type: rect, target: {object_name: algorithmTree, item_text: Mapa de calor}, colour: information, margin: 0, shadow: false}
+    output: {path: assets/captures/c4-kernel-caixa.png, annotations_svg: assets/captures/c4-kernel-caixa.annotations.svg, manifest: context/qgis/manifests/c4-kernel-caixa.yml}
+  - id: kernel-parametres
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:qgis:heatmapkerneldensityestimation'}
+    steps:
+      - action: open_processing_algorithm_dialog
+        algorithm: qgis:heatmapkerneldensityestimation
+        parameters: {INPUT: Constantí · 124 punts, RADIUS: 500, PIXEL_SIZE: 100, KERNEL: 0, DECAY: 0, OUTPUT_VALUE: 0, OUTPUT: TEMPORARY_OUTPUT}
+    drawings:
+      - {type: rect, target: {object_name: 'unaltracapturaProcessingParameter:RADIUS'}, colour: information, margin: 0, shadow: false}
+      - {type: rect, target: {object_name: mCellXSpinBox}, colour: example, margin: 0, shadow: false}
+      - {type: rect, target: {object_name: mCellYSpinBox}, colour: example, margin: 0, shadow: false}
+    output: {path: assets/captures/c4-kernel-parametres.png, annotations_svg: assets/captures/c4-kernel-parametres.annotations.svg, manifest: context/qgis/manifests/c4-kernel-parametres.yml}
+  - id: kernel-resultat
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: close_transients}
+      - {action: trigger_action, name: "Caixa d'eines"}
+      - {action: load_raster, path: tmp/dades-docents/qgis/constanti-pedagogia-20261005/densitat-500.tif, name: Densitat · radi 500 m}
+      - {action: load_vector, path: 'tmp/dades-docents/qgis/constanti-pedagogia-20261005/constanti.gpkg|layername=punts', name: Punts sobre el kernel}
+      - {action: clear_message_bar}
+    output: {path: assets/captures/c4-kernel-resultat.png, annotations_svg: assets/captures/c4-kernel-resultat.annotations.svg, manifest: context/qgis/manifests/c4-kernel-resultat.yml}

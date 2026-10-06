@@ -1,11 +1,38 @@
 # Pràctiques territorials: dades, controls i reproducció
 
-Preparacions locals del 29 de setembre al 4 d'octubre de 2026. Els ZIP es lliuren per Moodle;
+Preparacions locals del 29 de setembre al 5 d'octubre de 2026. Els ZIP es lliuren per Moodle;
 no formen part dels assets del web. Les instruccions conceptuals i els passos
 QGIS són als capítols de connectivitat, visibilitat, estadística descriptiva i
 autocorrelació. Cal mantenir còpies originals de les dades en treballar-hi.
 
 ## Paquets
+
+- Seqüència pedagògica vigent de Constantí, capítols4i5:
+  `practica-constanti-pedagogia-20261005.zip`,65.545.875bytes,95fitxers,
+  SHA `ec2a5e4d1fa580a5633927e6ff642b85fc2d1863911dcce64e721ca8c1681ce2`.
+  Cinc projectes de4/4/6/4/5capes,19captures,GUIA9p/SOLUCIONS2p.
+  124registres per a descripció i98potències publicades per a Moran en kW.
+  Recompte, centres, cercle/el·lipse, kernel i permutacions; renda com a
+  transferència poligonal. Offline/readonly a una altra ruta, CRC i hashes
+  comprovats. Segellat per a revisió privada, no pujat a Moodle.
+  Detall: `context/dades/constanti-pedagogia.md`.
+
+- Històric r2 recuperat després de falta d'espai:
+  `practica-autocorrelacio-20261005-r2.zip`,27.941.923bytes,62fitxers,
+  SHA `62d79ef394a4a5ce3ec06a104b9bd8c23aaee49218fbb3613afd042f4768ca2f`.
+  La compressió completa s'ha repetit sobre el directori immutable validat;
+  l'intent parcial es conserva com a fallit. Versió anterior al nou fil
+  pedagògic, no paquet vigent.
+
+- Autocorrelació, nou paquet de C5 per a revisió:
+  `practica-autocorrelacio-20261005.zip`,27.939.328bytes,61fitxers,
+  SHA `86f6bcbb5443bbd9586b5a62ca27dff94b27150365e9c345c4c6176c5f4098f3`.
+  Dos projectes de4i5capes; renda151seccions, edificació i98potències
+  publicades de Constantí. Nou captures, GUIA10p/SOLUCIONS3p, fonts INE
+  conservades i31proves de variable/veïnatge. Portabilitat a una altra ruta,
+  readonly/offline, i límits dels PDF correctes. Paquet segellat per a
+  revisió privada, no pujat a Moodle. Fonts i controls a
+  `context/dades/autocorrelacio-exemples.md`.
 
 - Suplement municipal amb imputació explícita:
   `practica-punts-municipals-20261004.zip`,15.255.627bytes,30fitxers,
@@ -89,8 +116,9 @@ autocorrelació. Cal mantenir còpies originals de les dades en treballar-hi.
 - `demos-seccions-autoconsum-20260929.zip`: seccions completes amb atributs
   agregats, fonts censals/cadastrals emprades, ICAEN, centres i taula de resultats.
 
-Cada arxiu conté `MANIFEST.json`, amb paths del paquet, font al projecte,
-SHA-256 i mida. El manifest de fonts conserva URLs, edicions i transformacions.
+Els manifests (`MANIFEST.json` o `sealed.json`, segons la preparació) conserven
+paths del paquet, SHA-256 i mida. El manifest de fonts conserva URLs,
+edicions i transformacions.
 Els preparadors generals de `reproduccio/` esperen l'estructura del repositori
 geodisseny i les seves rutes privades; no són un instal·lador autònom del
 programari. Les activitats QGIS es poden fer obrint directament les dades.

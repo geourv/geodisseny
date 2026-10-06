@@ -1,0 +1,101 @@
+id: autocorrelacio-exemples
+title: Potències de Constantí i renda per seccions
+source_prompt: context/qgis/autocorrelacio-exemples.md
+plugins: [processing, HotSpotAnalysis_v3]
+runtime: {display_backend: x11, locale: ca}
+compat: {qgis: '>=3.44'}
+data:
+  - {id: c5-punts, type: gpkg, path: constanti-pedagogia-20261005/constanti.gpkg}
+  - {id: c5-renda, type: gpkg, path: constanti-pedagogia-20261005/renda.gpkg}
+  - {id: c5-renda-shp, type: vector, path: constanti-pedagogia-20261005/renda.shp}
+  - {id: c5-renda-shx, type: file, path: constanti-pedagogia-20261005/renda.shx}
+  - {id: c5-renda-dbf, type: file, path: constanti-pedagogia-20261005/renda.dbf}
+  - {id: c5-renda-prj, type: file, path: constanti-pedagogia-20261005/renda.prj}
+  - {id: c5-renda-cpg, type: file, path: constanti-pedagogia-20261005/renda.cpg}
+  - {id: c5-renda-qml, type: file, path: constanti-pedagogia-20261005/renda.qml}
+  - {id: c5-orto, type: raster, path: constanti-pedagogia-20261005/ortofoto.tif}
+  - {id: c5-orto-estil, type: file, path: constanti-pedagogia-20261005/ortofoto.qml}
+connections:
+  - {id: c5-punts, type: gpkg, name: constanti.gpkg, path: tmp/dades-docents/qgis/constanti-pedagogia-20261005/constanti.gpkg}
+  - {id: c5-renda, type: gpkg, name: renda.gpkg, path: tmp/dades-docents/qgis/constanti-pedagogia-20261005/renda.gpkg}
+setup:
+  - {action: set_project_crs, auth_id: 'EPSG:25831'}
+  - {action: trigger_action, name: mActionRefresh, wait_ms: 300}
+  - {action: expand_tree_item, target: {class_name: QgsDockBrowserTreeView, item_text: GeoPackage}, wait_ms: 200}
+  - {action: expand_tree_item, target: {class_name: QgsDockBrowserTreeView, item_text: constanti.gpkg}, wait_ms: 300}
+  - {action: load_raster, path: tmp/dades-docents/qgis/constanti-pedagogia-20261005/ortofoto.tif, name: Ortofoto ICGC 2025}
+  - {action: load_vector, path: 'tmp/dades-docents/qgis/constanti-pedagogia-20261005/constanti.gpkg|layername=limit', name: Límit de Constantí}
+  - {action: load_vector, path: 'tmp/dades-docents/qgis/constanti-pedagogia-20261005/constanti.gpkg|layername=coneguda', name: Potències · 98 punts}
+  - {action: load_vector, path: 'tmp/dades-docents/qgis/constanti-pedagogia-20261005/constanti.gpkg|layername=veins', name: Vuit veïns dels registres}
+  - {action: zoom_to_layer, layer: Ortofoto ICGC 2025}
+  - {action: clear_message_bar}
+captures:
+  - id: punts-dades
+    mode: window
+    target: {object_name: QgisApp}
+    output: {path: assets/captures/c5-punts-dades.png, annotations_svg: assets/captures/c5-punts-dades.annotations.svg, manifest: context/qgis/manifests/c5-punts-dades.yml}
+  - id: punts-veins
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: load_vector, path: 'tmp/dades-docents/qgis/constanti-pedagogia-20261005/constanti.gpkg|layername=veins_industrial', name: 450 kW i veïns}
+      - {action: zoom_to_layer, layer: 450 kW i veïns, scale: 1.45}
+    output: {path: assets/captures/c5-punts-veins.png, annotations_svg: assets/captures/c5-punts-veins.annotations.svg, manifest: context/qgis/manifests/c5-punts-veins.yml}
+  - id: punts-eines
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: set_layer_visible, layer: 450 kW i veïns, visible: false}
+      - {action: zoom_to_layer, layer: Ortofoto ICGC 2025}
+      - {action: trigger_action, name: "Caixa d'eines", wait_ms: 300}
+      - {action: expand_tree_item, target: {object_name: algorithmTree, item_text: LISA}, wait_ms: 300}
+      - {action: select_tree_item, target: {object_name: algorithmTree, item_text: LISA}, wait_ms: 300}
+    drawings:
+      - {type: rect, target: {object_name: algorithmTree, item_text: LISA}, colour: information, margin: 0, shadow: false}
+    output: {path: assets/captures/c5-punts-eines.png, annotations_svg: assets/captures/c5-punts-eines.annotations.svg, manifest: context/qgis/manifests/c5-punts-eines.yml}
+  - id: punts-parametres
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:hotspotanalysis:moranlocal'}
+    steps:
+      - action: open_processing_algorithm_dialog
+        algorithm: hotspotanalysis:moranlocal
+        parameters: {INPUT: Potències · 98 punts, FIELD: POT_KW, WEIGHTS_TYPE: 1, KNN_K: 8, OPTIMIZE: false, BINARY_WEIGHTS: true, DISTANCE_METRIC: 0, ROW_STANDARDIZE: true, PERMUTATIONS: 9999, TWO_TAILED: false, OUTPUT: TEMPORARY_OUTPUT}
+        wait_ms: 800
+    drawings:
+      - {type: rect, target: {object_name: 'unaltracapturaProcessingParameter:FIELD'}, colour: information, margin: 0, shadow: false}
+      - {type: rect, target: {object_name: 'unaltracapturaProcessingParameter:KNN_K'}, colour: example, margin: 0, shadow: false}
+      - {type: rect, target: {class_name: QCheckBox, text: Row standardization}, colour: information, margin: 0, shadow: false}
+    output: {path: assets/captures/c5-punts-parametres.png, annotations_svg: assets/captures/c5-punts-parametres.annotations.svg, manifest: context/qgis/manifests/c5-punts-parametres.yml}
+  - id: punts-resultat
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: close_transients}
+      - {action: trigger_action, name: "Caixa d'eines"}
+      - {action: set_layer_visible, layer: Potències · 98 punts, visible: false}
+      - {action: load_vector, path: 'tmp/dades-docents/qgis/constanti-pedagogia-20261005/constanti.gpkg|layername=moran', name: Moran · potències en kW}
+      - {action: clear_message_bar}
+    output: {path: assets/captures/c5-punts-resultat.png, annotations_svg: assets/captures/c5-punts-resultat.annotations.svg, manifest: context/qgis/manifests/c5-punts-resultat.yml}
+  - id: renda-resultat
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: set_layer_visible, layer: Moran · potències en kW, visible: false}
+      - {action: set_layer_visible, layer: Vuit veïns dels registres, visible: false}
+      - {action: set_layer_visible, layer: Límit de Constantí, visible: false}
+      - {action: set_layer_visible, layer: Ortofoto ICGC 2025, visible: false}
+      - {action: expand_tree_item, target: {class_name: QgsDockBrowserTreeView, item_text: renda.gpkg}, wait_ms: 300}
+      - {action: load_vector, path: 'tmp/dades-docents/qgis/constanti-pedagogia-20261005/renda.gpkg|layername=renda_lisa', name: Renda · Moran local nominal}
+      - {action: zoom_to_layer, layer: Renda · Moran local nominal, scale: 1.08}
+      - {action: clear_message_bar}
+    output: {path: assets/captures/c5-renda-resultat.png, annotations_svg: assets/captures/c5-renda-resultat.annotations.svg, manifest: context/qgis/manifests/c5-renda-resultat.yml}
+  - id: renda-veins
+    mode: window
+    target: {object_name: QgisApp}
+    steps:
+      - {action: set_layer_visible, layer: Renda · Moran local nominal, visible: false}
+      - {action: load_vector, path: tmp/dades-docents/qgis/constanti-pedagogia-20261005/renda.shp, name: Renda 2023 · 151 seccions}
+      - {action: load_vector, path: 'tmp/dades-docents/qgis/constanti-pedagogia-20261005/renda.gpkg|layername=renda_veins', name: Tarragona 07013 i veïnes}
+      - {action: zoom_to_layer, layer: Tarragona 07013 i veïnes, scale: 1.1}
+      - {action: clear_message_bar}
+    output: {path: assets/captures/c5-renda-veins.png, annotations_svg: assets/captures/c5-renda-veins.annotations.svg, manifest: context/qgis/manifests/c5-renda-veins.yml}

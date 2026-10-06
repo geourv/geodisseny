@@ -1,0 +1,55 @@
+---
+title: Antiguitat de l’edificació i veïnatge
+lang: ca
+ref: figura-autocorrelacio-edat
+format: gfm
+execute-dir: project
+execute: {echo: false, warning: false}
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  inputs: [context/inputs/autocorrelacio-exemples.json, context/inputs/seccions-tarragones.geojson]
+  outputs: [assets/img/generated/autocorrelacio-edat.svg]
+---
+
+```{python}
+from pathlib import Path
+import json
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.path import Path as MPath
+from matplotlib.patches import PathPatch,Patch
+from matplotlib.colors import BoundaryNorm,ListedColormap
+from matplotlib.cm import ScalarMappable
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root==root.parent:raise RuntimeError('Projecte absent')
+    root=root.parent
+d=json.loads((root/'context/inputs/autocorrelacio-exemples.json').read_text())
+features=json.loads((root/'context/inputs/seccions-tarragones.geojson').read_text())['features']
+rows=d['local']['age-queen'];bycode={r['key']:r for r in rows}
+result=next(r for r in d['trials'] if r['id']=='age-queen')
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':18,'svg.fonttype':'none','svg.hashsalt':'autocorrelacio-edat'})
+fig,axes=plt.subplots(1,2,figsize=(11.5,5.8),layout='constrained')
+cmap=ListedColormap(['#f6edcc','#c8d7ad','#84b4a1','#428990','#275775']);norm=BoundaryNorm([0,30,45,60,90,180],5)
+for f in features:
+    key=f['properties']['cusec'];g=f['geometry'];parts=g['coordinates'] if g['type']=='MultiPolygon' else [g['coordinates']]
+    for part in parts:
+        vertices=[];codes=[]
+        for ring in part:
+            vertices.extend(np.asarray(ring)/1000);codes.extend([MPath.MOVETO]+[MPath.LINETO]*(len(ring)-2)+[MPath.CLOSEPOLY])
+        axes[0].add_patch(PathPatch(MPath(vertices,codes),facecolor=cmap(norm(bycode[key]['value'])) if key in bycode else '#dddddd',
+                                   edgecolor='white',lw=.45))
+axes[0].autoscale_view();axes[0].set(aspect='equal',xticks=[],yticks=[],title='Mediana d’edat dels edificis')
+for spine in axes[0].spines.values():spine.set_visible(False)
+axes[0].plot([362,367],[4548,4548],color='#223644',lw=3);axes[0].text(364.5,4547.5,'5 km',ha='center',va='top',fontsize=16)
+bar=fig.colorbar(ScalarMappable(norm=norm,cmap=cmap),ax=axes[0],orientation='horizontal',fraction=.065,pad=.035,ticks=[0,30,60,90,180])
+bar.set_label('Anys d’antiguitat respecte de 2026',fontsize=17)
+ax=axes[1];z=np.array([r['z'] for r in rows]);lag=np.array([r['lag_z'] for r in rows])
+ax.scatter(z,lag,color='#3c8695',s=30,alpha=.8);xs=np.array([z.min()-.2,z.max()+.3]);ax.plot(xs,result['I']*xs,color='#b52e45',lw=2)
+ax.axhline(0,color='#89949a',lw=.8);ax.axvline(0,color='#89949a',lw=.8)
+ax.set(title='150 seccions · I = 0,355',xlabel='Edat de la secció\n(estandarditzada)',ylabel='Mitjana de les veïnes\n(estandarditzada)')
+fig.legend(handles=[Patch(facecolor='#dddddd',label='Una secció amb menys de 10 edificis datats: exclosa')],
+           loc='outside lower center',frameon=False,fontsize=16)
+fig.savefig(root/'assets/img/generated/autocorrelacio-edat.svg',facecolor='white',metadata={'Date':None});plt.close(fig)
+```

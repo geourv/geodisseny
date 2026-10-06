@@ -1,7 +1,7 @@
 ---
 layout: manual-chapter
 title: Autocorrelació espacial
-description: Matrius de pesos, associació global i local, inferència i sensibilitat per estudiar atributs d'unitats territorials.
+description: "Potències veïnes a Constantí: comparació d'atributs, I de Moran, permutacions i aplicació a seccions censals."
 lang: ca
 ref: dependencia-espacial
 profiles: [unaltremanual]
@@ -12,274 +12,356 @@ part: Continguts
 manual_references: true
 ---
 
-Els barris veïns tenen valors semblants? Els valors alts d'una variable es concentren en determinats sectors o apareixen barrejats amb valors baixos? L'autocorrelació espacial ajuda a respondre aquestes preguntes comparant cada valor amb els del seu entorn. Cal començar amb una variable per unitat i una regla que indiqui quines unitats són veïnes.
+Un mapa de punts pot mostrar dues concentracions i, alhora, dues distribucions molt diferents de l'atribut que representa. Un grup pot reunir moltes instal·lacions petites; un altre, menys instal·lacions però amb més potència. Comptar i descriure la dispersió no respon encara si els punts pròxims tenen valors semblants.
 
-Dos mapes poden contenir els mateixos valors i presentar disposicions molt diferents: en un, els valors alts poden estar junts; en l'altre, poden alternar-se amb els baixos. La mitjana de la variable no distingeix aquestes situacions. Per descriure-les s'han de conservar les relacions entre les unitats i comparar els valors de cada lloc amb els dels seus veïns.
+Per estudiar aquesta semblança es compara el valor de cada observació amb els dels seus veïns. Després es pregunta si la disposició és més marcada que la que s'obtindria en repartir els mateixos valors d'una altra manera. Aquest contrast aporta evidència sobre l'associació espacial definida, sense explicar per si sol les causes del fenomen.
 
->>>>> En acabar el capítol, cal poder interpretar associació espacial amb unitats, veïnatge i inferència explícits.
+>>>>> En acabar el capítol, cal poder interpretar i contrastar la semblança entre valors veïns.
 >>>>>
->>>>> - Definir una unitat territorial i una variable amb suport coherent.
->>>>> - Justificar una matriu de pesos i comprovar-ne les connexions.
->>>>> - Relacionar Moran global, Moran local i Getis–Ord amb preguntes diferents.
->>>>> - Interpretar permutacions, comparacions múltiples i sensibilitat.
->>>>> - Explicar per què no s'interpolen àrees parcel·làries com temperatures puntuals.
+>>>>> - Distingir concentració de localitzacions i semblança dels atributs.
+>>>>> - Calcular una mitjana dels veïns amb una regla de proximitat explícita.
+>>>>> - Explicar què resumeix la I de Moran i què afegeixen les permutacions.
+>>>>> - Llegir els valors propis, els veïns i el resultat d'un contrast local a QGIS.
+>>>>> - Traslladar el procediment de punts a polígons sense confondre les unitats.
 
-## Reconèixer semblances entre veïns {#intuicio-autocorrelacio}
+## Les potències properes a Constantí {#intuicio-autocorrelacio}
 
-En la correlació ordinària es comparen dues variables observades en els mateixos casos, com altitud i temperatura. En l'**autocorrelació espacial** es compara una variable amb els valors d'aquesta mateixa variable en llocs relacionats. El prefix «auto» remet a aquesta repetició de la variable; «espacial» indica que la relació entre casos depèn d'un veïnatge {% cite moran1950notes %}.
+<span id="moran-punts-constanti"></span>
 
-Pensem en quatre peces consecutives al llarg d'un camí. Si les àrees són 1, 1, 4 i 4 ha, les dues peces petites estan juntes i les dues grans també. Si són 1, 4, 1 i 4 ha, els extrems s'alternen. Els dos conjunts tenen la mateixa mitjana, 2,5 ha, i la mateixa dispersió. La diferència només es pot reconèixer després d'introduir l'ordre espacial i qui és veí de qui.
+El [capítol anterior](../punts-densitat/#preparacio-punts-qgis) descrivia 124 registres de Constantí. Ara s'utilitzen els **98 que publiquen una xifra de potència**, entre 2 i 450 kW. Els 26 valors absents queden fora d'aquest càlcul; no s'hi utilitzen els pesos imputats. Cada observació continua sent un consumidor associat del registre ICAEN, no la petjada física dels panells.
 
-Autocorrelació positiva
-: Predomini de relacions entre valors semblants, respecte de la variable i el veïnatge definits.
+El mapa dona una primera pista. Al nucli hi ha molts valors petits; al polígon industrial occidental, diverses potències grans. Es trien dos registres concrets, **450 kW** i **3 kW**, etiquetats a QGIS. No són noms d'instal·lacions: són els valors que permeten recuperar les dues observacions del càlcul.
 
-Autocorrelació negativa
-: Predomini de contrastos entre veïns, com l'alternança de valors alts i baixos.
+![Potències publicades de Constantí amb els registres de 450 i 3 kW i les seves connexions]({{ site.baseurl }}/assets/captures/c5-punts-dades.png "Els colors distingeixen intervals de potència dels 98 registres. Les línies connecten els punts de 450 i 3 kW amb els vuit veïns utilitzats en el càlcul. La proximitat dels cercles i la semblança dels seus colors són dues informacions diferents."){: data-figure-width-web="50rem" data-figure-width-pdf="100%" data-caption-source="ICAEN, extracció 28/09/2026; [ortofoto ICGC 2025](https://geoserveis.icgc.cat/servei/catalunya/orto-territorial/wms), retall WMS a 8 m/píxel; límit ICGC. [Condicions ICGC](https://www.icgc.cat/condicions)."}
 
-Associació global
-: Resum únic per al conjunt de l'àmbit. Pot amagar diferències entre sectors.
+L'**autocorrelació espacial** estudia si els valors d'una variable s'assemblen entre llocs relacionats. «Auto» indica que es compara la mateixa variable —aquí, potència—; «espacial», que les relacions depenen del veïnatge. Un kernel intens indicava molts registres pròxims. Aquí s'examina si les **potències** d'aquells registres s'assemblen, una qüestió diferent {% cite moran1950notes %}.
 
-Associació local
-: Relació d'una unitat amb el seu entorn. Permet investigar on apareixen agrupacions o contrastos.
+## Comparar un valor amb els dels veïns {#matriu-pesos}
 
-![Dos mapes esquemàtics amb quatre polígons en cadena doblegada: agrupació 1,1,4,4 i alternança 1,4,1,4]({{ site.baseurl }}/assets/quarto/figures/moran-patrons.qmd "Amb contactes A–B–C–D i pesos normalitzats per files, l'agrupació dona I = 0,5 i l'alternança I = −1. Les dues mitjanes són 2,5 ha. Geometria esquemàtica sense escala, no proporcional a les àrees fictícies atribuïdes; el signe encara no estableix significació."){: data-figure-width-web="41rem" data-figure-width-pdf="94%"}
+Per començar s'ha de concretar «a prop». En aquest cas, cada registre es compara amb els **vuit punts més propers** en distància recta, sobre EPSG:25831. Aquesta regla s'anomena **kNN**, veïns més propers, amb $k=8$. La potència d'un punt no intervé a triar-los: es trien per distància i després se'n consulten els valors.
 
-La figura presenta un patró extremament petit per poder reconstruir el càlcul. En un mapa real poden coexistir zones agrupades, transicions i casos aïllats. El resum global serà útil per començar, però la lectura territorial necessitarà tornar a les unitats i als seus veïns. Tampoc s'ha d'equiparar agrupació d'atributs amb concentració de punts: aquí cada peça té un valor i una posició fixada.
+### El registre de 450 kW i el seu entorn
 
-## Construir el veïnatge {#matriu-pesos}
+Els vuit veïns del registre de 450 kW tenen **100, 100, 60, 30, 100, 20, 60 i 50 kW**. Tots es poden veure a la captura ampliada. La seva suma és 520 kW i la mitjana és **65 kW**.
 
-La **matriu de pesos** $W$ és una taula de relacions: una fila per unitat i una columna per unitat. El valor $w_{ij}$ indica quant contribueix la unitat $j$ a l'entorn de la unitat $i$. Un zero significa que aquella relació no entra al càlcul. Els pesos poden representar contacte, distància o altres connexions justificades {% cite moran1950notes anselin1995lisa %}.
+![Potència del registre de 450 kW i dels seus vuit veïns sobre l'ortofoto]({{ site.baseurl }}/assets/captures/c5-punts-veins.png "Les línies identifiquen quins punts entren en la comparació. Cada veí està etiquetat amb la seva potència: les vuit xifres sumen 520 kW. El valor de 450 kW no entra a la seva pròpia mitjana veïna. La ubicació és la publicada per al consumidor associat, sense atribuir exactitud de coberta a l'ortofoto."){: data-figure-width-web="50rem" data-figure-width-pdf="100%" data-caption-source="ICAEN i ICGC; mateix conjunt de 98 registres, ampliat només per llegir-ne els valors."}
 
-La contigüitat **rook** exigeix compartir una vora; **queen** també admet contacte en un vèrtex. Una distància fixa relaciona centroides dins d'un radi; els $k$ veïns més propers garanteixen un nombre de relacions sortints, però poden connectar peces molt allunyades en zones disperses. L'elecció altera la pregunta i s'ha de comparar amb la geometria real.
+Per al registre de **3 kW** del nucli, els veïns tenen **4, 4, 3, 10, 3, 3, 3 i 3 kW**. Sumen 33 kW: la mitjana és **4,125 kW**. El contrast entre els dos entorns ja es pot explicar amb xifres comprensibles, abans de calcular cap índex.
 
-![Dues definicions de veïnatge al voltant de la mateixa unitat sintètica]({{ site.baseurl }}/assets/quarto/figures/veinatges.qmd "La mateixa unitat té quatre veïns si s'exigeix contacte per vora i vuit si també s'admet contacte per vèrtex. Esquema sintètic per interpretar W; no és un mapa de significació."){: data-figure-width-web="38rem" data-figure-width-pdf="85%"}
-
-### Diagonal, normalització i asimetria
-
-En molts càlculs de Moran es fixa $w_{ii}=0$ per evitar que una unitat sigui veïna d'ella mateixa. La Gi* incorpora la pròpia unitat segons la seva definició. Reutilitzar sense revisar una matriu amb la diagonal equivocada pot canviar l'estadístic que es creu estar calculant.
-
-La normalització per files divideix cada pes per la suma de la seva fila. El **retard espacial** passa a ser una mitjana ponderada dels veïns quan la fila té suma positiva. Una matriu binària de contacte pot ser simètrica i deixar de ser-ho numèricament després de normalitzar si les unitats tenen nombres de veïns diferents.
-
-### Matriu de pesos d'una cadena de quatre àrees {#exemple-matriu}
-
-En la cadena A–B–C–D, A només té B com a veí i D només té C. B té A i C; C té B i D. Amb pesos binaris, cada relació valdria 1. En normalitzar per files, els dos veïns d'una peça interior reben 1/2 cadascun, mentre que el veí únic d'un extrem rep 1. La taula representa exactament aquesta regla.
-
-::: table "Matriu W de la cadena fictícia, normalitzada per files"
-| Unitat de la fila | A | B | C | D | Suma |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| A | 0 | 1 | 0 | 0 | 1 |
-| B | 0,5 | 0 | 0,5 | 0 | 1 |
-| C | 0 | 0,5 | 0 | 0,5 | 1 |
-| D | 0 | 0 | 1 | 0 | 1 |
+::: table "Dos registres concrets i les seves mitjanes veïnes"
+| Registre visible al mapa | Potència pròpia | Suma dels vuit veïns | Mitjana dels veïns |
+| --- | ---: | ---: | ---: |
+| Polígon industrial · 450 kW | 450 kW | 520 kW | 65 kW |
+| Nucli · 3 kW | 3 kW | 33 kW | 4,125 kW |
 :::
 
-Llegir la fila B vol dir «la meitat del valor d'A més la meitat del de C». Si els valors són 1, 1, 4 i 4 ha, el retard espacial de B és $0,5\times1+0,5\times4=2,5$ ha. El d'A és 1 ha perquè el seu únic veí és B. «Retard» és el terme estadístic: aquí no significa cap retard temporal, sinó un resum dels valors a les unitats relacionades.
+La mitjana dels **98 valors del conjunt** és **28,27 kW**. El registre industrial i la seva mitjana veïna la superen. El registre del nucli i el seu entorn hi queden per sota. «Valors semblants» no significa idèntics: es comparen magnituds respecte d'una referència comuna.
 
->> La fila indica **de qui rep informació** cada unitat. Comprovar que les files sumin 1 ajuda a verificar aquesta normalització, però no demostra que els veïns siguin territorialment adequats. Una matriu pot estar ben calculada i representar una relació poc pertinent.
+### Pesos espacials i taula de relacions
 
-Els $k$ veïns també poden generar relacions asimètriques: que A tingui B entre els seus més propers no implica la relació inversa. Cal decidir si es conserva aquesta direcció o se simetritza amb una regla explícita. La simetrització modifica el nombre de relacions i no és una operació neutra.
+<span id="exemple-matriu"></span><span id="diagonal-normalització-i-asimetria"></span>
 
-### Illes i qualitat geomètrica
+Fer la mitjana dels vuit veïns equival a donar-ne a cadascun **1/8 de contribució**. Aquests són els **pesos espacials**. No són els pesos de potència del centre ponderat: aquí expressen quines observacions intervenen en la comparació i quant contribueix cadascuna.
 
-Una unitat sense veïns pot reflectir una illa real, un polígon separat o un error de geometria. No s'ha d'eliminar ni connectar automàticament per fer desaparèixer un avís. Cal documentar el seu tractament i saber com l'eina l'incorpora als denominadors i a la inferència.
+Es pot conservar aquesta regla en una taula amb una fila i una columna per registre. Una relació no utilitzada rep 0; cadascun dels vuit veïns rep 1/8. La suma de cada fila és 1. Aquesta taula és la **matriu de pesos**, habitualment $W$. La diagonal és zero perquè no es compara un punt amb ell mateix.
 
-La matriu ha de tenir una clau estable que relacioni files amb observacions. Si s'ordena la taula o se'n retira un registre sense reconstruir la correspondència, els pesos poden acabar relacionant valors equivocats. Comprovacions útils són nombres de veïns, distàncies màximes, components connectats, diagonal i una inspecció de casos coneguts.
+El resum de valors veïns rep el nom tècnic de **retard espacial** (*spatial lag*). Aquí no és cap retard de temps: és exactament la mitjana veïna que s'ha calculat, 65 o 4,125 kW. El nom es fa servir després a la documentació dels programes, però el significat continua sent aquella operació.
 
-## Autocorrelació global {#moran-global}
+<span id="illes-i-qualitat-geomètrica"></span><span id="distància-empats-i-valors-absents"></span><span id="exemple-del-paper-de-w"></span>
 
-La I de Moran relaciona desviacions respecte de la mitjana amb les dels veïns. Si $z_i=x_i-\bar{x}$ i $S_0=\sum_i\sum_jw_{ij}$:
+Vuit veïns no defineix un radi constant. Al nucli dens s'arriba aviat a vuit punts; en sectors dispersos, el vincle més llarg del conjunt arriba a **2.566 m**. La regla també pot ser asimètrica: que un punt triï un altre no obliga que el segon triï el primer. A més, hi ha 94 posicions diferents per als 98 registres: els coincidents es conserven i es comproven els empats, en lloc d'eliminar observacions.
+
+## Què resumeix la I de Moran? {#moran-global}
+
+El mateix càlcul es repeteix per a tots els punts. Un valor propi i una mitjana veïna superiors a 28,27 contribueixen a una associació de valors alts. Quan tots dos són inferiors, contribueixen a una associació de valors baixos. Quan un és alt i l'altre baix, aporten un contrast. La **I de Moran** reuneix aquestes contribucions en un únic nombre {% cite moran1950notes %}.
+
+### Diferències respecte de la mitjana
+
+Es resta la mateixa mitjana general al valor propi i a la mitjana dels veïns. Així, «per sobre» es representa amb signe positiu i «per sota», amb signe negatiu. Per al punt de 450 kW les diferències són aproximadament **+421,73** i **+36,73 kW**; per al de 3 kW, **−25,27** i **−24,14 kW**.
+
+Multiplicar les dues diferències dona una contribució positiva en tots dos casos: positiu per positiu o negatiu per negatiu. Si les diferències tinguessin signes contraris, el producte seria negatiu. Aquest mecanisme explica els signes de l'índex, sense haver de pressuposar què significa la lletra $z$.
+
+::: table "Lectura dels signes, amb una mateixa referència de 28,27 kW"
+| Valor propi | Mitjana veïna | Producte de les diferències | Contribució |
+| --- | --- | --- | --- |
+| Per sobre | Per sobre | Positiu | Semblança de valors alts |
+| Per sota | Per sota | Positiu | Semblança de valors baixos |
+| Per sobre | Per sota | Negatiu | Contrast alt–baix |
+| Per sota | Per sobre | Negatiu | Contrast baix–alt |
+:::
+
+### Resultat del conjunt i fórmula general
+
+La I de les potències publicades és **0,192**, amb vuit veïns i mitjanes per fila. Hi predominen contribucions de semblança entre veïns. No significa que un 19,2% dels punts sigui igual ni és un percentatge explicat per la proximitat. Tampoc no identifica on es concentra l'associació: per això es conserva el mapa i es torna als casos locals.
+
+La fórmula suma els productes de diferències i els divideix per una mesura de la variació del conjunt. Si $x_i$ és la potència d'un punt i $\bar{x}$ la mitjana, la diferència $z_i=x_i-\bar{x}$ és el seu **valor centrat**, en kW: és l'operació que ja s'ha calculat amb xifres. $w_{ij}$ és el pes del veí $j$ i $S_0$, la suma de tots els pesos:
 
 $$
-I=\frac{n}{S_0}\,\frac{\sum_i\sum_jw_{ij}z_i z_j}{\sum_i z_i^2}.
+I=\frac{n}{S_0}
+\frac{\sum_i\sum_j w_{ij}z_i z_j}{\sum_i z_i^2}.
 \label{eq:moran}
 $$
 
-Els productes són positius quan valors alts estan relacionats amb alts o baixos amb baixos, i negatius quan es relacionen desviacions de signe contrari. L'estadístic requereix variació en la variable i una matriu vàlida. Els seus límits depenen de $W$; no convé interpretar-lo com una correlació ordinària sempre acotada exactament entre −1 i 1.
+Aquí hi ha $n=98$ punts i $S_0=98$, perquè cadascuna de les 98 files suma 1. Les unitats kW² es cancel·len entre numerador i denominador: I no té unitats. Una I positiva resumeix semblances, i una de negativa, contrastos, sota la regla triada. Els límits exactes depenen dels pesos: no s'ha d'assumir que sempre sigui una correlació ordinària entre −1 i 1.
 
-Sota una referència habitual de permutació amb diagonal nul·la, l'esperança és $-1/(n-1)$, no exactament zero. El contrast compara el valor observat amb una distribució de referència adequada. Un resultat significatiu no identifica la causa de l'estructura, i un resultat global poc marcat no descarta configuracions locals diferents que es compensin.
+## Contrastar el patró amb potències barrejades {#permutacions}
 
-### Exemple del paper de W
+<span id="permutacions-i-comparacions-múltiples"></span><span id="un-contrast-que-es-pot-enumerar-sencer"></span>
 
-Quatre peces en cadena tenen valors 1, 1, 4 i 4. Si cada peça es relaciona amb les adjacents de la cadena i els pesos es normalitzen per files, la I és 0,5. Si totes es relacionen igualment amb totes les altres, la I és −1/3. En aquest últim cas la relació completa imposa un valor degenerat que no distingeix la configuració espacial: no és un contrast útil del patró.
+Veure potències semblants juntes és una observació. Per valorar si el patró destaca sota una referència concreta es manté **el mateix mapa de posicions i els mateixos veïns**, i es reparteixen les 98 potències a l'atzar entre aquelles posicions. No s'afegeixen punts ni es canvia cap valor: només on s'assigna cadascun en aquesta prova.
 
-El primer resultat es pot reconstruir sense programari estadístic. La mitjana és 2,5, de manera que els valors centrats $z$ són −1,5, −1,5, +1,5 i +1,5. Aplicar la matriu als valors centrats dona −1,5, 0, 0 i +1,5. Es multiplica després el valor centrat de cada unitat pel seu retard centrat.
+![Potències observades i una distribució construïda barrejant els mateixos valors]({{ site.baseurl }}/assets/quarto/figures/constanti-moran.qmd "A l'esquerra hi ha les potències publicades. A la dreta, els mateixos 98 valors s'han assignat a l'atzar a les mateixes posicions: és una prova construïda, no una altra edició del registre. La mitjana i la suma no canvien; la semblança espacial sí. La I passa de 0,192 a −0,016 en aquesta barreja."){: data-figure-width-web="49rem" data-figure-width-pdf="100%" data-caption-source="ICAEN i ortofoto ICGC 2025. Permutació docent amb llavor 20261005; càlcul amb libpysal/esda i representació pròpia."}
 
-::: table "Reconstrucció de Moran global en la cadena 1, 1, 4, 4"
-| Unitat | Valor x, ha | Valor centrat z | Retard de z | Producte z × retard | z² |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| A | 1 | −1,5 | −1,5 | 2,25 | 2,25 |
-| B | 1 | −1,5 | 0 | 0 | 2,25 |
-| C | 4 | 1,5 | 0 | 0 | 2,25 |
-| D | 4 | 1,5 | 1,5 | 2,25 | 2,25 |
-| Suma | 10 | 0 | 0 | 4,5 | 9 |
+Una sola barreja no representa totes les disposicions possibles. Es repeteix **9.999 vegades** i es calcula una I en cadascuna. L'histograma mostra amb quina freqüència apareixen els diferents valors de I quan la potència no conserva la seva associació amb el lloc original.
+
+![Histograma de les I de 9999 permutacions i línia de la I observada]({{ site.baseurl }}/assets/quarto/figures/constanti-permutacions.qmd "Cada barra reuneix barreges que donen una I dins del mateix interval. La línia vermella situa el valor observat, 0,192. Només tres de les 9.999 barreges arriben a aquest valor o el superen: el resultat observat és poc freqüent sota aquesta referència."){: data-figure-width-web="35.5rem" data-figure-width-pdf="95%" data-caption-source="Mateixos 98 registres de Constantí i kNN8. Potències en kW, sense transformar; 9.999 permutacions, llavor 20261005. Elaboració pròpia."}
+
+El contrast pregunta per una associació **positiva** almenys tan marcada com l'observada. Amb la correcció habitual d'una unitat, el resultat és $(3+1)/(9999+1)=0{,}0004$. Aquest **pseudo-p de permutació** és una freqüència de referència del procediment. No és la probabilitat que una explicació industrial sigui certa ni la proporció de registres erronis.
+
+El resultat aporta evidència contra aquella assignació aleatòria dels atributs: **les potències i les posicions estan relacionades sota el veïnatge triat**. No prova interacció física entre instal·lacions, ni que una d'elles causi la potència de la veïna. Tipus de consumidor, usos del territori i estructura del registre podrien ajudar a investigar per què es produeix el patró.
+
+>> La prova conserva les posicions. Per tant, no contrasta si «hi ha massa punts junts» respecte d'una distribució de localitzacions. Contrasta la disposició de **l'atribut potència** en aquests punts. Aquesta és la diferència respecte del recompte i el kernel del capítol anterior.
+
+## Semblances i contrastos locals {#indicadors-locals}
+
+El nombre global no mostra si tots els sectors contribueixen igual. **Moran local** examina cada valor propi i el seu entorn. Recuperem els dos registres: el de 450 kW té una mitjana veïna de 65 kW, tots dos per sobre de la mitjana general; el de 3 kW té una mitjana veïna de 4,125 kW, tots dos per sota. Són configuracions **alta–alta** i **baixa–baixa** {% cite anselin1995lisa %}.
+
+### Configuració no és encara significació
+
+La documentació abrevia les quatre configuracions com **HH, LL, HL i LH**, per *high* i *low*. Les lletres són noms de categories, no identificadors de punts: HH significa valor alt amb veïns alts. Es distingeixen també els valors alts en entorns baixos i els baixos en entorns alts.
+
+Per destacar una observació es necessita un contrast local. En la referència conservada, el pseudo-p del registre de 450 kW és **0,0244** i el del de 3 kW, **0,0027**. Tots dos passen el llindar nominal de 0,05. Un altre registre pot tenir potència elevada i no passar-lo, perquè també intervenen els veïns i la distribució de referència.
+
+El contrast global i els locals no són intercanviables. Als locals condicionals es conserva el valor propi i es reorganitzen els altres valors segons el procediment. Si es fan molts contrastos, augmenta l'oportunitat de destacar casos per atzar; per això un mapa nominal es considera exploratori i es contrasta amb un tractament de comparacions múltiples.
+
+### Calcular Moran local a QGIS {#procediment-autocorrelacio}
+
+<span id="veïnatge-i-càlcul-a-qgis"></span>
+
+La [preparació del complement i les biblioteques](#preparacio-pysal) permet executar l'eina des de la interfície. Obre **Procés → Caixa d'eines → Hotspot Analysis → LISA** i tria **Local Moran's I**, l'eina univariant. La bivariant que apareix al costat compara dos atributs diferents.
+
+![Grup LISA desplegat sobre les potències de Constantí]({{ site.baseurl }}/assets/captures/c5-punts-eines.png "El grup reuneix tres eines. Local Moran's I analitza una variable: la potència publicada dels punts. El mapa de fons i l'Explorador corresponen al mateix conjunt municipal."){: data-figure-width-web="50rem" data-figure-width-pdf="100%"}
+
+1. Obre `05-moran.qgz`, o carrega **coneguda** des de `constanti.gpkg`: ha de tenir 98 punts simples, amb **POT_KW** numèric.
+2. A Local Moran's I, tria **POT_KW**, **K-Nearest Neighbors** i **K = 8**. Mantén distància euclidiana i pesos binaris.
+3. Activa **Row standardization**: cadascun dels vuit veïns contribueix 1/8. Deixa desactivada l'optimització de distància.
+4. Estableix **9.999 permutacions**. Deixa **Two-tailed p-value** desactivat per conservar la convenció del complement.
+5. Desa la sortida en un GeoPackage de treball, amb nom `moran_potencia`. Comprova 98 objectes i els atributs originals conservats.
+
+![Diàleg de Moran local amb POT_KW i vuit veïns]({{ site.baseurl }}/assets/captures/c5-punts-parametres.png "POT_KW indica què es compara; kNN8, amb qui. La normalització marcada expressa una mitjana dels veïns. Les permutacions i la sortida es revisen a la part inferior del diàleg."){: data-figure-width-web="38rem" data-figure-width-pdf="86%"}
+
+La sortida conté **p_value** i **q_value**. `q_value` és el quadrant, no un ajust FDR: 1=HH, 2=LH, 3=LL, 4=HL. A **Propietats → Simbologia → Categoritzat**, aquesta expressió separa els casos no destacats abans de consultar-ne el quadrant:
+
+```sql
+CASE
+  WHEN "p_value" >= 0.05 THEN 'No destacada'
+  WHEN "q_value" = 1 THEN 'Alta amb veins alts'
+  WHEN "q_value" = 2 THEN 'Baixa amb veins alts'
+  WHEN "q_value" = 3 THEN 'Baixa amb veins baixos'
+  WHEN "q_value" = 4 THEN 'Alta amb veins baixos'
+END
+```
+
+<span id="llegir-el-resultat-local"></span><span id="resultat-global-i-contrast-local"></span>
+
+![Moran local sobre potències en kW amb els dos registres etiquetats]({{ site.baseurl }}/assets/captures/c5-punts-resultat.png "Vermell: potència alta amb veïns alts; blau fosc: baixa amb veïns baixos. El registre de 450 kW i el de 3 kW es poden recuperar pel seu valor. Gris significa no destacat amb el contrast nominal de 0,05, no absència demostrada de relació. Mateixes potències en kW que als càlculs anteriors."){: data-figure-width-web="50rem" data-figure-width-pdf="100%" data-caption-source="ICAEN i ICGC. Local Moran's I, Hotspot Analysis 4.0.0; 9.999 permutacions, sense correcció múltiple al mapa nominal."}
+
+L'execució QGIS conservada destaca **8 alta–alta, 45 baixa–baixa, 1 alta–baixa i 3 baixa–alta**; 41 no passen el llindar nominal. El diàleg no ofereix llavor: una altra execució pot canviar algun cas prop del tall. Es conserva la taula retornada, no només la imatge. El càlcul de referència amb llavor explícita confirma els quadrants i permet aplicar Benjamini–Hochberg a 0,05; els dos registres comentats es mantenen destacats.
+
+## Comprovar les decisions de l'anàlisi {#sensibilitat}
+
+### Què canvia amb el veïnatge o la variable?
+
+Una regla diferent representa un altre entorn. Amb vuit veïns els punts dispersos es connecten a distàncies més grans que els del nucli. Un radi fix de 500 m deixa sis punts sense veïns, i un d'1.000 m, tres. No s'han eliminat silenciosament per obtenir un mapa més net. La regla inclusiva que manté tots els empatats al tall també es conserva com a prova de sensibilitat.
+
+L'exemple principal ha utilitzat **kW sense transformar** perquè el valor propi i la mitjana dels veïns es puguin llegir directament. Les potències grans tenen molta influència. Si s'analitza $\ln(1+\mathrm{kW})$, les distàncies numèriques entre valors es comprimeixen i la I amb kNN8 passa a **0,632**. Aquest resultat correspon a una variable transformada; no és un índex «més correcte» ni una justificació per substituir els kW sense explicar-ho.
+
+### Quina conclusió és defensable?
+
+La conclusió ha d'identificar **98 potències publicades de Constantí**, veïnatge de vuit punts, I observada i contrast amb potències permutades. S'ha observat una associació positiva i una disposició poc freqüent sota aquella referència. Per atribuir-la a causes concretes es necessitaria comprovar tipus de consumidors, usos i altres dades.
+
+No s'ha demostrat que una zona sigui adequada per a noves instal·lacions. Tampoc que les observacions sense potència segueixin el mateix patró. Reconèixer què aporta la prova i què encara queda per investigar és part del resultat {% cite wasserstein2016pvalues %}.
+
+## Transferència a seccions censals: renda {#renda-seccions}
+
+<span id="preparació-de-la-capa"></span>
+
+La mateixa pregunta es pot formular amb polígons: **les seccions de renda alta tendeixen a tenir veïnes de renda alta?** Ara cada observació és una secció censal i la variable, renda neta mitjana anual per persona, en euros. El veïnatge pot definir-se pel contacte entre les seccions, en lloc dels vuit punts més propers.
+
+L'[Atlas de distribució de renda de les llars de l'INE](https://www.ine.es/jaxiT3/Tabla.htm?t=31223&L=0) aporta l'any **2023**, publicat el 21/10/2025. La població de referència és d'**1/1/2024**, coherent amb les seccions ICGC/Idescat d'aquella data. La unió per codi INE de deu dígits produeix **151 seccions i 151 rendes numèriques** al Tarragonès. La renda no és salari ni una observació de cada família {% cite ine2025atlas ine2025metodologia icgc2024seccions %}.
+
+### Contactes i mitjana veïna {#renda-retard}
+
+S'utilitza **Queen**: dues seccions són veïnes si comparteixen una vora o un vèrtex. **Rook** exigiria una vora. En normalitzar cada fila es dona el mateix pes als veïns d'una secció: si en té tres, cadascun contribueix 1/3; si en té quatre, 1/4.
+
+La secció **07013 de Tarragona**, codi complet `4314807013`, té **23.239 €/persona**. Les seves tres veïnes tenen **24.068, 23.235 i 17.187 €/persona**. El retard —la mitjana que ja s'ha après amb punts— és **21.496,67 €/persona**. Valor propi i entorn superen la mitjana simple dels 151 indicadors, **15.220,36 €/persona**.
+
+![Secció 07013 de Tarragona i rendes de les tres veïnes]({{ site.baseurl }}/assets/captures/c5-renda-veins.png "La secció estudiada està destacada en blau fosc. Les tres seccions en blau clar comparteixen contacte Queen; cadascuna contribueix un terç a la mitjana veïna. Els valors etiquetats es corresponen amb el càlcul de 21.496,67 €/persona."){: data-figure-width-web="50rem" data-figure-width-pdf="100%" data-caption-source="INE, renda 2023; ICGC/Idescat, seccions 2024. Representació amb QGIS."}
+
+### Resultat global i lectura del mapa
+
+La I de renda és **0,572**, i el pseudo-p positiu, **0,0001**, amb 9.999 permutacions i llavor 20261005. El patró positiu es manté amb Rook, 0,579, i amb quatre centroides més propers, 0,569. Ampliar a vuit centroides dona 0,485: l'entorn que es resumeix ha canviat. Les unitats externes a la comarca no entren en aquestes matrius.
+
+![Mapa de renda i relació de cada secció amb la mitjana de les veïnes]({{ site.baseurl }}/assets/quarto/figures/renda-moran.qmd "Cada punt del gràfic és una secció, no una persona. Els eixos conserven euros anuals per persona. Les línies de la mitjana separen rendes pròpies i veïnes altes o baixes; els casos estan identificats pel municipi i la secció. El resultat global resumeix una continuïtat de valors que no exigeix que totes les rendes siguin iguals."){: data-figure-width-web="49rem" data-figure-width-pdf="100%" data-caption-source="[INE, ADRH 2023](https://www.ine.es/jaxiT3/Tabla.htm?t=31223&L=0), CC BY 4.0; seccions ICGC/Idescat 2024, CC BY 4.0. Elaboració pròpia."}
+
+La secció **08012 de Tarragona** té **7.379 €/persona** i mitjana veïna de **10.228,25**; és una associació baixa–baixa destacada. La secció **01002 de Constantí** té una renda pròpia semblant, **7.744**, però una mitjana veïna menys extrema, **13.453,50**, i no passa el contrast local. El valor propi baix no basta per obtenir el mateix resultat.
+
+::: table "Casos de renda: valor propi, entorn i contrast de referència"
+| Municipi i secció | Renda pròpia | Mitjana veïna | Lectura local |
+| --- | ---: | ---: | --- |
+| Tarragona 07013 | 23.239 | 21.496,67 | Alta amb veïnes altes; p = 0,0049 |
+| Tarragona 08012 | 7.379 | 10.228,25 | Baixa amb veïnes baixes; p = 0,0010 |
+| Constantí 01002 | 7.744 | 13.453,50 | No destacada; p = 0,2527 |
 :::
 
-Hi ha $n=4$ unitats i $S_0=4$ perquè cadascuna de les quatre files suma 1. Per tant, $I=(4/4)\times(4,5/9)=0,5$. En l'alternança, cada valor centrat té un retard de signe contrari i de la mateixa magnitud: els productes sumen −9 i $I=-1$. Les unitats d'àrea al quadrat es cancel·len entre numerador i denominador; I és adimensional.
+Les xifres són €/persona. La mitjana utilitzada per Moran dona la mateixa contribució a cada secció; no estima la renda mitjana de tots els habitants, que necessitaria el denominador poblacional. Aquest canvi d'unitat és tan important com el canvi d'eina.
 
-L'exemple mostra que no s'ha modificat cap superfície, sinó la definició de relació. La sensibilitat a $W$ no és un error a ocultar, sinó part de la interpretació. Cal justificar quina matriu representa millor la pregunta i què aporta una de contrast.
+### Reproducció amb QGIS
 
-La C de Geary utilitza diferències quadràtiques entre valors relacionats, amb una sensibilitat distinta a configuracions locals {% cite geary1954contiguity %}. Comparar estadístics pot enriquir la diagnosi, però no s'han de seleccionar només els que donin la resposta esperada.
+Carrega **renda.shp** del paquet d'autocorrelació per seccions. Aquesta versió del complement llegeix Queen des d'un Shapefile; conserva junts `.shp`, `.shx`, `.dbf`, `.prj` i `.cpg`. Exporta el conjunt complet i mantén-lo sense filtres, perquè geometries i atributs han de tenir els mateixos casos.
 
-## Indicadors locals i significació {#indicadors-locals}
+Local Moran's I utilitza **renda**, **Queen's Contiguity**, pesos binaris, normalització per files i 9.999 permutacions. L'optimització de distància i l'opció bilateral queden desactivades. Els camps de radi i KNN no decideixen els contactes quan s'ha triat Queen. El complement força Queen amb polígons; no s'atribueixen a aquell diàleg els contrastos Rook o kNN calculats separadament.
 
-Els indicadors locals estudien la relació d'una observació amb el seu entorn. **LISA** designa una família de mesures d'associació espacial local; la I de Moran local n'és un cas. La combinació entre signe del valor centrat, signe del retard espacial i resultat inferencial permet distingir clústers i atípics {% cite anselin1995lisa %}.
+![Mapa local de renda amb les seccions de lectura identificades]({{ site.baseurl }}/assets/captures/c5-renda-resultat.png "La renda alta i baixa es compara amb la de les veïnes. Tarragona 07013 i 08012 queden destacades; Constantí 01002 no. Aquest és el mapa nominal de QGIS, sense correcció múltiple: gris no significa que la renda sigui mitjana ni que no hi hagi cap relació."){: data-figure-width-web="50rem" data-figure-width-pdf="100%" data-caption-source="INE i ICGC/Idescat; Hotspot Analysis 4.0.0. La taula de referència amb llavor explícita es conserva separada de l'execució del complement."}
 
-::: table "Lectura de les configuracions locals de Moran"
-| Configuració | Valor de la unitat i entorn | Interpretació condicionada al contrast |
-| --- | --- | --- |
-| HH | Alt amb veïns relativament alts | Nucli d'associació local de valors elevats |
-| LL | Baix amb veïns relativament baixos | Nucli d'associació local de valors baixos |
-| HL | Alt amb entorn relativament baix | Atípic espacial alt |
-| LH | Baix amb entorn relativament alt | Atípic espacial baix |
-:::
+<span id="resum-global-i-sensibilitat-del-veïnatge"></span><span id="moran-global-qgis"></span>
 
-Alt i baix es defineixen respecte de la mitjana del conjunt, no respecte d'un llindar territorial universal. HH combina dues desviacions positives; LL, dues de negatives. Una unitat HH no queda qualificada com a apta per a cap actuació. El mapa conserva també els casos no destacats i els no calculables.
+El complement retorna indicadors locals, sense una eina separada de Moran global. Si es necessita reproduir aquest resum global de renda, selecciona el Shapefile complet i executa el bloc a l'editor de la consola de Python de QGIS:
 
->>> Si la mitjana del conjunt és 5 ha, una peça de 8 ha té valor centrat positiu. Amb veïns de 7, 8 i 9 ha, el retard també és positiu i la configuració és alta–alta. Amb veïns d'1, 2 i 3 ha seria alta–baixa. Encara falta el contrast per decidir si es destaca com a associació local; els quadrants no són, per si mateixos, una prova de significació.
+```python
+import numpy as np
+from libpysal.weights import Queen
+from esda import Moran
+capa = iface.activeLayer()
+ruta = capa.source().split('|')[0]
+assert ruta.lower().endswith('.shp')
+y = np.array([f['renda'] for f in capa.getFeatures()], dtype=float)
+w = Queen.from_shapefile(ruta)
+assert len(y) == w.n == 151 and not w.islands
+np.random.seed(20261005)
+m = Moran(y, w, transformation='r', permutations=9999)
+p = (1 + np.count_nonzero(m.sim >= m.I)) / 10000
+print(round(m.I, 4), p)
+```
 
-Un mapa local es llegeix en tres passos. Primer es consulta el valor de la unitat. Després es revisa el resum dels veïns que determina el quadrant. Finalment es consulta si el resultat passa el criteri inferencial adoptat. Saltar directament al color HH o LL fa perdre el significat de la classificació i pot ocultar que un mateix resultat depèn molt del radi de veïnatge.
+Els controls són **0.5719 i 0.0001**. És una comprovació addicional amb les biblioteques que també utilitza el complement, no una exigència de programar tots els passos de la pràctica.
 
-La Gi* de Getis–Ord estudia concentracions de valors alts o baixos en un entorn que inclou la unitat segons la convenció del mètode {% cite getis1992analysis ord1995local %}. No classifica de la mateixa manera els atípics HL i LH. Dos mapes poden diferir perquè responen preguntes diferents, encara que utilitzin una definició de proximitat semblant.
+## Relacionar renda, edificació i autoconsum {#associacio-bivariant}
 
-### Permutacions i comparacions múltiples
+<span id="cas-seccions"></span><span id="autocorrelacio-antiguitat"></span><span id="un-exemple-numèric-de-canvi-de-denominador"></span><span id="ampliació-els-residus-de-la-regressió"></span>
 
-La inferència per permutacions genera una distribució de referència. En una implementació local condicional es fixa el valor de la unitat i es reorganitzen els altres valors segons el procediment. Cal conservar nombre de permutacions, llavor, sentit del contrast i tractament de pesos. Els p-valors de motors diferents no són comparables si canvia aquesta convenció.
+Les tres fonts es poden reunir **per secció**, després de comprovar codis, dates i geometries. Però fan observacions diferents. La renda és un indicador dels habitants; l'edat és un resum d'edificis cadastrals; la potència s'agrega des de consumidors associats. Compartir un polígon no estableix una correspondència individual entre una família, un edifici i una instal·lació.
 
-Amb $B$ permutacions, una forma habitual de pseudo-p utilitza una correcció d'una unitat, de manera que la resolució mínima és $1/(B+1)$. Si hi ha molts contrastos, aquesta resolució pot ser insuficient per a una correcció exigent. No obtenir observacions significatives pot reflectir el disseny de la prova, no només el patró.
+La pregunta s'ha d'escriure abans de combinar camps. «Les rendes s'assemblen entre veïnes?» utilitza una sola variable i el veïnatge. «Les seccions de renda alta tenen més autoconsum?» compara dues variables **dins de la mateixa secció**. «Les seccions de renda alta estan envoltades de seccions amb més autoconsum?» compara renda pròpia i potència **veïna**: és associació espacial bivariant. Cap resultat d'una d'aquestes preguntes respon automàticament les altres.
 
-### Un contrast que es pot enumerar sencer
+Hi ha, a més, una decisió sobre què significa «més autoconsum». A la secció **02001 de Constantí** es coneixen **2.577 kW**, amb **939 edificis funcionals** i **964.262,85 m² de petjada**. Dividir pel nombre produeix **274,44 kW per 100 edificis**; dividir per petjada, **2,67 kW per 1.000 m²**. El numerador és el mateix, però les dues ràtios comparen quantitats diferents. La petjada no és coberta solar disponible ni superfície construïda de totes les plantes.
 
-Amb dos valors 1 i dos valors 4 només hi ha sis ordres diferents sobre la cadena. Es pot calcular la I de tots mantenint fixa W. La referència d'aquest exemple considera aquests sis ordres igualment probables i pregunta, en un contrast unilateral, per valors de I tan grans com l'observat o més.
+La renda és de 2023, les seccions de 2024 i el feed cadastral, del 21/08/2026; la data efectiva ICAEN no s'ha verificat. Les possibles relacions són exploratòries, amb aquestes limitacions. No s'ha establert una explicació individual o causal renda–instal·lació. Els resultats d'autocorrelació de punts i renda sí que responen preguntes delimitades i contrastades; no necessiten una regressió addicional per tenir sentit.
 
-::: table "Totes les disposicions diferents del petit exemple de permutació"
-| Valors en l'ordre A–B–C–D | I de Moran |
-| --- | ---: |
-| 1, 1, 4, 4 | 0,5 |
-| 1, 4, 1, 4 | −1 |
-| 1, 4, 4, 1 | −0,5 |
-| 4, 1, 1, 4 | −0,5 |
-| 4, 1, 4, 1 | −1 |
-| 4, 4, 1, 1 | 0,5 |
-:::
+## Altres aplicacions i límits {#altres-aplicacions}
 
-Dos dels sis ordres tenen I igual a 0,5 i cap la supera. La probabilitat exacta d'obtenir un valor almenys tan gran sota aquesta referència és $2/6=1/3$. Tot i la semblança visual de la primera cadena, aquest exemple no dona evidència contra la referència al nivell 0,05. Amb només quatre unitats, la distribució possible és molt grollera. Aquí s'han enumerat tots els ordres; la correcció de Montecarlo descrita abans correspon al cas en què només se'n mostreja un nombre finit.
+<span id="columbus"></span><span id="hotspots-estadístics-amb-getisord-gi"></span>
 
->>>> Un p-valor petit no és la mida de l'agrupació ni la seva importància territorial. Un mapa local necessita magnituds, veïnatge i criteri de contrast; decidir on actuar exigeix, a més, objectius i coneixement del procés {% cite wasserstein2016pvalues %}.
+El conjunt **Columbus**, de 49 barris d'Ohio de 1980, és un exemple de llibre d'Anselin: `CRIME` expressa robatoris per 1.000 llars, no el nombre brut. La I Queen de referència és aproximadament 0,500. La lectura és la mateixa que amb renda: una variable per barri, veïns definits i contrast declarat. La font bibliogràfica permet practicar amb un altre fenomen sense inventar observacions {% cite anselin1988spatial %}.
 
-Quan es fan molts contrastos locals, el problema canvia d'escala. Amb 100 contrastos vàlids sota hipòtesis nul·les certes i nivell 0,05, el nombre esperat de rebuigs falsos és aproximadament 5; no significa que cada mapa contingui exactament cinc errors. Les proves locals poden ser dependents. Una correcció de comparacions múltiples tracta aquest problema conjunt i s'ha d'escollir i documentar segons el procediment.
+**Getis–Ord Gi*** és una alternativa local que estudia sumes de valors en un entorn que inclou la pròpia unitat. Pot destacar concentracions altes o baixes, però no distingeix els atípics alt–baix i baix–alt de la mateixa manera que Moran. Abans de comparar colors es revisa què resumeix cada estadístic i quina prova s'ha fet; el color d'un kernel, per si sol, no és aquest contrast {% cite getis1992analysis ord1995local %}.
 
-El quadern de GeoDa d'Anselin aplica Moran local a donacions per habitant dels departaments francesos del conjunt Guerry. Mostra com canvien les localitzacions destacades en variar el llindar, les permutacions i els criteris de comparacions múltiples {% cite anselin2020workbook %}. La lliçó transferible és comparar configuracions, no cercar el llindar que produeixi més colors.
+<span id="suport-agrari"></span><span id="no-interpolar-arees"></span><span id="aportació-a-les-alternatives-territorials"></span>
 
-## Un exemple clàssic: els barris de Columbus {#columbus}
+També es pot preguntar si parcel·les grans tendeixen a tenir parcel·les grans com a veïnes. L'àrea pertany al polígon, no és una mesura física presa al centroide. Dividir una peça de 10 ha en dues de 5 ha canvia l'atribut sense canviar el terreny: interpolar aquells centroides com temperatures estimaria un efecte de la partició. Un grup de peces grans tampoc demostra propietat comuna o disponibilitat per a una actuació.
 
-El conjunt clàssic [**Columbus**](https://pysal.org/libpysal/generated/libpysal.examples.available.html) conté 49 barris d'Ohio l'any 1980. La variable `CRIME` resumeix robatoris en domicilis i de vehicles per 1.000 llars. No és el nombre brut d'incidències: el denominador permet comparar barris amb nombres diferents de llars. Les metadades remeten a la taula 12.1, pàgina 189, d'Anselin {% cite anselin1988spatial %}.
+## Preparar QGIS i les biblioteques {#preparacio-pysal}
 
-La figura recorre quatre lectures de les mateixes dades. Primer es representa la variable; després es dibuixen els veïns queen d'un barri. El tercer panell compara el valor de cada barri amb la mitjana dels seus veïns. Perquè tots dos eixos siguin comparables, s'ha restat la mitjana i s'ha dividit per la desviació estàndard: són **valors estandarditzats**, sense les unitats originals.
+**Hotspot Analysis 4.0.0** fa servir `libpysal` per construir pesos i `esda` per calcular estadístics. Són biblioteques del projecte **PySAL**. No totes les instal·lacions de QGIS les incorporen: han de funcionar al Python que executa QGIS, com ja s'anuncia a la [presentació](../../../ca/) {% cite cereda2026hotspot %}.
 
-![Quatre lectures dels barris de Columbus: incidències, veïns, diagrama de Moran i associació local]({{ site.baseurl }}/assets/quarto/figures/columbus-moran.qmd "A: incidències per 1.000 llars. B: un barri i els seus veïns queen. C: valor estandarditzat i mitjana dels veïns, amb I = 0,500. D: Moran local amb pseudo-p unilateral menor de 0,05, 9.999 permutacions i sense correcció múltiple. Gris: no destacat amb aquest criteri."){: data-figure-width-web="49rem" data-figure-width-pdf="100%" data-caption-source="Dades Columbus distribuïdes amb libpysal; Anselin (1988). Coordenades digititzades en unitats arbitràries, sense escala mètrica atribuïda."}
+Al [catàleg de complements](https://plugins.qgis.org/plugins/HotSpotAnalysis_v3/) el nom conserva «v3»; comprova **la versió 4.0.0** des de **Complements → Gestiona i instal·la complements**. Cerca Hotspot Analysis, instal·la'l i activa'l. El mantenidor documenta també la [instal·lació des de ZIP](https://github.com/geografiadascoisas/HotSpotAnalysis_Plugin).
 
-Un punt del quadrant superior dret té un valor superior a la mitjana i veïns que, de mitjana, també la superen. Al quadrant inferior esquerre passa el contrari. Els quadrants creuats indiquen contrast: un barri alt en un entorn baix o un barri baix en un entorn alt. En aquesta normalització, la recta que passa per l'origen té pendent igual a la I de Moran.
+### Comprovar l'entorn de QGIS {#comprovar-les-biblioteques}
 
-El resum global és $I=0,5002$, amb pseudo-p 0,0001 en 9.999 permutacions i llavor 20260930. El resultat indica associació positiva sota aquest veïnatge i aquesta referència. No significa que la meitat dels barris siguin iguals ni que la proximitat expliqui causalment les incidències. El mapa local diferencia agrupacions altes, agrupacions baixes i contrastos que el nombre global no situa.
+Obre **Complements → Consola de Python**, o prem **Ctrl+Alt+P**, i executa:
 
->> La seqüència de lectura és **variable → veïns → relació → contrast**. La mateixa seqüència servirà a QGIS amb una altra variable i altres polígons. El color final no substitueix les tres lectures anteriors.
+```python
+import sys
+print(sys.version.split()[0], sys.prefix)
+import libpysal, esda
+print(libpysal.__version__, esda.__version__)
+print(libpysal.__file__)
+print(esda.__file__)
+```
 
-## Cas real: autoconsum per seccions censals {#cas-seccions}
+Les rutes indiquen quines biblioteques està carregant QGIS. Les versions de referència són **libpysal 4.13.0 i esda 2.7.1**, amb Python **3.11 o posterior**. Un paquet instal·lat en un altre Python de l'ordinador pot no estar disponible aquí. `ModuleNotFoundError` indica una importació absent; errors de NumPy o Numba poden reflectir incompatibilitats de versions.
 
-Ara es reprèn l'[indicador d'autoconsum per secció]({{ site.baseurl }}/ca/chapters/punts-densitat/#potencia-antiguitat): potència coneguda de categoria Edifici per 100 edificis cadastrals funcionals, anomenada $q_s$. La pregunta és si una secció amb valor elevat tendeix a tenir veïnes amb valors elevats. **Només s'utilitza aquesta variable**; no cal introduir l'antiguitat per calcular-ne l'autocorrelació.
+Una prova petita comprova també el càlcul. Les dades següents són construïdes: dos valors baixos junts i dos d'alts al llarg d'una fila. El control és **0.5**, sense contrast de permutació perquè aquí només es prova la importació i l'estadístic.
 
-Els valors més elevats de $q_s$ se separen molt de la majoria. Per comprimir aquella escala s'utilitza $y_s=\log(1+q_s)$, amb logaritme natural. La Calculadora de camps de QGIS crea `log_pot` amb `ln(1 + "kw_per_100_buildings")`. Per exemple, $q_s=0$ es transforma en 0 i $q_s=99$ en aproximadament 4,605. La transformació conserva l'ordre dels valors però canvia les diferències entre ells.
+```python
+from libpysal.weights import lat2W
+from esda import Moran
+w = lat2W(1, 4)
+resultat = Moran([1, 1, 4, 4], w, permutations=0)
+print(round(resultat.I, 3))
+```
 
-De les 151 seccions de 2024, una només té potències absents i queda fora del càlcul. Les altres 150 es relacionen per contigüitat queen, sobre les geometries completes, amb diagonal zero i pesos normalitzats per files. No hi ha illes en aquest subconjunt. Les seccions sense cap registre ICAEN tenen zero potència **coneguda al registre**; no s'afirma que l'autoconsum real sigui nul. Els veïns externs a la comarca no formen part de W, una decisió que condiciona la lectura de les vores.
+### Vies d'instal·lació {#vies-dinstallació}
 
-### Resultat global i contrast local
+La [guia de QGIS](https://qgis.org/resources/installation-guide/) distingeix distribucions amb entorns diferents. Tanca QGIS després d'instal·lar paquets, torna'l a obrir i repeteix la prova d'importació. No s'ha de pressuposar que el Python d'una terminal qualsevol sigui el de QGIS.
 
-El càlcul de referència dona $I=0,144$, amb esperança de referència $-1/149\simeq-0,0067$. Amb 9.999 permutacions i llavor 20260929, el pseudo-p retornat pel motor és 0,0024. Hi ha associació positiva sota aquesta referència, sense que això impliqui que tot el territori formi un únic clúster. Com a contrast, quatre veïns més propers entre centroides donen $I=0,149$ i pseudo-p de 0,0026.
+**Windows amb OSGeo4W.** Obre l'OSGeo4W Shell de la mateixa instal·lació i comprova l'entorn. Les ordres corresponen a aquella shell:
 
-![Diagrama de Moran i mapa dels resultats locals amb correcció de comparacions múltiples]({{ site.baseurl }}/assets/quarto/figures/moran-tarragones.qmd "A: el pendent del retard espacial sobre la variable estandarditzada correspon a I amb aquesta normalització. B: Moran local, pseudo-p de permutació d'esda i procediment Benjamini–Hochberg a 0,05 sobre 150 contrastos; només una secció queda destacada com a HH. Gris clar no significa absència demostrada de patró."){: data-figure-width-web="52rem" data-figure-width-pdf="100%" data-caption-source="Fonts i agregació: mateix conjunt ICGC/Idescat–Cadastre–ICAEN del capítol d'estadística descriptiva."}
+```bat
+python -c "import sys; print(sys.version, sys.prefix)"
+python -m pip install --user libpysal==4.13.0 esda==2.7.1
+```
 
-Per al mapa local es conserva la convenció unilateral de `Moran_Local.p_sim` del motor, amb les mateixes 9.999 permutacions. El procediment Benjamini–Hochberg ordena els 150 pseudo-p i els compara amb llindars de rang $0,05k/150$. El tall obtingut és 0,0003 i queda destacada una secció HH de Vila-seca, codi `4317101013`. És un resultat exploratori condicionat a variable, matriu, implementació i tractament de les comparacions múltiples; no s'atribueix una garantia universal de control d'errors sota qualsevol dependència espacial.
+La via d'usuari pressuposa que aquella instal·lació de QGIS admet els paquets d'usuari. En equips d'aula gestionats, les dependències les prepara l'administració del mateix entorn.
 
-La secció destacada s'ha de llegir juntament amb els seus valors, usos i cobertura. El resultat no situa una instal·lació individual ni acredita idoneïtat per ampliar-la. Igualment, una secció no destacada pot tenir una potència elevada sense una associació local prou extrema sota el contrast. Aquesta distinció explica per què el mapa de la variable i el mapa local no es poden substituir entre si.
-
-### Moran local a QGIS {#procediment-autocorrelacio}
-
-El complement [**Hotspot Analysis v4**](https://github.com/geografiadascoisas/HotSpotAnalysis_Plugin), versió 4.0.0, afegeix a la Caixa d'eines **Local Moran's I** (`hotspotanalysis:moranlocal`) i **Getis–Ord Gi***. La versió importa: no s'ha de donar per equivalent una eina antiga amb un nom semblant. El complement necessita `libpysal` i `esda`; l'entorn d'aquest exemple utilitza 4.13.0 i 2.7.1, respectivament.
-
-Per a Queen, aquesta implementació llegeix un **Shapefile**. S'exporten les 150 seccions admeses amb el codi estable `cusec` i `log_pot`, conservant junts els fitxers `.shp`, `.shx`, `.dbf`, `.prj` i `.cpg`. No s'han de simplificar les geometries abans de construir els contactes.
-
-Al diàleg de Moran local es trien la capa, `log_pot` i **Queen's Contiguity**. Es marquen pesos binaris i normalització per files, es desactiva l'optimització de distància i s'estableixen 9.999 permutacions. L'opció bilateral es deixa desmarcada per conservar la convenció unilateral d'aquesta demostració. Els camps de distància i KNN no defineixen els contactes quan s'ha seleccionat Queen.
-
-![Diàleg Moran local amb variable log_pot i veïnatge Queen]({{ site.baseurl }}/assets/captures/moran-parametres.png "Hotspot Analysis v4: cada polígon és una secció i log_pot és la variable analitzada. Queen inclou contactes per vora o vèrtex; les files es normalitzen."){: data-figure-width-web="44rem" data-figure-width-pdf="100%"}
-
-La sortida afegeix `p_value` i `q_value`. El segon camp codifica quadrants: 1=HH, 2=LH, 3=LL i 4=HL. Per construir una classe cartogràfica es consulta primer si `p_value < 0.05`; si no, la secció queda com a no destacada. Així no es confon pertànyer a un quadrant amb superar un contrast.
-
-![Mapa QGIS de Moran local amb grups alts i baixos i atípics espacials]({{ site.baseurl }}/assets/captures/moran-resultat.png "Moran local amb llindar nominal de 0,05, sense correcció múltiple. Aquest mapa permet reconèixer HH, LL, HL i LH; no és el mapa més restrictiu amb Benjamini–Hochberg de la figura anterior."){: data-figure-width-web="50rem" data-figure-width-pdf="100%"}
-
-La convenció de pseudo-p del complement i la seqüència aleatòria poden diferir de les d'un altre motor. Convé conservar els camps retornats i els paràmetres, no només la imatge. Per reproduir exactament un mapa publicat s'utilitza també la taula de resultats de l'execució corresponent.
-
-### Hotspots estadístics amb Getis–Ord Gi*
-
-Un **hotspot estadístic** és un entorn on la concentració de valors alts resulta destacada sota un contrast especificat. Una zona vermella del KDE del capítol anterior només indicava densitat elevada: no s'hi havia fet aquest contrast. Igualment, k-means divideix observacions en grups i DBSCAN identifica agrupacions segons distàncies i nombre de punts; cap dels dos produeix automàticament un p-valor de Gi*.
-
-Gi* suma contribucions de la unitat i del seu veïnatge. En aquest exemple es reutilitzen `log_pot` i els contactes Queen, amb pesos binaris, **sense normalització per files**; el mètode estrella inclou la pròpia unitat. Es demanen 9.999 permutacions i s'activa el pseudo-p bilateral. Són decisions diferents de les del mapa de Moran local i han de constar en comparar-los {% cite getis1992analysis ord1995local %}.
-
-![Paràmetres de Getis–Ord Gi estrella al complement de QGIS]({{ site.baseurl }}/assets/captures/hotspots-parametres.png "Gi* sobre la mateixa variable, amb contactes Queen i pesos binaris. L'opció bilateral i les 9.999 permutacions completen la configuració del contrast."){: data-figure-width-web="44rem" data-figure-width-pdf="100%"}
-
-La taula retornada conté `Z_score` i `p_value`. Amb p bilateral menor de 0,05, un signe positiu destaca una concentració alta i un de negatiu una concentració baixa. L'execució conservada destaca 7 seccions altes i 13 de baixes; les altres 130 no passen aquest llindar nominal. No s'hi ha aplicat correcció múltiple.
-
-![Mapa QGIS de concentracions altes i baixes segons Gi estrella]({{ site.baseurl }}/assets/captures/hotspots-resultat.png "Getis–Ord Gi*: concentracions altes en vermell, baixes en blau i casos no destacats en gris. Llindar bilateral nominal de 0,05, sense correcció múltiple. No hi ha classes HL o LH."){: data-figure-width-web="50rem" data-figure-width-pdf="100%"}
-
-Per interpretar una diferència amb Moran local es torna a la pregunta: Moran compara el valor propi amb els veïns i permet reconèixer atípics; Gi* destaca sumes locals altes o baixes. No cal que els colors coincideixin. Abans d'utilitzar el resultat per prioritzar una actuació, s'han de revisar cobertura, veïnatge i comparacions múltiples.
-
-### Ampliació: els residus de la regressió
-
-Si es reprèn la regressió antiguitat–potència del capítol anterior, cada residu és la diferència entre el valor observat i el que estimava la recta. Aquells residus també formen una variable per secció. Sobre les 126 seccions admeses, la matriu queen restringida a la mostra dona una I dels residus de 0,164 i pseudo-p de 0,0026. Restar la recta no elimina tota la dependència espacial. Caldria investigar variables omeses, processos compartits o patrons del registre; aquest contrast no decideix per si sol quina explicació és correcta.
-
-Una reproducció conservarà el codi de secció, els recomptes que entren en cada indicador, W, versions i llavor. També compararà el resultat amb una altra definició defensable de veïnatge i amb criteris de cobertura més estrictes. Les diferències entre aquestes proves són part del resultat territorial, no soroll que s'hagi d'amagar.
-
-## Transferència a parcel·les agràries {#suport-agrari}
-
-La mateixa pregunta es pot formular sobre àrees parcel·làries: les peces grans tendeixen a tenir veïnes grans? Una parcel·la cadastral, un recinte d'ús agrari del SIGPAC i una explotació són unitats diferents. Primer es tria la unitat, després es calcula l'àrea en hectàrees i finalment es construeix el veïnatge. Per Queen es conserven els polígons; per distàncies es poden utilitzar centroides, mantenint la correspondència d'identificadors.
-
-Una agrupació de parcel·les grans descriu geometria, no titularitat. Un mateix titular pot gestionar moltes peces petites; una peça gran pot tenir usos i condicions de tinença diversos. **Minifundi** i **latifundi** són conceptes agraris i socials, no etiquetes automàtiques dels colors HH i LL.
-
-### Per què no s'interpolen les àrees dels centroides? {#no-interpolar-arees}
-
-L'àrea descriu tot el polígon; no és una propietat física mesurada al seu centre. Si una parcel·la de 10 ha es divideix en dues de 5 ha sense canviar el terreny, una interpolació passaria d'una observació de 10 a dues de 5. La superfície estimada canviaria per una nova partició administrativa, no per un canvi del camp físic.
-
->>> Amb un termòmetre, moure's a un altre punt manté la pregunta «quina temperatura hi ha aquí?». Amb l'àrea parcel·lària, el valor pertany a una peça sencera. Travessar-ne una vora canvia d'unitat. Que el programa accepti els centroides no dona significat físic als valors interpolats.
-
-Representar l'àrea a cada polígon conserva aquest suport. Rasteritzar-la també pot conservar-lo si cada cel·la rep l'atribut de la peça corresponent. Una altra cosa és interpolar entre centroides com si fossin temperatures. Existeixen mètodes d'interpolació areal amb supòsits propis; no són aquella operació puntual. Els [fonaments sobre observació i suport]({{ site.baseurl }}/ca/chapters/fonaments-geodisseny/#observacions-suport) permeten decidir quina pregunta s'està formulant.
-
-## Aportació a les alternatives territorials
-
-L'autocorrelació pot indicar sectors on es concentren determinades dimensions parcel·làries. Per estudiar candidates cal tornar als polígons: superfície admissible, forma, continuïtat, usos i restriccions. Un clúster estadístic pot contenir nuclis i veïns de dimensions diverses; no s'ha de convertir en una única finca disponible.
-
-Si la puntuació final utilitza l'àrea de la parcel·la i també un indicador local derivat d'aquella àrea, es pot duplicar la influència de la mateixa informació. Cal justificar si el criteri representa mida individual o context espacial. El capítol multicriteri mantindrà aquesta distinció i evitarà anomenar «latifundi» un simple valor alt.
-
-L'estabilitat entre matrius pot reforçar una diagnosi acotada. La inestabilitat revela dependència de l'escala de relació i suggereix què cal investigar. En tots dos casos, la conclusió ha de referir-se a la unitat estudiada i no a propietaris o explotacions que no s'han observat.
+**macOS amb QGIS.app.** El mantenidor proposa el Python del paquet. Comprova que la ruta correspon a l'aplicació instal·lada; el nom pot ser diferent:
+
+```bash
+QGIS_PY="/Applications/QGIS.app/Contents/MacOS/bin/python3"
+"$QGIS_PY" -c "import sys; print(sys.version, sys.prefix)"
+"$QGIS_PY" -m pip install --user \
+  libpysal==4.13.0 esda==2.7.1
+```
+
+**Linux.** Amb paquets del sistema, comprova si la distribució ofereix totes dues biblioteques per al mateix Python. Ubuntu 24.04 ofereix `python3-libpysal`, però no `python3-esda` al catàleg consultat. `externally-managed-environment` indica un Python gestionat pel sistema; no s'ha de resoldre sobreescrivint-ne indiscriminadament els paquets.
+
+Una via per preparar QGIS i les biblioteques conjuntament en un entorn separat és [Miniforge](https://github.com/conda-forge/miniforge), amb conda-forge:
+
+```bash
+conda create -n qgis-aeg -c conda-forge --strict-channel-priority \
+  "qgis=3.44" "python>=3.11,<3.14" "libpysal=4.13" "esda=2.7"
+conda activate qgis-aeg
+qgis
+```
+
+Obre el QGIS de l'entorn activat i instal·la-hi el complement. Crear l'entorn no modifica el QGIS que s'obre des d'una altra icona. Amb Flatpak, la guia oficial descriu una instal·lació dins del seu propi entorn. Les guies de [libpysal](https://pysal.org/libpysal/stable/installation.html) i [esda](https://pysal.org/esda/stable/installation.html) documenten pip i conda-forge. Les versions concretes han de ser compatibles amb el Python disponible.
 
 ## Activitats
 
-### Calcular abans d'interpretar colors
+### Valor propi i vuit veïns {#calcular-abans-dinterpretar-colors}
 
-Cal reconstruir la matriu de la cadena i les dues I de la figura amb un full de càlcul. La sortida inclourà valors, mitjana, valors centrats, retards, productes i sumes. Després s'ha de repetir l'enumeració de sis ordres i explicar la diferència entre observar I positiva i obtenir un contrast significatiu.
+Recupera el registre de 450 kW a `05-moran.qgz` i els vuit valors de 100, 100, 60, 30, 100, 20, 60 i 50 kW. Conserva una captura amb les connexions i les xifres, suma 520 i mitjana **65 kW**. Compara amb la mitjana general **28,27 kW** i explica els signes de les dues diferències.
 
->> Els controls són: files de W amb suma 1, diagonal zero, suma de valors centrats zero, suma de quadrats 9, I de 0,5 per agrupació i −1 per alternança. Si la mitjana canvia en permutar, no s'han conservat els mateixos valors.
+<span id="atributs-puntuals-i-concentració-de-registres"></span>
 
-### Demostrar el problema de suport
+### Què es conserva en una permutació? {#dues-matrius-dues-preguntes}
 
-Cal comparar una partició docent abans i després de dividir una parcel·la sense modificar el terreny. Es representarà l'àrea per polígon i s'explicarà què canviaria en una interpolació dels centroides. El resultat és una demostració conceptual de per què aquesta interpolació no estima una propietat física contínua.
+Compara els dos mapes de potències. Escriu què s'ha mantingut —98 punts, 98 valors, suma, mitjana i veïnatge— i què s'ha canviat. Interpreta després **3 de 9.999** i el pseudo-p **0,0004**. La conclusió no ha d'atribuir una causa al resultat.
 
-### Dues matrius, dues preguntes
+### Llegir el mapa local {#associació-global-i-local}
 
-Cal construir una matriu principal i una de contrast, conservar-ne els diagnòstics i representar els veïns de tres unitats. La justificació ha d'explicar quina relació territorial representa cada matriu i què significa una unitat aïllada.
+Conserva el valor propi, la mitjana veïna, la categoria i el pseudo-p dels registres de 450 i 3 kW. Explica per què un quadrant i passar un contrast són dues decisions diferents. Consulta també un cas gris i comprova que no es pot deduir el seu valor de potència només d'aquell color.
 
-### Associació global i local
+### Una secció i els seus contactes {#reconstruir-un-retard-de-renda}
 
-Cal calcular un estadístic global i un de local amb variable, matriu i inferència declarades. S'han de conservar mapes de valors, significació i configuració, amb una taula de sensibilitat. Una localització destacada s'ha d'interpretar retornant a la geometria i als valors dels veïns.
+La secció 07013 de Tarragona té 23.239 €/persona i tres veïnes de 24.068, 23.235 i 17.187. Conserva els codis, un mapa de contactes i la mitjana **21.496,67 €/persona**. Compara amb **15.220,36** i amb el pseudo-p de referència **0,0049**: distingeix quadrant i contrast.
 
-### Geometria i decisió
+### Canviar el denominador {#comparar-denominadors-sense-canviar-casos}
 
-Cal seleccionar un sector amb peces relativament grans i redactar una fitxa de candidata. La fitxa ha de separar allò que es coneix de superfície i continuïtat d'allò que faltaria sobre ús, propietat i disponibilitat. El resultat no pot qualificar el sector com a apte només perquè aparegui HH.
+La secció 02001 de Constantí té 2.577 kW publicats, 939 edificis funcionals i 964.262,85 m² de petjada. Calcula **274,44 kW per 100 edificis** i **2,67 kW per 1.000 m²**. Explica què pregunta cadascuna de les dues ràtios i per què no mesuren ocupació efectiva dels panells.
+
+<span id="demostrar-el-problema-de-suport"></span><span id="geometria-i-decisió"></span>
+
+### Valor de la prova i informació que falta
+
+Redacta una conclusió de Constantí amb unitat, variable, veïnatge, índex observat i permutacions. Separa l'associació observada d'una explicació possible sobre usos industrials o residencials. Identifica les dades addicionals que permetrien comprovar aquella explicació.
