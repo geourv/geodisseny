@@ -84,6 +84,124 @@
       ],
       "rendered_at": "2026-10-01T19:30:04+00:00"
     },
+    "assets/quarto/figures/autocorrelacio-denominadors.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/autocorrelacio-denominadors.qmd",
+          "sha256": "1276a53e5917ffebc5fe44cd593c9b35202563ed379f52340af0f54beb8a8b37"
+        },
+        {
+          "path": "context/inputs/autocorrelacio-exemples.json",
+          "sha256": "a347de1911661be6b39198256f97d74ab60b270066efd02cabb846b91b5fe0f4"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "870a068a7637c5e9493f7df5cf685058391bdf8122421081f0847b877238013e",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/autocorrelacio-denominadors.svg",
+          "sha256": "a980441e57593ee1af91baaf65dac2c95fc2b7f15ede482f4aabe88a982f7c49",
+          "size": 58672
+        }
+      ],
+      "rendered_at": "2026-10-05T06:14:33+00:00"
+    },
+    "assets/quarto/figures/autocorrelacio-edat.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/autocorrelacio-edat.qmd",
+          "sha256": "5e98819c5bd74e15fa1a3ed23f61d42be2d34329f2ef2d41ea44048246df81d9"
+        },
+        {
+          "path": "context/inputs/autocorrelacio-exemples.json",
+          "sha256": "a347de1911661be6b39198256f97d74ab60b270066efd02cabb846b91b5fe0f4"
+        },
+        {
+          "path": "context/inputs/seccions-tarragones.geojson",
+          "sha256": "754123e02429ab5a118b9a9d16770f64f2d9ce44209409e5ad68cfdc822d32ed"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "5caa7c25110a53f8be82fc294da27a9fed93f7dc43ab07a14f88bd55884f67b1",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/autocorrelacio-edat.svg",
+          "sha256": "002cd8d2510b7717876889f17216ff2b01acfbab5b8dc5891a3b4b893f804485",
+          "size": 217252
+        }
+      ],
+      "rendered_at": "2026-10-05T06:14:40+00:00"
+    },
+    "assets/quarto/figures/autocorrelacio-relacions.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/autocorrelacio-relacions.qmd",
+          "sha256": "0e7964401ff12c6beda886d8bb7b437a5f01be9d61b66b7971ba583f2e13d4ce"
+        },
+        {
+          "path": "context/inputs/autocorrelacio-exemples.json",
+          "sha256": "a347de1911661be6b39198256f97d74ab60b270066efd02cabb846b91b5fe0f4"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "7a81dac8c1559cd5d28d5accb7e41b8e911a9384eeb1bf577e795f0b015e179d",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/autocorrelacio-relacions.svg",
+          "sha256": "6be48b2d77a492b31e7e153b2e2ef3fd21fba02c2b297064bc1e3e410038c62e",
+          "size": 103958
+        }
+      ],
+      "rendered_at": "2026-10-05T06:14:48+00:00"
+    },
     "assets/quarto/figures/centres-potencia.qmd": {
       "dependencies": [
         {
@@ -160,11 +278,91 @@
       ],
       "rendered_at": "2026-09-30T00:39:03+00:00"
     },
+    "assets/quarto/figures/constanti-moran.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/constanti-moran.qmd",
+          "sha256": "ccaccea8269fe07b6ddab9a9e37ba8c2fd77b0dc1599920dd98faa3b9cc9aa27"
+        },
+        {
+          "path": "context/inputs/constanti-pedagogia.json",
+          "sha256": "f42ddb5b008866f117a7ad0485b7ffafe99ea3bcfe3d67eafd78305196f82680"
+        },
+        {
+          "path": "context/inputs/constanti-ortofoto-2025.png",
+          "sha256": "87a1b6507d0cd345a2e6a4497a4313be3a083cf608825ac9b70366dbdaafd9b5"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "23aa51d83b65801a2d07a20c85aafc937776994a824abe2ac83f314ade7c1bde",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/constanti-moran.svg",
+          "sha256": "0a4150adc3f6a0b41cdeac095f285d572bd44e50d4acebcfe827c94207798018",
+          "size": 1454024
+        }
+      ],
+      "rendered_at": "2026-10-05T22:47:51+00:00"
+    },
+    "assets/quarto/figures/constanti-permutacions.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/constanti-permutacions.qmd",
+          "sha256": "23d7a38699dce37dcbcf3888c5fd16c3092c52a893f08d1f2d6ce3799eb83e99"
+        },
+        {
+          "path": "context/inputs/constanti-pedagogia.json",
+          "sha256": "f42ddb5b008866f117a7ad0485b7ffafe99ea3bcfe3d67eafd78305196f82680"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "43daa993f5b796e152a51b4532b88e68fb10d31c474f43856f356035a4890710",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/constanti-permutacions.svg",
+          "sha256": "4d8b924de002fabf8678a1d1f4dbcfa8693b95852f01b70e74b1ad7e379d5bb0",
+          "size": 20846
+        }
+      ],
+      "rendered_at": "2026-10-05T22:48:02+00:00"
+    },
     "assets/quarto/figures/constanti-pesos.qmd": {
       "dependencies": [
         {
           "path": "assets/quarto/figures/constanti-pesos.qmd",
-          "sha256": "ff05c004c90204cd1c38e7354c2d5354745a679998bc1a39e7b738559b17ef43"
+          "sha256": "67e37b04a9bcd32acf107ce3e70ca54121f8a44aed8afa01e7efe02535fff30b"
         },
         {
           "path": "context/inputs/punts-escenaris.json",
@@ -180,7 +378,7 @@
         }
       ],
       "engine": "python",
-      "fingerprint": "780f9a6b2b60587493d4967a46ae943d25f50e987800bbb456d61ebba869149a",
+      "fingerprint": "9c7362ef20730c49d8d7eb39f3ecb5decfb8659aa01255bc38d9e59b921e3984",
       "image": {
         "engine": "python",
         "environment": "local",
@@ -196,11 +394,53 @@
       "outputs": [
         {
           "path": "assets/img/generated/constanti-pesos.svg",
-          "sha256": "3efb07352e953a7d8d134c531840912afd372f6d3703d854085fe5266c21dec5",
-          "size": 1463953
+          "sha256": "033c873a5fbd314993a2a951650f6dec7fa97deac78db27fdd9661ada6113b24",
+          "size": 1241729
         }
       ],
-      "rendered_at": "2026-10-04T19:59:13+00:00"
+      "rendered_at": "2026-10-05T21:02:09+00:00"
+    },
+    "assets/quarto/figures/constanti-recomptes.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/constanti-recomptes.qmd",
+          "sha256": "78a72e9e1b1ffd4ba6504836830e9ff38cba84c21e3fd5ecb2b0c4f19c37a987"
+        },
+        {
+          "path": "context/inputs/constanti-pedagogia.json",
+          "sha256": "f42ddb5b008866f117a7ad0485b7ffafe99ea3bcfe3d67eafd78305196f82680"
+        },
+        {
+          "path": "context/inputs/constanti-ortofoto-2025.png",
+          "sha256": "87a1b6507d0cd345a2e6a4497a4313be3a083cf608825ac9b70366dbdaafd9b5"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "f22c6c48ba1ba93b2a52ded9c109f2741385f7bcc4c5c8cd7a21d33182250941",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/constanti-recomptes.svg",
+          "sha256": "792a2218b7fc356b447b115810eae192dbdc671c0c60c0dcc8b5ccb5019c1c48",
+          "size": 633979
+        }
+      ],
+      "rendered_at": "2026-10-05T23:11:45+00:00"
     },
     "assets/quarto/figures/contrast-hipotesi.qmd": {
       "dependencies": [
@@ -1142,7 +1382,7 @@
       "dependencies": [
         {
           "path": "assets/quarto/figures/punts-municipis.qmd",
-          "sha256": "1fbb15726b16cd89ca2f6e79a2b943b35142dd33eee81e03692caabd9968d8d0"
+          "sha256": "131039cf301b4645b54540d1ebd7eb7e382703754798b4ccd63f32be800714e5"
         },
         {
           "path": "context/inputs/punts-municipis.json",
@@ -1154,7 +1394,7 @@
         }
       ],
       "engine": "python",
-      "fingerprint": "a28d158ef2dbb71c44567d60c6504f4b884df6fdee07d852ccda194c6abdcae9",
+      "fingerprint": "c1ec155fd9ed72fa3fa54f1e3916c2829a09c84d71d1c456ccfb54dfe4cf908c",
       "image": {
         "engine": "python",
         "environment": "local",
@@ -1170,11 +1410,11 @@
       "outputs": [
         {
           "path": "assets/img/generated/punts-municipis.svg",
-          "sha256": "3864fe2ded102f4d8b76c2ce50904223ab8d62e5aba1b30475594bdba1bc47da",
-          "size": 137283
+          "sha256": "7ec4dffca608ccec2ef94d2af18fabe2da88d1d92ef274a742189d03cd2a0d70",
+          "size": 124343
         }
       ],
-      "rendered_at": "2026-10-04T12:46:17+00:00"
+      "rendered_at": "2026-10-05T22:48:25+00:00"
     },
     "assets/quarto/figures/regressio-residus.qmd": {
       "dependencies": [
@@ -1209,6 +1449,48 @@
         }
       ],
       "rendered_at": "2026-09-30T22:03:10+00:00"
+    },
+    "assets/quarto/figures/renda-moran.qmd": {
+      "dependencies": [
+        {
+          "path": "assets/quarto/figures/renda-moran.qmd",
+          "sha256": "a94bd08225c86eda86b31b156311b406d4a4ca4af6f607c20edce8b581a0f147"
+        },
+        {
+          "path": "context/inputs/autocorrelacio-exemples.json",
+          "sha256": "a347de1911661be6b39198256f97d74ab60b270066efd02cabb846b91b5fe0f4"
+        },
+        {
+          "path": "context/inputs/seccions-tarragones.geojson",
+          "sha256": "754123e02429ab5a118b9a9d16770f64f2d9ce44209409e5ad68cfdc822d32ed"
+        },
+        {
+          "path": ".unaltraweb/computations.yml",
+          "sha256": "fa5cedc8d3192f05e40bdf43b9c343e561907139984377b9f9702922bcd8ec06"
+        }
+      ],
+      "engine": "python",
+      "fingerprint": "2ff0ecc2e2a5ec95796b221dbfb166606c249c1c2f3644371edc1d5cee1b01e8",
+      "image": {
+        "engine": "python",
+        "environment": "local",
+        "image": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "source": "environment:COMPUTE_PYTHON_IMAGE"
+      },
+      "image_identity": {
+        "available": "true",
+        "digest": "ghcr.io/dosquartsdedocs/unaltraweb-compute-python@sha256:18cb269811bd4005800382da25a480ec2bca7eac8d0501ad1ef36bad1c0f8cd9",
+        "id": "sha256:039af70322afeea49f34e28f5efa11ab86d091baaf02100a7414bb0104f344bc"
+      },
+      "mode": "figure",
+      "outputs": [
+        {
+          "path": "assets/img/generated/renda-moran.svg",
+          "sha256": "1c40ecc64bde3b60afcfdd683000f1c1b1c764d566765a90a8150ee78411c7ba",
+          "size": 222361
+        }
+      ],
+      "rendered_at": "2026-10-05T21:24:03+00:00"
     },
     "assets/quarto/figures/restriccions-gir.qmd": {
       "dependencies": [

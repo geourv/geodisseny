@@ -1,5 +1,81 @@
 # Historial de revisió d'Anàlisi Espacial i Geodisseny
 
+## Autorització actual de publicació — 6 d'octubre de 2026
+
+L'autor demana «Publica el manual i ja veurém com va» després del lliurament
+renderitzat. La versió de#7 s'aprova per a commit, push, PR, fusió i
+desplegament. Presentació, capítols4/5 i bibliografia passen a approved;
+els estats draft documentats a continuació són les etapes prèvies.
+Registre d'autorització i rebuts a `context/dades/constanti-pedagogia.md` i
+https://github.com/geourv/geodisseny/issues/7#issuecomment-6010267813.
+
+Versió aprovada:PDF221p,49.424.633bytes,SHA
+`93a690cbfd1e15eb86796457beda3c400fce5975452c1be8653a98e6982095c0`.
+Web final18vistes/108imatges a1440/390px, sense errors o desbordament;
+font/site/publication-check correctes. Reviews85–90 sobre el perfil i les
+metadades aprovades. La PR i els rebuts de desplegament es tanquen a#7.
+
+## Estat actual — claredat i continuïtat dels capítols 4 i 5
+
+L'autor ha revisat la primera ampliació i ha demanat menys jerga i salts,
+amb Constantí com a cas recognoscible. Reserva addicional acceptada a#7.
+Reorganitzat capítol4:recompte→centres→dispersió→densitat. Capítol5:
+98potències publicades→veïns i mitjanes→Moran→permutacions→locals→renda.
+
+Corregit el fons dels accessos, ara municipals; cercle i el·lipse visibles
+a QGIS amb tot el context; accés a recompte i kernel a la caixa oberta.
+Morell amb zoom adaptat i barra d'escala. Etiquetes de450/3kW i codis
+municipals de secció, sense ABC en casos. Fora del recorregut inicial
+la regressió edat–potència i els gràfics sense conclusió territorial definida.
+Cap secció amb una sola subsecció, abreviatures C4/C5 només al context.
+
+19bundles finals sense avisos,57computacions actuals;89ancoratges previs
+preservats. Web1440/390px:4vistes,26imatges,sense errors ni desbordament.
+SVGs sense títols/peus retallats i fórmules compactades per al mòbil.
+PDF223p,49.425.856bytes, SHA
+`bff4fe0b5c75bda364edb1aa0914cc018f69208473a73170cbe31ab8c16cad86`.
+PDF servit localment idèntic al generat, límits correctes. Cinc projectes
+reubicats readonly/offline; paquet nou95fitxers,GUIA9p/SOLUCIONS2p.
+
+Diagnosi/retalls a67–70; resolucions explícites71–78; reviews finals79–84.
+Fonts dels dos capítols en draft per a revisió humana. Registre, dades i
+hashes: `context/dades/constanti-pedagogia.md`. Cap commit, push o publicació
+nova. Paquet r2 interromput recuperat sense modificar el directori segellat.
+
+## Historial — ampliació de C5, 5 d'octubre de 2026
+
+Tasca#7, branca `content/7-autocorrelacio-exemples`. L'autor ha acceptat
+explícitament ampliar la reserva a quatre figures i nou bundles de captures.
+C0, C5 i bibliografia estan en draft per a revisió; l'autorització de
+publicació de l'entrada següent correspon a la versió anterior de main.
+
+Desenvolupats renda INE2023 per151seccions, mediana d'edat per150,
+potència per nombre/superfície de petjades,98potències publicades de
+Constantí i relacions ordinàries/bivariants sobre126casos.31proves
+conservades; dues bandes amb illes s'expliquen sense índex inferencial.
+Valors propis, veïns i retards concrets per interpretar A/B/C i el punt A.
+
+Requisits PySAL anunciats a C0; instal·lació segons l'entorn i tres blocs
+Python exactes comprovats a QGIS a C5. Windows/macOS documentats, sense
+atribuir-hi una instal·lació executada.54computacions actuals;17imatges a
+C5, nou manifests x11/DPR1 sense avisos i dos projectes reubicats amb
+nous camins, offline/readonly. Paquet privat61fitxers, GUIA10p/SOLUCIONS3p.
+
+Revisió de C0/C5/bibliografia a1440/390px:6vistes,17imatges, cap error de
+MathJax, imatge absent ni desbordament de pàgina.25encapçalaments/ancoratges
+anteriors de C5 preservats. Fonts privades i QMD de la figura retornen404.
+PDF local253p,40.710.571bytes, SHA
+`0890bb1405da1b298a388fc4481024b7aa00ac9e8b7496fa910b96fc25887ef2`;
+el PDF servit localment és idèntic al generat. Text, taules, codi i figures
+revisats i cap paraula fora dels límits. L'únic avís dimensional del source
+check és el ja revisat de punts-municipis a C4.
+
+Diagnosi inicial a revisió57; tres findings resolts explícitament a58–60.
+Reviews d'estructura/evidència/línia C5 i de C0/bibliografia a61–65.
+Estat65,50reviews,45stale; les cinc revisions noves són actuals.
+No equivalen a aprovació de l'autor. Registre complet i hashes del paquet:
+`context/dades/autocorrelacio-exemples.md`.
+
 ## Autorització de publicació — 5 d'octubre de 2026
 
 L'autor ha demanat commit, push, PR, fusió i publicació de l'última versió
@@ -8,7 +84,7 @@ aquesta autorització humana. Abast, evidència i procediment registrats a
 `context/publicacio-manual-20261005.md`. Els estats draft que consten a
 continuació descriuen les etapes anteriors a aquesta aprovació.
 
-## Estat actual — Constantí com a cas principal i imputació explícita
+## Historial — Constantí com a cas principal i imputació explícita
 
 A petició de l'autor, la pràctica principal utilitza els124punts de Constantí,
 amb ortofoto i símbols proporcionals que permeten interpretar la influència

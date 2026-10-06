@@ -1,0 +1,41 @@
+---
+title: Potència, nombre d’edificis i superfície de les petjades
+lang: ca
+ref: figura-autocorrelacio-denominadors
+format: gfm
+execute-dir: project
+execute: {echo: false, warning: false}
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  inputs: [context/inputs/autocorrelacio-exemples.json]
+  outputs: [assets/img/generated/autocorrelacio-denominadors.svg]
+---
+
+```{python}
+from pathlib import Path
+import json
+import numpy as np
+import matplotlib.pyplot as plt
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root==root.parent:raise RuntimeError('Projecte absent')
+    root=root.parent
+d=json.loads((root/'context/inputs/autocorrelacio-exemples.json').read_text())
+rows=[s for s in d['sections'] if s['association_sample']]
+assert len(rows)==126
+x=np.array([s['mean_area'] for s in rows]);chosen=next(i for i,s in enumerate(rows) if s['key']=='4314806006')
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':18,'svg.fonttype':'none','svg.hashsalt':'autocorrelacio-denominadors'})
+fig,axes=plt.subplots(1,2,figsize=(11.5,5.3),layout='constrained')
+for ax,field,title,label in [(axes[0],'log_count','Divisió pel nombre d’edificis','ln(1 + kW per 100 edificis)'),
+                             (axes[1],'log_area','Divisió per superfície de petjada','ln(1 + kW per 1.000 m²)')]:
+    y=np.array([s[field] for s in rows]);r=np.corrcoef(x,y)[0,1]
+    ax.scatter(x,y,s=32,color='#3c869f',alpha=.75)
+    b,a=np.polyfit(x,y,1);xx=np.array([0,3300]);ax.plot(xx,a+b*xx,color='#b52e45',lw=2)
+    ax.scatter(x[chosen],y[chosen],s=100,color='#b52e45',edgecolor='white',zorder=4)
+    ax.annotate('D',(x[chosen],y[chosen]),xytext=(-18,10),textcoords='offset points',weight='bold',color='#b52e45')
+    ax.set(title=title,xlabel='Petjada mitjana per edifici (m²)',ylabel=label,xlim=(0,3350))
+    ax.text(.04,.94,f'r = {r:.3f}'.replace('.',','),transform=ax.transAxes,va='top',bbox={'facecolor':'white','edgecolor':'none','alpha':.85})
+    ax.grid(alpha=.13)
+fig.savefig(root/'assets/img/generated/autocorrelacio-denominadors.svg',facecolor='white',metadata={'Date':None});plt.close(fig)
+```

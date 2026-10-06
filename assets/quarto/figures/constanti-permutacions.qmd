@@ -1,0 +1,37 @@
+---
+title: Comparar la I observada amb les barreges de potència
+lang: ca
+ref: figura-constanti-permutacions
+format: gfm
+execute-dir: project
+execute: {echo: false, warning: false}
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  inputs: [context/inputs/constanti-pedagogia.json]
+  outputs: [assets/img/generated/constanti-permutacions.svg]
+---
+
+```{python}
+from pathlib import Path
+import json
+import numpy as np
+import matplotlib.pyplot as plt
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():root=root.parent
+d=json.loads((root/'context/inputs/constanti-pedagogia.json').read_text())
+edges=np.array(d['permutation']['edges']);counts=np.array(d['permutation']['histogram'])
+assert counts.sum()==9999
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':18,'svg.fonttype':'none','svg.hashsalt':'constanti-permutacions'})
+fig,ax=plt.subplots(figsize=(9.7,4.5),layout='constrained')
+ax.bar(edges[:-1],counts,width=np.diff(edges),align='edge',color='#88b6ca',edgecolor='white',lw=.5)
+ax.axvline(d['moran']['I'],color='#b32d42',lw=3)
+ax.annotate('Observat: 0,192',xy=(d['moran']['I'],0),xytext=(.97,.64),textcoords='axes fraction',ha='right',
+    color='#b32d42',fontsize=18,arrowprops={'arrowstyle':'-','color':'#b32d42'},bbox={'facecolor':'white','edgecolor':'none'})
+ax.text(.97,.93,'Només 3 de 9.999 barreges\narriben a aquest valor o el superen',transform=ax.transAxes,ha='right',va='top',fontsize=17,
+    bbox={'facecolor':'white','edgecolor':'none','alpha':.95})
+ax.set(xlabel='I de Moran calculada en cada barreja de les 98 potències',ylabel='Nombre de barreges',
+       title='Quin resultat dona canviar les potències de lloc?')
+ax.grid(axis='y',alpha=.12);ax.spines[['top','right']].set_visible(False)
+fig.savefig(root/'assets/img/generated/constanti-permutacions.svg',facecolor='white',metadata={'Date':None});plt.close(fig)
+```

@@ -1,0 +1,42 @@
+---
+title: Relació al mateix lloc i associació amb els veïns
+lang: ca
+ref: figura-autocorrelacio-relacions
+format: gfm
+execute-dir: project
+execute: {echo: false, warning: false}
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  inputs: [context/inputs/autocorrelacio-exemples.json]
+  outputs: [assets/img/generated/autocorrelacio-relacions.svg]
+---
+
+```{python}
+from pathlib import Path
+import json
+import numpy as np
+import matplotlib.pyplot as plt
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():
+    if root==root.parent:raise RuntimeError('Projecte absent')
+    root=root.parent
+d=json.loads((root/'context/inputs/autocorrelacio-exemples.json').read_text());rows=d['association_rows']
+assert len(rows)==126
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':18,'svg.fonttype':'none','svg.hashsalt':'autocorrelacio-relacions'})
+fig,axes=plt.subplots(2,2,figsize=(11.5,8.4),layout='constrained')
+for row,(xfield,xlabel) in enumerate([('age','Edat dels edificis de la secció'),('renda','Renda de la secció')]):
+    x=np.array([r[xfield] for r in rows]);stats=next(r for r in d['association'] if r['x']==xfield and r['y']=='log_count')
+    for col,(yfield,title) in enumerate([('log_count','Potència a la mateixa secció'),('lag_log_count','Potència a les seccions veïnes')]):
+        ax=axes[row,col];y=np.array([r[yfield] for r in rows]);slope=x@y/(x@x)
+        value=stats['pearson_r'] if col==0 else stats['bivariate_I_x_lag_y']
+        assert np.isclose(slope,value)
+        ax.scatter(x,y,color='#3985a2' if col==0 else '#648c64',s=27,alpha=.75)
+        xx=np.array([x.min()-.2,x.max()+.2]);ax.plot(xx,slope*xx,color='#b52e45',lw=2)
+        ax.axhline(0,color='#88949b',lw=.8);ax.axvline(0,color='#88949b',lw=.8)
+        ax.set(xlabel=xlabel+'\n(estandarditzada)',ylabel='Indicador estandarditzat' if col==0 else 'Mitjana estandarditzada',title=title if row==0 else '',ylim=(-2.7,3.3))
+        prefix='r' if col==0 else 'I bivariant'
+        ax.text(.04,.94,f'{prefix} = {value:.3f}'.replace('.',','),transform=ax.transAxes,va='top',
+                bbox={'facecolor':'white','edgecolor':'none','alpha':.85},fontsize=17)
+fig.savefig(root/'assets/img/generated/autocorrelacio-relacions.svg',facecolor='white',metadata={'Date':None});plt.close(fig)
+```

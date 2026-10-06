@@ -24,6 +24,8 @@ paths:
     - context/qgis/visibilitat-acces.yml
     - context/qgis/punts-tarragones.yml
     - context/qgis/punts-municipals.yml
+    - context/qgis/autocorrelacio-exemples.yml
+    - context/qgis/constanti-pedagogia.yml
   play_prompts: context/qgis
   director_plans: tmp/qgis/plans
   plays: tmp/qgis/plays

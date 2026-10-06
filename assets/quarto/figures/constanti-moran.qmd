@@ -1,0 +1,47 @@
+---
+title: Potències observades i potències barrejades a Constantí
+lang: ca
+ref: figura-constanti-moran
+format: gfm
+execute-dir: project
+execute: {echo: false, warning: false}
+unaltraweb_compute:
+  engine: python
+  mode: figure
+  inputs: [context/inputs/constanti-pedagogia.json, context/inputs/constanti-ortofoto-2025.png]
+  outputs: [assets/img/generated/constanti-moran.svg]
+---
+
+```{python}
+from pathlib import Path
+import json
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
+root=Path.cwd()
+while not (root/'.unaltraweb/computations.yml').exists():root=root.parent
+d=json.loads((root/'context/inputs/constanti-pedagogia.json').read_text())
+xy=np.array([p['xy'] for p in d['known_points']])/1000
+observed=np.array([p['kw'] for p in d['known_points']]);shuffled=np.array(d['permutation']['values_kw'])
+assert np.array_equal(np.sort(observed),np.sort(shuffled))
+a,b,e,n=np.array(d['bounds'])/1000
+image=plt.imread(root/'context/inputs/constanti-ortofoto-2025.png')
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':18,'svg.fonttype':'none','svg.hashsalt':'constanti-moran'})
+fig,axes=plt.subplots(1,2,figsize=(11.5,6.4))
+fig.subplots_adjust(left=.025,right=.975,bottom=.13,top=.82,wspace=.06)
+bins=[(0,5,'#65b5cf'),(5,25,'#2786ad'),(25,100,'#9c4f38'),(100,500,'#682b39')]
+for ax,y,title in zip(axes,[observed,shuffled],['Potències publicades\nI de Moran = 0,192',f'Potències barrejades\nI = {d["permutation"]["I"]:.3f}'.replace('.',',')]):
+    ax.imshow(image,extent=[a,e,b,n],alpha=.48)
+    for lo,hi,c in bins:
+        mask=(y>lo)&(y<=hi);ax.scatter(xy[mask,0],xy[mask,1],s=35,color=c,edgecolor='white',lw=.4,zorder=3)
+    ax.set(xlim=(a,e),ylim=(b,n),aspect='equal',xticks=[],yticks=[],title=title)
+    ax.plot([344,346],[4554.7,4554.7],color='#243e4b',lw=3);ax.text(345,4554.4,'2 km',ha='center',fontsize=17)
+    for spine in ax.spines.values():spine.set_visible(False)
+for name,location in [('industrial',(344.2,4562.2)),('nucli',(350.1,4555.5))]:
+    r=d['examples'][name];pos=xy[r['index']]
+    axes[0].annotate(f'{int(r["kw"])} kW',pos,xytext=location,arrowprops={'arrowstyle':'-','color':'#273d49'},
+        bbox={'facecolor':'white','edgecolor':'none','alpha':.94,'pad':2},fontsize=18)
+fig.legend(handles=[Line2D([],[],marker='o',ls='',color=c,label=f'{lo}-{hi} kW') for lo,hi,c in bins],
+           loc='lower center',bbox_to_anchor=(.5,.015),ncol=4,frameon=False,fontsize=17)
+fig.savefig(root/'assets/img/generated/constanti-moran.svg',facecolor='white',metadata={'Date':None});plt.close(fig)
+```

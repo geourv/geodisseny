@@ -39,21 +39,23 @@ for ax in axes:
 axes[0].set_ylabel('Nord UTM (km)')
 axes[0].scatter(xy[:,0],xy[:,1],s=22,color='#006699',edgecolors='white',linewidths=.3)
 axes[0].scatter(*r,s=150,marker='D',color='#b22d43',edgecolors='white',zorder=6)
-axes[0].annotate('R',r,xytext=(7,-22),textcoords='offset points',weight='bold',color='#b22d43',bbox={'facecolor':'white','alpha':.9,'edgecolor':'none','pad':1})
+axes[0].annotate('Centre dels registres',r,xytext=(344.2,4554.8),fontsize=16,color='#b22d43',
+    arrowprops={'arrowstyle':'-','color':'#b22d43'},bbox={'facecolor':'white','alpha':.94,'edgecolor':'none','pad':2})
 axes[0].set_title('Cada registre compta una vegada\n124 punts',fontsize=18,pad=12)
 for mask,color in [(~assigned,'#006699'),(assigned,'#e69f00')]:
     axes[1].scatter(xy[mask,0],xy[mask,1],s=1.5*w[mask],facecolors=color,edgecolors='#333333',linewidths=.45,alpha=.85)
 axes[1].plot([r[0],p[0]],[r[1],p[1]],color='#b22d43',ls='--',lw=2,zorder=5)
 axes[1].scatter(*r,s=150,marker='D',color='#b22d43',edgecolors='white',zorder=6)
 axes[1].scatter(*p,s=260,marker='*',color='#111111',edgecolors='white',zorder=7)
-for text,at,offset in [('R',r,(7,-22)),('P',p,(-25,-24))]:
-    axes[1].annotate(text,at,xytext=offset,textcoords='offset points',weight='bold',bbox={'facecolor':'white','alpha':.9,'edgecolor':'none','pad':1})
+for text,at,target in [('Centre dels registres',r,(350.1,4555.5)),('Centre ponderat',p,(344.2,4556.0))]:
+    axes[1].annotate(text,at,xytext=target,fontsize=16,arrowprops={'arrowstyle':'-','color':'#333333'},
+        bbox={'facecolor':'white','alpha':.94,'edgecolor':'none','pad':2})
 imax=int(np.argmax(w));assert c['points'][imax]['published']==450
-axes[1].annotate('Registre A · 450 kW',xy[imax],xytext=(343.9,4562.3),fontsize=18,
+axes[1].annotate('450 kW publicats',xy[imax],xytext=(343.9,4562.3),fontsize=18,
     arrowprops={'arrowstyle':'-','color':'#333333'},bbox={'facecolor':'white','alpha':.94,'edgecolor':'none','pad':2})
 axes[1].set_title('Àrees proporcionals als pesos\n2.770 kW publicats + 200 assignats',fontsize=18,pad=12)
-fig.legend(handles=[Line2D([],[],marker='D',ls='',color='#b22d43',label='R · centre dels registres'),
-    Line2D([],[],marker='*',ls='',color='#111111',markersize=14,label='P · centre ponderat central'),
+fig.legend(handles=[Line2D([],[],marker='D',ls='',color='#b22d43',label='Centre dels registres'),
+    Line2D([],[],marker='*',ls='',color='#111111',markersize=14,label='Centre ponderat'),
     Line2D([],[],marker='o',ls='',color='#006699',label='Valor publicat'),
     Line2D([],[],marker='o',ls='',color='#e69f00',label='Valor assignat')],
     loc='outside lower center',ncol=2,frameon=False,fontsize=17)
