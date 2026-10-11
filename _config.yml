@@ -24,6 +24,8 @@ theme: unaltraweb
 exclude:
   - context/
   - sandbox/
+  - practiques/
+  - dist/
   - tmp/
   - assets/quarto/
   - vendor/
