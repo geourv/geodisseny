@@ -26,6 +26,7 @@ paths:
     - context/qgis/punts-municipals.yml
     - context/qgis/autocorrelacio-exemples.yml
     - context/qgis/constanti-pedagogia.yml
+    - context/qgis/accessibilitat-inici.yml
   play_prompts: context/qgis
   director_plans: tmp/qgis/plans
   plays: tmp/qgis/plays

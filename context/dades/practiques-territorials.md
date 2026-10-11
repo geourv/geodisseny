@@ -1,11 +1,56 @@
 # Pràctiques territorials: dades, controls i reproducció
 
-Preparacions locals del 29 de setembre al 5 d'octubre de 2026. Els ZIP es lliuren per Moodle;
+Preparacions locals del 29 de setembre al 7 d'octubre de 2026. Els ZIP es lliuren per Moodle;
 no formen part dels assets del web. Les instruccions conceptuals i els passos
 QGIS són als capítols de connectivitat, visibilitat, estadística descriptiva i
 autocorrelació. Cal mantenir còpies originals de les dades en treballar-hi.
 
 ## Paquets
+
+- **Accessibilitat, lliurament local vigent del 7/10, r2 de noms Moodle**:
+  `dist/practiques/accessibilitat-vilaseca/2026-10-07-r2/ca/accessibilitat-vilaseca-2026-10-07-r2-ca.zip`,
+  27.598.739 bytes, 2 fitxers: GeoPackage/projecte inicial i `LLEGIU-ME.pdf`
+  de 33 pàgines amb 15 imatges.
+  SHA `d936d1b56b9ab811140493a9413843e81d362f0ccf350c4a848a9c77323a71e9`.
+  `dist/practiques/accessibilitat-vilaseca/2026-10-07-r2/ca/accessibilitat-vilaseca-docent-2026-10-07-r2-ca.zip`,
+  46.704.358 bytes, 50 fitxers: resolució `LLEGIU-ME.pdf` de 28 pàgines,
+  dades inicials, 11 projectes i resultats/intermedis de classe.
+  SHA `f7425f063993404ce1382f45e149fb172cdf8cc31b160a6ae4d13a501a05c5ab`.
+  ZIPs exactes reubicats offline/readonly sense repositori: 11 capes inicials,
+  11 projectes, 52 fitxers intactes i controls de passos correctes.
+  Fonts editables a `practiques/accessibilitat-vilaseca/`; reconstrucció a
+  `sandbox/practiques/accessibilitat-vilaseca/2026-10-07-organitzacio/`.
+  Originals, logs i captures editables es conserven al sandbox.
+  Noms de ZIP descriptius i inici sense destinatari al nom/arrel interna.
+  Bytes i SHA idèntics als ZIPs verificats de `2026-10-07/ca`, conservats.
+  Rebut r2 `sandbox/practiques/accessibilitat-vilaseca/verificacio-1791389969352194110/verified.json`.
+  Manifest a dist; revisió humana pendent, sense càrrega a Moodle ni
+  publicació web. Detall a `context/dades/accessibilitat-inici.md`.
+
+- Accessibilitat, guies detallades revisades7/10, baseline conservada a `tmp/dades-docents/`:
+  `practica-accessibilitat-vilaseca-20261007-guies-alumnat.zip`,27.598.638bytes,
+  només2fitxers: el mateixGeoPackage d'inici iGUIA33p amb15imatges.
+  SHA `714d59da2d8961a9a12155653244155ea69b6729275cf314bba2cdb513a7bdbb`.
+  Docent `practica-accessibilitat-vilaseca-20261007-guies-docent.zip`,
+  396.941.925bytes,191fitxers,resolució28p/15imatges,11projectes.
+  SHA `0afa47fa4b0e1cac6e18ea978c43f4cdfbc58641e15ef8a7c55310893cc1860e`.
+  Rasterització de cobertes/passos i conservació dels passos als costos,
+  recursos enllaçats per operació, captures conservades i tres de noves.
+  Dades idèntiques, reubicació readonly/offline iCRC/hashes correctes;
+  versió privada per a revisió humana. Detall a`context/dades/accessibilitat-inici.md`.
+
+- Accessibilitat, inici compacte anterior, conservat a `tmp/dades-docents/`:
+  `practica-accessibilitat-vilaseca-20261006-alumnat.zip`,26.895.817bytes,
+  només2fitxers: GeoPackage amb projecte incrustat iGUIA23p.
+  SHA `95082dbcc3c25c7082b1af7ac666b6884337974631bf8655de88fb24384bf0a7`.
+  Preparació docent diferenciada:
+  `practica-accessibilitat-vilaseca-20261006-docent.zip`,385.887.881bytes,
+  171fitxers,11projectes,9captures iSOLUCIONS3p.
+  SHA `284c087c48f1f9863306c82c637ee54cd2b767d0570afe8bcab30965e7b3a00c`.
+  Xarxa completa deVila-seca/entorn, cobertes, DEM, passos, GRASS, anisotropia
+  iisòcrones; reubicació offline/readonly iCRC/hashes correctes. Nova versió
+  privada per a revisió humana, sense pujada a Moodle. Detall a
+  `context/dades/accessibilitat-inici.md`.
 
 - Seqüència pedagògica vigent de Constantí, capítols4i5:
   `practica-constanti-pedagogia-20261005.zip`,65.545.875bytes,95fitxers,
@@ -190,8 +235,11 @@ pràctiques atribuïda al nucli. Límits i pàgines amb figures revisats.
 Font executable: `context/dades/preparar_distancies.py`. Destinació privada:
 `tmp/dades-docents/qgis/distancies-vilaseca-20261001/`; lliurament curat a
 `lliurament/`, arrel interna del ZIP `distancies-vilaseca/`.
-Guions editables: `context/practiques/distancies-vilaseca.md` i
-`context/practiques/distancies-vilaseca-docent.md`.
+Rutes dels guions utilitzades en aquella edició: `context/practiques/distancies-vilaseca.md`
+i `context/practiques/distancies-vilaseca-docent.md`. Els documents d'aquella
+versió es conserven al paquet segellat. Les fonts actuals són
+`practiques/accessibilitat-vilaseca/ca/alumnat/LLEGIU-ME.md` i
+`practiques/accessibilitat-vilaseca/ca/docent/LLEGIU-ME.md`.
 
 ### Fonts i geometria
 

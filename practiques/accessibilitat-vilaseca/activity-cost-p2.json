@@ -1,0 +1,114 @@
+{
+  "schema_version": 2,
+  "kind": "qgis-practice-request-v2",
+  "activity": {
+    "id": "accessibilitat-vilaseca-cost-p2",
+    "version": "2026-10-09-de1",
+    "title": "Vila-seca · D/E: fricció i cost amb P2 obert/tancat"
+  },
+  "qgis_image": "sha256:1003721d96abe9607d8337b36851f9b29f84c2f8f92b377d1a73ff03c9d15cd2",
+  "script": "compute_cost_p2.py",
+  "inputs": [
+    {
+      "id": "starter",
+      "path": "accessibilitat-vilaseca.gpkg",
+      "sha256": "46d326819ad05f328eec12d34026956adcd3bfec9facbefeee226068fee03593"
+    }
+  ],
+  "parameters": {
+    "coverage": "D/E only; historical A–G readings/captures are separate",
+    "input_origin": "sandbox/practiques/accessibilitat-vilaseca/2026-10-07-organitzacio/alumnat/accessibilitat-vilaseca.gpkg",
+    "bounds": [343000, 4552000, 346000, 4555200],
+    "resolution_m": 5,
+    "axis_buffer_m": 35,
+    "origin": [344407.56508087966, 4553669.6737325005],
+    "destination": [344475.2796088749, 4554024.59009263],
+    "p2_cell": [291, 274],
+    "alternative_cell": [324, 219],
+    "expected": {
+      "open": {"cost_weighted_m": 1336.9900782009827, "path_length_m": 441.98484809834997},
+      "closed": {"cost_weighted_m": 4548.731957466707, "path_length_m": 1639.2135623731024}
+    }
+  },
+  "products": [
+    {
+      "id": "initial-data", "path": "data/accessibilitat-vilaseca.gpkg",
+      "role": "initial-data", "format": "geopackage", "from_input": "starter",
+      "depends_on": ["font-regular"],
+      "members": [
+        {"kind": "vector", "name": "municipi", "role": "initial-data"},
+        {"kind": "vector", "name": "ambit_calcul", "role": "initial-data"},
+        {"kind": "vector", "name": "cobertura_sense_dades", "role": "initial-data"},
+        {"kind": "vector", "name": "cobertes", "role": "initial-data"},
+        {"kind": "vector", "name": "xarxa", "role": "initial-data"},
+        {"kind": "vector", "name": "origen", "role": "initial-data"},
+        {"kind": "vector", "name": "desti", "role": "initial-data"},
+        {"kind": "vector", "name": "passos", "role": "initial-data"},
+        {"kind": "vector", "name": "autopista_eixos", "role": "initial-data"},
+        {"kind": "table", "name": "llegenda_costos", "role": "initial-data"},
+        {"kind": "raster", "name": "mdt", "role": "initial-data"},
+        {"kind": "raster", "name": "ortofoto", "role": "initial-data"},
+        {"kind": "project", "name": "inici", "role": "initial-project"},
+        {"kind": "style", "name": "1", "role": "style"},
+        {"kind": "style", "name": "2", "role": "style"},
+        {"kind": "style", "name": "3", "role": "style"},
+        {"kind": "style", "name": "4", "role": "style"},
+        {"kind": "style", "name": "5", "role": "style"},
+        {"kind": "style", "name": "6", "role": "style"},
+        {"kind": "style", "name": "7", "role": "style"},
+        {"kind": "style", "name": "8", "role": "style"},
+        {"kind": "style", "name": "9", "role": "style"}
+      ]
+    },
+    {"id": "font-regular", "path": "data/fonts/DejaVuSans.ttf", "role": "initial-data", "format": "font", "depends_on": []},
+    {"id": "axis-buffer", "path": "data/axis_buffer.gpkg", "role": "resolved-data", "format": "geopackage", "members": [{"kind": "vector", "name": "axis_buffer", "role": "resolved-data"}]},
+    {"id": "road-cover", "path": "data/road_cover.gpkg", "role": "resolved-data", "format": "geopackage", "members": [{"kind": "vector", "name": "road_cover", "role": "resolved-data"}]},
+    {"id": "barrier-vector", "path": "data/barrera_autopista.gpkg", "role": "resolved-data", "format": "geopackage", "members": [{"kind": "vector", "name": "barrera_autopista", "role": "resolved-data"}]},
+    {"id": "classes", "path": "data/classes.tif", "role": "resolved-data", "format": "geotiff"},
+    {"id": "base", "path": "data/base.tif", "role": "resolved-data", "format": "geotiff"},
+    {"id": "pass-grid", "path": "data/pas.tif", "role": "resolved-data", "format": "geotiff"},
+    {"id": "barrier-grid", "path": "data/barrera.tif", "role": "resolved-data", "format": "geotiff"},
+    {"id": "friction-numeric-open", "path": "data/friccio_numeric_obert.tif", "role": "resolved-data", "format": "geotiff"},
+    {"id": "friction-numeric-closed", "path": "data/friccio_numeric_tancat.tif", "role": "resolved-data", "format": "geotiff"},
+    {"id": "friction-open", "path": "data/friccio_obert.tif", "role": "resolved-data", "format": "geotiff"},
+    {"id": "friction-closed", "path": "data/friccio_tancat.tif", "role": "resolved-data", "format": "geotiff"},
+    {"id": "cell-cost-open", "path": "data/cost_cella_obert.tif", "role": "resolved-data", "format": "geotiff"},
+    {"id": "cell-cost-closed", "path": "data/cost_cella_tancat.tif", "role": "resolved-data", "format": "geotiff"},
+    {"id": "cost-open", "path": "data/cost_obert.tif", "role": "resolved-data", "format": "geotiff"},
+    {"id": "cost-closed", "path": "data/cost_tancat.tif", "role": "resolved-data", "format": "geotiff"},
+    {"id": "directions-open", "path": "data/direccions_obert.tif", "role": "resolved-data", "format": "geotiff"},
+    {"id": "directions-closed", "path": "data/direccions_tancat.tif", "role": "resolved-data", "format": "geotiff"},
+    {"id": "cost-open-worldfile", "path": "data/cost_obert.tfw", "role": "resolved-data", "format": "sidecar"},
+    {"id": "cost-closed-worldfile", "path": "data/cost_tancat.tfw", "role": "resolved-data", "format": "sidecar"},
+    {"id": "directions-open-worldfile", "path": "data/direccions_obert.tfw", "role": "resolved-data", "format": "sidecar"},
+    {"id": "directions-closed-worldfile", "path": "data/direccions_tancat.tfw", "role": "resolved-data", "format": "sidecar"},
+    {"id": "route-open", "path": "data/ruta_cost_obert.gpkg", "role": "resolved-data", "format": "geopackage", "members": [{"kind": "vector", "name": "ruta_cost_obert", "role": "resolved-data"}]},
+    {"id": "route-closed", "path": "data/ruta_cost_tancat.gpkg", "role": "resolved-data", "format": "geopackage", "members": [{"kind": "vector", "name": "ruta_cost_tancat", "role": "resolved-data"}]}
+  ],
+  "fonts": [{"file": "font-regular", "family": "DejaVu Sans"}],
+  "projects": [
+    {
+      "id": "initial-project", "path": "projects/initial/inici.qgz", "role": "initial-project",
+      "source_product": "initial-data", "source_project": "inici", "compose": true, "capture": false,
+      "scene": {"setup": [], "presentation": {"checks": {"project_crs": "EPSG:25831", "required_layers": ["Origen O", "Destí D", "MDT ICGC · altitud5m", "Ortofoto ICGC2025 · context2m"]}}}
+    },
+    {
+      "id": "resolved-project", "path": "projects/resolved/cost-p2.qgz", "role": "resolved-project",
+      "source_product": "initial-data", "source_project": "inici", "compose": true, "capture": true,
+      "scene": {
+        "setup": [
+          {"action": "load_raster", "path": "data/cost_obert.tif", "name": "Cost acumulat · obert"},
+          {"action": "load_raster", "path": "data/cost_tancat.tif", "name": "Cost acumulat · tancat"},
+          {"action": "load_vector", "path": "data/ruta_cost_obert.gpkg|layername=ruta_cost_obert", "name": "Camí de cost · obert"},
+          {"action": "load_vector", "path": "data/ruta_cost_tancat.gpkg|layername=ruta_cost_tancat", "name": "Camí de cost · tancat"},
+          {"action": "zoom_to_layer", "layer": "Àmbit de càlcul · cel·la5m", "scale": 1.05},
+          {"action": "clear_message_bar"}
+        ],
+        "presentation": {"active_layer": "Cost acumulat · obert", "checks": {"project_crs": "EPSG:25831", "required_layers": ["Cost acumulat · obert", "Camí de cost · obert", "Camí de cost · tancat", "Origen O", "Destí D"]}},
+        "captures": [{"id": "cost-p2", "target": {"class_name": "QgisApp"}, "drawings": []}]
+      }
+    }
+  ],
+  "timeout_seconds": 600,
+  "locale": "ca_ES"
+}
