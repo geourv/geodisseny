@@ -29,7 +29,7 @@ Prompt/recepta de captures: `context/qgis/accessibilitat-inici.md` i `context/qg
 | `context/practiques/distancies-vilaseca.md` al commit base | `78b71f998cf2f1da74801d512b26b050c043e258c2ecd1f99fd16b6c15688aa5` | Blob Git del commit `5c904a386048bf317ca45cab6d42e0965f0ce0d6` |
 | `context/practiques/distancies-vilaseca-docent.md` al commit base | `7a93b5913ec08c615ececcedd62ba4edab301ac2a31cf144cbc64d51d9a323e8` | Mateix commit; versió docent anterior |
 | Lectura d'inici abans de captions | `2b143ca541a6d5a84bea9d1c2b8e7e5641f6f81fe514f9141cebc06886057953` | `sandbox/practiques/accessibilitat-vilaseca/lectura-2026-10-09-pdf-01-ca-alumnat-ga32-alumnat-01/inputs/original.md` |
-| Lectura docent abans de captions | `8b54fe7842cb0847a54f57dbfb2fa6edf46af9669b5f5bde0dae45b357d814` | `sandbox/practiques/accessibilitat-vilaseca/lectura-2026-10-09-pdf-01-ca-docent-ga32-docent-01/inputs/original.md` |
+| Lectura docent abans de captions | `8b54fe7842cb0847a54f57dbfb2fa6edf46af9669b5f5b5bde0dae45b357d814` | `sandbox/practiques/accessibilitat-vilaseca/lectura-2026-10-09-pdf-01-ca-docent-ga32-docent-01/inputs/original.md`, 19.827 bytes; digest64recalculat sobre les bytes preservades i coincident amb el handoff |
 
 Recuperar aquestes versions com a còpies en una ubicació nova, mai sobre la font actual de l'autor. Els logs i inputs complets dels dos jobs fallits es conserven.
 

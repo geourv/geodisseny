@@ -93,36 +93,92 @@ def organise():
 
 
 def capture_config():
-    """Materialise a consumer recipe/config using the same provider interface."""
+    """Derive confined, create-only capture paths for an owned unsealed run."""
     import yaml
     setup()
+    root, out = ROOT.resolve(), OUT.resolve()
+    activity_root = (root / 'sandbox/practiques' / PACKAGE_STEM).resolve()
+    if not activity_root.is_relative_to(root) or out == activity_root or not out.is_relative_to(activity_root):
+        raise ValueError('Capture configuration requires an activity sandbox run.')
+    captures = (out / 'captures').resolve()
+    rendered = (captures / 'rendered').resolve()
+    if not captures.is_relative_to(out) or not rendered.is_relative_to(captures):
+        raise ValueError('Capture output escapes the owned run.')
+    target, config_path = captures / 'recipe.yml', captures / 'config.yml'
+    if any(path.exists() or path.is_symlink() for path in [target, config_path]):
+        raise FileExistsError('Capture recipe/config already exists; select a new run.')
     source = ROOT / 'context/qgis/accessibilitat-inici.yml'
     recipe = yaml.safe_load(source.read_text())
-    work_prefix = str(OUT.relative_to(ROOT))
     legacy_prefixes = ['tmp/dades-docents/qgis/accessibilitat-vilaseca-20261006-inici',
                        'tmp/dades-docents/qgis/accessibilitat-vilaseca-20261007-guies']
+    prefixes = legacy_prefixes + [Path(prefix).name for prefix in legacy_prefixes]
+
+    def confined_path(value, base, boundary):
+        filesystem, separator, options = value.partition('|')
+        path = Path(filesystem)
+        path = (path if path.is_absolute() else base / path).resolve()
+        if not path.is_relative_to(boundary):
+            raise ValueError('Capture path escapes its declared base: ' + value)
+        return str(path) + (separator + options if separator else '')
+
     def rewrite(value):
         if isinstance(value, str):
-            for prefix in legacy_prefixes:
-                value = value.replace(prefix, work_prefix)
+            filesystem, separator, options = value.partition('|')
+            for prefix in prefixes:
+                if filesystem == prefix or filesystem.startswith(prefix + '/'):
+                    relative = filesystem[len(prefix):].lstrip('/')
+                    return confined_path(relative + (separator + options if separator else ''), out, out)
             return value
         if isinstance(value, list):
             return [rewrite(item) for item in value]
         if isinstance(value, dict):
             return {key: rewrite(item) for key, item in value.items()}
         return value
+
     recipe = rewrite(recipe)
-    for resource in recipe.get('data', []):
-        path = resource['path']
-        for prefix in ['accessibilitat-vilaseca-20261006-inici', 'accessibilitat-vilaseca-20261007-guies']:
-            if path.startswith(prefix + '/'):
-                resource['path'] = work_prefix + path[len(prefix):]
-    target = OUT / 'captures/recipe.yml'
-    target.write_text(yaml.safe_dump(recipe, allow_unicode=True, sort_keys=False))
+    if recipe.get('source_prompt'):
+        recipe['source_prompt'] = confined_path(recipe['source_prompt'], root, root)
+    destinations = set()
+    for capture in recipe['captures']:
+        for key in ['path', 'annotations_svg', 'manifest']:
+            value = capture.get('output', {}).get(key)
+            if not value:
+                continue
+            old_output = Path(confined_path(value, out, captures))
+            new_output = Path(confined_path(str(old_output.relative_to(captures)), rendered, rendered))
+            if new_output.exists() or new_output.is_symlink():
+                raise FileExistsError('Capture output already exists: ' + str(new_output))
+            if new_output in destinations:
+                raise ValueError('Duplicate capture output: ' + str(new_output))
+            destinations.add(new_output)
+            capture['output'][key] = str(new_output)
+
+    def check_paths(value):
+        if isinstance(value, dict):
+            for key, item in value.items():
+                if key == 'path' and isinstance(item, str):
+                    confined_path(item, out, out)
+                else:
+                    check_paths(item)
+        elif isinstance(value, list):
+            for item in value:
+                check_paths(item)
+
+    check_paths(recipe)
     config = yaml.safe_load((ROOT / '.unaltracaptura-qgis.yml').read_text())
-    config['paths'].update({'recipes': [str(target.relative_to(ROOT))], 'data_root': '.',
-                            'output_root': str((OUT / 'captures').relative_to(ROOT))})
-    (OUT / 'captures/config.yml').write_text(yaml.safe_dump(config, allow_unicode=True, sort_keys=False))
+    # Inherited input bases stay rooted at the original consumer; output bases
+    # belong to this run. Absolute paths are independent of config.yml's parent.
+    for key, value in list(config['paths'].items()):
+        if key != 'recipes' and isinstance(value, str):
+            config['paths'][key] = confined_path(value, root, root)
+    config['paths'].update({'recipes': ['recipe.yml'], 'output_root': str(rendered),
+                            'cache_root': confined_path('cache', captures, out),
+                            'director_plans': confined_path('plans', captures, out),
+                            'plays': confined_path('plays', captures, out)})
+    with target.open('x', encoding='utf-8') as stream:
+        stream.write(yaml.safe_dump(recipe, allow_unicode=True, sort_keys=False))
+    with config_path.open('x', encoding='utf-8') as stream:
+        stream.write(yaml.safe_dump(config, allow_unicode=True, sort_keys=False))
 
 
 def reading_name(language=None):
