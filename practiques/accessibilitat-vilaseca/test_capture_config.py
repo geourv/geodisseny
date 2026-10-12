@@ -47,7 +47,10 @@ def load_preparer():
 class CaptureConfigTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        FIXTURES.mkdir()
+        parent = ROOT.resolve() / 'sandbox/practiques/accessibilitat-vilaseca'
+        if FIXTURES.parent.resolve() != parent:
+            raise ValueError('Fixture parent escapes the source-only sandbox.')
+        FIXTURES.mkdir(parents=True)
 
     def setUp(self):
         self.root = FIXTURES / self._testMethodName / 'consumer with spaces'
