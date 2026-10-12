@@ -1,0 +1,24 @@
+{
+  "allow_empty_public_sources": false,
+  "data_roots": [
+    "context/inputs",
+    "sandbox",
+    "dist",
+    "tmp",
+    ".unaltracaptura-qgis/jobs",
+    "practiques/accessibilitat-vilaseca/data",
+    "practiques/accessibilitat-vilaseca/outputs",
+    "practiques/accessibilitat-vilaseca/captures",
+    "assets/pdf"
+  ],
+  "practice_roots": [
+    "practiques",
+    "_practices"
+  ],
+  "profile": "unaltremanual",
+  "public_roots": [
+    "_chapters",
+    "_pages"
+  ],
+  "schema_version": 1
+}

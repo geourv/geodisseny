@@ -1,0 +1,56 @@
+version: 1
+practica: accessibilitat-vilaseca
+idioma: ca
+versions_idioma: [ca]
+lectura:
+  ca: LLEGIU-ME
+  es: LEEME
+  en: README
+fonts_documents:
+  alumnat: ca/alumnat/LLEGIU-ME.md
+  docent: ca/docent/LLEGIU-ME.md
+treball: sandbox/practiques/accessibilitat-vilaseca/2026-10-07-organitzacio
+lliurament: dist/practiques/accessibilitat-vilaseca/2026-10-07-r2/ca
+paquets:
+  alumnat: accessibilitat-vilaseca-2026-10-07-r2-ca.zip
+  docent: accessibilitat-vilaseca-docent-2026-10-07-r2-ca.zip
+runtime_qgis: sha256:950ee7bf7cbab5163849415d4f7fd72dc400b1e81127913ff308244ae4a6ebdc
+runtime_pdf: ghcr.io/dosquartsdedocs/unaltraweb-manual-pdf@sha256:9e0b3a45753c170b795e9a9d6df61580085c113436beac5bf6c8de69b6562097
+captures:
+  prompt: context/qgis/accessibilitat-inici.md
+  recepta: context/qgis/accessibilitat-inici.yml
+recursos:
+  - id: divisions-icgc
+    productor: ICGC
+    edicio: 2026-01-20
+    pagina: https://www.icgc.cat/ca/Geoinformacio-i-mapes/Dades-i-productes/Geoinformacio-cartografica/Divisions-administratives
+    sha256_snapshot: 99b864527af667d8c1ac2dcb814039c8328d03f0cd3d3faf24274878f5b14e61
+  - id: cobertes-mcsc
+    productor: ICGC
+    edicio: 2024
+    url: https://datacloud.icgc.cat/datacloud/cobertes-sol/gpkg_unzip/cobertes-sol-v1r0-2024.gpkg
+    capa: cobertes_sol
+    llicencia: CC BY 4.0
+  - id: transports-rtt
+    productor: ICGC
+    edicio: 2024
+    url: https://datacloud.icgc.cat/datacloud/topografia-territorial/gpkg_unzip/topografia-territorial-v1r0-2024.gpkg
+    capa: _35_transports_l
+    llicencia: CC BY 4.0
+  - id: mdt
+    productor: ICGC
+    edicio: LiDAR 2021-2023
+    url: https://datacloud.icgc.cat/datacloud/model-elevacions-terreny/tif_unzip/model-elevacions-terreny-lidar-catalunya-5m-2021-2023.tif
+    resolucio_m: 5
+  - id: ortofoto
+    productor: ICGC
+    edicio: 2025
+    url: https://geoserveis.icgc.cat/servei/catalunya/orto-territorial/wms
+    capa: ortofoto_25cm_color_2025
+    resolucio_copia_m: 2
+  - id: vials-osm
+    productor: OpenStreetMap contributors / Geofabrik
+    edicio: 2026-10-05
+    url: https://download.geofabrik.de/europe/spain/cataluna-261005.osm.pbf
+    sha256: 522f5a71ae966c02d76935b6cecabb09eea6f0c9ad8443c33867cb89c6417959
+    llicencia: ODbL 1.0

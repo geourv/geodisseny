@@ -2,6 +2,17 @@
 
 This site uses the **`unaltremanual`** profile: Book-like manual, course, or teaching site.
 
+## Recursos del manual i de les activitats
+
+- **Web/manual:** `_pages/`, `_chapters/`, `_bibliography/` i assets publicats, amb fonts i rebuts dels proveïdors. El PDF del manual segueix el seu canal de publicació.
+- **Reconstrucció d'activitats:** codi, documents Markdown i recursos a [`practiques/`](practiques/README.md), versionats i exclosos de Jekyll.
+- **Treball d'agent:** descàrregues, fonts datades, intermedis, proves i verificacions a `sandbox/practiques/`, ignorat. Els directoris dels capturadors conserven les seves regles de propietat.
+- **Moodle:** ZIPs finals a `dist/practiques/<practica>/<versio>/<idioma>/`, amb noms `<practica>-<versio>-<idioma>.zip` i `<practica>-docent-<versio>-<idioma>.zip`, ignorats i exclosos del web. Són independents del PDF/versió del manual; el nom públic del lliurament d'inici no inclou «alumnat» o «estudiants».
+
+Els documents de lectura es diuen `LLEGIU-ME`(ca), `LEEME`(es) o `README`(en).
+Les activitats antigues encara sota `context/` i els paquets segellats sota
+`tmp/dades-docents/` són inventariats: no s'eliminen ni es mouen implícitament.
+
 The package-managed collaboration contract is `.github/CONTRIBUTING.md`. It defines branch names, exact path reservations, single-checkout session coordination, generated figure bundles, and provider integrations.
 
 GitHub Web is suitable for small, coordinated content updates. Follow this workflow before changing a file:
