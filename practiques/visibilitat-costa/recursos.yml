@@ -1,0 +1,48 @@
+schema_version: 1
+activity: visibilitat-costa
+language: ca
+scope: torxa de la Canonja, TV-3148 i recinte petroquímic
+reading_status: approved
+runtime:
+  producer: unaltracaptura-qgis
+  version: 0.6.0
+  profile: qgis-practice-v2
+  revision: sha256:4dcd2c40bca4836a202c0c5cc400553b0f134925023b7300e0c0ff2fff1d8492
+  schema_sha256: 528c8be229c72c346f134ffaa60094f94224094a25b6fb11bcc87802ddc7fffb
+  image: sha256:1003721d96abe9607d8337b36851f9b29f84c2f8f92b377d1a73ff03c9d15cd2
+  network: none
+readings:
+  provider: unaltraweb
+  version: 0.7.2
+  template: private-practice-a4-landscape
+  image: sha256:618163d3f924439792b2306617bd9612f566c5881166102fa544b4e782d569fa
+retained_source:
+  path: tmp/dades-docents/practica-visibilitat-costa-20261002-r3.zip
+  sha256: b7f2c5f38c8ee45cca592ce35db4aaeac77a413f6ace210948e47e338c3369cc
+  original_runtime: sha256:950ee7bf7cbab5163849415d4f7fd72dc400b1e81127913ff308244ae4a6ebdc
+resources:
+  - producer: ICGC
+    url: https://www.icgc.cat/ca/Geoinformacio-i-mapes/Dades-i-productes/Elevacions
+    edition: LiDAR 2021–2023
+    derivation: native MDT 5 m; MDS 1 m aggregated by maximum to 5 m
+    crs: EPSG:25831
+    extent: [342000, 4549000, 352000, 4559000]
+  - producer: ICGC
+    url: https://www.icgc.cat/ca/Geoinformacio-i-mapes/Mapes/Mapa-de-cobertes-del-sol-de-Catalunya
+    edition: MCSC 2024
+    feature: 1459998
+    category: 347
+  - producer: ICGC
+    url: https://www.icgc.cat/condicions
+    rtt_edition: 2024
+    ortho_edition: 2025
+    ortho_source: retained WMS context snapshot, 10 metres per pixel
+  - producer: OpenStreetMap contributors
+    url: https://www.openstreetmap.org/copyright
+    node: 7682543312
+    version: 1
+delivery:
+  student: prepared inputs, embedded initial project, local font and LLEGIU-ME.pdf
+  teacher: initial inputs, exact retained classroom results, embedded teacher project and worked reading
+  reconstruction: retained separately, including the 179 original viewshed executions and their evidence
+  human_approved: true

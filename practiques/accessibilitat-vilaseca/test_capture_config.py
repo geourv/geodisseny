@@ -223,12 +223,13 @@ class CaptureConfigTests(unittest.TestCase):
             self.preparer.capture_config()
         self.assertFalse((self.captures / 'recipe.yml').exists())
 
-    def test_all_twelve_template_captures_keep_parameters_and_new_destinations(self):
+    def test_all_sixteen_icgc_captures_keep_parameters_and_new_destinations(self):
         # Only versioned YAML text is read; no historical GIS inputs are used.
         self.recipe = yaml.safe_load(source_text('context/qgis/accessibilitat-inici.yml'))
         self.write_inputs()
-        _, derived = self.generate()
-        self.assertEqual(len(derived['captures']), 12)
+        config, derived = self.generate()
+        self.assertEqual(len(derived['captures']), 16)
+        self.assertEqual(config['runtime']['default_image'], self.preparer.IMAGE)
 
         def non_path_fields(value):
             if isinstance(value, dict):
@@ -241,8 +242,8 @@ class CaptureConfigTests(unittest.TestCase):
         self.assertEqual(non_path_fields(derived), non_path_fields(self.recipe))
         outputs = [Path(value) for capture in derived['captures']
                    for value in capture['output'].values()]
-        self.assertEqual(len(outputs), 36)
-        self.assertEqual(len(set(outputs)), 36)
+        self.assertEqual(len(outputs), 48)
+        self.assertEqual(len(set(outputs)), 48)
         self.assertTrue(all(p.is_relative_to(self.captures / 'rendered') for p in outputs))
         self.assertTrue(all(not p.exists() for p in outputs))
 

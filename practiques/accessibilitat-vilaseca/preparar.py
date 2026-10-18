@@ -16,16 +16,16 @@ import urllib.request
 from urllib.parse import urlencode
 
 ROOT = Path(__file__).resolve().parents[2]
-OUT = ROOT / 'sandbox/practiques/accessibilitat-vilaseca/2026-10-07-organitzacio'
+OUT = ROOT / 'sandbox/practiques/accessibilitat-vilaseca/2026-10-14-r5-01'
 PACKAGE_STEM = 'accessibilitat-vilaseca'
 PRACTICE = Path(__file__).resolve().parent
 LANGUAGE = 'ca'
-VERSION = '2026-10-07-r2'
+VERSION = '2026-10-14-r5'
 DIST = ROOT / 'dist/practiques' / PACKAGE_STEM / VERSION / LANGUAGE
 OLD = ROOT / 'tmp/dades-docents/qgis/distancies-vilaseca-20261001-ampliada'
 ADM = ROOT / 'tmp/dades-docents/originals/icgc-20260120/divisions-administratives-v2r2-20260120.gpkg'
 RTT = ROOT / 'tmp/dades-docents/practiques/rtt-original.gpkg'
-IMAGE = 'sha256:950ee7bf7cbab5163849415d4f7fd72dc400b1e81127913ff308244ae4a6ebdc'
+IMAGE = 'sha256:1003721d96abe9607d8337b36851f9b29f84c2f8f92b377d1a73ff03c9d15cd2'
 COVER_URL = 'https://datacloud.icgc.cat/datacloud/cobertes-sol/gpkg_unzip/cobertes-sol-v1r0-2024.gpkg'
 RTT_URL = 'https://datacloud.icgc.cat/datacloud/topografia-territorial/gpkg_unzip/topografia-territorial-v1r0-2024.gpkg'
 DEM_URL = 'https://datacloud.icgc.cat/datacloud/model-elevacions-terreny/tif_unzip/model-elevacions-terreny-lidar-catalunya-5m-2021-2023.tif'
@@ -34,6 +34,24 @@ RES = 5
 BOUNDS = (343000, 4552000, 346000, 4555200)
 OLD_O = (344407.0, 4553668.36)
 OLD_D = (344473.01, 4554030.72)
+P2_RTT_ID = 1354754
+MODULE = None
+MODULES = {
+    'xarxa': {'slug': 'accessibilitat-xarxa-vilaseca', 'projects': ['00-inici', '02-xarxa'],
+              'initial_rasters': [], 'worked_rasters': []},
+    'raster': {'slug': 'accessibilitat-raster-vilaseca',
+               'projects': ['00-inici', '01-euclidiana', '02-xarxa', '05-friccio-oberta', '06-friccio-tancada', '07-cost'],
+               'initial_rasters': [], 'worked_rasters': ['classes', 'base', 'vials', 'pas', 'barrera',
+                   'origen_zero', 'origen_null', 'friccio_obert', 'friccio_tancat', 'cost_cella_obert',
+                   'cost_cella_tancat', 'direccions_obert', 'direccions_tancat']},
+    'temps': {'slug': 'accessibilitat-temps-vilaseca',
+              'projects': ['00-inici', '03-servei-obert', '04-servei-tancat', '08-marxa', '09-isocrones-obert', '10-isocrones-tancat'],
+              'initial_rasters': ['friccio_obert', 'friccio_tancat'],
+              'worked_rasters': ['friccio_obert', 'friccio_tancat', 'friccio_temporal_obert',
+                  'friccio_temporal_tancat', 'mdt_ambit', 'mdt_pla'] +
+                  ['marxa_' + state + '_' + suffix for state in ['obert_anada', 'obert_tornada',
+                      'tancat_anada', 'pla_anada', 'pla_tornada'] for suffix in ['segons', 'direccions', 'minuts']]},
+}
 
 
 def sha(path):
@@ -51,7 +69,7 @@ def initialise():
         assert marker.is_file() and json.loads(marker.read_text())['owner'] == Path(__file__).name, OUT
     else:
         OUT.mkdir(parents=True)
-        record(marker, {'owner': Path(__file__).name, 'prepared': '2026-10-07'})
+        record(marker, {'owner': Path(__file__).name, 'prepared': VERSION})
     assert not (OUT / 'sealed.json').exists(), 'Sealed delivery is immutable.'
     for name in ['fonts', 'controls', 'alumnat', 'docent', 'docent/resultats', 'docent/projectes', 'captures']:
         (OUT / name).mkdir(exist_ok=True)
@@ -92,7 +110,114 @@ def organise():
     print('Sandbox run prepared from the sealed, hash-verified practice.', flush=True)
 
 
-def capture_config():
+def stage_icgc():
+    """Retain only the verified institutional inputs for a fresh calculation."""
+    import shutil
+    previous = ROOT / 'sandbox/practiques/accessibilitat-vilaseca/2026-10-13-r4-01'
+    seal = json.loads((previous / 'sealed.json').read_text())
+    assert sha(previous / 'MANIFEST.json') == seal['manifest_sha256']
+    assert not OUT.exists(), 'Select a new run; existing activity runs are retained.'
+    sources = json.loads((previous / 'fonts/fonts.json').read_text())
+    names = ['municipi.gpkg', 'eixos-rtt-2024.gpkg', 'cobertes-2024.gpkg',
+             'mdt-5m.tif', 'ortofoto-2025.tif']
+    for name in names:
+        assert sha(previous / 'fonts' / name) == sources[name]['sha256'], name
+    initialise()
+    selected = {}
+    for name in names:
+        target = OUT / 'fonts' / name
+        shutil.copyfile(previous / 'fonts' / name, target)
+        assert sha(target) == sources[name]['sha256']
+        selected[name] = sources[name]
+    record(OUT / 'fonts/fonts.json', selected)
+    reproduction = OUT / 'reproduccio'
+    reproduction.mkdir()
+    shutil.copyfile(Path(__file__), reproduction / 'preparar.py')
+    record(OUT / 'controls/reconstruction-source.json', {
+        'source': str(previous.relative_to(ROOT)), 'manifest_sha256': seal['manifest_sha256'],
+        'operation': 'new ICGC network and recalculation', 'network_source': 'ICGC RTT 2024',
+        'selected_inputs': {name: selected[name]['sha256'] for name in names},
+        'source_outputs_reused': False,
+    })
+    print('Verified institutional input snapshots staged for a new ICGC calculation.', flush=True)
+
+
+def reuse_icgc(source_run):
+    """Copy this activity's sealed ICGC classroom bytes for a reading revision."""
+    import shutil
+    import yaml
+    previous = (ROOT / 'sandbox/practiques' / PACKAGE_STEM / source_run).resolve()
+    assert previous.is_relative_to((ROOT / 'sandbox/practiques' / PACKAGE_STEM).resolve())
+    assert not OUT.exists(), 'Select a new run; existing activity runs are retained.'
+    seal = json.loads((previous / 'sealed.json').read_text())
+    assert sha(previous / 'MANIFEST.json') == seal['manifest_sha256']
+    manifest = json.loads((previous / 'MANIFEST.json').read_text())
+    assert manifest['runtime'] == IMAGE
+    verified = json.loads((previous / 'controls/verificacio-qgis.json').read_text())
+    assert verified['ok'] and verified['network_source'] == 'ICGC RTT2024'
+    assert verified['network_parts'] == 7945 and verified['closed_route_empty']
+    sources = json.loads((previous / 'fonts/fonts.json').read_text())
+    retained = {}
+
+    def retain(relative, expected):
+        source = (previous / relative).resolve()
+        target = OUT / relative
+        assert source.is_relative_to(previous) and target.resolve().is_relative_to(OUT.resolve())
+        assert sha(source) == expected, relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        with source.open('rb') as stream, target.open('xb') as destination:
+            shutil.copyfileobj(stream, destination)
+        assert sha(target) == expected
+        retained[relative] = expected
+
+    # The sealed delivery inventory is the authority for classroom GIS bytes.
+    for item in manifest['inventories']['docent']:
+        if not item['path'].endswith('.pdf'):
+            relative = item['path']
+            assert relative.startswith(('alumnat/', 'docent/'))
+            assert sha(previous / relative) == item['sha256'], relative
+    initialise()
+    for relative, digest in verified['checked_hashes'].items():
+        assert relative.startswith(('alumnat/', 'docent/'))
+        retain(relative, digest)
+    assert sha(OUT / 'alumnat/accessibilitat-vilaseca.gpkg') == verified['student_gpkg_sha256']
+    for item in manifest['inventories']['docent']:
+        if not item['path'].endswith('.pdf'):
+            assert retained[item['path']] == item['sha256']
+    for name, evidence in sources.items():
+        retain('fonts/' + name, evidence['sha256'])
+    retain('fonts/fonts.json', sha(previous / 'fonts/fonts.json'))
+    for name in ['preparacio.json', 'resultats-inici.json']:
+        retain('controls/' + name, sha(previous / 'controls' / name))
+    config = yaml.safe_load((ROOT / '_config.yml').read_text())
+    readings = config['unaltraweb']['practices']['readings']
+    png_hashes = {Path(binding['reference']).name: binding['sha256']
+                  for reading in readings if reading['slug'] == PACKAGE_STEM
+                  for binding in reading['bindings']}
+    recipe = yaml.safe_load((ROOT / 'context/qgis/accessibilitat-inici.yml').read_text())
+    for capture in recipe['captures']:
+        name = capture['id']
+        prefix = 'captures/icgc-final/rendered/' + name
+        evidence = json.loads((previous / (prefix + '.manifest.yml')).read_text())
+        assert evidence['ok'] and not evidence['warnings'] and evidence['image_digest'] == IMAGE
+        retain(prefix + '.png', png_hashes[name + '.png'])
+        for suffix in ['.annotations.svg', '.manifest.yml']:
+            retain(prefix + suffix, sha(previous / (prefix + suffix)))
+    reproduction = OUT / 'reproduccio'
+    reproduction.mkdir()
+    shutil.copyfile(Path(__file__), reproduction / 'preparar.py')
+    record(OUT / 'controls/reconstruction-source.json', {
+        'source': str(previous.relative_to(ROOT)), 'manifest_sha256': seal['manifest_sha256'],
+        'operation': 'reading revision with unchanged ICGC classroom GIS',
+        'network_source': 'ICGC RTT2024', 'student_inputs_unchanged': True,
+        'source_outputs_reused': True, 'captures_reused_without_render': True,
+        'source_packages': seal['packages'], 'retained_sha256': retained,
+    })
+    assert sha(previous / 'MANIFEST.json') == seal['manifest_sha256']
+    print('Verified ICGC classroom data and captures copied without recalculation.', flush=True)
+
+
+def capture_config(pass_id=None):
     """Derive confined, create-only capture paths for an owned unsealed run."""
     import yaml
     setup()
@@ -101,10 +226,15 @@ def capture_config():
     if not activity_root.is_relative_to(root) or out == activity_root or not out.is_relative_to(activity_root):
         raise ValueError('Capture configuration requires an activity sandbox run.')
     captures = (out / 'captures').resolve()
-    rendered = (captures / 'rendered').resolve()
+    staging = captures / pass_id if pass_id else captures
+    if pass_id and (Path(pass_id).name != pass_id or not pass_id):
+        raise ValueError('Capture pass must be one path component')
+    rendered = (staging / 'rendered').resolve()
     if not captures.is_relative_to(out) or not rendered.is_relative_to(captures):
         raise ValueError('Capture output escapes the owned run.')
-    target, config_path = captures / 'recipe.yml', captures / 'config.yml'
+    if pass_id:
+        staging.mkdir()
+    target, config_path = staging / 'recipe.yml', staging / 'config.yml'
     if any(path.exists() or path.is_symlink() for path in [target, config_path]):
         raise FileExistsError('Capture recipe/config already exists; select a new run.')
     source = ROOT / 'context/qgis/accessibilitat-inici.yml'
@@ -166,15 +296,17 @@ def capture_config():
 
     check_paths(recipe)
     config = yaml.safe_load((ROOT / '.unaltracaptura-qgis.yml').read_text())
+    config['runtime']['default_image'] = IMAGE
+    config['plugins'] = ['processing']
     # Inherited input bases stay rooted at the original consumer; output bases
     # belong to this run. Absolute paths are independent of config.yml's parent.
     for key, value in list(config['paths'].items()):
         if key != 'recipes' and isinstance(value, str):
             config['paths'][key] = confined_path(value, root, root)
     config['paths'].update({'recipes': ['recipe.yml'], 'output_root': str(rendered),
-                            'cache_root': confined_path('cache', captures, out),
-                            'director_plans': confined_path('plans', captures, out),
-                            'plays': confined_path('plays', captures, out)})
+                            'cache_root': confined_path('cache', staging, out),
+                            'director_plans': confined_path('plans', staging, out),
+                            'plays': confined_path('plays', staging, out)})
     with target.open('x', encoding='utf-8') as stream:
         stream.write(yaml.safe_dump(recipe, allow_unicode=True, sort_keys=False))
     with config_path.open('x', encoding='utf-8') as stream:
@@ -268,72 +400,6 @@ def fetch():
                  derivation='Whole source polygons and legend tables; original feature IDs retained.')
         source = None
 
-    if not ready('xarxa-osm.json'):
-        import subprocess
-        import sys
-        sr = osr.SpatialReference()
-        sr.ImportFromEPSG(25831)
-        ll = osr.SpatialReference()
-        ll.ImportFromEPSG(4326)
-        sr.SetAxisMappingStrategy(osr.OAMS_TRADITIONAL_GIS_ORDER)
-        ll.SetAxisMappingStrategy(osr.OAMS_TRADITIONAL_GIS_ORDER)
-        transform = osr.CoordinateTransformation(sr, ll)
-        west, south, _ = transform.TransformPoint(full_bounds[0], full_bounds[1])
-        east, north, _ = transform.TransformPoint(full_bounds[2], full_bounds[3])
-        # A dated regional snapshot avoids dependence on overloaded Overpass
-        # services. Pyosmium is a declared preparation-only dependency in this
-        # short-lived container; it does not modify QGIS or the pinned image.
-        pbf_name = 'cataluna-261005.osm.pbf'
-        endpoint = 'https://download.geofabrik.de/europe/spain/' + pbf_name
-        if not ready(pbf_name):
-            print('FETCH OSM SNAPSHOT', endpoint, flush=True)
-            path = OUT / 'fonts' / pbf_name
-            temporary = path.with_suffix('.partial')
-            if not temporary.exists() or temporary.stat().st_size != 271098804:
-                with urllib.request.urlopen(endpoint, timeout=180) as response, temporary.open('wb') as stream:
-                    while chunk := response.read(1024 * 1024):
-                        stream.write(chunk)
-            assert temporary.stat().st_size == 271098804, 'Dated snapshot size differs from the publisher index.'
-            upstream_md5 = None
-            checksum_error = ''
-            try:
-                with urllib.request.urlopen(endpoint + '.md5', timeout=15) as response:
-                    upstream_md5 = response.read().decode().split()[0]
-            except (urllib.error.URLError, TimeoutError) as error:
-                checksum_error = str(error)
-            if upstream_md5 is not None:
-                with temporary.open('rb') as stream:
-                    assert hashlib.file_digest(stream, 'md5').hexdigest() == upstream_md5
-            temporary.rename(path)
-            kept(pbf_name, producer='OpenStreetMap contributors / Geofabrik', url=endpoint,
-                 licence='ODbL 1.0', snapshot='2026-10-05', upstream_md5=upstream_md5,
-                 upstream_checksum_error=checksum_error, publisher_index_bytes=271098804)
-        dependency = '/tmp/geodisseny-osmium'
-        subprocess.run([sys.executable, '-m', 'pip', 'install', '--quiet', '--target', dependency,
-                        'osmium==4.1.1'], check=True)
-        sys.path.insert(0, dependency)
-        import osmium
-        elements = []
-
-        class Roads(osmium.SimpleHandler):
-            def way(self, way):
-                if not way.tags.get('highway'):
-                    return
-                coordinates = [{'lon': node.lon, 'lat': node.lat} for node in way.nodes]
-                if not any(west <= node['lon'] <= east and south <= node['lat'] <= north for node in coordinates):
-                    return
-                elements.append({'type': 'way', 'id': way.id, 'nodes': [node.ref for node in way.nodes],
-                                 'geometry': coordinates, 'tags': dict(way.tags)})
-
-        Roads().apply_file(str(OUT / 'fonts' / pbf_name), locations=True, idx='sparse_mem_array')
-        assert elements
-        data = {'elements': elements, 'source': endpoint, 'snapshot': '2026-10-05'}
-        record(OUT / 'fonts/xarxa-osm.json', data)
-        kept('xarxa-osm.json', producer='OpenStreetMap contributors', licence='ODbL 1.0',
-             url=endpoint, selection_bounds=full_bounds, preparation_dependency='osmium==4.1.1',
-             source_sha256=sha(OUT / 'fonts' / pbf_name), timestamp='2026-10-05',
-             note='OSM node identities retain street connections and grade-separated crossings; all highway ways retained before walking exclusions.')
-
     if not ready('mdt-5m.tif'):
         print('FETCH MDT', flush=True)
         image = gdal.Translate(str(OUT / 'fonts/mdt-5m.tif'), '/vsicurl/' + DEM_URL,
@@ -384,6 +450,91 @@ def qgis_session():
     return app, project, context
 
 
+def icgc_network(full_bounds, municipality):
+    """Prepare a traceable graph from RTT axes, without noding visual crossings."""
+    import networkx as nx
+    import numpy as np
+    import shapely
+    from shapely.geometry import LineString, Point, box
+    from shapely.ops import substring
+    from osgeo import ogr
+    allowed = {'vca', 'vnc', 'vcu', 'vpu', 'vpd', 'vcd', 'cor', 'bir', 'bin'}
+    clip = box(*full_bounds)
+    source = ogr.Open(str(OUT / 'fonts/eixos-rtt-2024.gpkg'), 0)
+    candidates, excluded = [], []
+    for feature in source.GetLayerByName('original'):
+        attributes = feature.items()
+        if attributes['tipus'] not in allowed or attributes['estat'] != 'gen':
+            excluded.append({'rtt_id': feature.GetFID(), 'tipus': attributes['tipus'],
+                             'estat': attributes['estat']})
+            continue
+        geometry = shapely.force_2d(shapely.from_wkb(bytes(feature.GetGeometryRef().ExportToWkb()))).intersection(clip)
+        for part in shapely.get_parts(geometry):
+            if part.geom_type == 'LineString' and part.length > .001:
+                candidates.append((part, dict(attributes, rtt_id=feature.GetFID())))
+    assert candidates
+    geometries = [line for line, attributes in candidates]
+    tree = shapely.STRtree(geometries)
+    cuts = {i: [] for i in range(len(candidates))}
+    junctions = []
+    for i, (line, attributes) in enumerate(candidates):
+        if attributes['terreny'] != 'gen':
+            continue
+        for xy in (line.coords[0], line.coords[-1]):
+            point = Point(xy)
+            for j in tree.query(point.buffer(.005)):
+                j = int(j)
+                other, other_attributes = candidates[j]
+                if i == j or other_attributes['terreny'] != 'gen':
+                    continue
+                position = other.project(point)
+                if .005 < position < other.length - .005 and point.distance(other) <= .005:
+                    cuts[j].append(position)
+                    junctions.append({'endpoint_axis': attributes['rtt_id'],
+                                      'split_axis': other_attributes['rtt_id'],
+                                      'xy': list(xy), 'distance_m': point.distance(other)})
+    # Use the same physical endpoints as the ICGC demonstration. Splitting at
+    # these points is explicit; selecting arbitrary nearest graph nodes is not.
+    for coordinates in (OLD_O, OLD_D):
+        point = Point(coordinates)
+        matches = []
+        for i in tree.query(point.buffer(.005)):
+            i = int(i)
+            line = geometries[i]
+            if point.distance(line) <= .005:
+                cuts[i].append(line.project(point))
+                matches.append(candidates[i][1]['rtt_id'])
+        assert matches, ('Declared ICGC endpoint is not on an admitted axis', coordinates)
+    rows, graph = [], nx.MultiGraph()
+    for i, (line, attributes) in enumerate(candidates):
+        positions = [0, *sorted(set(cuts[i])), line.length]
+        for first, last in zip(positions, positions[1:]):
+            if last - first <= .001:
+                continue
+            part = substring(line, first, last)
+            part = LineString(np.round(shapely.get_coordinates(part), 3))
+            if part.length <= .001:
+                continue
+            a, b = tuple(part.coords[0]), tuple(part.coords[-1])
+            identity = len(rows) + 1
+            row = dict(attributes, part_id=identity, node_a=','.join(map(str, a)),
+                       node_b=','.join(map(str, b)), v_kmh=5.,
+                       dins_muni=int(part.intersects(municipality)))
+            rows.append((part, row))
+            graph.add_edge(a, b, key=identity, weight=part.length)
+    assert OLD_O in graph and OLD_D in graph, 'Declared endpoints changed during preparation'
+    assert nx.has_path(graph, OLD_O, OLD_D), 'Inspect the disconnected ICGC network; do not enlarge tolerance blindly'
+    components = sorted(nx.connected_components(graph), key=len, reverse=True)
+    information = {'source': 'ICGC RTT 2024', 'source_layer': '_35_transports_l',
+                   'allowed_types': sorted(allowed), 'excluded_axes': excluded,
+                   'junctions': junctions, 'junction_tolerance_m': .005,
+                   'coordinate_rounding_m': .001, 'origin': OLD_O, 'destination': OLD_D,
+                   'opened_network_m': nx.shortest_path_length(graph, OLD_O, OLD_D, weight='weight'),
+                   'component_sizes': [len(component) for component in components],
+                   'walking_model': 'Admitted non-motorway axes, both directions, uniform5km/h; no legal access certification'}
+    return rows, graph, information
+
+
 def prepare():
     """Prepare only inputs; verify the municipal coverage and routing graph."""
     import networkx as nx
@@ -391,7 +542,6 @@ def prepare():
     import shapely
     from shapely.geometry import Point, LineString, Polygon, box
     from shapely.ops import nearest_points
-    from pyproj import Transformer
     from osgeo import gdal, ogr, osr
     setup()
     gdal.UseExceptions()
@@ -408,7 +558,7 @@ def prepare():
     db = ogr.GetDriverByName('GPKG').CreateDataSource(str(stage))
 
     def vector(name, kind, fields, rows):
-        layer = db.CreateLayer(name, reference, kind)
+        layer = db.CreateLayer(name, reference, kind, options=['SPATIAL_INDEX=YES'])
         for field, datatype in fields:
             layer.CreateField(ogr.FieldDefn(field, datatype))
         layer.StartTransaction()
@@ -473,48 +623,15 @@ def prepare():
         feature['classe'], feature['categoria'], feature['cost_model'] = code, label, costs[code]
         legend.CreateFeature(feature)
 
-    osm = json.loads((OUT / 'fonts/xarxa-osm.json').read_text())
-    transform = Transformer.from_crs(4326, 25831, always_xy=True)
-    nodes, rows, graph = {}, [], nx.Graph()
-    exclusions = []
-    for way in osm['elements']:
-        tags = way['tags']
-        highway = tags['highway']
-        admitted = highway not in {'motorway', 'motorway_link', 'trunk', 'trunk_link', 'construction', 'proposed', 'raceway'}
-        admitted = admitted and tags.get('foot') not in {'no', 'private'}
-        admitted = admitted and (tags.get('foot') in {'yes', 'designated', 'permissive'} or tags.get('access') not in {'no', 'private'})
-        if not admitted:
-            exclusions.append({'way_id': way['id'], 'highway': highway, 'access': tags.get('access'), 'foot': tags.get('foot')})
-            continue
-        for identity, coordinate in zip(way['nodes'], way['geometry']):
-            position = transform.transform(coordinate['lon'], coordinate['lat'])
-            if identity in nodes:
-                assert math.dist(nodes[identity], position) < 1e-6
-            nodes[identity] = position
-        for a, b in zip(way['nodes'], way['nodes'][1:]):
-            geometry = LineString([nodes[a], nodes[b]])
-            if geometry.length < .001 or not geometry.intersects(clip):
-                continue
-            length = geometry.length
-            if not graph.has_edge(a, b) or length < graph[a][b]['weight']:
-                graph.add_edge(a, b, weight=length)
-            rows.append((geometry, {'way_id': str(way['id']), 'node_a': str(a), 'node_b': str(b),
-                                    'tipus': highway, 'nom': tags.get('name', ''), 'v_kmh': 5.,
-                                    'nivell': tags.get('layer', '0'), 'pont': tags.get('bridge', ''),
-                                    'tunel': tags.get('tunnel', ''), 'dins_muni': int(geometry.intersects(municipality))}))
-    components = sorted(nx.connected_components(graph), key=len, reverse=True)
-    largest = components[0]
-    origin_node = min(largest, key=lambda identity: math.dist(nodes[identity], OLD_O))
-    destination_node = min(largest, key=lambda identity: math.dist(nodes[identity], OLD_D))
-    origin, destination = nodes[origin_node], nodes[destination_node]
-    assert math.dist(origin, OLD_O) < 120 and math.dist(destination, OLD_D) < 120
-    print('NEW ENDPOINTS', origin, destination, 'SHIFTS', math.dist(origin, OLD_O), math.dist(destination, OLD_D), flush=True)
-    route_nodes = nx.shortest_path(graph, origin_node, destination_node, weight='weight')
-    opened_length = nx.path_weight(graph, route_nodes, weight='weight')
+    rows, graph, network_info = icgc_network(full_bounds, municipality)
+    origin, destination = network_info['origin'], network_info['destination']
+    opened_length = network_info['opened_network_m']
     network_count = vector('xarxa', ogr.wkbLineString,
-                          [('way_id', ogr.OFTString), ('node_a', ogr.OFTString), ('node_b', ogr.OFTString),
-                           ('tipus', ogr.OFTString), ('nom', ogr.OFTString), ('v_kmh', ogr.OFTReal),
-                           ('nivell', ogr.OFTString), ('pont', ogr.OFTString), ('tunel', ogr.OFTString), ('dins_muni', ogr.OFTInteger)], rows)
+                           [('rtt_id', ogr.OFTInteger64), ('part_id', ogr.OFTInteger),
+                            ('node_a', ogr.OFTString), ('node_b', ogr.OFTString),
+                            ('tipus', ogr.OFTString), ('nom', ogr.OFTString), ('codivia', ogr.OFTString), ('v_kmh', ogr.OFTReal),
+                            ('entorn', ogr.OFTString), ('estat', ogr.OFTString), ('terreny', ogr.OFTString),
+                            ('xarxa', ogr.OFTString), ('dins_muni', ogr.OFTInteger)], rows)
     vector('origen', ogr.wkbPoint, [('nom', ogr.OFTString)], [(Point(origin), {'nom': 'O · Origen'})])
     vector('desti', ogr.wkbPoint, [('nom', ogr.OFTString)], [(Point(destination), {'nom': 'D · Destí'})])
 
@@ -534,14 +651,15 @@ def prepare():
     closed_graph = graph.copy()
     removed = []
     for geometry, attributes in rows:
-        if geometry.intersects(principal):
-            a, b = int(attributes['node_a']), int(attributes['node_b'])
-            if closed_graph.has_edge(a, b):
-                closed_graph.remove_edge(a, b)
-                removed.append([a, b, attributes['way_id']])
+        if attributes['rtt_id'] == P2_RTT_ID:
+            a, b = tuple(geometry.coords[0]), tuple(geometry.coords[-1])
+            if closed_graph.has_edge(a, b, attributes['part_id']):
+                closed_graph.remove_edge(a, b, attributes['part_id'])
+                removed.append({'part_id': attributes['part_id'], 'rtt_id': attributes['rtt_id']})
+    assert removed, 'The declared ICGC crossing is absent from the prepared network'
     closed_length = None
-    if nx.has_path(closed_graph, origin_node, destination_node):
-        closed_length = nx.shortest_path_length(closed_graph, origin_node, destination_node, weight='weight')
+    if nx.has_path(closed_graph, origin, destination):
+        closed_length = nx.shortest_path_length(closed_graph, origin, destination, weight='weight')
     source = ogr.Open(str(OUT / 'fonts/eixos-rtt-2024.gpkg'), 0)
     source.GetLayerByName('original').SetAttributeFilter("codivia = 'AP-7'")
     motorway = [shapely.force_2d(shapely.from_wkb(bytes(f.GetGeometryRef().ExportToWkb()))) for f in source.GetLayerByName('original')]
@@ -572,10 +690,10 @@ def prepare():
     summary = {'bounds': BOUNDS, 'full_bounds': full_bounds, 'crs': 'EPSG:25831', 'resolution_m': RES,
                'origin': origin, 'destination': destination, 'original_endpoints': [OLD_O, OLD_D],
                'endpoint_shift_m': [math.dist(origin, OLD_O), math.dist(destination, OLD_D)],
-               'origin_node': origin_node, 'destination_node': destination_node,
-               'network_parts': network_count, 'network_components': [len(component) for component in components],
+               'network_source': 'ICGC RTT 2024', 'network_preparation': network_info,
+               'network_parts': network_count, 'network_components': network_info['component_sizes'],
                'opened_network_m': opened_length, 'closed_network_m': closed_length, 'closed_edges': removed,
-               'excluded_osm_ways': exclusions, 'cover_polygons': cover_count,
+               'cover_polygons': cover_count,
                'municipal_cover_gap_m2': municipality.difference(coverage).area,
                'industrial_polygons_in_municipality': industrial, 'costs': costs,
                'student_gpkg_sha256_before_project': sha(final), 'embedded_dem_exact': True}
@@ -610,7 +728,7 @@ def style_start():
         ('cobertes', 'Cobertes del sòl2024 · classes', 'covers', '#6d9768', False),
         ('cobertura_sense_dades', 'Cobertura desconeguda · conservar NoData', 'polygon', '#ad6549', False),
         ('ambit_calcul', 'Àmbit de càlcul · cel·la5m', 'polygon', '#69757d', False),
-        ('xarxa', 'Xarxa a peu · Vila-seca i entorn', 'line', '#69757d', True),
+        ('xarxa', 'Xarxa a peu · ICGC RTT 2024', 'line', '#69757d', True),
         ('autopista_eixos', 'AP-7 · eixos de referència', 'line', '#8a665a', False),
         ('passos', 'P2 principal i passos alternatius', 'passes', '#9e468c', True),
         ('origen', 'Origen O', 'point', '#00866f', True),
@@ -677,7 +795,7 @@ def build():
     import shapely
     from osgeo import gdal
     from qgis.core import (QgsApplication, QgsVectorLayer, QgsRasterLayer, QgsVectorFileWriter,
-                          QgsRectangle, QgsProcessingFeedback)
+                          QgsRectangle, QgsProcessingFeedback, QgsProcessingException)
     from qgis.analysis import QgsRasterCalculator, QgsRasterCalculatorEntry
     setup()
     app, project, context = qgis_session()
@@ -796,20 +914,30 @@ def build():
 
     principal = run('native:extractbyattribute', {'INPUT': passes, 'FIELD': 'pas_id', 'OPERATOR': 0,
                                                'VALUE': 2, 'OUTPUT': 'memory:'})['OUTPUT']
-    closed = run('native:extractbylocation', {'INPUT': network, 'PREDICATE': [2], 'INTERSECT': principal,
-                                           'OUTPUT': 'memory:'})['OUTPUT']
+    # The RTT bridge is an identified axis. Removing every long cartographic
+    # axis touching the raster corridor would also delete the approach to O.
+    closed = run('native:extractbyattribute', {'INPUT': network, 'FIELD': 'rtt_id', 'OPERATOR': 1,
+                                             'VALUE': P2_RTT_ID, 'OUTPUT': 'memory:'})['OUTPUT']
+    controls['closed_rtt_axis'] = P2_RTT_ID
     closed_uri = save(closed, 'xarxa_tancada')
     common = {'START_POINT': f'{origin[0]},{origin[1]} [EPSG:25831]',
               'END_POINT': f'{destination[0]},{destination[1]} [EPSG:25831]',
               'DEFAULT_DIRECTION': 2, 'SPEED_FIELD': 'v_kmh', 'DEFAULT_SPEED': 5,
               'TOLERANCE': 0, 'POINT_TOLERANCE': .1, 'OUTPUT': 'memory:'}
     for state, value in [('obert', network), ('tancat', closed)]:
-        route = run('native:shortestpathpointtopoint', {**common, 'INPUT': value, 'STRATEGY': 0})['OUTPUT']
-        save(route, 'ruta_' + state)
-        length = next(route.getFeatures()).geometry().length()
         reference = input_info['opened_network_m' if state == 'obert' else 'closed_network_m']
-        assert abs(length - reference) < .02, (state, length, reference)
-        controls['network'][state] = {'length_m': length, 'time_min': length / 5000 * 60}
+        try:
+            route = run('native:shortestpathpointtopoint', {**common, 'INPUT': value, 'STRATEGY': 0})['OUTPUT']
+        except QgsProcessingException as error:
+            assert state == 'tancat' and reference is None and 'no route' in str(error).lower(), error
+            route = QgsVectorLayer('LineString?crs=EPSG:25831', 'Sense ruta', 'memory')
+            controls['network'][state] = {'reachable': False, 'length_m': None,
+                                          'time_min': None, 'message': str(error)}
+        else:
+            length = next(route.getFeatures()).geometry().length()
+            assert reference is not None and abs(length - reference) < .02, (state, length, reference)
+            controls['network'][state] = {'reachable': True, 'length_m': length, 'time_min': length / 5000 * 60}
+        save(route, 'ruta_' + state)
         controls['service'][state] = {}
         for minutes in [3, 6, 12]:
             service = run('native:serviceareafrompoint', {
@@ -839,15 +967,24 @@ def build():
     expected_base = read(vector_base)
     expected_base[expected_base == 0] = 99
     assert np.array_equal(read(base), expected_base), 'Reclassification differs from the declared class table.'
+    road_raster = rasterize(network, 'vials')
+    road_values = read(road_raster)
+    assert set(np.unique(road_values)) <= {0., 1.}
+    controls['roads'] = {'source': 'xarxa; admitted ICGC RTT axes', 'burn_value': 1,
+                         'road_cells': int(np.count_nonzero(road_values == 1)),
+                         'cells_without_weight_one_in_cover_base': int(np.count_nonzero(
+                             (road_values == 1) & (read(base) != 1))),
+                         'priority': 'open passages; excluded motorway/closed P2; admitted roads; covers'}
     barriers = rasterize(barrier, 'barrera')
     pass_raster = rasterize(passes, 'pas', field='pas_id')
     # The real GUI expressions are executed, including intermediate numeric99
     # and final NoData99. Branches never have to recover a prematurely null cell.
     for state, expression in [
-        ('obert', 'if("pas@1" > 0, 1, if("barrera@1" > 0, 99, if("base@1" = 0, 99, "base@1")))'),
-        ('tancat', 'if("pas@1" = 1, 1, if(("pas@1" = 2) OR ("barrera@1" > 0), 99, if("base@1" = 0, 99, "base@1")))'),
+        ('obert', 'if("pas@1" > 0, 1, if("barrera@1" > 0, 99, if("vials@1" = 1, 1, if("base@1" = 0, 99, "base@1"))))'),
+        ('tancat', 'if("pas@1" = 1, 1, if(("pas@1" = 2) OR ("barrera@1" > 0), 99, if("vials@1" = 1, 1, if("base@1" = 0, 99, "base@1"))))'),
     ]:
-        numeric = calc(expression, {'pas': pass_raster, 'barrera': barriers, 'base': base}, 'friccio_numeric_' + state)
+        numeric = calc(expression, {'pas': pass_raster, 'barrera': barriers, 'vials': road_raster,
+                                    'base': base}, 'friccio_numeric_' + state)
         final = str(result_dir / ('friccio_' + state + '.tif'))
         image = gdal.Translate(final, numeric, noData=99)
         image = None
@@ -856,7 +993,7 @@ def build():
         codes, p, b = read(base), read(pass_raster), read(barriers)
         reference = np.where(p > 0 if state == 'obert' else p == 1, 1,
                              np.where((b > 0) | ((p == 2) if state == 'tancat' else False), 99,
-                                      np.where(codes == 0, 99, codes)))
+                                       np.where(road_values == 1, 1, np.where(codes == 0, 99, codes))))
         actual = gdal.Open(numeric).ReadAsArray()
         assert np.array_equal(actual, reference), 'GUI conditional differs from its independent cell model.'
         cell_cost = calc('"friccio@1" * 5', {'friccio': final}, 'cost_cella_' + state)
@@ -973,6 +1110,7 @@ def style_teacher():
     gpkg = OUT / 'alumnat/accessibilitat-vilaseca.gpkg'
     results = OUT / 'docent/resultats'
     vector_results = OUT / 'docent/resultats.gpkg'
+    controls = json.loads((OUT / 'controls/resultats-inici.json').read_text())
     definitions = {}
 
     def raster(key, filename, name, items, exact=False, opacity=1):
@@ -984,10 +1122,14 @@ def style_teacher():
     distance_colours = [(0, '#ffffe5', '0m'), (250, '#d9f0a3', '250m'),
                         (500, '#78c679', '500m'), (1000, '#238443', '1000m'), (2000, '#004529', '2000m')]
     raster('distance', 'distancia_grass.tif', 'Distància euclidiana GRASS · m', distance_colours, opacity=.75)
-    line('straight', str(vector_results) + '|layername=euclidiana_vector', 'Recta O–D · 361,3m', '#9742a0', .95, True)
+    straight_label = f'Recta O–D · {controls["euclidean_vector_m"]:.1f} m'.replace('.', ',')
+    line('straight', str(vector_results) + '|layername=euclidiana_vector', straight_label, '#9742a0', .95, True)
     for state, colour in [('obert', '#006699'), ('tancat', '#d37838')]:
+        route_label = 'Ruta de xarxa · ' + state
+        if not controls['network'][state]['reachable']:
+            route_label += ' · sense ruta'
         line('network_' + state, str(vector_results) + '|layername=ruta_' + state,
-             'Ruta de xarxa · ' + state, colour, 1.15, state == 'tancat')
+             route_label, colour, 1.15, state == 'tancat')
         for minutes, c, w in [(12, '#e89537', 1.8), (6, '#27a584', 1.4), (3, '#1565ad', 1.)]:
             line(f'service_{state}_{minutes}', str(vector_results) + f'|layername=servei_{state}_{minutes:02d}',
                  f'{minutes}min · pas {state}', c, w)
@@ -1008,8 +1150,8 @@ def style_teacher():
     raster('minutes', 'marxa_obert_anada_minuts.tif', 'Temps de marxa · minuts',
            [(0, '#ffffcc', '0min'), (3, '#c7e9b4', '3min'), (6, '#7fcdbb', '6min'),
             (12, '#41b6c4', '12min'), (30, '#253494', '30min')], opacity=.85)
-    line('walk_out', str(results / 'marxa_obert_anada_ruta.gpkg'), 'Anada · 8,15min', '#54278f', 1.)
-    line('walk_back', str(results / 'marxa_obert_tornada_ruta.gpkg'), 'Tornada · 8,05min', '#c94743', .9, True)
+    line('walk_out', str(results / 'marxa_obert_anada_ruta.gpkg'), 'Anada · marxa amb MDT', '#54278f', 1.)
+    line('walk_back', str(results / 'marxa_obert_tornada_ruta.gpkg'), 'Tornada · marxa amb MDT', '#c94743', .9, True)
     specifications = {
         '00-inici': [],
         '01-euclidiana': ['distance', 'straight'],
@@ -1072,6 +1214,8 @@ def style_teacher():
         bounds = BOUNDS
         if name == '02-xarxa':
             route = QgsVectorLayer(str(vector_results) + '|layername=ruta_tancat', 'Route extent', 'ogr')
+            if route.featureCount() == 0:
+                route = QgsVectorLayer(str(vector_results) + '|layername=ruta_obert', 'Open route extent', 'ogr')
             rectangle = route.extent()
             bounds = (rectangle.xMinimum() - 180, rectangle.yMinimum() - 180,
                       rectangle.xMaximum() + 180, rectangle.yMaximum() + 180)
@@ -1087,44 +1231,39 @@ def style_teacher():
     print(json.dumps({'projects': len(reports)}, indent=2), flush=True)
 
 
-def documents():
+def documents(receipts_directory):
     import shutil
-    import subprocess
     setup()
+    assert receipts_directory, 'Build with manual_practice_pdf_build and supply --pdf-receipts.'
+    receipts = (ROOT / receipts_directory).resolve()
+    assert receipts.is_relative_to(ROOT / 'sandbox/practiques' / PACKAGE_STEM)
     document_name = reading_name()
-    for recipient in ['alumnat', 'docent']:
-        source = PRACTICE / LANGUAGE / recipient / (document_name + '.md')
-        assert source.is_file(), 'Translate only a human-approved source before selecting another language.'
-        shutil.copyfile(source, OUT / recipient / (document_name + '.md'))
     reproduction = OUT / 'reproduccio'
     reproduction.mkdir(exist_ok=True)
     for source, name in [(Path(__file__), 'preparar.py'),
                          (ROOT / 'context/qgis/accessibilitat-inici.md', 'prompt.md'),
                          (ROOT / 'context/qgis/accessibilitat-inici.yml', 'recipe.yml')]:
         shutil.copyfile(source, reproduction / name)
-    image = 'ghcr.io/dosquartsdedocs/unaltraweb-manual-pdf@sha256:9e0b3a45753c170b795e9a9d6df61580085c113436beac5bf6c8de69b6562097'
-    settings = {'image': image, 'engine': 'xelatex', 'SOURCE_DATE_EPOCH': 0, 'font': 'DejaVu Sans',
-                'GUIA': 'a4paper,landscape,left=18mm,right=18mm,top=15mm,bottom=15mm',
-                'SOLUCIONS': 'a4paper,landscape,left=18mm,right=18mm,top=15mm,bottom=15mm'}
+    image = 'sha256:618163d3f924439792b2306617bd9612f566c5881166102fa544b4e782d569fa'
+    settings = {'image': image, 'producer': 'unaltraweb0.7.2 manual_practice_pdf_build', 'readings': {}}
+    for recipient in ['alumnat', 'docent']:
+        response = json.loads((receipts / (recipient + '-pdf.json')).read_text())
+        built = response['structuredContent']
+        assert not response['isError'] and built['ok'] and not built['publishes']
+        assert built['version'] == VERSION and built['language'] == LANGUAGE and built['audience'] == recipient
+        assert built['renderer']['observed_image_id'] == image
+        source = PRACTICE / LANGUAGE / recipient / (document_name + '.md')
+        assert built['source'] == str(source.relative_to(ROOT))
+        pdf = (ROOT / built['pdf']).resolve()
+        assert pdf.is_relative_to(ROOT / 'sandbox/practiques' / PACKAGE_STEM)
+        assert sha(pdf) == built['pdf_sha256']
+        target = OUT / recipient / (document_name + '.pdf')
+        assert not target.exists(), 'Existing candidate PDF is retained; select a new destination.'
+        shutil.copyfile(pdf, target)
+        shutil.copyfile(source, OUT / recipient / (document_name + '.md'))
+        settings['readings'][recipient] = {'job': built['job'], 'source_sha256': sha(source),
+                                           'pdf_sha256': sha(target), 'fingerprint': built['fingerprint']}
     record(OUT / 'controls/handouts.json', settings)
-    (OUT / 'controls/handout-header.tex').write_text(
-        '\\usepackage{float}\n\\floatplacement{figure}{H}\n'
-        '\\usepackage{needspace}\n\\usepackage{etoolbox}\n'
-        '\\AtBeginEnvironment{longtable}{\\Needspace{10\\baselineskip}}\n')
-    for kind, recipient in [('GUIA', 'alumnat'), ('SOLUCIONS', 'docent')]:
-        output = recipient + '/' + document_name + '.pdf'
-        command = ['docker', 'run', '--rm', '--user', f'{os.getuid()}:{os.getgid()}', '--network', 'none',
-                   '--env', 'HOME=/tmp', '--env', 'SOURCE_DATE_EPOCH=0',
-                   '--mount', f'type=bind,src={OUT},dst=/paquet', '--workdir', '/paquet',
-                   '--entrypoint', 'pandoc', image, recipient + '/' + document_name + '.md', '--standalone', '--pdf-engine=xelatex',
-                   '--include-in-header=/paquet/controls/handout-header.tex',
-                   '--resource-path=/paquet', '-V', 'mainfont=DejaVu Sans', '-V', 'monofont=DejaVu Sans Mono',
-                   '-V', 'fontfamily=fontspec',
-                   '-V', 'fontsize=11pt', '-V', 'colorlinks=true', '-V', 'geometry=' + settings[kind],
-                   '-o', '/paquet/' + output]
-        command.extend(['--toc', '--toc-depth=2'])
-        print('PDF', recipient + '/' + document_name, flush=True)
-        subprocess.run(command, check=True)
     (OUT / 'COMENCA-AQUI.txt').write_text(
         'Accessibilitat de Vila-seca · preparació completa del professorat\n\n'
         'Per a l’alumnat: només alumnat/accessibilitat-vilaseca.gpkg i alumnat/LLEGIU-ME.pdf.\n'
@@ -1184,11 +1323,11 @@ def package():
         source = PRACTICE / LANGUAGE / recipient / (document_name + '.md')
         assert pdf_report[key]['source_sha256'] == sha(source)
         assert pdf_report[key]['sha256'] == sha(OUT / recipient / (document_name + '.pdf'))
-    captures = ['inici', 'distancia-grass', 'xarxa', 'friccio', 'cost', 'marxa-parametres', 'marxa',
-                'isocrones-obert', 'isocrones-tancat']
-    captures.extend(['rasteritzar-cobertes', 'rasteritzar-passos', 'cost-cella-pas'])
+    import yaml
+    captures = [capture['id'] for capture in yaml.safe_load(
+        (ROOT / 'context/qgis/accessibilitat-inici.yml').read_text())['captures']]
     for name in captures:
-        evidence = json.loads((OUT / 'captures' / (name + '.manifest.yml')).read_text())
+        evidence = json.loads((OUT / 'captures/icgc-final/rendered' / (name + '.manifest.yml')).read_text())
         assert evidence['ok'] and not evidence['warnings'], name
         assert evidence['image_digest'] == IMAGE
     for path in [OUT / 'alumnat/accessibilitat-vilaseca.gpkg', OUT / 'docent/resultats.gpkg']:
@@ -1199,8 +1338,15 @@ def package():
         assert not path.with_name(path.name + '-shm').exists()
     import xml.etree.ElementTree as ET
     required = {OUT / 'alumnat/accessibilitat-vilaseca.gpkg', OUT / 'alumnat' / (document_name + '.pdf')}
+    student_files = list(required)
+    if MODULE:
+        student_files += [OUT / 'alumnat' / (name + '.tif') for name in MODULE['initial_rasters']]
+        required.update(student_files)
     projects = sorted((OUT / 'docent/projectes').glob('*.qgz'))
     assert len(projects) == 11
+    if MODULE:
+        projects = [path for path in projects if path.stem in MODULE['projects']]
+        assert len(projects) == len(MODULE['projects'])
     required.update(projects)
     # Only classroom project dependencies and named worked-stage outputs enter
     # the teacher ZIP. Agent snapshots/caches/logs/scripts stay in sandbox.
@@ -1218,10 +1364,12 @@ def package():
             dependency = (project.parent / uri).resolve()
             assert dependency.is_relative_to(OUT.resolve()) and dependency.is_file(), (project, uri)
             required.add(dependency)
-    for name in ['classes.tif', 'base.tif', 'pas.tif', 'barrera.tif', 'origen_zero.tif', 'origen_null.tif',
+    worked = [name + '.tif' for name in MODULE['worked_rasters']] if MODULE else [
+                 'classes.tif', 'base.tif', 'vials.tif', 'pas.tif', 'barrera.tif', 'origen_zero.tif', 'origen_null.tif',
                  'friccio_obert.tif', 'friccio_tancat.tif', 'cost_cella_obert.tif', 'cost_cella_tancat.tif',
                  'direccions_obert.tif', 'direccions_tancat.tif', 'friccio_temporal_obert.tif',
-                 'friccio_temporal_tancat.tif', 'mdt_ambit.tif', 'mdt_pla.tif']:
+                 'friccio_temporal_tancat.tif', 'mdt_ambit.tif', 'mdt_pla.tif']
+    for name in worked:
         required.add(OUT / 'docent/resultats' / name)
     for path in list(required):
         qml = path.with_suffix('.qml')
@@ -1239,11 +1387,11 @@ def package():
         destination = candidates / delivery_name(kind)
         assert not destination.exists(), 'An existing delivery is never overwritten.'
         if kind == 'alumnat':
-            files = [OUT / 'alumnat/accessibilitat-vilaseca.gpkg', OUT / 'alumnat' / (document_name + '.pdf')]
-            prefix = 'accessibilitat-vilaseca/'
+            files = sorted(student_files)
+            prefix = PACKAGE_STEM + '/'
         else:
             files = sorted(required)
-            prefix = 'accessibilitat-vilaseca-docent/'
+            prefix = PACKAGE_STEM + '-docent/'
         inventory = []
         with zipfile.ZipFile(destination, 'x', compression=zipfile.ZIP_DEFLATED, compresslevel=6) as archive:
             for path in files:
@@ -1260,7 +1408,7 @@ def package():
         destinations[kind] = {'path': str(final.relative_to(ROOT)), 'bytes': destination.stat().st_size,
                               'sha256': sha(destination), 'files': len(inventory), 'zip_crc': 'ok', 'all_member_sha256': 'ok'}
         record(destination.with_suffix('.receipt.json'), destinations[kind])
-    assert len(inventories['alumnat']) == 2
+    assert len(inventories['alumnat']) == 2 + (len(MODULE['initial_rasters']) if MODULE else 0)
     assert all(not item['path'].startswith(('fonts/', 'controls/', 'captures/', 'reproduccio/')) for item in inventories['docent'])
     DIST.mkdir(parents=True, exist_ok=True)
     for kind, evidence in destinations.items():
@@ -1269,7 +1417,7 @@ def package():
         with candidate.open('rb') as source, final.open('xb') as target:
             shutil.copyfileobj(source, target)
         assert sha(final) == evidence['sha256']
-    record(DIST / 'manifest.json', {'schema_version': 1, 'practica': 'accessibilitat-vilaseca',
+    record(DIST / 'manifest.json', {'schema_version': 1, 'practica': PACKAGE_STEM,
                                   'version': VERSION, 'language': LANGUAGE, 'status': 'local-moodle-packages',
                                   'human_approved': False, 'site_release': None, 'packages': destinations,
                                   'inventories': inventories, 'reconstruction': str(OUT.relative_to(ROOT))})
@@ -1279,6 +1427,47 @@ def package():
     record(OUT / 'sealed.json', {'status': 'private-author-review', 'human_approved': False,
                                 'manifest_sha256': sha(OUT / 'MANIFEST.json'), 'packages': destinations})
     print(json.dumps(destinations, ensure_ascii=False, indent=2), flush=True)
+
+
+def seal_common():
+    """Retain the common calculation for selecting the three classroom modules."""
+    setup()
+    assert MODULE is None
+    assert json.loads((OUT / 'controls/verificacio-qgis.json').read_text())['ok']
+    paths = [path for folder in ['alumnat', 'docent', 'fonts', 'captures', 'controls', 'reproduccio']
+             for path in (OUT / folder).rglob('*') if path.is_file()]
+    record(OUT / 'MANIFEST.json', {'kind': 'accessibilitat-common-classroom-calculation',
+        'version': VERSION, 'runtime': IMAGE, 'human_approved': False,
+        'files': [{'path': str(path.relative_to(OUT)), 'sha256': sha(path), 'bytes': path.stat().st_size}
+                  for path in sorted(paths)]})
+    record(OUT / 'sealed.json', {'manifest_sha256': sha(OUT / 'MANIFEST.json'),
+                               'human_approved': False, 'status': 'private-common-calculation'})
+
+
+def stage_module(source_run):
+    """Separate existing projects/data; the common calculation is not repeated."""
+    import shutil
+    assert MODULE and not OUT.exists()
+    previous = ROOT / 'sandbox/practiques/accessibilitat-vilaseca' / source_run
+    seal = json.loads((previous / 'sealed.json').read_text())
+    assert sha(previous / 'MANIFEST.json') == seal['manifest_sha256']
+    manifest = json.loads((previous / 'MANIFEST.json').read_text())
+    assert manifest['kind'] == 'accessibilitat-common-classroom-calculation'
+    initialise()
+    for item in manifest['files']:
+        path = Path(item['path'])
+        assert not path.is_absolute() and '..' not in path.parts
+        assert sha(previous / path) == item['sha256']
+        target = OUT / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        with (previous / path).open('rb') as source, target.open('xb') as destination:
+            shutil.copyfileobj(source, destination)
+        assert sha(target) == item['sha256']
+    for name in MODULE['initial_rasters']:
+        shutil.copyfile(OUT / 'docent/resultats' / (name + '.tif'), OUT / 'alumnat' / (name + '.tif'))
+    record(OUT / 'controls/module-source.json', {'source': str(previous.relative_to(ROOT)),
+        'manifest_sha256': seal['manifest_sha256'], 'classroom_selection': MODULE,
+        'gis_recalculated': False, 'human_approved': False})
 
 
 def rename_deliverables(source_version):
@@ -1343,6 +1532,51 @@ def rename_deliverables(source_version):
     print(json.dumps(destinations, ensure_ascii=False, indent=2), flush=True)
 
 
+def verify_run():
+    """Check this activity's new ICGC classroom states before packaging."""
+    import subprocess
+    setup()
+    paths = [path for directory in ('alumnat', 'docent') for path in (OUT / directory).rglob('*')
+             if path.is_file() and path.suffix in {'.gpkg', '.tif', '.tfw', '.qml', '.qgz', '.xml'}]
+    checked = {str(path.relative_to(OUT)): sha(path) for path in paths}
+    code = '''import json
+from pathlib import Path
+from qgis.core import QgsApplication,QgsProject,QgsVectorLayer
+app=QgsApplication([],False);app.initQgis();p=QgsProject.instance();root=Path('/paquet')
+gpkg=root/'alumnat/accessibilitat-vilaseca.gpkg'
+assert p.read('geopackage:'+str(gpkg)+'?projectName=inici')
+assert len(p.mapLayers())==11 and all(l.isValid() for l in p.mapLayers().values())
+network=QgsVectorLayer(str(gpkg)+'|layername=xarxa','ICGC','ogr')
+fields=network.fields().names();assert 'rtt_id' in fields and 'way_id' not in fields
+assert network.featureCount()==7945
+p.clear();projects=[]
+for file in sorted((root/'docent/projectes').glob('*.qgz')):
+    assert p.read(str(file))
+    assert all(l.isValid() and '/paquet/' in l.source() for l in p.mapLayers().values())
+    projects.append({'project':file.name,'all_valid':True,'layers':len(p.mapLayers())});p.clear()
+assert len(projects)==11
+closed=QgsVectorLayer(str(root/'docent/resultats.gpkg')+'|layername=ruta_tancat','Sense ruta','ogr')
+assert closed.isValid() and closed.featureCount()==0
+print(json.dumps({'ok':True,'initial_layers':11,'network_source':'ICGC RTT2024',
+                  'network_parts':network.featureCount(),'projects':projects,'closed_route_empty':True}))
+'''
+    result = subprocess.run(['docker', 'run', '--rm', '--pull', 'never', '--user', f'{os.getuid()}:{os.getgid()}',
+                             '--network', 'none', '--read-only', '--tmpfs', '/tmp',
+                             '--env', 'HOME=/tmp', '--env', 'QT_QPA_PLATFORM=offscreen',
+                             '--mount', f'type=bind,src={OUT},dst=/paquet,readonly',
+                             '--entrypoint', 'python3', IMAGE, '-c', code],
+                            capture_output=True, text=True, timeout=180)
+    record(OUT / 'controls/verificacio-qgis-native.json', {'returncode': result.returncode,
+            'stdout': result.stdout, 'stderr': result.stderr, 'image': IMAGE, 'readonly': True, 'network': 'none'})
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert checked == {str(path.relative_to(OUT)): sha(path) for path in paths}
+    report = json.loads(result.stdout)
+    report.update({'student_gpkg_sha256': sha(OUT / 'alumnat/accessibilitat-vilaseca.gpkg'),
+                   'checked_hashes': checked, 'readonly': True, 'network': 'none', 'runtime': IMAGE})
+    record(OUT / 'controls/verificacio-qgis.json', report)
+    print(json.dumps({key: report[key] for key in ('ok', 'initial_layers', 'network_parts', 'closed_route_empty')}))
+
+
 def verify_deliverables():
     """Open the exact Moodle ZIPs in an isolated readonly QGIS environment."""
     import shutil
@@ -1388,6 +1622,12 @@ for name in ['cost_cella_obert.tif','cost_cella_tancat.tif']:
     values[name]={'p2':'NoData' if p2==nd else p2,'alternatiu':alt}
 print(json.dumps({'ok':True,'initial_layers':11,'projects':projects,'passages':values}))
 '''
+    if MODULE:
+        code = code.replace('alumnat/accessibilitat-vilaseca/', 'alumnat/' + PACKAGE_STEM + '/')
+        code = code.replace('accessibilitat-vilaseca-docent', PACKAGE_STEM + '-docent')
+        code = code.replace('assert len(projects)==11', 'assert len(projects)==' + str(len(MODULE['projects'])))
+        if MODULE['slug'] != 'accessibilitat-raster-vilaseca':
+            code = code.replace("for name in ['cost_cella_obert.tif','cost_cella_tancat.tif']:", 'for name in []:')
     command = ['docker', 'run', '--rm', '--user', f'{os.getuid()}:{os.getgid()}', '--network', 'none',
                '--env', 'HOME=/tmp', '--env', 'QT_QPA_PLATFORM=offscreen',
                '--env', 'PYTHONPATH=/usr/share/qgis/python:/usr/share/qgis/python/plugins',
@@ -1416,32 +1656,59 @@ if __name__ == '__main__':
     parser.add_argument('--build', action='store_true')
     parser.add_argument('--style-teacher', action='store_true')
     parser.add_argument('--docs', action='store_true')
+    parser.add_argument('--pdf-receipts')
     parser.add_argument('--package', action='store_true')
     parser.add_argument('--organise', action='store_true')
+    parser.add_argument('--stage-icgc', action='store_true')
+    parser.add_argument('--reuse-icgc-from', metavar='RUN')
+    parser.add_argument('--capture-config', action='store_true')
+    parser.add_argument('--capture-pass')
     parser.add_argument('--verify-deliverables', action='store_true')
+    parser.add_argument('--verify-run', action='store_true')
     parser.add_argument('--rename-deliverables-from', metavar='VERSION')
     parser.add_argument('--run-id')
     parser.add_argument('--version', default=VERSION)
     parser.add_argument('--language', choices=['ca', 'es', 'en'], default='ca')
     parser.add_argument('--style-cell-cost', action='store_true')
+    parser.add_argument('--module', choices=MODULES)
+    parser.add_argument('--stage-module-from', metavar='RUN')
+    parser.add_argument('--seal-common', action='store_true')
     arguments = parser.parse_args()
     import re
     LANGUAGE = arguments.language
     VERSION = arguments.version
     assert re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._-]*', arguments.version)
-    DIST = ROOT / 'dist/practiques/accessibilitat-vilaseca' / arguments.version / LANGUAGE
+    if arguments.module:
+        MODULE = MODULES[arguments.module]
+        PACKAGE_STEM = MODULE['slug']
+        PRACTICE = ROOT / 'practiques' / PACKAGE_STEM
+    DIST = ROOT / 'dist/practiques' / PACKAGE_STEM / arguments.version / LANGUAGE
     if arguments.run_id:
         assert re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._-]*', arguments.run_id)
-        OUT = ROOT / 'sandbox/practiques/accessibilitat-vilaseca' / arguments.run_id
+        OUT = ROOT / 'sandbox/practiques' / PACKAGE_STEM / arguments.run_id
+    if arguments.stage_module_from:
+        assert re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._-]*', arguments.stage_module_from)
+        assert arguments.module and arguments.run_id
+        stage_module(arguments.stage_module_from)
+    if arguments.reuse_icgc_from:
+        assert arguments.run_id, 'Select an explicit new run for the reading revision.'
+        assert re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._-]*', arguments.reuse_icgc_from)
+        assert not any([arguments.init, arguments.organise, arguments.stage_icgc,
+                        arguments.fetch, arguments.prepare, arguments.build, arguments.recover_stage,
+                        arguments.renew_initial, arguments.style_start, arguments.style_teacher,
+                        arguments.style_cell_cost, arguments.rename_deliverables_from])
+        reuse_icgc(arguments.reuse_icgc_from)
     if arguments.rename_deliverables_from:
         assert re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._-]*', arguments.rename_deliverables_from)
         assert not any([arguments.init, arguments.organise, arguments.fetch, arguments.prepare,
                         arguments.build, arguments.docs, arguments.package, arguments.recover_stage,
                         arguments.renew_initial, arguments.style_start, arguments.style_teacher,
-                        arguments.style_cell_cost]), 'Rename only already verified deliveries.'
+                         arguments.style_cell_cost, arguments.stage_icgc, arguments.capture_config]), 'Rename only already verified deliveries.'
         rename_deliverables(arguments.rename_deliverables_from)
     if arguments.organise:
         organise()
+    if arguments.stage_icgc:
+        stage_icgc()
     if arguments.init:
         initialise()
     if arguments.fetch:
@@ -1477,11 +1744,17 @@ if __name__ == '__main__':
         build()
     if arguments.style_teacher:
         style_teacher()
+    if arguments.capture_config:
+        capture_config(pass_id=arguments.capture_pass)
     if arguments.docs:
-        documents()
+        documents(arguments.pdf_receipts)
     if arguments.style_cell_cost:
         style_cell_cost()
     if arguments.package:
         package()
+    if arguments.verify_run:
+        verify_run()
     if arguments.verify_deliverables:
         verify_deliverables()
+    if arguments.seal_common:
+        seal_common()

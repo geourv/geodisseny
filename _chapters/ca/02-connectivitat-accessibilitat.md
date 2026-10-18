@@ -198,6 +198,24 @@ Una **tolerància** és la separació màxima que s'accepta per considerar que d
 
 Un **component connectat** és una part de la xarxa dins de la qual es pot anar d'un node a un altre. Dos punts poden estar propers i pertànyer a components diferents. Un resultat sense ruta pot reflectir aquesta desconnexió; no és sempre una fallada del programa.
 
+## Fonts de dades per a xarxes i accessibilitat {#fonts-xarxes-accessibilitat}
+
+Per preparar una xarxa de treball al Camp de Tarragona es pot partir del [Referencial Topogràfic Territorial de l'ICGC](https://www.icgc.cat/ca/Geoinformacio-i-mapes/Dades-i-productes/Geoinformacio-cartografica/Referencial-Topografic-Territorial). L'RTT cobreix Catalunya, organitza la informació per capes i té una **escala òptima de treball d'1:5.000**. La distribució GeoPackage 2D incorpora estils i un projecte per a QGIS. El visor permet descarregar dades [per àrea](https://visors.icgc.cat/appdownloads/?c=fmetopoterritorial) o [per fulls](https://visors.icgc.cat/appdownloads/?c=dlftopoterritorial), sense haver de preparar tot el conjunt de Catalunya.
+
+La temàtica de transports inclou la xarxa viària i altres elements. Abans de calcular rutes, s'identifiquen els **eixos** i la seva categoria mitjançant els atributs i la llegenda; els marges de la plataforma no s'han de tractar com un altre itinerari. Les [especificacions de l'RTT](https://datacloud.ide.cat/especificacions/topografia-territorial-v1r0-20260629.pdf) descriuen l'estructura i la visualització de les dades. La data del producte i la data de descàrrega es conserven separadament.
+
+El GeoPackage facilita la càrrega, la selecció i la consulta local. Encara cal decidir quins trams s'admeten al model, inspeccionar les connexions, els ponts i els passos a diferent nivell, i declarar els sentits i costos. La precisió de la cartografia i l'escala de treball no certifiquen, per si soles, la connectivitat d'un graf ni l'accés a peu a cada vial. Convé conservar la font i desar la xarxa preparada com una capa nova amb índex espacial.
+
+Per a l'accessibilitat sobre cel·les, les [cobertes del sòl de l'ICGC](https://www.icgc.cat/ca/Geoinformacio-i-mapes/Mapes/Mapa-de-cobertes-del-sol-de-Catalunya) permeten construir una fricció a partir d'una llegenda explícita. L'[MDT](https://www.icgc.cat/ca/Geoinformacio-i-mapes/Dades-i-productes/Elevacions) serveix per incorporar relleu, i l'[ortofoto](https://www.icgc.cat/ca/Geoinformacio-i-mapes/Dades-i-productes/Imatge/Ortofoto-Territorial), per contrastar camins, barreres i passos. S'escull un àmbit amb marge suficient per mantenir les connexions externes necessàries i s'alineen els ràsters abans d'aplicar-hi costos. Un servei WMS és útil com a context visual; per construir la xarxa s'utilitzen les geometries vectorials descarregades.
+
+OpenStreetMap és una altra font possible, amb dades aportades i revisades per una comunitat. [Geofabrik](https://download.geofabrik.de/europe/spain/cataluna.html) distribueix extractes datats, però la seva estructura i preparació no són les d'una capa viària de l'RTT.
+
+>> **Nodes, vies, relacions i PBF a OpenStreetMap.** Un *node* guarda una posició; una *via* (*way*) és una seqüència ordenada d'identificadors de nodes que pot descriure un camí o un contorn. Una *relació* agrupa objectes amb un significat, com un itinerari o els components d'un límit. Les propietats s'expressen amb etiquetes clau–valor, com `highway`, `access` o `oneway`.
+>>
+>> Un fitxer **PBF** és una representació binària compacta d'aquests objectes. Per mostrar línies o polígons, el lector ha de reconstruir geometries a partir de les referències entre nodes, vies i relacions. Un PBF regional gran no és una capa local ja preparada per a consultes interactives. La [documentació del lector OSM de GDAL](https://gdal.org/en/stable/drivers/vector/osm.html) recomana importar-lo a un format SIG com GeoPackage per a aquest ús.
+>>
+>> Per treballar a QGIS, prepara un extracte de l'àrea que conservi les referències necessàries, transforma'l en capes locals amb índex espacial i revisa quines etiquetes s'han mantingut. Els identificadors ajuden a conservar les connexions; no convé crear una cruïlla a cada creuament visual. Ponts, túnels, accessos i restriccions de gir necessiten una interpretació coherent amb el motor de rutes que s'utilitzi.
+
 ## Calcular una ruta amb QGIS {#procediment-xarxes}
 
 L'eina **Camí més curt — punt a punt**, de la Caixa d'eines de processament, permet escollir entre longitud mínima i temps mínim. El seu identificador és `native:shortestpathpointtopoint`. La primera opció utilitza longituds; la segona les divideix per velocitats per estimar temps {% cite qgisUserGuide %}.

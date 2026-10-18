@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "kind": "unaltraweb-practice-edition",
+  "slug": "visibilitat-costa",
+  "version": "2026-10-18",
+  "language": "ca",
+  "gis": {
+    "profile": "qgis-practice-v2",
+    "bundle": "sandbox/practiques/visibilitat-costa/2026-10-12-pilot-02/gis/bundle.json",
+    "sha256": "d4ca87e214ee5fccb41a93041220d240bc07b1c4e0097e51cc8d8d7d39783cdd",
+    "verifier": {
+      "origin": "prepared-image",
+      "package": "unaltracaptura-qgis",
+      "version": "0.6.0",
+      "revision": "sha256:4dcd2c40bca4836a202c0c5cc400553b0f134925023b7300e0c0ff2fff1d8492",
+      "image_id": "sha256:1fe4a54a42cbac4a6eea596be73425985ab3bca5f28f5871d2fa66d7c0a05f8b",
+      "schema_sha256": "528c8be229c72c346f134ffaa60094f94224094a25b6fb11bcc87802ddc7fffb"
+    },
+    "teacher_only": ["resolved-data", "resolved-project", "t-mdt", "t-mds", "minimum-mds", "c-mdt-37", "c-mdt-37-percent", "c-mdt-28", "c-mds-28", "c-mdt-percent", "c-mds-percent", "a-mdt-number", "a-mds-number", "a-mdt-percent", "a-mds-percent", "g-mdt", "g-mds", "resolved-project-png", "resolved-project-svg", "resolved-project-original"]
+  },
+  "selection": {"alumnat": ["initial-data"], "docent": ["resolved-data"]},
+  "readings": {
+    "alumnat": {"source": "practiques/visibilitat-costa/ca/alumnat/LLEGIU-ME.md", "approved_sha256": "fc276856598516d16aa913a344f2d0bb6aba941f110e765da3542910e533f35e"},
+    "docent": {"source": "practiques/visibilitat-costa/ca/docent/LLEGIU-ME.md", "approved_sha256": "126dcc0235a38e4d28672784ac01b0025e3e142bb5cd6314017ed0af3eb2fdc5"}
+  }
+}

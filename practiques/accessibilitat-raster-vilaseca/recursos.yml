@@ -1,0 +1,20 @@
+version: 1
+practica: accessibilitat-raster-vilaseca
+idioma: ca
+edicio: '2026-10-18'
+calcul_comu: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01
+preparador_comu: practiques/accessibilitat-vilaseca/preparar.py
+fonts_documents:
+  alumnat: ca/alumnat/LLEGIU-ME.md
+  docent: ca/docent/LLEGIU-ME.md
+temps_orientatiu_min:
+  aula: [150, 180]
+  autonom: [90, 120]
+  preparacio_docent: [45, 60]
+  base: estimacio no mesurada; QGIS GDAL GRASS preparats, dades locals i nocions de raster
+projectes_docents: [00-inici, 01-euclidiana, 02-xarxa, 05-friccio-oberta, 06-friccio-tancada, 07-cost]
+runtime_qgis: sha256:1003721d96abe9607d8337b36851f9b29f84c2f8f92b377d1a73ff03c9d15cd2
+runtime_pdf: sha256:618163d3f924439792b2306617bd9612f566c5881166102fa544b4e782d569fa
+fonts: [ICGC MCSC2024, RTT2024, limit municipal 2026-01-20, ortofoto2025]
+friccio: passos admesos; barrera i P2 tancat; eixos RTT amb pes1; cobertes
+human_approved: true

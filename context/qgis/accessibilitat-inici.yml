@@ -1,5 +1,5 @@
 id: accessibilitat-inici
-title: Connexió GeoPackage i models d'accessibilitat de Vila-seca
+title: Connexió GeoPackage i models d'accessibilitat amb xarxa ICGC de Vila-seca
 source_prompt: context/qgis/accessibilitat-inici.md
 runtime: {display_backend: x11, locale: ca}
 plugins: [processing]
@@ -17,6 +17,7 @@ data:
   - {id: inici-franges-tancades, type: raster, path: accessibilitat-vilaseca-20261006-inici/docent/resultats/franges_tancat.tif}
   - {id: guies-gpkg, type: gpkg, path: accessibilitat-vilaseca-20261007-guies/alumnat/accessibilitat-vilaseca.gpkg}
   - {id: guies-cost-cella, type: raster, path: accessibilitat-vilaseca-20261007-guies/docent/resultats/cost_cella_obert.tif}
+  - {id: guies-direccions-cost, type: raster, path: accessibilitat-vilaseca-20261007-guies/docent/resultats/direccions_obert.tif}
 connections:
   - {id: inici-gpkg, type: gpkg, name: accessibilitat-vilaseca.gpkg, path: tmp/dades-docents/qgis/accessibilitat-vilaseca-20261006-inici/alumnat/accessibilitat-vilaseca.gpkg}
 setup:
@@ -25,7 +26,7 @@ setup:
   - {action: expand_tree_item, target: {class_name: QgsDockBrowserTreeView, item_text: GeoPackage}, wait_ms: 200}
   - {action: expand_tree_item, target: {class_name: QgsDockBrowserTreeView, item_text: accessibilitat-vilaseca.gpkg}, wait_ms: 400}
   - {action: load_raster, path: tmp/dades-docents/qgis/accessibilitat-vilaseca-20261006-inici/fonts/ortofoto-2025.tif, name: Ortofoto ICGC2025}
-  - {action: load_vector, path: 'tmp/dades-docents/qgis/accessibilitat-vilaseca-20261006-inici/alumnat/accessibilitat-vilaseca.gpkg|layername=xarxa', name: Xarxa a peu}
+  - {action: load_vector, path: 'tmp/dades-docents/qgis/accessibilitat-vilaseca-20261006-inici/alumnat/accessibilitat-vilaseca.gpkg|layername=xarxa', name: Xarxa a peu ICGC RTT}
   - {action: load_vector, path: 'tmp/dades-docents/qgis/accessibilitat-vilaseca-20261006-inici/alumnat/accessibilitat-vilaseca.gpkg|layername=ambit_calcul', name: Àmbit de càlcul}
   - {action: set_layer_visible, layer: Àmbit de càlcul, visible: false}
   - {action: load_vector, path: 'tmp/dades-docents/qgis/accessibilitat-vilaseca-20261006-inici/alumnat/accessibilitat-vilaseca.gpkg|layername=passos', name: Passos P2 i alternatius}
@@ -34,6 +35,45 @@ setup:
   - {action: zoom_to_layer, layer: Àmbit de càlcul, scale: 1.05}
   - {action: clear_message_bar}
 captures:
+  - id: distancies-vector-parametres
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:native:shortestline'}
+    steps:
+      - action: open_processing_algorithm_dialog
+        algorithm: native:shortestline
+        parameters: {SOURCE: Origen O, DESTINATION: Destí D, METHOD: 0, NEIGHBORS: 1, OUTPUT: TEMPORARY_OUTPUT}
+    drawings:
+      - {type: rect, target: {object_name: 'unaltracapturaProcessingParameter:SOURCE'}, colour: information, margin: 0, shadow: false}
+      - {type: rect, target: {object_name: 'unaltracapturaProcessingParameter:DESTINATION'}, colour: example, margin: 0, shadow: false}
+    output: {path: tmp/dades-docents/qgis/accessibilitat-vilaseca-20261007-guies/captures/distancies-vector-parametres.png, annotations_svg: tmp/dades-docents/qgis/accessibilitat-vilaseca-20261007-guies/captures/distancies-vector-parametres.annotations.svg, manifest: tmp/dades-docents/qgis/accessibilitat-vilaseca-20261007-guies/captures/distancies-vector-parametres.manifest.yml}
+  - id: distancies-cost-parametres
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:grass:r.cost'}
+    steps:
+      - {action: close_transients}
+      - {action: load_raster, path: tmp/dades-docents/qgis/accessibilitat-vilaseca-20261007-guies/docent/resultats/cost_cella_obert.tif, name: Cost per cel·la ICGC}
+      - {action: set_layer_visible, layer: Cost per cel·la ICGC, visible: false}
+      - action: open_processing_algorithm_dialog
+        algorithm: grass:r.cost
+        parameters: {input: Cost per cel·la ICGC, start_points: Origen O, '-k': false, '-n': true, output: TEMPORARY_OUTPUT, outdir: TEMPORARY_OUTPUT, GRASS_REGION_PARAMETER: '343000,346000,4552000,4555200 [EPSG:25831]', GRASS_REGION_CELLSIZE_PARAMETER: 5}
+    drawings:
+      - {type: rect, target: {object_name: 'unaltracapturaProcessingParameter:input'}, colour: information, margin: 0, shadow: false}
+      - {type: rect, target: {object_name: 'unaltracapturaProcessingParameter:start_points'}, colour: example, margin: 0, shadow: false}
+    output: {path: tmp/dades-docents/qgis/accessibilitat-vilaseca-20261007-guies/captures/distancies-cost-parametres.png, annotations_svg: tmp/dades-docents/qgis/accessibilitat-vilaseca-20261007-guies/captures/distancies-cost-parametres.annotations.svg, manifest: tmp/dades-docents/qgis/accessibilitat-vilaseca-20261007-guies/captures/distancies-cost-parametres.manifest.yml}
+  - id: distancies-path-parametres
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:grass:r.path'}
+    steps:
+      - {action: close_transients}
+      - {action: load_raster, path: tmp/dades-docents/qgis/accessibilitat-vilaseca-20261007-guies/docent/resultats/direccions_obert.tif, name: Direccions de cost ICGC}
+      - {action: set_layer_visible, layer: Direccions de cost ICGC, visible: false}
+      - action: open_processing_algorithm_dialog
+        algorithm: grass:r.path
+        parameters: {input: Direccions de cost ICGC, format: 1, start_points: Destí D, vector_path: TEMPORARY_OUTPUT, raster_path: TEMPORARY_OUTPUT, GRASS_REGION_PARAMETER: '343000,346000,4552000,4555200 [EPSG:25831]', GRASS_REGION_CELLSIZE_PARAMETER: 5}
+    drawings:
+      - {type: rect, target: {object_name: 'unaltracapturaProcessingParameter:input'}, colour: information, margin: 0, shadow: false}
+      - {type: rect, target: {object_name: 'unaltracapturaProcessingParameter:start_points'}, colour: example, margin: 0, shadow: false}
+    output: {path: tmp/dades-docents/qgis/accessibilitat-vilaseca-20261007-guies/captures/distancies-path-parametres.png, annotations_svg: tmp/dades-docents/qgis/accessibilitat-vilaseca-20261007-guies/captures/distancies-path-parametres.annotations.svg, manifest: tmp/dades-docents/qgis/accessibilitat-vilaseca-20261007-guies/captures/distancies-path-parametres.manifest.yml}
   - id: rasteritzar-cobertes
     mode: window
     target: {object_name: 'unaltracapturaProcessingDialog:gdal:rasterize'}
@@ -47,6 +87,18 @@ captures:
       - {type: rect, target: {object_name: 'unaltracapturaProcessingParameter:FIELD'}, colour: information, margin: 0, shadow: false}
       - {type: rect, target: {object_name: 'unaltracapturaProcessingParameter:UNITS'}, colour: example, margin: 0, shadow: false}
     output: {path: tmp/dades-docents/qgis/accessibilitat-vilaseca-20261007-guies/captures/rasteritzar-cobertes.png, annotations_svg: tmp/dades-docents/qgis/accessibilitat-vilaseca-20261007-guies/captures/rasteritzar-cobertes.annotations.svg, manifest: tmp/dades-docents/qgis/accessibilitat-vilaseca-20261007-guies/captures/rasteritzar-cobertes.manifest.yml}
+  - id: rasteritzar-vials
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:gdal:rasterize'}
+    steps:
+      - {action: close_transients}
+      - action: open_processing_algorithm_dialog
+        algorithm: gdal:rasterize
+        parameters: {INPUT: Xarxa a peu ICGC RTT, BURN: 1, UNITS: 1, WIDTH: 5, HEIGHT: 5, EXTENT: '343000,346000,4552000,4555200 [EPSG:25831]', INIT: 0, NODATA: -9999, DATA_TYPE: 5, OUTPUT: TEMPORARY_OUTPUT}
+    drawings:
+      - {type: rect, target: {object_name: 'unaltracapturaProcessingParameter:INPUT'}, colour: information, margin: 0, shadow: false}
+      - {type: rect, target: {object_name: 'unaltracapturaProcessingParameter:BURN'}, colour: example, margin: 0, shadow: false}
+    output: {path: tmp/dades-docents/qgis/accessibilitat-vilaseca-20261007-guies/captures/rasteritzar-vials.png, annotations_svg: tmp/dades-docents/qgis/accessibilitat-vilaseca-20261007-guies/captures/rasteritzar-vials.annotations.svg, manifest: tmp/dades-docents/qgis/accessibilitat-vilaseca-20261007-guies/captures/rasteritzar-vials.manifest.yml}
   - id: rasteritzar-passos
     mode: window
     target: {object_name: 'unaltracapturaProcessingDialog:gdal:rasterize'}
@@ -65,7 +117,7 @@ captures:
     target: {object_name: QgisApp}
     steps:
       - {action: close_transients}
-      - {action: set_layer_visible, layer: Xarxa a peu, visible: false}
+      - {action: set_layer_visible, layer: Xarxa a peu ICGC RTT, visible: false}
       - {action: load_raster, path: tmp/dades-docents/qgis/accessibilitat-vilaseca-20261007-guies/docent/resultats/cost_cella_obert.tif, name: Cost per cel·la · passos oberts}
       - {action: load_vector, path: 'tmp/dades-docents/qgis/accessibilitat-vilaseca-20261007-guies/alumnat/accessibilitat-vilaseca.gpkg|layername=passos', name: Polígons de pas sobre el cost}
       - {action: select_tree_item, target: {class_name: QgsLayerTreeView, item_text: Àmbit de càlcul}}
@@ -79,6 +131,12 @@ captures:
     target: {object_name: QgisApp}
     camera: {mode: crop, target: {class_name: QgsDockBrowserTreeView}, padding: 10, output_size: {width: 650, height: 650}}
     steps:
+      - {action: close_transients}
+      - {action: set_layer_visible, layer: 'Cost per cel·la · passos oberts', visible: false}
+      - {action: set_layer_visible, layer: Polígons de pas sobre el cost, visible: false}
+      - {action: set_layer_visible, layer: Cobertes MCSC2024, visible: false}
+      - {action: set_layer_visible, layer: Ortofoto ICGC2025, visible: true}
+      - {action: set_layer_visible, layer: Xarxa a peu ICGC RTT, visible: true}
       - {action: select_tree_item, target: {class_name: QgsLayerTreeView, item_text: Àmbit de càlcul}, wait_ms: 200}
       - {action: trigger_action, name: mActionZoomToLayer, wait_ms: 500}
     drawings:
@@ -102,10 +160,13 @@ captures:
     target: {object_name: QgisApp}
     steps:
       - {action: close_transients}
+      - {action: set_layer_visible, layer: 'Cost per cel·la · passos oberts', visible: false}
+      - {action: set_layer_visible, layer: Polígons de pas sobre el cost, visible: false}
+      - {action: set_layer_visible, layer: Ortofoto ICGC2025, visible: true}
       - {action: trigger_action, name: Minimitza tot, wait_ms: 200}
-      - {action: load_vector, path: 'tmp/dades-docents/qgis/accessibilitat-vilaseca-20261006-inici/docent/resultats.gpkg|layername=ruta_tancat', name: 'Ruta tancada · 4876,7m'}
-      - {action: load_vector, path: 'tmp/dades-docents/qgis/accessibilitat-vilaseca-20261006-inici/docent/resultats.gpkg|layername=ruta_obert', name: 'Ruta oberta · 448,0m'}
-      - {action: select_tree_item, target: {class_name: QgsLayerTreeView, item_text: 'Ruta tancada'}, wait_ms: 200}
+      - {action: load_vector, path: 'tmp/dades-docents/qgis/accessibilitat-vilaseca-20261006-inici/docent/resultats.gpkg|layername=ruta_tancat', name: 'Xarxa ICGC tancada · sense ruta'}
+      - {action: load_vector, path: 'tmp/dades-docents/qgis/accessibilitat-vilaseca-20261006-inici/docent/resultats.gpkg|layername=ruta_obert', name: 'Xarxa ICGC oberta · ruta'}
+      - {action: select_tree_item, target: {class_name: QgsLayerTreeView, item_text: 'Xarxa ICGC oberta'}, wait_ms: 200}
       - {action: trigger_action, name: mActionZoomToLayer, wait_ms: 500}
       - {action: clear_message_bar}
     output: {path: tmp/dades-docents/qgis/accessibilitat-vilaseca-20261006-inici/captures/xarxa.png, annotations_svg: tmp/dades-docents/qgis/accessibilitat-vilaseca-20261006-inici/captures/xarxa.annotations.svg, manifest: tmp/dades-docents/qgis/accessibilitat-vilaseca-20261006-inici/captures/xarxa.manifest.yml}
@@ -113,9 +174,9 @@ captures:
     mode: window
     target: {object_name: QgisApp}
     steps:
-      - {action: set_layer_visible, layer: 'Ruta tancada · 4876,7m', visible: false}
-      - {action: set_layer_visible, layer: 'Ruta oberta · 448,0m', visible: false}
-      - {action: set_layer_visible, layer: Xarxa a peu, visible: false}
+      - {action: set_layer_visible, layer: 'Xarxa ICGC tancada · sense ruta', visible: false}
+      - {action: set_layer_visible, layer: 'Xarxa ICGC oberta · ruta', visible: false}
+      - {action: set_layer_visible, layer: Xarxa a peu ICGC RTT, visible: false}
       - {action: load_raster, path: tmp/dades-docents/qgis/accessibilitat-vilaseca-20261006-inici/docent/resultats/friccio_tancat.tif, name: Fricció tancada · pesos}
       - {action: select_tree_item, target: {class_name: QgsLayerTreeView, item_text: Àmbit de càlcul}}
       - {action: trigger_action, name: mActionZoomToLayer, wait_ms: 500}
@@ -160,8 +221,8 @@ captures:
       - {action: set_layer_visible, layer: Camí de cost · tancat, visible: false}
       - {action: set_layer_visible, layer: Camí de cost · obert, visible: false}
       - {action: load_raster, path: tmp/dades-docents/qgis/accessibilitat-vilaseca-20261006-inici/docent/resultats/marxa_obert_anada_minuts.tif, name: Temps de marxa · minuts}
-      - {action: load_vector, path: tmp/dades-docents/qgis/accessibilitat-vilaseca-20261006-inici/docent/resultats/marxa_obert_anada_ruta.gpkg, name: 'Anada · 8,15min'}
-      - {action: load_vector, path: tmp/dades-docents/qgis/accessibilitat-vilaseca-20261006-inici/docent/resultats/marxa_obert_tornada_ruta.gpkg, name: 'Tornada · 8,05min'}
+      - {action: load_vector, path: tmp/dades-docents/qgis/accessibilitat-vilaseca-20261006-inici/docent/resultats/marxa_obert_anada_ruta.gpkg, name: 'Anada · model amb MDT'}
+      - {action: load_vector, path: tmp/dades-docents/qgis/accessibilitat-vilaseca-20261006-inici/docent/resultats/marxa_obert_tornada_ruta.gpkg, name: 'Tornada · model amb MDT'}
       - {action: expand_tree_item, target: {class_name: QgsLayerTreeView, item_text: Temps de marxa}}
       - {action: select_tree_item, target: {class_name: QgsLayerTreeView, item_text: Temps de marxa}}
       - {action: clear_message_bar}
@@ -172,8 +233,8 @@ captures:
     steps:
       - {action: set_layer_visible, layer: Temps de marxa · minuts, visible: false}
       - {action: trigger_action, name: Minimitza tot, wait_ms: 200}
-      - {action: set_layer_visible, layer: 'Anada · 8,15min', visible: false}
-      - {action: set_layer_visible, layer: 'Tornada · 8,05min', visible: false}
+      - {action: set_layer_visible, layer: 'Anada · model amb MDT', visible: false}
+      - {action: set_layer_visible, layer: 'Tornada · model amb MDT', visible: false}
       - {action: load_raster, path: tmp/dades-docents/qgis/accessibilitat-vilaseca-20261006-inici/docent/resultats/franges_obert.tif, name: Franges · P2 obert}
       - {action: load_vector, path: tmp/dades-docents/qgis/accessibilitat-vilaseca-20261006-inici/docent/resultats/isocrones_obert.gpkg, name: Contorns3/6/12min · obert}
       - {action: expand_tree_item, target: {class_name: QgsLayerTreeView, item_text: Franges · P2 obert}}

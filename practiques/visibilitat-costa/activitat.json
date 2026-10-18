@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "kind": "qgis-practice-request-v2",
+  "activity": {"id": "visibilitat-costa", "version": "2026-10-12-pilot-01", "title": "Visibilitat de torxa, carretera i recinte petroquímic"},
+  "qgis_image": "sha256:1003721d96abe9607d8337b36851f9b29f84c2f8f92b377d1a73ff03c9d15cd2",
+  "script": "preparar.py",
+  "inputs": [{"id": "source-torxa", "path": "source-torxa.gpkg", "sha256": "24017e521d0745a3b5b39ee507aa78600ac3b1475c35a7c7793d8660eecdd66a"}],
+  "parameters": {"source_archive_sha256": "b7f2c5f38c8ee45cca592ce35db4aaeac77a413f6ace210948e47e338c3369cc", "bounds": [342000, 4549000, 352000, 4559000], "resolution_m": 5, "analysis_reused": true},
+  "products": [
+    {"id": "font-regular", "path": "data/fonts/DejaVuSans.ttf", "role": "initial-data", "format": "font"},
+    {"id": "initial-data", "path": "data/visibilitat-costa.gpkg", "role": "initial-data", "format": "geopackage", "depends_on": ["font-regular"], "members": [
+      {"kind": "vector", "name": "torxa", "role": "initial-data"},
+      {"kind": "vector", "name": "carretera", "role": "initial-data"},
+      {"kind": "vector", "name": "mostres_carretera", "role": "initial-data"},
+      {"kind": "vector", "name": "coberta_original", "role": "initial-data"},
+      {"kind": "vector", "name": "receptors", "role": "initial-data"},
+      {"kind": "vector", "name": "ambit", "role": "initial-data"},
+      {"kind": "raster", "name": "mdt", "role": "initial-data"},
+      {"kind": "raster", "name": "mds", "role": "initial-data"},
+      {"kind": "raster", "name": "domini", "role": "initial-data"},
+      {"kind": "raster", "name": "ortofoto", "role": "initial-data"},
+      {"kind": "project", "name": "inici", "role": "initial-project"}
+    ]},
+    {"id": "t-mdt", "path": "data/torxa-mdt.tif", "role": "resolved-data", "format": "geotiff"},
+    {"id": "t-mds", "path": "data/torxa-mds.tif", "role": "resolved-data", "format": "geotiff"},
+    {"id": "minimum-mds", "path": "data/cota-minima-mds.tif", "role": "resolved-data", "format": "geotiff"},
+    {"id": "c-mdt-37", "path": "data/carretera-mdt-totes-nombre.tif", "role": "resolved-data", "format": "geotiff"},
+    {"id": "c-mdt-37-percent", "path": "data/carretera-mdt-totes-percent.tif", "role": "resolved-data", "format": "geotiff"},
+    {"id": "c-mdt-28", "path": "data/carretera-mdt-nombre.tif", "role": "resolved-data", "format": "geotiff"},
+    {"id": "c-mds-28", "path": "data/carretera-mds-nombre.tif", "role": "resolved-data", "format": "geotiff"},
+    {"id": "c-mdt-percent", "path": "data/carretera-mdt-percent.tif", "role": "resolved-data", "format": "geotiff"},
+    {"id": "c-mds-percent", "path": "data/carretera-mds-percent.tif", "role": "resolved-data", "format": "geotiff"},
+    {"id": "a-mdt-number", "path": "data/area-mdt-nombre.tif", "role": "resolved-data", "format": "geotiff"},
+    {"id": "a-mds-number", "path": "data/area-mds-nombre.tif", "role": "resolved-data", "format": "geotiff"},
+    {"id": "a-mdt-percent", "path": "data/area-mdt-percent.tif", "role": "resolved-data", "format": "geotiff"},
+    {"id": "a-mds-percent", "path": "data/area-mds-percent.tif", "role": "resolved-data", "format": "geotiff"},
+    {"id": "g-mdt", "path": "data/poligon-mdt-alguna.tif", "role": "resolved-data", "format": "geotiff"},
+    {"id": "g-mds", "path": "data/poligon-mds-alguna.tif", "role": "resolved-data", "format": "geotiff"},
+    {"id": "resolved-data", "path": "data/visibilitat-costa-docent.gpkg", "role": "resolved-data", "format": "geopackage", "depends_on": ["initial-data", "font-regular", "t-mdt", "t-mds", "minimum-mds", "c-mdt-37", "c-mdt-37-percent", "c-mdt-28", "c-mds-28", "c-mdt-percent", "c-mds-percent", "a-mdt-number", "a-mds-number", "a-mdt-percent", "a-mds-percent", "g-mdt", "g-mds"], "members": [
+      {"kind": "vector", "name": "poligon", "role": "resolved-data"},
+      {"kind": "vector", "name": "buffer_positiu", "role": "resolved-data"},
+      {"kind": "vector", "name": "fragments_area", "role": "resolved-data"},
+      {"kind": "vector", "name": "mostres_area", "role": "resolved-data"},
+      {"kind": "vector", "name": "receptors_resultats", "role": "resolved-data"},
+      {"kind": "vector", "name": "carretera_torxa", "role": "resolved-data"},
+      {"kind": "vector", "name": "intervisibilitat", "role": "resolved-data"},
+      {"kind": "project", "name": "docent", "role": "resolved-project"}
+    ]}
+  ],
+  "fonts": [{"file": "font-regular", "family": "DejaVu Sans"}],
+  "projects": [
+    {"id": "initial-project", "path": "projects/initial/inici.qgz", "role": "initial-project", "source_product": "initial-data", "source_project": "inici", "compose": true, "capture": false, "scene": {"setup": [], "presentation": {"checks": {"project_crs": "EPSG:25831", "required_layers": ["torxa", "carretera", "MDT", "MDS", "Domini", "Ortofoto ICGC 2025"]}}}},
+    {"id": "resolved-project", "path": "projects/resolved/docent.qgz", "role": "resolved-project", "source_product": "resolved-data", "source_project": "docent", "compose": true, "capture": true, "scene": {"setup": [{"action": "clear_message_bar"}], "presentation": {"checks": {"project_crs": "EPSG:25831", "required_layers": ["torxa", "carretera", "poligon", "g-mds", "Ortofoto ICGC 2025"]}}, "captures": [{"id": "visibilitat-pilot", "target": {"class_name": "QgisApp"}, "drawings": []}]}}
+  ],
+  "timeout_seconds": 600,
+  "locale": "ca_ES"
+}

@@ -9,13 +9,15 @@ lectura:
 fonts_documents:
   alumnat: ca/alumnat/LLEGIU-ME.md
   docent: ca/docent/LLEGIU-ME.md
-treball: sandbox/practiques/accessibilitat-vilaseca/2026-10-07-organitzacio
-lliurament: dist/practiques/accessibilitat-vilaseca/2026-10-07-r2/ca
-paquets:
-  alumnat: accessibilitat-vilaseca-2026-10-07-r2-ca.zip
-  docent: accessibilitat-vilaseca-docent-2026-10-07-r2-ca.zip
-runtime_qgis: sha256:950ee7bf7cbab5163849415d4f7fd72dc400b1e81127913ff308244ae4a6ebdc
-runtime_pdf: ghcr.io/dosquartsdedocs/unaltraweb-manual-pdf@sha256:9e0b3a45753c170b795e9a9d6df61580085c113436beac5bf6c8de69b6562097
+treball: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01
+subpractiques:
+  - accessibilitat-xarxa-vilaseca
+  - accessibilitat-raster-vilaseca
+  - accessibilitat-temps-vilaseca
+edicio_subpractiques: '2026-10-18'
+lliurament_combinat_anterior: dist/practiques/accessibilitat-vilaseca/2026-10-14-r6/ca
+runtime_qgis: sha256:1003721d96abe9607d8337b36851f9b29f84c2f8f92b377d1a73ff03c9d15cd2
+runtime_pdf: ghcr.io/dosquartsdedocs/unaltraweb-manual-pdf@sha256:1bb3f2dafd741e96c28639ec1cc8ccaeb81cbaa73e649f787c0b4ef59997bd4b
 captures:
   prompt: context/qgis/accessibilitat-inici.md
   recepta: context/qgis/accessibilitat-inici.yml
@@ -37,6 +39,10 @@ recursos:
     url: https://datacloud.icgc.cat/datacloud/topografia-territorial/gpkg_unzip/topografia-territorial-v1r0-2024.gpkg
     capa: _35_transports_l
     llicencia: CC BY 4.0
+    escala_optima: '1:5000'
+    usos: [xarxa_preparada, vials_friccio, autopista_eixos]
+    font_local: fonts/eixos-rtt-2024.gpkg
+    eix_p2: 1354754
   - id: mdt
     productor: ICGC
     edicio: LiDAR 2021-2023
@@ -48,9 +54,11 @@ recursos:
     url: https://geoserveis.icgc.cat/servei/catalunya/orto-territorial/wms
     capa: ortofoto_25cm_color_2025
     resolucio_copia_m: 2
+fonts_alternatives:
   - id: vials-osm
     productor: OpenStreetMap contributors / Geofabrik
     edicio: 2026-10-05
     url: https://download.geofabrik.de/europe/spain/cataluna-261005.osm.pbf
-    sha256: 522f5a71ae966c02d76935b6cecabb09eea6f0c9ad8443c33867cb89c6417959
     llicencia: ODbL 1.0
+    usos: [explicacio_formats_i_fonts_alternatives]
+    inclosa_al_paquet: false

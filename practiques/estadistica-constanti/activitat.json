@@ -1,0 +1,40 @@
+{
+  "schema_version": 2,
+  "kind": "qgis-practice-request-v2",
+  "activity": {"id": "estadistica-constanti", "version": "2026-10-12-pilot-01", "title": "Constantí: recompte, centres, dispersió i densitat"},
+  "qgis_image": "sha256:1003721d96abe9607d8337b36851f9b29f84c2f8f92b377d1a73ff03c9d15cd2",
+  "script": "preparar.py",
+  "inputs": [{"id": "source-municipal", "path": "constanti.gpkg", "sha256": "25a8356bc93a485dc3902a3ad7c61b86dfd46230c40293e78f6e4f5ef5f89b6e"}],
+  "parameters": {"scope": "descriptive only; no Moran or renda", "source_archive_sha256": "ec2a5e4d1fa580a5633927e6ff642b85fc2d1863911dcce64e721ca8c1681ce2", "bounds": [343500, 4554000, 353500, 4563000]},
+  "products": [
+    {"id": "font-regular", "path": "data/fonts/DejaVuSans.ttf", "role": "initial-data", "format": "font"},
+    {"id": "initial-data", "path": "data/estadistica-constanti.gpkg", "role": "initial-data", "format": "geopackage", "depends_on": ["font-regular"], "members": [
+      {"kind": "vector", "name": "punts", "role": "initial-data"},
+      {"kind": "vector", "name": "coneguda", "role": "initial-data"},
+      {"kind": "vector", "name": "pesos", "role": "initial-data"},
+      {"kind": "vector", "name": "malla", "role": "initial-data"},
+      {"kind": "vector", "name": "limit", "role": "initial-data"},
+      {"kind": "raster", "name": "ortofoto", "role": "initial-data"},
+      {"kind": "project", "name": "inici", "role": "initial-project"}
+    ]},
+    {"id": "kernel-500", "path": "data/kernel-500-raw.tif", "role": "resolved-data", "format": "geotiff"},
+    {"id": "kernel-1500", "path": "data/kernel-1500-raw.tif", "role": "resolved-data", "format": "geotiff"},
+    {"id": "densitat-500", "path": "data/densitat-500.tif", "role": "resolved-data", "format": "geotiff"},
+    {"id": "densitat-1500", "path": "data/densitat-1500.tif", "role": "resolved-data", "format": "geotiff"},
+    {"id": "resolved-data", "path": "data/estadistica-constanti-docent.gpkg", "role": "resolved-data", "format": "geopackage", "depends_on": ["initial-data", "font-regular", "densitat-500", "densitat-1500"], "members": [
+      {"kind": "vector", "name": "recompte", "role": "resolved-data"},
+      {"kind": "vector", "name": "centres", "role": "resolved-data"},
+      {"kind": "vector", "name": "dispersio", "role": "resolved-data"},
+      {"kind": "vector", "name": "cercle", "role": "resolved-data"},
+      {"kind": "vector", "name": "ellipse", "role": "resolved-data"},
+      {"kind": "project", "name": "docent", "role": "resolved-project"}
+    ]}
+  ],
+  "fonts": [{"file": "font-regular", "family": "DejaVu Sans"}],
+  "projects": [
+    {"id": "initial-project", "path": "projects/initial/inici.qgz", "role": "initial-project", "source_product": "initial-data", "source_project": "inici", "compose": true, "capture": false, "scene": {"setup": [], "presentation": {"checks": {"project_crs": "EPSG:25831", "required_layers": ["punts", "limit", "malla", "Ortofoto ICGC 2025"]}}}},
+    {"id": "resolved-project", "path": "projects/resolved/docent.qgz", "role": "resolved-project", "source_product": "resolved-data", "source_project": "docent", "compose": true, "capture": true, "scene": {"setup": [{"action": "clear_message_bar"}], "presentation": {"checks": {"project_crs": "EPSG:25831", "required_layers": ["punts", "centres", "cercle", "ellipse", "Ortofoto ICGC 2025"]}}, "captures": [{"id": "constanti-descriptiva", "target": {"class_name": "QgisApp"}, "drawings": []}]}}
+  ],
+  "timeout_seconds": 600,
+  "locale": "ca_ES"
+}
