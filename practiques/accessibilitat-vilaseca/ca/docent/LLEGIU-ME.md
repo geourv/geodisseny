@@ -2,11 +2,49 @@
 title: "Resolució docent: accessibilitat de Vila-seca"
 author: Benito Zaragozí
 lang: ca
-date: "Guia revisada: 7 d'octubre de 2026"
+date: "Guia revisada: 14 d'octubre de 2026"
 content_status: draft
 ---
 
-# Pregunta i preparació de la pràctica
+# Preparar la tasca de Moodle
+
+El cas es distribueix ara en tres tasques amb lectures pròpies: **xarxa vectorial**, **model ràster** i **temps d'accés i ampliacions**. Per preparar Moodle, utilitza els enunciats dels documents docents de cada subpràctica. Aquest guió conserva la resolució conjunta; l'enunciat general següent correspon al paquet combinat anterior.
+
+1. Activa l'edició del curs i tria **Afegir una activitat o un recurs → Tasca**. Posa-hi el nom **Accessibilitat: distància, xarxa i cost**.
+2. A **Descripció**, enganxa el bloc següent, des de «Dades de partida» fins al final de «Qualificació».
+3. A **Fitxers addicionals**, adjunta **`accessibilitat-vilaseca-2026-10-14-r6-ca.zip`**, el paquet d'inici. Conté el GeoPackage i el `LLEGIU-ME.pdf` de l'alumnat.
+4. Comprova la tasca amb la vista d'estudiant: el ZIP s'ha de poder descarregar i l'enunciat ha de quedar visible a la descripció. La resolució d'aquest document i el paquet docent serveixen per preparar la classe.
+
+## Enunciat per copiar a la descripció
+
+**Dades de partida.** Descarregueu `accessibilitat-vilaseca-2026-10-14-r6-ca.zip`, adjunt a aquesta tasca, i descomprimiu-lo en una carpeta local pròpia. Conté `accessibilitat-vilaseca.gpkg` i `LLEGIU-ME.pdf`. El GeoPackage incorpora el projecte **inici**, els punts O/D, la xarxa preparada amb eixos ICGC, les cobertes, els eixos de l'AP-7, els passos, el límit, l'àmbit de càlcul, el MDT i l'ortofoto. Obriu-lo amb QGIS 3.44, GDAL i GRASS, seguint la guia.
+
+El cas preparat és el **Camí del Mas de la Plana, al pas de l'AP-7 de Vila-seca**. Els dos punts són als costats de la infraestructura i es mantenen fixos durant la comparació. La xarxa procedeix del **Referencial Topogràfic Territorial2024 de l'ICGC**, amb escala òptima de treball d'1:5.000. Les cobertes, elevacions, límit i ortofoto també són de l'ICGC. Els càlculs ràster utilitzen EPSG:25831 i una graella de **5 m**. Els pesos, trams admesos i corredors són supòsits docents, no mesures de caminades o permisos de pas.
+
+**Treball de classe.** El professor indicarà a classe quins apartats, exercicis i comprovacions són obligatoris dins del **70% de la qualificació** i ho recollirà en aquesta tasca. La guia desenvolupa un recorregut complet: no tots els passos són automàticament obligatoris. La comparació principal relaciona tres longituds entre els mateixos O/D: **recta euclidiana, camí de menor cost en ràster i ruta més curta en xarxa**. Els blocs que es poden seleccionar són:
+
+1. **Distància euclidiana i proximitat.** Calculeu la recta vectorial. Prepareu la cel·la origen i obteniu la distància ràster amb `r.grow.distance`; contrasteu-la amb Proximitat de GDAL. Expliqueu la diferència entre punts i centres de cel·la.
+2. **Camí ràster.** Rasteritzeu les cobertes i apliqueu els pesos de `llegenda_costos`. Integreu l'AP-7 i els passos abans de convertir el codi de barrera en NoData. Executeu **r.cost** des d'O i reconstruïu el camí amb **r.path**, seleccionant les direccions i D. Mesureu-ne la longitud i conserveu el cost ponderat en una columna separada.
+3. **Ruta en xarxa.** Comproveu les connexions dels eixos ICGC preparats i calculeu el camí més curt, amb cost de longitud. En Vila-seca, compareu P2 obert i tancat, retirant l'eix **rtt_id1354754**, mantenint O/D i documentant la selecció dels trams. Si el mòdul retorna sense ruta, conserveu aquest resultat i distingiu-lo d'una distància zero.
+4. **Comparació.** Prepareu un mapa del camí ràster, un mapa de les rutes de xarxa i una taula amb les tres longituds en metres. Incloeu-hi el control de proximitat i distingiu-lo del cost acumulat. Expliqueu què considera cada model.
+
+**Ampliacions per aspirar a l'excel·lent.** Desenvolupeu una pregunta que vagi més enllà de repetir els passos seleccionats. Podeu comparar diversos destins, calcular àrees de servei, marxa anisòtropa o isòcrones, repetir l'anàlisi amb altres pesos o resolucions, o estudiar una zona alternativa. Canvieu un paràmetre cada vegada i conserveu una referència. Justifiqueu què heu après; més operacions no impliquen una millor conclusió. Les ampliacions no substitueixen els obligatoris.
+
+**Preguntes obertes i aplicacions.** Quin destí o origen és més vulnerable al tancament? Canvia l'ordre dels destins segons el model? Quina connexió convindria inspeccionar sobre el terreny? Proposeu una aplicació geogràfica, com comparar accessos a un equipament o connexions vulnerables, i expliqueu quines dades farien falta per desenvolupar-la. Si treballeu una zona alternativa, d'acord amb el professor, justifiqueu fonts, O/D, extensió, resolució, pesos i passos; reviseu la connectivitat i calculeu controls propis.
+
+**Informe.** Presenteu la pregunta i l'àmbit, les dades i decisions, el procediment amb controls, els mapes i taules dels apartats seleccionats, i una conclusió amb límits. Separeu metres, cost ponderat i temps. Podeu enregistrar fragments de la pantalla mentre treballeu i després pausar el vídeo per desar captures dels paràmetres o resultats importants. Comproveu la llegibilitat, numereu-les i expliqueu què demostra cadascuna; per als mapes finals, feu una exportació cartogràfica. El vídeo és una ajuda, no un lliurament obligatori tret que el professor ho indiqui. La guia detalla aquesta manera de documentar el treball.
+
+**Lliurament.** Entregueu `accessibilitat-vilaseca-cognom.gpkg`, amb les capes generades i el projecte incrustat; una còpia externa `accessibilitat-vilaseca-cognom.qgz`; i `accessibilitat-vilaseca-cognom.pdf`, amb l'informe. Afegiu els TIFF referenciats pel projecte, conservant l'estructura de carpetes si ho empaqueteu en un ZIP. Comproveu que s'obre des d'una altra ubicació sense rutes trencades. En una zona alternativa, identifiqueu el cas al nom dels fitxers.
+
+**Qualificació.** **70% als apartats obligatoris que el professor indicarà a classe**; **20% a les ampliacions**; **10% a la qualitat de l'informe, captures, mapes i organització**. Una ampliació permet aspirar a l'excel·lent quan planteja una pregunta, aplica el mètode amb controls i interpreta els resultats. Intentar-la no garanteix una nota ni substitueix els obligatoris.
+
+# Preparació de la resolució docent
+
+Selecciona abans de la classe els apartats que entraran al 70% obligatori i comunica'ls a l'alumnat; deixa la mateixa selecció a Moodle. Les parts A–E ofereixen la comparació principal. Les àrees de servei de C i les parts F/G ofereixen ampliacions, juntament amb les preguntes obertes. Ajusta l'abast al temps de classe i distingeix una demostració docent d'un resultat que l'alumnat haurà de calcular.
+
+La resolució següent conserva els controls de tot el recorregut. Per orientar les ampliacions, demana una pregunta concreta, una comparació de referència, un registre de paràmetres i una discussió dels límits. Si es canvia de zona, els controls de Vila-seca deixen de ser valors esperats. Valora la justificació d'una aplicació geogràfica i les dades que requeriria, no només la semblança visual amb les captures de referència.
+
+## Pregunta i preparació de la pràctica
 
 La pregunta és com canvia l'accés entre **O i D** quan s'admet moviment en línia recta, sobre vials o entre cel·les, i quan es tanca el pas **P2** de l'AP-7. La resolució utilitza les mateixes coordenades durant tota la cadena. No s'ha de substituir el punt quan un resultat sembli poc favorable: cal revisar el model i les entrades.
 
@@ -24,7 +62,7 @@ L'alumnat rep `accessibilitat-vilaseca.gpkg` i `LLEGIU-ME.pdf`. El projecte **in
 
 | Entrada | Font i accés | Què s'utilitza |
 | --- | --- | --- |
-| Xarxa a peu | [OSM/Geofabrik, Catalunya](https://download.geofabrik.de/europe/spain/cataluna.html) | Vials i connexions nodals; velocitat docent5km/h |
+| Xarxa a peu | [ICGC, Referencial Topogràfic Territorial](https://www.icgc.cat/ca/Geoinformacio-i-mapes/Dades-i-productes/Geoinformacio-cartografica/Referencial-Topografic-Territorial) | Eixos2024 seleccionats/nodificats; rtt_id i atributs originals; velocitat docent5km/h |
 | Cobertes | [MCSC de l'ICGC](https://www.icgc.cat/ca/Geoinformacio-i-mapes/Mapes/Mapa-de-cobertes-del-sol-de-Catalunya), [àrea seleccionada](https://visors.icgc.cat/appdownloads/index.html?c=fmexomcsc) i [GeoPackage2024](https://datacloud.icgc.cat/datacloud/cobertes-sol/gpkg/cobertes-sol-v1r0-2024.zip) | Classe vectorial i llegenda per assignar pesos |
 | Autopista i passos | [ICGC, RTT](https://www.icgc.cat/ca/Geoinformacio-i-mapes/Dades-i-productes/Geoinformacio-cartografica/Referencial-Topografic-Territorial) | Eixos AP-7 i corredors de travessa del model |
 | Altitud | [ICGC, elevacions](https://www.icgc.cat/ca/Geoinformacio-i-mapes/Dades-i-productes/Elevacions) | MDT de5m, en metres d'altitud |
@@ -57,12 +95,12 @@ Les sortides ràster són TIFF locals; les vectorials es desen amb noms de capa 
 
 | Punt | X, m | Y, m |
 | --- | ---: | ---: |
-| O | 344407,565081 | 4553669,673733 |
-| D | 344475,279609 | 4554024,590093 |
+| O | 344407,000000 | 4553668,360000 |
+| D | 344473,010000 | 4554030,720000 |
 
 Table: Coordenades d'O i D per al càlcul de la distància vectorial.
 
-Les diferències són **67,714528m** en X i **354,916360m** en Y. Pitàgores dona **361,318253m**. Tancar P2 no modifica aquesta separació geomètrica. La interpretació esperada és que una recta entre punts encara no és un itinerari possible.
+Les diferències són **66,01m** en X i **362,36m** en Y. Pitàgores dona **368,323349m**. Tancar P2 no modifica aquesta separació geomètrica. La interpretació esperada és que una recta entre punts encara no és un itinerari possible.
 
 # B. Resolució de la distància ràster
 
@@ -77,7 +115,7 @@ Les diferències són **67,714528m** en X i **354,916360m** en Y. Pitàgores don
 
 1. Obre [r.grow.distance](https://grass.osgeo.org/grass84/manuals/r.grow.distance.html), amb **origen_null**, mètrica **euclidean** i cerca de NULL desactivada.
 2. Fixa la regió comuna i5m; desa **distancia_grass.tif**.
-3. Amb `native:rastersampling`, mostreja **Destí D**. El resultat és **361,835598m**.
+3. Amb `native:rastersampling`, mostreja **Destí D**. El resultat és **370,742498m**.
 4. Repeteix amb `gdal:proximity`, entrada origen_zero, objectiu1, unitats georeferenciades, Float32 i NoData−9999. Ha de concordar amb GRASS al mil·límetre.
 
 ![La mètrica euclidiana s'aplica a la cel·la origen; el fonsNULL evita que el fons es tracti com un conjunt d'orígens.](captures/distancia-grass.png){width=85% height=380pt}
@@ -85,11 +123,11 @@ Les diferències són **67,714528m** en X i **354,916360m** en Y. Pitàgores don
 | Centre de cel·la | X, m | Y, m |
 | --- | ---: | ---: |
 | O | 344407,5 | 4553667,5 |
-| D | 344477,5 | 4554022,5 |
+| D | 344472,5 | 4554032,5 |
 
 Table: Coordenades dels centres de cel·la d'O i D en la graella comuna.
 
-La separació de centres és70m en X i355m en Y. El control és `sqrt(70²+355²)`. La diferència de **0,517345m** respecte del vector és una conseqüència de representar els punts amb cel·les, no una ruta que eviti l'autopista.
+La separació de centres és65m en X i365m en Y. El control és `sqrt(65²+365²)`. La diferència de **2,419149m** respecte del vector és una conseqüència de representar els punts amb cel·les, no una ruta que eviti l'autopista.
 
 # C. Xarxa, tancament i àrees de servei
 
@@ -99,25 +137,25 @@ La separació de centres és70m en X i355m en Y. El control és `sqrt(70²+355²
 2. Utilitza O/D de les capes amb tolerància punt–xarxa0,1m. Les coordenades per als camps són:
 
 ```text
-O: 344407.565081,4553669.673733 [EPSG:25831]
-D: 344475.279609,4554024.590093 [EPSG:25831]
+O: 344407.000000,4553668.360000 [EPSG:25831]
+D: 344473.010000,4554030.720000 [EPSG:25831]
 ```
 
-3. Desa **ruta_obert**: **448,048353m**. La longitud supera la recta361,318253m perquè segueix els trams connectats.
-4. Amb **més ràpid**, camp `v_kmh`, velocitat5km/h i mateixos punts, s'obtenen **0,089609671h =5,376580min**. La velocitat és una hipòtesi uniforme de l'exercici.
+3. Desa **ruta_obert**: **454,104650m**. La longitud supera la recta368,323349m perquè segueix els trams connectats.
+4. Amb **més ràpid**, camp `v_kmh`, velocitat5km/h i mateixos punts, s'obtenen **0,090820930h =5,449256min**. La velocitat és una hipòtesi uniforme de l'exercici.
 
 ## Itinerari tancat
 
-1. Extreu `passos` per atribut **pas_id=2** i desa **pas_p2**.
-2. A `native:extractbylocation`, entrada xarxa, comparació amb pas_p2, predicat **disjoint**. Desa **xarxa_tancada**.
-3. Repeteix la ruta amb els mateixos punts: **4876,695005m**, o **58,520340min** a5km/h.
-4. Representa totes dues rutes i apropa la vista a l'extensió completa de la tancada. Identifica el pas alternatiu i la connexió amb el sud.
+1. Identifica **rtt_id1354754** a `xarxa` i contrasta aquest eix de P2 amb **pas_id2** i l'ortofoto.
+2. A `native:extractbyexpression`, conserva `"rtt_id" <> 1354754` i desa **xarxa_tancada**. El tancament es defineix per l'eix ICGC identificat, no per tots els eixos llargs que toquen el polígon ràster.
+3. Repeteix la ruta amb els mateixos punts. QGIS i el graf de control retornen **sense ruta**. La capa de ruta tancada és buida i el control conserva longitud/temps nuls, no zeros.
+4. Representa la ruta oberta, l'eix retirat i el component d'O. La manca de ruta en aquesta xarxa preparada no certifica la manca de tota alternativa física al territori.
 
-![La volta de la ruta tancada es compara amb el trajecte curt per P2. Els punts es mantenen al mateix lloc.](captures/xarxa.png){width=100% height=380pt}
+![La ruta oberta segueix la xarxa ICGC per P2. En retirar l'eix1354754, el graf preparat deixa de connectar els mateixos O i D.](captures/xarxa.png){width=100% height=380pt}
 
 La diferència no modifica la distància euclidiana. Tampoc totes les línies que es creuen són connexions: cal conservar la separació entre l'autopista i el vial que la travessa a un altre nivell.
 
-## Àrees de servei
+## Àrees de servei: ampliació a Vila-seca
 
 1. A `native:serviceareafrompoint`, entrada xarxa, criteri més ràpid, origen O, `v_kmh`, ambdós sentits i tolerància0.
 2. Introdueix0,05/0,10/0,20h per als límits3/6/12min. Desa les sortides en línies.
@@ -125,13 +163,13 @@ La diferència no modifica la distància euclidiana. Tampoc totes les línies qu
 
 | Límit | Obert, longitud única | Tancat, longitud única |
 | --- | ---: | ---: |
-| 3min | 1863,763322m | 1480,689265m |
-| 6min | 5586,766059m | 4565,420436m |
-| 12min | 16315,694568m | 12706,175167m |
+| 3min | 448,384607m | 68,418647m |
+| 6min | 1116,560723m | 68,418647m |
+| 12min | 3606,611447m | 68,418647m |
 
 Table: Longitud única de les branques accessibles per xarxa amb P2 obert i tancat.
 
-Els controls de longitud fan la unió geomètrica per no sumar trams coincidents. Són longituds de **branques accessibles**, no d'un trajecte únic. D entra en6min amb P2 obert i queda fora de12min amb la ruta tancada.
+Els controls de longitud fan la unió geomètrica per no sumar trams coincidents. Són longituds de **branques accessibles**, no d'un trajecte únic. D entra en6min amb P2 obert. En retirar P2, augmentar el límit de3 a12min no permet sortir del component d'O: l'abast es manté en68,42m.
 
 # D. Desenvolupament de la fricció
 
@@ -163,6 +201,14 @@ Table: Pesos de fricció i codis de barrera assignats a les classes de coberta.
 
 Una rasterització del camp **cost_model** proporciona un contrast dels pesos. La classe351 agrupa tota la xarxa viària, mentre que la347 generalitza zones industrials i de serveis; no resol els accessos de cada edifici o recinte.
 
+## Rasteritzar els vials RTT
+
+La coberta MCSC pot generalitzar un camí dins d'una classe de conreu o d'un recinte. Rasteritza **xarxa** amb valor fix 1, sense camp, resolució5/5m, regió comuna, Float32, inicial0 i NoData−9999. Desa **vials.tif**.
+
+![Els eixos RTT admesos es rasteritzen amb pes 1 abans d'integrar-los amb cobertes, barreres i passos.](captures/rasteritzar-vials.png){width=85% height=380pt}
+
+Control:15.113cel·les de vial;10.557 no tenien pes1 a la base de cobertes. La màscara no és un permís de pas: conserva les exclusions i les connexions del model. Vials es consulta després de barrera/P2 tancat i abans de base.
+
 ## Identificar la plataforma de l'AP-7
 
 1. Extreu cobertes on **classe=351**.
@@ -184,13 +230,14 @@ El control de la graella és **375cel·les alternatives** i **91cel·les de P2**
 
 ## Aplicar els condicionals
 
-1. A la Calculadora ràster, selecciona les bandes **pas**, **barrera** i **base**. Fixa600×640 cel·les i la regió comuna.
+1. A la Calculadora ràster, selecciona les bandes **pas**, **barrera**, **vials** i **base**. Fixa600×640 cel·les i la regió comuna.
 2. Per a l'obert, dona prioritat a qualsevol pas:
 
 ```text
 if("pas@1" > 0, 1,
    if("barrera@1" > 0, 99,
-      if("base@1" = 0, 99, "base@1")))
+      if("vials@1" = 1, 1,
+         if("base@1" = 0, 99, "base@1"))))
 ```
 
 3. Per al tancat, mantén els alternatius i marca P2 com a barrera:
@@ -198,7 +245,8 @@ if("pas@1" > 0, 1,
 ```text
 if("pas@1" = 1, 1,
    if(("pas@1" = 2) OR ("barrera@1" > 0), 99,
-      if("base@1" = 0, 99, "base@1")))
+      if("vials@1" = 1, 1,
+         if("base@1" = 0, 99, "base@1"))))
 ```
 
 4. Desa **friccio_numeric_obert/tancat**. Només ara executa Translate assignant99 com a NoData per crear **friccio_obert/tancat**.
@@ -243,17 +291,17 @@ Table: Fricció integrada i cost per cel·la als passos i les cobertes dels dos 
 
 | Resultat | Obert | Tancat |
 | --- | ---: | ---: |
-| Longitud del camí ràster | 441,984848m | 1639,213562m |
-| Cost acumulat a D | 1336,990078m ponderats | 4548,731957m ponderats |
-| Cel·les excloses | 17.224 | 17.315 |
+| Longitud del camí ràster | 474,766594m | 1920,990258m |
+| Cost acumulat a D | 474,766594m ponderats | 2840,376259m ponderats |
+| Cel·les excloses | 16.987 | 17.078 |
 
 Table: Longitud del camí ràster, cost acumulat a D i cel·les excloses amb P2 obert i tancat.
 
-Les91cel·les de diferència coincideixen amb P2. El cost és superior a la longitud perquè el recorregut travessa pesos diferents. No són minuts ni es poden sumar metres ponderats i temps com una mateixa magnitud.
+Les91cel·les de diferència coincideixen amb P2. Amb el pas obert, cost i longitud coincideixen perquè el camí recorre cel·les de pes1; en el tancat es travessen pesos diferents. No són minuts ni es poden sumar metres ponderats i temps com una mateixa magnitud.
 
 ![Comparació dels camins de cost sobre la superfície acumulada. Els passos i O/D es mantenen identificables.](captures/cost.png){width=100% height=380pt}
 
-# F. Desenvolupament de la marxa anisòtropa
+# F. Desenvolupament de la marxa anisòtropa: ampliació a Vila-seca
 
 1. Carrega el [MDT ICGC](https://www.icgc.cat/ca/Geoinformacio-i-mapes/Dades-i-productes/Elevacions) **mdt** i retalla'l a ambit_calcul amb `gdal:cliprasterbyextent`, sense refinar la resolució. Desa **mdt_ambit.tif** i comprova600×640 cel·les de5m.
 2. Converteix la fricció integrada en penalització temporal amb `("friccio_obert@1" - 1) * 0.125`. Conserva NoData. Els pesos1/2/4/6 passen a0/0,125/0,375/0,625s/m.
@@ -268,19 +316,19 @@ Les91cel·les de diferència coincideixen amb P2. El cost és superior a la long
 
 | Model | O→D | D→O |
 | --- | ---: | ---: |
-| MDT, P2 obert | 489,156143s =8,152602min | 483,173590s =8,052893min |
-| Elevació constant, P2 obert | 430,104744s | 430,104744s |
-| MDT, P2 tancat | 1600,131968s =26,668866min | No necessari per a aquest control |
+| MDT, P2 obert | 401,797517s =6,696625min | 394,465679s =6,574428min |
+| Elevació constant, P2 obert | 340,724610s | 340,724610s |
+| MDT, P2 tancat | 1555,331669s =25,922194min | No necessari per a aquest control |
 
 Table: Temps de marxa segons el relleu, el sentit del recorregut i l'estat de P2.
 
-El control pla és simètric; amb MDT l'anada i la tornada difereixen gairebé6s. Els coeficients distingeixen desnivells amb signe. Un zero de penalització addicional no vol dir temps zero: r.walk continua calculant desplaçament i efecte del relleu. No multipliquis la penalització temporal per5.
+El control pla és simètric; amb MDT l'anada i la tornada difereixen uns7,33s. Els coeficients distingeixen desnivells amb signe. Un zero de penalització addicional no vol dir temps zero: r.walk continua calculant desplaçament i efecte del relleu. No multipliquis la penalització temporal per5.
 
 ![Els recorreguts d'anada i tornada provenen d'execucions diferents sobre el mateix lloc.](captures/marxa.png){width=100% height=380pt}
 
 El MDT de5m pot simplificar el pas inferior i els temps del model no estan calibrats amb caminades observades.
 
-# G. Resolució de les isòcrones
+# G. Resolució de les isòcrones: ampliació a Vila-seca
 
 1. Selecciona la banda **marxa des d'O en minuts**. A [r.contour](https://grass.osgeo.org/grass84/manuals/r.contour.html), nivells3,6,12, mínim3punts per línia, regió comuna5m.
 2. Desa **isocrones_obert**. A la Calculadora ràster crea les franges:
@@ -302,17 +350,19 @@ if("minuts@1" <= 3, 1,
 
 | Límit | Obert, cel·les | Obert, ha | Tancat, cel·les | Tancat, ha |
 | --- | ---: | ---: | ---: | ---: |
-| Fins a 3 min | 2704 | 6,7600 | 2484 | 6,2100 |
-| Fins a 6 min | 10177 | 25,4425 | 7573 | 18,9325 |
-| Fins a 12 min | 33205 | 83,0125 | 21949 | 54,8725 |
+| Fins a 3 min | 2831 | 7,0775 | 2552 | 6,3800 |
+| Fins a 6 min | 10924 | 27,3100 | 7677 | 19,1925 |
+| Fins a 12 min | 35430 | 88,5750 | 22109 | 55,2725 |
 
 Table: Recomptes de cel·les i superfícies acumulades fins als límits de temps amb P2 obert i tancat.
 
-La xarxa a velocitat uniforme arriba a D en 5,38 min, mentre que la marxa amb penalitzacions de coberta i MDT requereix 8,15 min. Són models diferents. La superfície de franges ràster no s'ha de substituir per un buffer de les branques de xarxa.
+La xarxa a velocitat uniforme arriba a D en 5,45 min, mentre que la marxa amb penalitzacions de coberta, vials integrats i MDT requereix 6,70 min. Són models diferents. Amb P2 tancat, la superfície ràster conserva un camí a D, però la xarxa d'eixos preparada no hi connecta; cal explicar les condicions de moviment i cobertura de cada model.
 
 # Posada en comú i zona alternativa
 
 La resposta final ha de separar **distància recta, itinerari de xarxa, cost ponderat i temps de marxa**. Tancar P2 modifica les connexions i les superfícies de cost, però no les posicions. Els passos han de seguir oberts en el cost per cel·la abans d'acumular-lo.
+
+Revisa els resultats dels apartats obligatoris anunciats, la qualitat dels controls i la interpretació. En l'ampliació, pregunta què canvia respecte de la referència, quin supòsit explica el canvi i com es podria contrastar. Les captures extretes d'un vídeo són evidències seleccionades: una gravació completa no substitueix l'informe ni la comprovació de les dades.
 
 Per a la zona alternativa, demana justificar fonts, O/D, regió, resolució, pesos i corredors. Els enllaços de la taula inicial porten als recursos de descàrrega. En un GeoTIFF MCSC, 1–41 són l'índex ràster; els codis vectorials 111–466 són una altra codificació i necessiten la seva llegenda.
 

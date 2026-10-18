@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "kind": "unaltraweb-practice-edition",
+  "slug": "estadistica-constanti",
+  "version": "2026-10-18",
+  "language": "ca",
+  "gis": {
+    "profile": "qgis-practice-v2",
+    "bundle": "sandbox/practiques/estadistica-constanti/2026-10-12-pilot-05/gis/bundle.json",
+    "sha256": "760c485f36f64f55e516c6f53bb0fc51a0ad5a5af113b7a3414686744f7b2390",
+    "verifier": {
+      "origin": "prepared-image",
+      "package": "unaltracaptura-qgis",
+      "version": "0.6.0",
+      "revision": "sha256:4dcd2c40bca4836a202c0c5cc400553b0f134925023b7300e0c0ff2fff1d8492",
+      "image_id": "sha256:1fe4a54a42cbac4a6eea596be73425985ab3bca5f28f5871d2fa66d7c0a05f8b",
+      "schema_sha256": "528c8be229c72c346f134ffaa60094f94224094a25b6fb11bcc87802ddc7fffb"
+    },
+    "teacher_only": ["resolved-data", "resolved-project", "kernel-500", "kernel-1500", "densitat-500", "densitat-1500", "resolved-project-png", "resolved-project-svg", "resolved-project-original"]
+  },
+  "selection": {"alumnat": ["initial-data"], "docent": ["resolved-data", "kernel-500", "kernel-1500"]},
+  "readings": {
+    "alumnat": {"source": "practiques/estadistica-constanti/ca/alumnat/LLEGIU-ME.md", "approved_sha256": "833d2680ce8d5b79820260b6ac803db6168ed2049b48e695a65da3d40b0c2f7a"},
+    "docent": {"source": "practiques/estadistica-constanti/ca/docent/LLEGIU-ME.md", "approved_sha256": "a7bd2c58f1021a429a8584cd4ca5a9d415fbab9ea7ef3c9bf0a185cceb74cce5"}
+  }
+}

@@ -1,0 +1,38 @@
+schema_version: 1
+activity: estadistica-constanti
+language: ca
+scope: recompte, centres, cercle i el·lipse, kernel
+reading_status: approved
+runtime:
+  producer: unaltracaptura-qgis
+  version: 0.6.0
+  profile: qgis-practice-v2
+  revision: sha256:4dcd2c40bca4836a202c0c5cc400553b0f134925023b7300e0c0ff2fff1d8492
+  schema_sha256: 528c8be229c72c346f134ffaa60094f94224094a25b6fb11bcc87802ddc7fffb
+  image: sha256:1003721d96abe9607d8337b36851f9b29f84c2f8f92b377d1a73ff03c9d15cd2
+  network: none
+readings:
+  provider: unaltraweb
+  version: 0.7.2
+  template: private-practice-a4-landscape
+  image: sha256:618163d3f924439792b2306617bd9612f566c5881166102fa544b4e782d569fa
+retained_source:
+  path: tmp/dades-docents/practica-constanti-pedagogia-20261005.zip
+  sha256: ec2a5e4d1fa580a5633927e6ff642b85fc2d1863911dcce64e721ca8c1681ce2
+  original_runtime: sha256:950ee7bf7cbab5163849415d4f7fd72dc400b1e81127913ff308244ae4a6ebdc
+resources:
+  - producer: ICAEN
+    url: https://icaen.gencat.cat/ca/energia/autoconsum/Observatori-de-lautoconsum-a-catalunya/localitzacio-dinstallacions/
+    snapshot: 2026-09-28
+    effective_date: not-established
+    selection: municipi Constantí, 124 registres
+  - producer: ICGC
+    url: https://www.icgc.cat/condicions
+    limits_edition: 2026-01-20
+    ortho_edition: 2025
+    ortho_source: WMS local snapshot, 8 metres per pixel
+delivery:
+  student: dades/projecte inicial i LLEGIU-ME.pdf
+  teacher: entrades, resultats descriptius, projecte docent i lectura treballada
+  reconstruction: retained separately; never infer handout contents from the whole source ZIP
+  human_approved: true

@@ -46,6 +46,7 @@
 - Utilitzar figures per explicar operacions i inferències: punts i boxplot, desviacions i quadrats, productes de covariància, agregacions i relacions entre grups. Acompanyar-les d'una lectura concreta; no limitar el text a remetre a la imatge.
 - Reservar `###` i `####` per a divisions amb contingut propi. Evitar subtítols artificials, frases grandiloqüents i afirmacions absolutes.
 - Cada activitat ha d'identificar un resultat conservable i criteris de comprovació. Les condicions d'avaluació només es poden fixar amb la guia docent i els enunciats verificats.
+- A les guies docents de pràctiques, incloure una durada orientativa per bloc: temps d'aula, treball autònom i preparació docent. Indicar prerequisits, dades/programari preparats, abast de la selecció i factors que poden allargar-la. Identificar l'estimació com orientativa fins que hi hagi una prova d'aula; el nombre de pàgines o el temps d'un càlcul automàtic no substitueixen aquesta estimació. La pauta és opcional i local al manual.
 
 ## Contingut i cas territorial
 

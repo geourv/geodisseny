@@ -1,0 +1,19 @@
+version: 1
+practica: accessibilitat-xarxa-vilaseca
+idioma: ca
+edicio: '2026-10-18'
+calcul_comu: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01
+preparador_comu: practiques/accessibilitat-vilaseca/preparar.py
+fonts_documents:
+  alumnat: ca/alumnat/LLEGIU-ME.md
+  docent: ca/docent/LLEGIU-ME.md
+temps_orientatiu_min:
+  aula: [90, 120]
+  autonom: [60, 90]
+  preparacio_docent: [30, 45]
+  base: estimacio no mesurada; QGIS preparat, dades locals i experiencia basica
+projectes_docents: [00-inici, 02-xarxa]
+runtime_qgis: sha256:1003721d96abe9607d8337b36851f9b29f84c2f8f92b377d1a73ff03c9d15cd2
+runtime_pdf: sha256:618163d3f924439792b2306617bd9612f566c5881166102fa544b4e782d569fa
+fonts: [ICGC RTT2024, limit municipal 2026-01-20, ortofoto2025]
+human_approved: true
