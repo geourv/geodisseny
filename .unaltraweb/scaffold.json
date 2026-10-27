@@ -3,12 +3,42 @@
     ".github/CONTRIBUTING.md": "5ea05a6b8ca999bd19684f4a4686acf41b8aedb5991396fd994841a9dad2b77b",
     ".github/dependabot.yml": "a8220cfb49a6649b7d8d8600e4b6f619fadf05b4da68bea2e3a9cd3fc48eac20",
     ".github/pull_request_template.md": "88086df7e4052936e8dbe6515db3f13fa93c5602e9e3a7beeae8210a6e52a7dc",
-    ".github/workflows/deploy.yml": "a789870542614d5817d30ea4328c7d1ad38d27443c009c68a48ad5aaa3106b8e",
-    ".gitignore": "2a8759432093ddc35526ba104208cdf01e6d259dbdd5b9e26da9d31966057f64",
+    ".github/workflows/deploy.yml": "efcb07d00b45b89fa1ee9a77e5a059740e0bd376be8a570b2ee04b95b60aa501",
+    ".github/workflows/source-checks.yml": "c0c1ad9f32b70d0e36846d5dc32eb4f585e36c7e3fcc071c27092a5afd59067a",
+    ".gitignore": "e63225e3d5b8ccbd81292bf872e3a87771df1ed6780e660bad23b80cb558c875",
     ".unaltraweb/docker-mount.sh": "59b042cecc2226036e4d85bd96543182c53b32dbddb437b9c196d78df6d12104",
-    "Gemfile": "0d1ede717551733eab14654b20844da68fc1a28d313ed6372bb4db8c3b927f30",
-    "Gemfile.lock": "5218d50d73358f0c3cfc7f4bb94e8159bbfd37e8f00ac01ba86c42cb72e6282b",
-    "Makefile": "598409834ed01333951531752790325e1b0b55def3b8e43d55e343253fc58a4c"
+    "Gemfile": "a593559bfe89825b8bbe39da8fbc223f4d37f10c5b262f30e310e34e5d063a9a",
+    "Gemfile.lock": "dd10fcf843c20587fae4fc11c903c1fee6750cc7766c8e765ff93b05d31bc7fe",
+    "Makefile": "9e5da284b2821e9684f9ebd99ea7326ed66970208eea2c920994739f572cc38f"
+  },
+  "reviewed_resolutions": {
+    ".github/workflows/deploy.yml": {
+      "base_plan_sha256": "5f353518d592eaaaf89250d22458c06e264db6aab86d86f14ff990ad1280b853",
+      "baseline_sha256": "a789870542614d5817d30ea4328c7d1ad38d27443c009c68a48ad5aaa3106b8e",
+      "local_sha256": "48c6c77b816b421df72dc281e4bcb59a6c9ecc693891de29e468665996c97fcb",
+      "mode": "pins-only",
+      "payload_sha256": "efcb07d00b45b89fa1ee9a77e5a059740e0bd376be8a570b2ee04b95b60aa501",
+      "reason": "Autoritzaci\u00f3 de tancament t\u00e8cnic: actualitzar nom\u00e9s els pins publicats, preservant tots els controls i bytes no relacionats amb pins.",
+      "result_sha256": "0d4fef4bf23b26d1f60cdcdc41d09b514d4e55db3db3e32de220817562ea1ae2"
+    },
+    ".github/workflows/source-checks.yml": {
+      "base_plan_sha256": "5f353518d592eaaaf89250d22458c06e264db6aab86d86f14ff990ad1280b853",
+      "baseline_sha256": "",
+      "local_sha256": "8b5c475aa5e33b2ac5b66c2c5ca9cd5f058593684c245a7cffa163f62777fd4e",
+      "mode": "pins-only",
+      "payload_sha256": "c0c1ad9f32b70d0e36846d5dc32eb4f585e36c7e3fcc071c27092a5afd59067a",
+      "reason": "Autoritzaci\u00f3 de tancament t\u00e8cnic: actualitzar nom\u00e9s els pins publicats, preservant tots els controls i bytes no relacionats amb pins.",
+      "result_sha256": "b0f271fd8dea90dd1c9c084d0db6dd0e6120c3e22cc53001794b84e21776759a"
+    },
+    ".gitignore": {
+      "base_plan_sha256": "5f353518d592eaaaf89250d22458c06e264db6aab86d86f14ff990ad1280b853",
+      "baseline_sha256": "2a8759432093ddc35526ba104208cdf01e6d259dbdd5b9e26da9d31966057f64",
+      "local_sha256": "2b88af76fd7595be63ec2cf1d6bd7e39fda137365ca3d0b095b780d577a0a2aa",
+      "mode": "keep",
+      "payload_sha256": "e63225e3d5b8ccbd81292bf872e3a87771df1ed6780e660bad23b80cb558c875",
+      "reason": "Autoritzaci\u00f3 coordinada: conservar \u00edntegres les exclusions i personalitzacions locals, incloent /dist/ i estat QGIS.",
+      "result_sha256": "2b88af76fd7595be63ec2cf1d6bd7e39fda137365ca3d0b095b780d577a0a2aa"
+    }
   },
   "schema_version": 1,
   "source": "unaltraweb_mcp package"
