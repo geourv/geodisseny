@@ -1,0 +1,24 @@
+# Estadística espacial descriptiva
+
+**Dades de partida.** Descarregueu `estadistica-espacial-descriptiva.zip`, adjunt a aquesta tasca, i descomprimiu-lo en una carpeta pròpia, conservant-ne l'estructura. Llegiu `LLEGIU-ME.pdf`, a l'arrel, i obriu **`data/inici.qgz`** amb QGIS 3.44. Els vectors són a `data/estadistica-constanti.gpkg`; els ràsters són GeoTIFF a `data/rasters/`. El cas d'aplicació és Constantí: el paquet conté els punts, les potències publicades i els pesos de l'escenari, una malla d'1 km de costat, el límit municipal i l'ortofoto local. El WMS del grup Ortofoto ICGC ofereix més detall amb connexió. Conserveu també els recursos de `data/fonts/`.
+
+**Organització.** Preserveu les entrades de `data/` i deseu la còpia del projecte, proves i intermedis a `sandbox/`. Prepareu a `dist/` només la selecció final. Els grups de capes organitzen la vista, però no mouen fitxers.
+
+**Treball de classe.** El professor indicarà a classe quins apartats, exercicis i comprovacions són obligatoris dins del **70% de la qualificació** i ho recollirà en aquesta tasca. La guia desenvolupa un recorregut complet: no tots els passos són automàticament obligatoris. Compareu nombre de registres, potència, localització, dispersió i densitat mitjançant els blocs seleccionats:
+
+1. Compteu els punts per quadrats i sumeu-hi la potència publicada. Localitzeu i compareu el quadrat amb més registres i el de més potència.
+2. Calculeu el centre dels registres i el centre ponderat amb `w_mid`. Expliqueu el desplaçament i distingiu pesos publicats de valors assignats per interval.
+3. Dibuixeu el cercle i l'el·lipse sobre el centre no ponderat, amb els paràmetres de la guia. Identifiqueu un punt exterior i un espai interior amb pocs registres.
+4. Calculeu dos mapes de calor sense pes, amb radis de 500 i 1.500 m i píxel de 100 m. Normalitzeu-los a registres/km², conserveu NoData i compareu-los amb la mateixa escala de color.
+
+**Ampliacions per aspirar a l'excel·lent.** Podeu canviar la mida o l'origen de la malla, comparar escenaris de pesos per als intervals sense xifra, provar altres radis i mides de píxel, o treballar un altre municipi amb dades adequades. Manteniu una referència, canvieu un paràmetre cada vegada i conserveu els valors publicats. Justifiqueu què canvia i què persisteix. Si canvieu de conjunt, recalculeu centres i dispersió; no reutilitzeu les constants de Constantí.
+
+**Preguntes obertes i aplicacions.** Coincideixen els llocs amb més registres i els de més potència? Quina influència tenen els pesos grans o els valors absents? Quines dades addicionals sobre edificis, habitants o activitats ajudarien a interpretar una concentració? Desenvolupeu una idea de diagnosi territorial o comparació municipal i distingiu el que mostren els resums del que caldria investigar.
+
+**Informe.** Presenteu pregunta i àmbit, dades i decisions, procediment amb controls, mapes i taules dels apartats seleccionats, i interpretació amb límits. Podeu enregistrar fragments de la pantalla i després pausar el vídeo per desar captures dels paràmetres o resultats importants. Comproveu que es llegeixen, numereu-les i expliqueu què demostra cadascuna; exporteu els mapes finals amb llegenda, escala i unitats. El vídeo és una ajuda, no un lliurament obligatori tret que el professor ho indiqui. La guia detalla com preparar l'informe.
+
+**Lliurament.** Prepareu a `dist/` un GeoPackage nou amb els vectors seleccionats, un QGZ extern amb rutes relatives, els TIFF necessaris a `rasters/`, els recursos utilitzats i l'informe PDF. Conserveu els camps que expliquen els pesos i els valors absents. Les proves descartades i els fitxers sense ús final es queden a `sandbox/`. El patró de carpeta/ZIP i fitxers principals és `prN-estadistica-descriptiva-cognoms`, amb les extensions corresponents; substituïu `prN` pel codi real d'aquesta tasca. En una zona alternativa acordada amb el professor, identifiqueu també el cas i conserveu fonts i controls propis.
+
+**Comprovacions.** Reviseu les sumes, les unitats, EPSG:25831/NONE, els centres, els paràmetres de dispersió i la normalització del kernel. Expliqueu què resumeix cada resultat: un contorn de dispersió no és una cobertura de servei i un pic de densitat no és un contrast estadístic. Obriu una còpia traslladada o el ZIP extret en una carpeta nova, sense xarxa. Les fonts de dades del QGZ han de ser dins de la còpia; comproveu capes, valors, estils, etiquetes, fonts tipogràfiques i ordre, sense dependències del `sandbox/` original.
+
+**Qualificació.** El **70%** correspon als apartats obligatoris que indicarà el professor. Les ampliacions permeten aspirar a l'excel·lent segons els criteris comunicats a classe i recollits en aquesta tasca. Es valoren la pregunta, els controls i la interpretació, no només el nombre d'operacions. No substitueixen els obligatoris ni garanteixen una nota per haver-les intentat.

@@ -265,15 +265,45 @@ unaltraweb:
           - reference: captures/visibilitat-costa-torxa.png
             path: sandbox/practiques/visibilitat-costa/2026-10-12-pilot-01/inputs/capture-visibilitat-costa-torxa.png
             sha256: da5a9ec473ecff63b5c1f386fef3b6331fa80d7fe050e07375387f1b64c8d8bc
-          - reference: captures/visibilitat-costa-punt.png
-            path: sandbox/practiques/visibilitat-costa/2026-10-12-pilot-01/inputs/capture-visibilitat-costa-punt.png
-            sha256: 7a8f196d7b44d1fb66cdd368424fd7e6b87fa6ec231ebd47a2e258449d775164
           - reference: captures/visibilitat-costa-intervisibilitat.png
             path: sandbox/practiques/visibilitat-costa/2026-10-12-pilot-01/inputs/capture-visibilitat-costa-intervisibilitat.png
             sha256: e0bb7ca2386336d28e87a265e62c2815f47f62a0f4b0b8c3daca1633bf5f7229
-          - reference: captures/visibilitat-costa-carretera.png
-            path: sandbox/practiques/visibilitat-costa/2026-10-12-pilot-01/inputs/capture-visibilitat-costa-carretera.png
-            sha256: 0c78586dd70993604938d4a426d0ec4bdd8304cff3e41ad09b8b63ff863c357c
+          - reference: captures/visibilitat-ortofoto-context.png
+            path: assets/captures/visibilitat-ortofoto-context.png
+            sha256: a381d15f04d39bde41425b704eba4b1af4654b729d9a6dadcb30136ae0838fc5
+          - reference: captures/visibilitat-extra-obert.png
+            path: assets/captures/visibilitat-extra-obert.png
+            sha256: 6ff4c637cb1f7b50e135f114ef869f5058b40260e57cab37bea404a8e5b8b03c
+          - reference: captures/visibilitat-batch-taula.png
+            path: assets/captures/visibilitat-batch-taula.png
+            sha256: e33e2dbbef7d256126f9a3f2e8a046018d5f9277d1bcf2cadeecc8158948dccf
+          - reference: captures/visibilitat-batch-autofill.png
+            path: assets/captures/visibilitat-batch-autofill.png
+            sha256: 41465e335f89d3a70d406f68f63217b8fdab0364ea71725c75e51e600a4ade97
+          - reference: captures/visibilitat-batch-expressio.png
+            path: assets/captures/visibilitat-batch-expressio.png
+            sha256: b1f611b5f0b2a6ef0220981a3fad7118489ee006923fe9c9d3201618a21bbdab
+          - reference: captures/visibilitat-batch-fila-buida.png
+            path: assets/captures/visibilitat-batch-fila-buida.png
+            sha256: 1cab01a16cd7e5efd377ea6879f471996cb13636a10dca93b6852e709b71089d
+          - reference: captures/visibilitat-batch-fill-down.png
+            path: assets/captures/visibilitat-batch-fill-down.png
+            sha256: 973fc1cf4c4027498bee1cff7009b5adf35f1da8a24d28472d42235dfe40d406
+          - reference: captures/visibilitat-batch-calcula.png
+            path: assets/captures/visibilitat-batch-calcula.png
+            sha256: 80b441bb408626bf49dc2c6bc45c2cb95ad35cad27253bda3850b1048d7a256a
+          - reference: captures/visibilitat-batch-sortides.png
+            path: assets/captures/visibilitat-batch-sortides.png
+            sha256: 5c8960b821774f16dca9e86346cb20c089a52e30e096e79e26540edced3e328b
+          - reference: captures/visibilitat-batch-seleccio.png
+            path: assets/captures/visibilitat-batch-seleccio.png
+            sha256: 52f083cb04e66faf1e9dc347ac8a9e27a0edd87c072d6c6a303f8cfa7f99f7a4
+          - reference: captures/visibilitat-carretera-parametres.png
+            path: assets/captures/visibilitat-carretera-parametres.png
+            sha256: 3cbb882f49a4d71c209041eea1d5d0c736658483dce93d8fc0e23f30bfe217e0
+          - reference: captures/visibilitat-lots-suma.png
+            path: assets/captures/visibilitat-lots-suma.png
+            sha256: b56f181410298e7798823294ad619686079bd73ea350d053294745ac71c4b7d5
           - reference: captures/visibilitat-costa-acumulada.png
             path: sandbox/practiques/visibilitat-costa/2026-10-12-pilot-01/inputs/capture-visibilitat-costa-acumulada.png
             sha256: f05f5c81aab3aa4c524059ada7fd4cb829a7268fa1864b0422e5550ec445812e
@@ -293,6 +323,25 @@ unaltraweb:
         slug: visibilitat-costa
         lang: ca
         recipient: docent
+        bindings:
+          - reference: captures/visibilitat-batch-taula.png
+            path: assets/captures/visibilitat-batch-taula.png
+            sha256: e33e2dbbef7d256126f9a3f2e8a046018d5f9277d1bcf2cadeecc8158948dccf
+          - reference: captures/visibilitat-extra-obert.png
+            path: assets/captures/visibilitat-extra-obert.png
+            sha256: 6ff4c637cb1f7b50e135f114ef869f5058b40260e57cab37bea404a8e5b8b03c
+          - reference: captures/visibilitat-batch-autofill.png
+            path: assets/captures/visibilitat-batch-autofill.png
+            sha256: 41465e335f89d3a70d406f68f63217b8fdab0364ea71725c75e51e600a4ade97
+          - reference: captures/visibilitat-batch-fill-down.png
+            path: assets/captures/visibilitat-batch-fill-down.png
+            sha256: 973fc1cf4c4027498bee1cff7009b5adf35f1da8a24d28472d42235dfe40d406
+          - reference: captures/visibilitat-batch-calcula.png
+            path: assets/captures/visibilitat-batch-calcula.png
+            sha256: 80b441bb408626bf49dc2c6bc45c2cb95ad35cad27253bda3850b1048d7a256a
+          - reference: captures/visibilitat-lots-suma.png
+            path: assets/captures/visibilitat-lots-suma.png
+            sha256: b56f181410298e7798823294ad619686079bd73ea350d053294745ac71c4b7d5
   manual:
     collection: chapters
     nav_title: Geodisseny
@@ -310,7 +359,7 @@ unaltraweb:
       series: Dos quarts de docs
       series_subtitle: Recursos d'aprenentatge
       publisher: Dos quarts de docs
-      edition: Edició digital de treball, curs 2026/2027
+      edition: Edició beta, curs 2026/2027
       source: https://geourv.github.io/geodisseny/
       subject: Anàlisi Espacial i Geodisseny
       teaching_guides:

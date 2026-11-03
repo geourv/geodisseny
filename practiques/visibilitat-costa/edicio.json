@@ -2,7 +2,7 @@
   "schema_version": 1,
   "kind": "unaltraweb-practice-edition",
   "slug": "visibilitat-costa",
-  "version": "2026-10-18",
+  "version": "2026-10-30",
   "language": "ca",
   "gis": {
     "profile": "qgis-practice-v2",
@@ -20,7 +20,7 @@
   },
   "selection": {"alumnat": ["initial-data"], "docent": ["resolved-data"]},
   "readings": {
-    "alumnat": {"source": "practiques/visibilitat-costa/ca/alumnat/LLEGIU-ME.md", "approved_sha256": "fc276856598516d16aa913a344f2d0bb6aba941f110e765da3542910e533f35e"},
-    "docent": {"source": "practiques/visibilitat-costa/ca/docent/LLEGIU-ME.md", "approved_sha256": "126dcc0235a38e4d28672784ac01b0025e3e142bb5cd6314017ed0af3eb2fdc5"}
+    "alumnat": {"source": "practiques/visibilitat-costa/ca/alumnat/LLEGIU-ME.md", "approved_sha256": "816c46f059346967a77b0459b5601849a4e75df23a6086041ef98825d2f48b9c"},
+    "docent": {"source": "practiques/visibilitat-costa/ca/docent/LLEGIU-ME.md", "approved_sha256": "adc101815b9f924076f48078a758191e0a3b88f82eb48e8e7212955745b96033"}
   }
 }

@@ -211,7 +211,7 @@ La relació entre Nord, Sud i port és, per tant, també productiva i logística
 
 La primera pregunta és concreta: **es veu la part alta d'una torxa des d'un punt de la carretera?** El cas se situa a la Canonja, al polígon químic sud, prop del recorregut entre Vila-seca i la Pineda. Les torxes són les estructures on es poden observar flames de combustió. Per identificar-ne una es contrasta el [punt d'OpenStreetMap classificat com a torxa](https://www.openstreetmap.org/node/7682543312) amb l'ortofoto ICGC de 2025 i les elevacions LiDAR de 2021–2023.
 
-L'ortofoto s'ha obtingut amb peticions **GetMap al servei WMS de l'ICGC**, capa de 2025, i s'ha desat localment com a GeoTIFF georeferenciat. La vista general té 10 m per píxel; els retalls industrial i de la torxa, 2,5 i 0,5 m per píxel. Són resolucions de les imatges demanades al servei, que ofereix una ortofoto d'origen de 25 cm. L'extensió i la resolució de cada petició es conserven a `fonts/fonts.json`.
+L'ortofoto s'ha obtingut amb peticions **GetMap al servei WMS de l'ICGC**, capa de 2025, i s'ha desat localment com a GeoTIFF georeferenciat. La vista general té 10 m per píxel; els retalls industrial i de la torxa, 2,5 i 0,5 m per píxel. Són resolucions de les imatges demanades al servei, que ofereix una ortofoto d'origen de 25 cm.
 
 ![Torxa, carretera i recinte petroquímic sobre l'ortofoto]({{ site.baseurl }}/assets/captures/visibilitat-costa-dades.png "T és la torxa; la línia blava segueix la TV-3148. El contorn taronja delimita el recinte petroquímic d'estudi, generalitzat a partir de la coberta industrial. Són els tres objectes que s'estudiaran successivament."){: data-figure-width-web="52rem" data-figure-width-pdf="100%" data-caption-source="Fonts: ICGC, RTT i MCSC 2024, ortofoto 2025 obtinguda per WMS; col·laboradors d'OpenStreetMap."}
 
@@ -223,11 +223,11 @@ El punt T es representa al centre de la cel·la de 5 m situada a **(346892,5;455
 
 ![Detall de la torxa identificada en l'ortofoto de QGIS]({{ site.baseurl }}/assets/captures/visibilitat-costa-torxa.png "La posició de T correspon a una estructura identificable, no al centroide d'una parcel·la. L'estimació vertical prové del LiDAR; l'ortofoto aporta el contrast de localització."){: data-figure-width-web="52rem" data-figure-width-pdf="100%" data-caption-source="Fonts: ortofoto ICGC 2025 i col·laboradors d'OpenStreetMap."}
 
-Per al càlcul es fixa T **1 m per damunt del pic representat**, a cota 152,311996 m. És una separació de model respecte de la superfície digital, no una mesura de l'altura de la flama. Les flames varien; les elevacions tampoc no certifiquen per si soles l'altura física exacta de l'estructura.
+Per al càlcul es fixa T **1 m per damunt del pic representat**, a una cota aproximada de 152,31 m. És una separació de model respecte de la superfície digital, no una mesura de l'altura de la flama. Les flames varien; les elevacions tampoc no certifiquen per si soles l'altura física exacta de l'estructura.
 
 ### Intervisibilitat entre la torxa i la carretera {#perfils-visibilitat-nord}
 
-R1, R2 i R3 són posicions de consulta al recorregut, amb els ulls a **1,7 m sobre l'MDT**. S'han triat per il·lustrar respostes diferents: no són una mostra representativa de persones. La capa `resultats/intervisibilitat.gpkg` relaciona aquests receptors amb T i permet seguir cada parella sobre el mapa.
+R1, R2 i R3 són posicions de consulta al recorregut, amb els ulls a **1,7 m sobre l'MDT**. S'han triat per il·lustrar respostes diferents: no són una mostra representativa de persones. El mapa següent permet seguir cada parella receptor–torxa.
 
 ::: table "Tres parelles amb la mateixa torxa"
 | Receptor | Mostra del recorregut | MDT | MDS | Lectura |
@@ -245,11 +245,11 @@ El perfil explica la classificació. A R1, la línia queda per damunt de les due
 
 ### Conca visual de la torxa {#passar-de-les-parelles-al-mapa}
 
-Una conca repeteix la comprovació cap a les cel·les de l'entorn. El paquet de Moodle inclou les fonts, les còpies de càlcul, els resultats de referència i deu projectes QGIS amb rutes relatives. `00-inici.qgz` situa el cas; `01-torxa.qgz` i `02-intervisibilitat.qgz` permeten començar pels punts. Les sortides pròpies es desen a `treball`.
+Una conca repeteix la comprovació cap a les cel·les de l'entorn. El paquet d'inici de Moodle inclou el projecte **`data/inici.qgz`**, els vectors a `data/visibilitat-costa.gpkg` i els ràsters GeoTIFF a `data/rasters/`. S'obre amb **Projecte → Obre**. El paquet docent conserva `data/docent.qgz` i els resultats de referència. Les proves i els intermedis es desen a `sandbox/`; la selecció final es prepara a `dist/`, segons la [pauta d'organització del manual]({{ site.baseurl }}/ca/#carpetes-practiques).
 
 La graella comuna té **2.000 × 2.000 cel·les de 5 m**, amb límits X 342000–352000 i Y 4549000–4559000. L'MDT conserva la resolució nativa; l'MDS d'1 m s'ha agregat pel màxim a 5 m. Aquesta operació reté cotes altes, però pot eixamplar arbres, fanals i altres obstacles estrets.
 
-El mar i els buits d'elevació es tracten abans del càlcul. Les còpies preparades representen els buits del mar cartografiat a 0 m i exclouen les línies afectades per altres elevacions desconegudes. La capa **Domini** val 1 a les **3.490.455 cel·les comparables** i NoData a la resta. Els originals es conserven a `fonts`; les còpies i la màscara, a `dades`.
+El mar i els buits d'elevació es tracten abans del càlcul. Les còpies preparades representen els buits del mar cartografiat a 0 m i exclouen les línies afectades per altres elevacions desconegudes. La capa **Domini** val 1 a les **3.490.455 cel·les comparables** i NoData a la resta. L'MDT, l'MDS i el domini comparable són GeoTIFF preparats a `data/rasters/`.
 
 Per localitzar l'eina, obre **Procés → Caixa d'eines**, prem el botó corresponent de la barra o utilitza **Ctrl+Alt+T**. A la cerca de la caixa de Processament, escriu **Viewshed** i comprova que el resultat correspon al proveïdor **GDAL**. Els noms traduïts i els identificadors permeten reconèixer la mateixa eina entre instal·lacions {% cite qgisUserGuide %}.
 
@@ -258,25 +258,25 @@ Per localitzar l'eina, obre **Procés → Caixa d'eines**, prem el botó corresp
 ![Botó de la barra que obre la caixa de Processament]({{ site.baseurl }}/assets/captures/visibilitat-acces-barra.png "El botó de la barra obre el mateix panell. Després s'hi cerca el nom de l'algorisme."){: data-figure-width-web="44rem" data-figure-width-pdf="90%"}
 :::
 
-A **Conca visual / Viewshed**, `gdal:viewshed`, es trien l'MDT de càlcul, banda 1, T com a origen, altura **131,369997 m** sobre MDT i altura de destinació **1,7 m**. S'aprofita la reciprocitat per preguntar des d'on es veu T. Distància màxima 0 significa tota la finestra ràster; es fixen els codis 1/0, NoData separat i curvatura/refracció **0,85714**.
+A **Conca visual / Viewshed**, `gdal:viewshed`, es trien l'MDT de càlcul, banda 1, T com a origen, altura aproximada de **131,37 m** sobre MDT i altura de destinació **1,7 m**. S'aprofita la reciprocitat per preguntar des d'on es veu T. Distància màxima 0 significa tota la finestra ràster; es fixen els codis 1/0, NoData separat i curvatura/refracció **0,85714**.
 
 ![Caixa de Processament oberta amb GDAL, Miscel·lània ràster i Viewshed desplegats]({{ site.baseurl }}/assets/captures/visibilitat-acces-caixa-viewshed.png "A la versió capturada, Viewshed és dins de GDAL → Miscel·lània ràster. El requadre identifica la fila que obre l'algorisme. La cerca pel nom també permet arribar-hi."){: data-figure-width-web="40rem" data-figure-width-pdf="90%"}
 
-![Diàleg Viewshed amb les coordenades i les altures de T]({{ site.baseurl }}/assets/captures/visibilitat-costa-punt.png "El camp demana altura relativa: 131,37 m sobre l'MDT, no la cota absoluta de 152,31 m. L'altre extrem se situa a 1,7 m sobre el terreny. Després s'aplica la màscara del domini comú."){: data-figure-width-web="42rem" data-figure-width-pdf="90%"}
+![Diàleg Viewshed amb les coordenades i les altures de T]({{ site.baseurl }}/assets/captures/visibilitat-opcions-avancades.png "El camp demana altura relativa: 131,37 m sobre l'MDT, no la cota absoluta de 152,31 m. L'altre extrem se situa a 1,7 m sobre el terreny. Després s'aplica la màscara del domini comú."){: data-figure-width-web="42rem" data-figure-width-pdf="90%"}
 
-La Calculadora ràster aplica `"Domini@1" * "Conca T MDT@1"`. Això conserva la resposta 0/1 dins del domini i NoData fora. El resultat de referència, `resultats/torxa-mdt.tif`, conté **2.962.199 cel·les visibles**, el **84,87%** del domini comparable. És superfície territorial, no nombre de persones.
+La Calculadora ràster aplica `"Domini@1" * "Conca T MDT@1"`. Això conserva la resposta 0/1 dins del domini i NoData fora. El resultat de referència conté **2.962.199 cel·les visibles**, el **84,87%** del domini comparable. És superfície territorial, no nombre de persones.
 
 ## Comparar MDT i MDS amb els mateixos extrems {#mdt-mds-controlat}
 
-Canviar de superfície no ha de moure la torxa ni els ulls. T continua a cota 152,311996 m: sobre l'MDS necessita una altura relativa d'1 m, mentre que sobre l'MDT en necessita 131,369997.
+Canviar de superfície no ha de moure la torxa ni els ulls. T continua a una cota aproximada de 152,31 m: sobre l'MDS necessita una altura relativa d'1 m, mentre que sobre l'MDT en necessita uns 131,37 m.
 
 ::: table "Cotes i altures del punt T"
 | Magnitud | Valor aproximat |
 | --- | ---: |
-| MDT a T | 20,941999 m |
-| Pic MDS a T | 151,311996 m |
-| Cota de T en el model | 152,311996 m |
-| Altura sobre MDT | 131,369997 m |
+| MDT a T | 20,94 m |
+| Pic MDS a T | 151,31 m |
+| Cota de T en el model | 152,31 m |
+| Altura sobre MDT | 131,37 m |
 | Altura equivalent sobre MDS | 1 m |
 :::
 
@@ -296,31 +296,82 @@ La conca MDS de T conté **447.860 cel·les visibles**, el **12,83%** del domini
 
 ### Representar un recorregut amb observadors
 
-Ara canvia la pregunta: **quines posicions del territori es veuen al llarg d'una carretera?** El recorregut segueix els eixos de la **TV-3148** del [Referencial Topogràfic Territorial de l'ICGC](https://www.icgc.cat/ca/Geoinformacio-i-mapes/Dades-i-productes/Geoinformacio-cartografica/Referencial-Topografic-Territorial). Va de la sortida de Vila-seca a l'enllaç amb la TV-3146, a l'entrada de la Pineda, i fa **3.652,272633 m**. Se'n prepara una trajectòria cartogràfica única per evitar sumar dues vegades les dues calçades.
+Ara canvia la pregunta: **quines posicions del territori es veuen al llarg d'una carretera?** El recorregut segueix els eixos de la **TV-3148** del [Referencial Topogràfic Territorial de l'ICGC](https://www.icgc.cat/ca/Geoinformacio-i-mapes/Dades-i-productes/Geoinformacio-cartografica/Referencial-Topografic-Territorial). Va de la sortida de Vila-seca a l'enllaç amb la TV-3146, a l'entrada de la Pineda, i fa aproximadament **3.652,27 m**. Se'n prepara una trajectòria cartogràfica única per evitar sumar dues vegades les dues calçades.
 
-El recorregut es divideix en **37 intervals iguals de 98,710071 m**. A **Punts al llarg de la geometria**, `native:pointsalonglines`, s'introdueix aquest pas i un desplaçament inicial de **49,355036 m**. Cada punt C se situa al mig de la longitud que representa. La capa conserva les posicions originals i les coordenades de centre de cel·la utilitzades en el càlcul.
+El recorregut es divideix en **37 intervals iguals d'uns 98,71 m**. A **Punts al llarg de la geometria**, `native:pointsalonglines`, s'introdueix aquest pas i un desplaçament inicial de **49,36 m**. Cada punt C se situa al mig de la longitud que representa. La capa conserva les posicions originals i les coordenades de centre de cel·la utilitzades en el càlcul.
 
-![Mostreig de la TV-3148 amb intervals regulars i mig interval inicial]({{ site.baseurl }}/assets/captures/visibilitat-costa-carretera.png "Cada mostra representa 98,71 m del recorregut. La separació es mesura al llarg de la línia; no és un radi de visió. La suma dels 37 pesos recupera els 3.652,27 m analitzats."){: data-figure-width-web="42rem" data-figure-width-pdf="90%"}
+![Mostreig de la TV-3148 amb intervals regulars i mig interval inicial]({{ site.baseurl }}/assets/captures/visibilitat-carretera-parametres.png "Cada mostra representa 98,71 m del recorregut. La separació es mesura al llarg de la línia; no és un radi de visió. La suma dels 37 pesos recupera els 3.652,27 m analitzats."){: data-figure-width-web="42rem" data-figure-width-pdf="90%"}
+
+### Executar una eina per lots {#viewshed-processament-lots}
+
+En obrir el menú contextual d'una eina de la Caixa de Processament apareix **Executar com a procés per lots…** (*Execute as batch process…*). És una opció disponible en moltes eines: potser ja s'havia vist en cercar un buffer o un altre algorisme, sense arribar a utilitzar-la. Aquí se n'explica el funcionament amb Viewshed abans de repetir el càlcul per a tota la carretera.
+
+Un **procés per lots** repeteix el mateix algorisme amb diversos conjunts de paràmetres. **Cada fila de la taula és una execució; cada columna és un paràmetre o una sortida.** Una fila de Viewshed calcula la conca d'un observador. Les 37 posicions, per tant, necessiten 37 files de càlcul, encara que totes utilitzin el mateix MDT. El lot encara no combina els resultats.
+
+S'hi accedeix amb clic dret sobre **Viewshed → Executar com a procés per lots…**. Si el diàleg de Viewshed ja està obert, el botó amb el mateix nom, a la part inferior, obre aquesta mateixa interfície. No cal tornar a cercar l'eina ni prémer **Executa** una vegada per observador.
+
+![Diàleg individual de Viewshed amb el botó d'accés al procés per lots ressaltat]({{ site.baseurl }}/assets/captures/visibilitat-lots-acces.png "El requadre blau identifica el botó que obre el lot. Encara es mostra el diàleg individual, configurat per a C05 amb altures d'1,7 m; la taula de repeticions s'obre en prémer el botó."){: data-figure-width-web="44rem" data-figure-width-pdf="90%"}
+
+#### Preparar un primer lot de cinc posicions
+
+Per entendre la taula, es pot començar amb C05, C11, C13, C25 i C37 i contrastar una execució individual abans de repetir-la. Les coordenades següents són els centres de cel·la utilitzats al model:
+
+::: table "Cinc observadors per aprendre l'estructura del lot, en EPSG:25831"
+| Mostra | Coordenada per al camp Observer location | Fitxer de sortida proposat |
+| --- | --- | --- |
+| C05 | `344977.5,4552147.5 [EPSG:25831]` | `conca-C05-mdt.tif` |
+| C11 | `345422.5,4551812.5 [EPSG:25831]` | `conca-C11-mdt.tif` |
+| C13 | `345587.5,4551707.5 [EPSG:25831]` | `conca-C13-mdt.tif` |
+| C25 | `346417.5,4550937.5 [EPSG:25831]` | `conca-C25-mdt.tif` |
+| C37 | `347257.5,4550157.5 [EPSG:25831]` | `conca-C37-mdt.tif` |
+:::
+
+1. Obre el lot de **GDAL Viewshed**. La fila **Emplenament automàtic / Autofill…** conté menús per omplir les columnes: **no és una execució**. Afegeix files de càlcul amb el botó **+** fins a tenir-ne cinc. La guia de la pràctica desenvolupa també l'autocompletat d'aquesta prova filtrada.
+2. A la primera fila de càlcul, tria **MDT**, banda **1**, les coordenades de C05 i altures d'observador/destinació **1,7/1,7 m**. L'abast màxim és **0**, tota la finestra. El botó **Toggle advanced mode** de la barra del lot mostra les columnes avançades.
+3. A les opcions addicionals introdueix `-vv 1 -iv 0 -ov 255 -a_nodata 255 -cc 0.85714`. Són els mateixos codis i correcció de curvatura de les execucions individuals.
+4. En les columnes comunes, obre **Autofill… → Fill Down** —copiar cap avall—. Això copia el valor de la primera fila a les altres. Fes-ho per a MDT, banda, altures, abast i opcions; **no per a les coordenades ni per al nom de sortida**.
+5. A la columna d'observador, introdueix C11, C13, C25 i C37 en les files següents. No s'ha de seleccionar tota la capa C en lloc d'una coordenada: Viewshed continua esperant un sol punt en cada execució.
+6. Crea una carpeta nova dins de `sandbox/` per a les conques i assigna els cinc TIFF de la taula, cadascun amb la seva ruta. El nom ha de permetre recuperar quin observador representa. Evita donar el mateix nom de fitxer a tota la columna amb Fill Down.
+7. Revisa les cinc files abans de prémer **Executa**. A **Registre / Log** comprova l'acabament de cada execució i l'existència dels cinc TIFF. Si actives **Carrega les capes en acabar**, els resultats s'incorporen al projecte; aquesta casella no els suma.
+
+#### Ampliar el lot a les 37 mostres
+
+La fila Autofill ofereix dues operacions diferents amb expressions. **Calculate by Expression…** calcula valors per a les files que ja existeixen. **Add Values by Expression…** espera una llista de valors i hi afegeix les files necessàries. Per afegir les 37 coordenades s'utilitza aquesta segona opció a la columna **Observer location**.
+
+Amb la capa de mostres anomenada **C**, l'expressió següent construeix una llista ordenada de coordenades a partir dels camps `x`, `y` i `id`:
+
+```text
+aggregate(
+  layer := 'C', aggregate := 'array_agg',
+  expression := to_string("x") || ',' || to_string("y")
+                || ' [EPSG:25831]',
+  order_by := "id"
+)
+```
+
+Prepara aquest lot en una taula nova, o retira abans les cinc files de prova: afegir la llista al darrere duplicaria aquells observadors. **Comprova les cel·les després de tancar l'expressió.** En QGIS 3.44.11, Add Values conserva la fila inicial buida: queden 38 execucions abans de retirar-la. Han de quedar **37 files amb coordenades**, de C01 a C37, sense aquella fila ni la capçalera Autofill. Emplena els valors comuns a la primera i copia'ls cap avall com al lot petit.
+
+>> Una llista de coordenades no és una coordenada individual. **Add Values by Expression** distribueix l'array entre files noves; **Calculate by Expression** recalcula una cel·la per fila. Passar l'array sencer a aquesta segona opció pot donar `0,0`. Per recalcular files existents s'extreu un element amb `array_get(llista, @row_number)`, amb índex inicial 0. La guia mostra les expressions completes per recuperar les cinc o les 37 files.
+
+Per a les sortides es pot triar el primer fitxer amb el botó **… → Select File/Folder…**. El diàleg d'autocompleció permet **Fill with numbers**, que afegeix números als noms de les files següents. Revisa la carpeta, els 37 noms diferents i la correspondència amb l'ordre dels observadors. Utilitzar els identificadors als noms evita confondre l'ordre de fila amb la mostra.
+
+El lot es pot desar amb el botó de disc en un **fitxer `.batch` de configuració, amb contingut JSON**, i tornar-lo a obrir. Conserva paràmetres i rutes, no copia les dades ni els resultats. Després de moure la carpeta de treball s'han de revisar les referències. El [manual de QGIS 3.44 descriu les opcions de la interfície de lots](https://docs.qgis.org/3.44/en/docs/user_manual/processing/batch.html).
 
 ### Sumar les conques, no les superfícies totals
 
-**Viewshed calcula una conca per punt i execució.** Per comprendre el procediment es poden repetir individualment C05, C11 i C13. Per obtenir les 37 conques, QGIS ofereix **execució per lots**: una taula amb una fila per observador. Quan s'executa el lot, QGIS repeteix automàticament l'algorisme amb els paràmetres de cada fila; el lot no suma les conques per si sol.
+El resultat del lot són **37 conques individuals**. Cada TIFF conserva la resposta 1/0 del seu observador. Per comptar quantes posicions veuen una mateixa cel·la cal una operació posterior de suma sobre una graella comuna.
 
-S'hi accedeix amb clic dret sobre **Viewshed → Execute as batch process…**, o des del botó equivalent del diàleg de l'algorisme. Les opcions d'emplenament automàtic permeten afegir les coordenades dels 37 punts a partir dels camps `x` i `y`, copiar els paràmetres comuns a tota la columna i generar una ruta de sortida diferent per fila. El [manual de QGIS descriu el funcionament dels lots](https://docs.qgis.org/3.44/en/docs/user_manual/processing/batch.html).
+Si les conques són crues, es poden sumar primer i aplicar la màscara comuna al resultat: amb nom **Suma C bruta**, la fórmula és `"Domini@1" * "Suma C bruta@1"`. Dins del domini és equivalent a emmascarar cada conca abans de sumar-la.
 
-En aquest lot MDT, les altures d'origen i destinació són **1,7 m sobre el terreny**. També són comuns l'MDT, banda 1, abast 0, curvatura 0,85714 i codis de resposta. Canvien **les coordenades i el fitxer de sortida**. Cal comprovar 37 files i 37 noms diferents abans d'executar-lo; escollir la capa de punts no fa que un paràmetre de coordenada individual recorri tots els seus objectes automàticament.
-
-Els 37 ràsters de referència, ja emmascarats amb Domini, són a `resultats/conques-carretera-mdt`. Si el lot produeix conques crues, es poden sumar primer i aplicar la màscara comuna al resultat: amb nom **Suma C bruta**, la fórmula és `"Domini@1" * "Suma C bruta@1"`. Dins del domini és equivalent a emmascarar cada conca abans de sumar-la.
-
-**Estadístiques de cel·la**, `native:cellstatistics`, amb estadística **Suma**, combina els 37 ràsters. Es pren una de les entrades com a referència de graella i es desactiva **Ignora NoData**. El resultat compta des de quantes posicions de carretera es veu cada destinació del model.
+**Estadístiques de cel·la**, `native:cellstatistics`, amb estadística **Suma**, combina els 37 ràsters **en una sola execució**. S'obre l'eina normalment i se seleccionen tots els TIFF al selector de **Capes d'entrada → …**; no cal escriure 37 termes a la calculadora ni sumar de dos en dos. Es pren una de les conques com a referència de graella, es desactiva **Ignora NoData** i es fixa NoData de sortida 255 als avançats. **Merge/Fusiona** faria un mosaic, no aquesta suma. El resultat compta des de quantes posicions de carretera es veu cada destinació del model.
 
 ![Conca acumulada de les trenta-set posicions de carretera amb MDT]({{ site.baseurl }}/assets/captures/visibilitat-costa-acumulada.png "Un valor 12 significa visió des de 12 dels 37 observadors, no 12 persones. El màxim observat és 33. El mar i les zones sense comparació queden fora del recompte; el gris dins del domini correspon a zero."){: data-figure-width-web="52rem" data-figure-width-pdf="100%"}
 
->>> Amb pesos iguals, una cel·la amb 12 representa aproximadament $12\times98,710071=1.184,52$ m de recorregut amb visió: el **32,43%** dels 3.652,27 m analitzats. És una aproximació per mostreig, no una digitalització de tots els canvis de visió entre punts.
+>>> Amb pesos iguals, una cel·la amb 12 representa aproximadament $12\times98,71=1.184,52$ m de recorregut amb visió: el **32,43%** dels 3.652,27 m analitzats. És una aproximació per mostreig, no una digitalització de tots els canvis de visió entre punts.
 
 La pregunta inversa, **des de quina part de la carretera es veu T**, es resol mostrejant la conca de la torxa als punts C amb `native:rastersampling`. Amb MDT, 34 de les 37 mostres donen 1: representen uns **3.356,14 m**. Aquesta longitud d'itinerari no s'obté sumant les àrees visibles de les 37 conques.
 
->> El paquet inclou `reproduccio/lots_visibilitat.py` per executar tota la cadena des de QGIS: llegeix cada observador, crida `gdal:viewshed`, aplica les cotes i Domini i desa els recomptes i percentatges. És un guió d'automatització amb les mateixes operacions, no una introducció manual de punts. El guió de pràctica mostra tant l'emplenament del lot gràfic com la invocació d'aquesta cadena.
+>> **Repetir, emmascarar i sumar són operacions diferents.** El lot repeteix Viewshed amb els paràmetres de cada fila; Domini delimita la comparació vàlida; la suma compta observadors. Només una cadena que incorpori explícitament les tres operacions les executaria seguides. El fet de llançar Viewshed per lots no les activa automàticament.
 
 ## Visibilitat del recinte petroquímic {#cas-petroquimica}
 
@@ -328,7 +379,7 @@ La pregunta inversa, **des de quina part de la carretera es veu T**, es resol mo
 
 La tercera pregunta és **des de quines parts del territori es veu algun element del polígon**. S'utilitza el polígon **1459998** del [Mapa de cobertes del sòl de Catalunya de 2024](https://www.icgc.cat/ca/Geoinformacio-i-mapes/Mapes/Mapa-de-cobertes-del-sol-de-Catalunya), classe 347, «Zones industrials, comercials i/o de serveis». L'ortofoto permet reconèixer l'àrea industrial seleccionada de **162,59 ha**.
 
-La geometria original representa una coberta del sòl, amb **19 forats** i entrants que separen parts de la instal·lació. Per tractar el sector com una unitat es delimita un **recinte petroquímic d'estudi** més compacte, que inclou patis i alguns espais entre peces industrials. La coberta original es manté a `dades/coberta-original.gpkg`; el recinte derivat, a `dades/poligon.gpkg`. La generalització no modifica els usos classificats pel MCSC.
+La geometria original representa una coberta del sòl, amb **19 forats** i entrants que separen parts de la instal·lació. Per tractar el sector com una unitat es delimita un **recinte petroquímic d'estudi** més compacte, que inclou patis i alguns espais entre peces industrials. Conserva `coberta_original` i desa la geometria derivada com una capa nova. La generalització no modifica els usos classificats pel MCSC.
 
 ### Construir un recinte compacte amb dos buffers {#perimetre-estudi}
 
@@ -344,7 +395,7 @@ A QGIS, l'eina **Àrea d'influència / Buffer**, `native:buffer`, es pot obrir d
 
 La primera execució utilitza **Coberta original MCSC**, distància **+150 m**, **32 segments per quadrant**, unions arrodonides i dissolució activada. La segona execució utilitza **aquest intermedi**, distància **−150 m** i els mateixos altres paràmetres. El resultat es desa com **Recinte petroquímic d'estudi**.
 
-El paquet conserva l'intermedi a `dades/buffer-positiu.gpkg`.
+Desa també el buffer positiu per comprovar que el negatiu utilitza l'intermedi correcte.
 
 ![Buffer positiu de cent cinquanta metres sobre la coberta original]({{ site.baseurl }}/assets/captures/visibilitat-costa-buffer-positiu.png "Primer s'expandeix la coberta original 150 m i es dissol el resultat. Els 32 segments per quadrant aproximen els arcs de les unions arrodonides."){: data-figure-width-web="42rem" data-figure-width-pdf="94%"}
 
@@ -368,7 +419,7 @@ S'adopta **150 m**, després de contrastar les formes amb l'ortofoto. El recinte
 
 Una graella rectangular de **250 × 250 m** es retalla amb el **recinte petroquímic d'estudi** mitjançant `native:clip`. **Punt sobre la superfície**, `native:pointonsurface`, situa una mostra A dins de cada fragment. En resulten **57 fragments**.
 
-La suma dels pesos és **2.229.408,741960 m²**. La malla representa també els espais incorporats al recinte; els fragments de vora tenen menys pes que els quadrats complets.
+La suma dels pesos és aproximadament **2.229.408,74 m²**. La malla representa també els espais incorporats al recinte; els fragments de vora tenen menys pes que els quadrats complets.
 
 ![Graella de dos-cents cinquanta metres per preparar el mostreig d'àrea]({{ site.baseurl }}/assets/captures/visibilitat-costa-area.png "La graella es retalla amb el recinte abans d'obtenir punts i pesos. Una mostra interior representa el seu fragment; no cal situar totes les mostres al perímetre."){: data-figure-width-web="42rem" data-figure-width-pdf="90%"}
 
@@ -376,7 +427,7 @@ Les mostres A se situen **1 m sobre l'MDS local**. La cota absoluta resultant es
 
 ![Mapa amb T, trenta-set punts de carretera i cinquanta-set mostres dins del recinte petroquímic]({{ site.baseurl }}/assets/quarto/figures/visibilitat-mostreig.qmd "La torxa és un objectiu singular, C mostreja posicions d'observació i A representa fragments del recinte. Les tres geometries responen preguntes diferents. Les cotes provenen dels models d'elevació i dels desplaçaments verticals definits a l'exercici."){: data-figure-width-web="52rem" data-figure-width-pdf="100%" data-caption-source="Fonts: ICGC, RTT i MCSC 2024; col·laboradors d'OpenStreetMap."}
 
-També aquí es repeteix el càlcul per lots: **57 execucions per superfície**, una per A. Amb MDT, l'altura d'origen varia segons `h_mdt_m`; amb MDS és 1 m i s'utilitza la cota mínima per mantenir els receptors a MDT + 1,7 m. El guió d'automatització del paquet encadena aquestes operacions, aplica Domini i acumula els pesos de cada fragment. Un lot de Viewshed, tot sol, només produeix les sortides individuals.
+També aquí es repeteix el càlcul per lots: **57 execucions per superfície**, una per A. Amb MDT, l'altura d'origen varia segons `h_mdt_m`; amb MDS és 1 m i s'utilitza la cota mínima per mantenir els receptors a MDT + 1,7 m. Després s'aplica Domini i s'acumulen els pesos de cada fragment. Un lot de Viewshed, tot sol, només produeix les sortides individuals.
 
 Una graella regular pot passar per alt una estructura estreta i alta. Per això **T es conserva com a objectiu addicional**. El mapa d'alguna part visible combina «es veu almenys una de les 57 mostres A» **o** «es veu T». No s'atribueixen a la torxa els metres quadrats de tot un fragment.
 
@@ -405,7 +456,7 @@ La fracció ponderada d'àrea és una altra sortida. Suma els metres quadrats de
 | Àrea ponderada A | 0–100% | Quina fracció dels fragments representats té mostra visible? |
 :::
 
-`native:rastersampling` consulta cadascun dels mapes als receptors. R1–R4 corresponen a C05, C11, C13 i C37; R5, a **(352100;4552000) m**, queda fora del retall. La taula preparada és `resultats/receptors-resultats.gpkg`.
+`native:rastersampling` consulta cadascun dels mapes als receptors. R1–R4 corresponen a C05, C11, C13 i C37; R5, a **(352100;4552000) m**, queda fora del retall. El mostreig genera els atributs amb què es comparen les respostes.
 
 ![Matriu de la torxa, algun element del polígon i fracció d'àrea als cinc receptors]({{ site.baseurl }}/assets/quarto/figures/visibilitat-matriu-real.qmd "T i G es llegeixen com 0/1; A és un percentatge ponderat de les 57 mostres interiors. Amb MDS, R1 veu la torxa i, per tant, algun element industrial, encara que cap mostra A sigui visible. R5 conserva un guió, no zero."){: data-figure-width-web="52rem" data-figure-width-pdf="100%"}
 
@@ -433,15 +484,15 @@ Cal seleccionar un receptor i un punt verificat de la proposta, construir-ne el 
 
 ### MDT i MDS amb extrems controlats
 
-Amb el paquet local, calcula T sobre MDT i compara'l amb MDS mantenint T a cota 152,311996 m i els receptors a MDT + 1,7 m. T és a (346892,5;4552507,5) m; les altures relatives són 131,369997 m sobre MDT i 1 m sobre MDS. Conserva els dos ràsters binaris, la cota mínima absoluta i la màscara Domini.
+Amb el paquet local, calcula T sobre MDT i compara'l amb MDS mantenint T a una cota aproximada de 152,31 m i els receptors a MDT + 1,7 m. T és a (346892,5;4552507,5) m; les altures relatives són 131,37 m sobre MDT i 1 m sobre MDS. Conserva els dos ràsters binaris, la cota mínima absoluta i la màscara Domini.
 
 Comprova aproximadament 2.962.199 cel·les visibles amb MDT i 447.860 amb MDS, dins de les 3.490.455 cel·les comparables de 5 m. Explica l'efecte de l'agregació màxima i per què 130,4 m estimats d'estructura no són una mesura de la flama.
 
 ### Acumulació i longitud de carretera
 
-Suma les 37 conques MDT i conserva un ràster de nombre d'observadors i un de percentatge. Cada mostra representa 98,710071 m d'un total de 3.652,272633 m. Interpreta una cel·la amb valor 12: calcula longitud representada i fracció del recorregut. Comprova que no has sumat hectàrees dels mapes individuals.
+Suma les 37 conques MDT i conserva un ràster de nombre d'observadors i un de percentatge. Cada mostra representa aproximadament 98,71 m d'un total de 3.652,27 m. Interpreta una cel·la amb valor 12: calcula longitud representada i fracció del recorregut. Comprova que no has sumat hectàrees dels mapes individuals.
 
-Per a la visió de T amb MDS, cada mostra de la taula representa els mateixos **98,710071 m** de recorregut:
+Per a la visió de T amb MDS, cada mostra de la taula representa els mateixos **98,71 m** aproximats de recorregut:
 
 ::: table "Dades per interpretar la cobertura de carretera"
 | Estat en el contrast MDS | Nombre de mostres | Valor de T |
@@ -457,7 +508,7 @@ Calcula 7/28 i explica per què expressa la fracció de les posicions comparable
 
 Parteix de la coberta de 162,59 ha i prepara el recinte amb buffers +150 m i −150 m. Compara'n les 222,94 ha amb els resultats de 100 i 250 m. Explica per què la segona operació no recupera necessàriament la geometria original i justifica quins espais s'incorporen al recinte.
 
-Prepara els 57 fragments d'àrea i comprova que els pesos sumen 2.229.408,741960 m². Compara el nombre de mostres visibles amb el percentatge ponderat: un fragment de vora no representa el mateix que un quadrat complet de 62.500 m².
+Prepara els 57 fragments d'àrea i comprova que els pesos sumen aproximadament 2.229.408,74 m². Compara el nombre de mostres visibles amb el percentatge ponderat: un fragment de vora no representa el mateix que un quadrat complet de 62.500 m².
 
 Construeix «alguna part visible» com la unió de les mostres A i la torxa T. Amb MDS, comprova 470.444 cel·les visibles i que totes les 447.860 cel·les de la conca de T hi queden incloses. Interpreta R1, a (344977,5;4552147,5) m, amb T = 1, G = 1 i A = 0%. Explica què es perdria si s'utilitzés només la graella d'àrea.
 

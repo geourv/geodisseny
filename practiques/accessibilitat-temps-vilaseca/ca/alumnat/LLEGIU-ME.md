@@ -1,9 +1,9 @@
 ---
-title: "Pràctica: temps d'accés, marxa i isòcrones"
+title: "Pràctica: accessibilitat — temps d'accés"
 author: Benito Zaragozí
 lang: ca
-date: "Edició: 18 d'octubre de 2026"
-content_status: approved
+date: "Edició: 30 d'octubre de 2026"
+content_status: review
 ---
 
 # Abast per xarxa i per superfície
@@ -14,13 +14,19 @@ Què es pot assolir en 3, 6 o 12 minuts? Compararem branques accessibles de la x
 
 # Entrades preparades
 
-El ZIP conté `accessibilitat-vilaseca.gpkg`, **friccio_obert.tif**, **friccio_tancat.tif** i aquest PDF. Les friccions són entrades inicials d'aquest bloc, preparades amb cobertes, vials i passos. No contenen els temps ni les isòcrones que calcularàs. Si disposes de les teves friccions del bloc ràster, utilitza-les després de validar-les i declara les diferències respecte de la referència.
+El ZIP conté `LLEGIU-ME.pdf` a l'arrel i els recursos a `data/`. Els vectors són a `data/accessibilitat-vilaseca.gpkg`; l'MDT, l'ortofoto i **friccio_obert.tif** i **friccio_tancat.tif**, a `data/rasters/`. Les friccions són entrades inicials d'aquest bloc, preparades amb cobertes, vials i passos. No contenen els temps ni les isòcrones que calcularàs. Si disposes de les teves friccions del bloc ràster, utilitza-les després de validar-les i declara les diferències respecte de la referència.
 
-1. Utilitza QGIS 3.44 amb GDAL i GRASS. Crea una connexió GeoPackage i obre **inici**; carrega les dues friccions des de la carpeta local.
+1. Utilitza QGIS 3.44 amb GDAL i GRASS. Obre **`data/inici.qgz`**. Carrega les dues friccions des de `data/rasters/`.
 2. Comprova EPSG:25831/NONE, extensió X343000–346000/Y4552000–4555200, cel·la5m i600×640cel·les.
-3. Crea una carpeta d'intermedis. Selecciona capes concretes als diàlegs GRASS; desa el projecte amb rutes relatives i mantén tots els fitxers referenciats.
+3. Conserva `data/` com a referència i crea `sandbox/` al seu costat. Desa-hi una còpia del projecte com a `temps-acces.qgz`, amb rutes relatives, un GeoPackage nou per als vectors i `intermedis/` per als TIFF de preparació. Selecciona capes concretes als diàlegs GRASS.
+
+Mantén proves i alternatives a `sandbox/`; prepara a `dist/` només la selecció final. Els grups de capes poden reflectir aquestes fases, però no mouen ni copien les dades entre carpetes.
 
 O=(344407;4553668,36)m;D=(344473,01;4554030,72)m. La fricció oberta té pes1als vials i passos; P2tancat és NoData i els alternatius continuen amb1. El model admet moviment entre cel·les i no certifica permisos de pas.
+
+El grup **Ortofoto ICGC** reuneix el retall local i el **WMS** de context. Activa el WMS per veure més detall amb internet; per treballar sense connexió, deixa només el retall local. El servei no és una entrada de r.walk ni substitueix l'MDT.
+
+Mantén `data/ortofoto-wms.xml`: configura la capa de context en línia del projecte. L'ordre de dibuix segueix el panell **Capes**.
 
 # Àrees de servei de xarxa
 
@@ -33,7 +39,9 @@ Les longituds de branques accessibles no són un trajecte únic. Un polígon que
 
 # Altitud i penalització temporal
 
-1. Carrega **mdt** del GeoPackage. Retalla'l a ambit_calcul amb `gdal:cliprasterbyextent`, conservant resolució nativa5m i alineació. Desa **mdt_ambit.tif**.
+L'MDT es distribueix com a GeoTIFF separat; no cal exportar-lo des d'un GeoPackage.
+
+1. Utilitza **`data/rasters/mdt.tif`**. Retalla'l a ambit_calcul amb `gdal:cliprasterbyextent`, conservant CRS, resolució nativa de 5 m, alineació i NoData. Desa **mdt_ambit.tif** a la carpeta d'intermedis.
 2. Converteix la fricció en penalització addicional en segons per metre:
 
 ```text
@@ -86,7 +94,21 @@ Proposa una aplicació geogràfica: accés a equipaments, itineraris o connexion
 
 L'informe ha de presentar pregunta, dades i decisions, controls, mapes/taules comparables i interpretació amb límits. Pots enregistrar fragments de pantalla i extreure fotogrames llegibles i comentats. El vídeo només es lliura si el professor ho indica; els mapes finals han de tenir llegenda, escala i unitats.
 
-Lliura vectors en GeoPackage, projecte relatiu, TIFF requerits i PDF, amb el prefix **accessibilitat-temps-vilaseca-cognom**. Comprova la carpeta després de moure-la.
+## Preparar i provar la selecció final
+
+1. Crea `dist/` i un **GeoPackage nou** amb els vectors lliurats: àrees de servei en línies, camins i isòcrones dels apartats seleccionats, amb les entrades necessàries per llegir-los. A **Exporta → Desa els objectes com a…**, afegeix cada capa amb un nom nou al mateix fitxer, sense sobreescriure el GeoPackage complet.
+2. Copia a `dist/rasters/` els GeoTIFF que necessiten els resultats i els controls demanats: temps, franges i, si són pertinents, MDT, friccions o direccions. Les variants descartades i els fitxers no utilitzats es queden a `sandbox/`. Afegeix només el context i els recursos necessaris; conserva l'XML si mantens el WMS opcional.
+3. Desa el projecte final com a `.qgz` **extern** dins de `dist/`, amb rutes relatives. Carrega les capes dels fitxers finals, aplica els estils i etiquetes i retira del projecte les referències a `data/` i `sandbox/`. Revisa ordre de dibuix, segons/minuts, colors comparables i NoData.
+4. Desa-hi l'informe PDF. Carpeta/ZIP i fitxers principals comparteixen codi, tema i cognoms. Substitueix **`prN` pel codi real de Moodle**:
+
+```filetree
+prN-temps-acces-cognoms.gpkg
+prN-temps-acces-cognoms.qgz
+prN-temps-acces-cognoms.pdf
+rasters/
+```
+
+5. Reanomena la carpeta amb el mateix prefix i/o comprimeix-la. Obre una còpia traslladada o el ZIP extret en una carpeta nova, sense connexió. Les capes han de ser vàlides i conservar dades, estils, etiquetes i ordre. Comprova que les fonts són dins de la còpia: el projecte no ha de continuar llegint les proves de l'ordinador original.
 
 Qualificació: 70% apartats obligatoris indicats a classe; 20% ampliacions; 10% informe, captures, mapes i organització. Les ampliacions no substitueixen els obligatoris ni garanteixen una nota.
 

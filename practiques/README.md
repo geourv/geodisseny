@@ -4,6 +4,284 @@ Aquest directori conté **codi, configuració de recursos i documents editables*
 Es versiona a Git i està exclòs de Jekyll. Les activitats es publiquen com a
 paquets de Moodle, amb una versió pròpia independent del manual.
 
+## Pauta per a l'organització del treball de l'alumnat
+
+La pauta general del manual separa `data/` (entrades i `inici.qgz`),
+`sandbox/` (projecte de treball, proves i intermedis) i `dist/` (selecció final).
+En preparar o revisar les edicions següents, cada LLEGIU-ME ha de concretar
+aquesta separació i les rutes de les seves expressions i configuracions de lot.
+Els grups de capes poden reflectir les fases, però no substitueixen exportar
+o desar els resultats als fitxers corresponents.
+
+El lliurament de l'estudiant es prepara en un GeoPackage nou amb els vectors
+seleccionats, un QGZ extern relatiu, l'informe PDF i els GeoTIFF o recursos
+necessaris. Les proves descartades no s'hi inclouen. Carpeta/ZIP i fitxers
+principals s'identifiquen amb codi de pràctica, tema i cognoms, per exemple
+`pr1-visibilitat-cognoms`; el codi real correspon a l'enunciat. La comprovació
+final es fa sobre una còpia traslladada o un ZIP acabat de descomprimir:
+mateixes capes, valors, estils, etiquetes, fonts i ordre de dibuix, sense
+dependències de temporals o fitxers que no s'han lliurat.
+
+Els LLEGIU-ME també han d'identificar proveïdors i requisits, distingir
+expressions QGIS d'ordres CLI i recuperar el registre de GDAL/GRASS/SAGA quan
+sigui pertinent. Aquesta pauta docent és diferent dels directoris ignorats
+de preparació i reconstrucció del repositori descrits més avall.
+
+## Lliuraments actuals i enunciats de Moodle
+
+El directori visible conté només l'edició actual de cadascuna de les cinc
+pràctiques, amb noms estables. L'enunciat editable es lliura fora del PDF:
+
+```text
+dist/practiques/<practica>/ca/
+  <practica>.zip
+  <practica>-docent.zip
+  LLEGIU-ME.pdf
+  LLEGIU-ME-docent.pdf
+  ENUNCIAT-MOODLE.md
+  manifest.json
+  SHA256SUMS
+```
+
+Cada ZIP desplega una arrel amb el mateix nom de la pràctica, amb aquesta
+estructura:
+
+```text
+<practica>/
+  LLEGIU-ME.pdf
+  data/
+    inici.qgz
+    <cas>.gpkg
+    rasters/
+    ortofoto-wms.xml
+```
+
+El paquet docent afegeix `data/docent.qgz` o les vistes de `data/projectes/`,
+els vectors resolts i els GeoTIFF de resultats. Els projectes són externs i
+relatius; els GeoPackage contenen vectors, no ràsters ni projectes incrustats.
+L'ordre de dibuix segueix l'arbre del panell Capes. La font local de les dues
+pràctiques que la necessiten es conserva a `data/fonts/`.
+
+Els noms visibles identifiquen les tècniques. La correspondència de lliurament
+és explícita a `HANDOFFS` del preparador del curs:
+
+| Pràctica | Carpeta i prefix de ZIP actual |
+| --- | --- |
+| Accessibilitat: xarxa vectorial | `accessibilitat-xarxa-vectorial` |
+| Accessibilitat: model ràster de cost | `accessibilitat-raster` |
+| Accessibilitat: temps d'accés | `accessibilitat-temps-acces` |
+| Anàlisi d'intervisibilitat | `analisi-intervisibilitat` |
+| Estadística espacial descriptiva | `estadistica-espacial-descriptiva` |
+
+Els municipis i recintes es presenten com a casos dins dels documents. Les
+fonts de preparació i els noms dels fitxers de dades conserven la seva identitat
+geogràfica per a la reconstrucció; no es reescriu la procedència dels bundles.
+
+El preparador específic del curs és
+[`lliurament-geodisseny.py`](lliurament-geodisseny.py). Selecciona els deu ZIPs
+aprovats de la base del18/10, els verifica i en prepara còpies en un run nou.
+La fase `--context`, dins de l'engine QGIS100… fixat, agrupa l'ortofoto local
+i el WMS oficial de2025 i comprova que vectors i mostres ràster no han canviat.
+El servei es declara amb `ortofoto-wms.xml`, llegible sense internet, i queda
+desactivat. Els píxels del servei només s'utilitzen com a context en línia;
+no són una entrada d'anàlisi. Cal conservar l'XML amb el projecte.
+
+Després, `--layout --layout-pass <pass-nou>` crea una còpia de lliurament a
+`handouts/<pass>/`: selecciona els vectors amb GDAL, exporta els ràsters a
+GeoTIFF, escriu els projectes QGZ i actualitza les seves dependències relatives.
+Comprova FIDs, atributs i geometries, píxels, graella, CRS, NoData i màscares.
+`--package` rep el mateix `--layout-pass`; un pass existent no se sobreescriu.
+La disposició històrica dels ZIPs aprovats només es conserva a la reconstrucció.
+
+Els PDFs de lectura es construeixen amb `manual_practice_pdf_build` d'unaltraweb
+i es consumeixen amb `--package --pdf-receipts <carpeta>`. La fase comprova
+hashes, fonts, A4 horitzontal, codi i límits del PDF abans de fer els ZIPs del
+curs. L'enunciat es versiona a `ca/docent/ENUNCIAT-MOODLE.md` de cada pràctica;
+el PDF docent només explica on trobar-lo i com carregar-lo a Moodle.
+En el lliurament visible, els dos PDFs i l'enunciat queden directament al costat
+dels ZIPs. `alumnat/` i `docent/` només organitzen les fonts o la reconstrucció.
+Si només canvien aquestes rutes externes, `--reuse-packages-from <run-verificat>`
+reutilitza els mateixos ZIPs, PDFs i rebuts de verificació en un run nou, sense
+tornar a renderitzar lectures ni executar GIS.
+
+El perfil natiu v2 conserva la base d'anàlisi **només local** i no admet capes
+WMS. Per això els `edicio.json` continuen descrivint aquesta base local; el
+lliurament actual amb el context opcional el prepara el script del curs. Els
+seus manifests són de Geodisseny, no bundles nous del protocol natiu. Les
+captures s'obtenen separadament amb el MCP publicat0.6.1 i pantalla privada.
+
+Abans de `--publish-current`, els deu ZIPs exactes es reobren en una ubicació
+nova de només lectura, sense xarxa ni muntatge del workspace original. La
+promoció prepara i comprova tot el candidat abans de moure l'arbre anterior complet a
+`sandbox/practiques/arxiu-lliuraments/<run>/dist-practiques/`, verifica tots els
+hashes i promou un arbre actual nou. Els noms, dates i hashes originals queden
+als inventaris i a l'arxiu. No es netegen originals, runs o ZIPs segellats.
+Per reconstruir a partir d'un lliurament aprovat que ja és a l'arxiu,
+`--stage --source-handoff <carpeta-aprovada>` selecciona explícitament aquell
+inventari; no s'infereix una font nova a partir d'un nom de fitxer semblant.
+
+Trasllat efectuat el21/10/2026: els184fitxers i67directoris anteriors són a
+`sandbox/practiques/arxiu-lliuraments/2026-10-21-distribucions-anteriors-01/dist-practiques/`.
+L'inventari `original-tree.json` i el rebut `verified.json` de l'arxiu acrediten
+els hashes. La base aprovada del18/10 es troba allà a
+`lliurament-moodle/2026-10-18/ca/`. Les rutes antigues de les seccions històriques
+s'han de llegir sota aquesta arrel arxivada.
+
+Després de la prova d'aula, l'edició del **21/10** va adoptar els noms tècnics de
+la taula anterior. La reconstrucció d'aquella edició és
+`sandbox/practiques/lliurament-geodisseny/2026-10-21-lots-01/`, amb els paquets
+`packages/review01/` i reobertura de21projectes a `reopen01/`. L'arbre actual
+anterior del20/10,37fitxers i20directoris, és íntegre a
+`sandbox/practiques/arxiu-lliuraments/2026-10-21-abans-noms-tecnics-01/dist-practiques/`,
+amb inventari i comprovació de tots els hashes.
+
+Les proves de l'autocompletat i de la suma són a
+`sandbox/practiques/visibilitat-costa/2026-10-21-lots-01/`: s'han comprovat les
+taules natives de5/37files, les expressions dels casos28/57, una execució de
+Viewshed amb NoData255, la suma multifitxer i una ponderació real. Són proves
+programàtiques dins del contenidor; no substitueixen les captures MCP pendents.
+
+El lliurament local del **26/10** utilitza els nous formats i les rutes de
+`sandbox/practiques/lliurament-geodisseny/2026-10-26-pdf-data-01/`.
+Els paquets són a `packages/review02/`, amb selecció de rebuts PDF a
+`pdf-receipts03/` i reobertura dels ZIPs exactes a `reopen03/`. S'han contrastat
+els22ràsters extrets dels GeoPackage i s'han reobert26projectes QGZ offline:
+afegir i moure una capa canvia l'ordre que rep el mapa. Els164fitxers extrets
+es mantenen inalterats. Les lectures tenen9/4,18/8,9/8,42/10i15/7pàgines
+d'inici/docents, en l'ordre de la taula.
+
+Abans de substituir el dist, els37fitxers i20directoris de l'edició del21/10
+s'han arxivat íntegres a
+`sandbox/practiques/arxiu-lliuraments/2026-10-26-abans-geotiff-01/dist-practiques/`.
+`current-verified.json` comprova independentment tots els hashes de l'arxiu,
+els ZIPs actuals i els cinc `SHA256SUMS`. No s'ha sobreescrit cap versió.
+
+La prova `diagnostics/uri01/verified.json` reprodueix la sortida GeoTIFF amb
+prefix `geopackage:` i la resol en desar el projecte com a QGZ. Les dues conques
+C05 amb entrada GPKG i GeoTIFF coincideixen píxel a píxel. Això no diagnostica
+altres incidències de compatibilitat observades a classe.
+
+`REVISIO-RETINGUDA.json` conserva deu passes copy preparats contra digests i
+revision123; el registre tool-owned continua al límit i no s'ha alterat. Les
+captures existents es reutilitzen, no es presenten com a captures noves del
+format de fitxers. La taula de lots i el camp EXTRA desplegat continuen pendents
+del proveïdor. El compositor natiu v2 és una font històrica d'anàlisi: els nous
+formats els prepara el collector del curs, no un nou bundle natiu declarat.
+
+L'edició local del **27/10** corregeix l'arrel de tots els ZIPs:
+**`LLEGIU-ME.pdf` al costat de `data/`**, sense carpeta `pdf/` ni `payload`.
+Lectures i enunciats indiquen les mateixes rutes. El run és
+`sandbox/practiques/lliurament-geodisseny/2026-10-27-minimal-01/`:
+`--reuse-layout-from 2026-10-26-pdf-data-01 --layout-pass layout02` conserva
+byte a byte les dades i els projectes verificats; no torna a executar anàlisi.
+Els deu PDFs s'han construït amb Web0.7.4 i el mateix worker PDF fixat.
+Tenen9/4,18/8,9/8,43/11i15/7pàgines d'inici/docents, en l'ordre de la taula;
+s'han revisat les132pàgines. `packages/review01/` i `reopen01/` vinculen els
+ZIPs exactes a la reobertura dels26projectes i als164fitxers extrets inalterats.
+
+Abans de substituir el dist, l'edició26/10completa —37fitxers i20directoris—
+s'ha arxivat a
+`sandbox/practiques/arxiu-lliuraments/2026-10-27-abans-arrel-minima-01/dist-practiques/`.
+`current-verified.json` del run nou comprova tots els membres dels ZIPs,
+els PDFs separats, els cinc fitxers de sumes i l'arxiu anterior íntegre.
+
+La correcció posterior del mateix dia aplana també el directori visible:
+`LLEGIU-ME.pdf`, `LLEGIU-ME-docent.pdf` i `ENUNCIAT-MOODLE.md` són directament
+al costat dels dos ZIPs, sota `ca/`, sense carpetes `alumnat/` ni `docent/`.
+La reconstrucció d'aquesta disposició és
+`sandbox/practiques/lliurament-geodisseny/2026-10-27-pdfs-plans-01/`.
+Reutilitza els deu ZIPs i PDFs anteriors byte a byte; l'arbre substituït és
+íntegre a `sandbox/practiques/arxiu-lliuraments/2026-10-27-abans-pdfs-plans-01/`.
+Els nous manifests i fitxers de sumes identifiquen les rutes planes.
+
+Les dues lectures d'intervisibilitat incorporen la nova captura
+`assets/captures/visibilitat-lots-suma.png`: cinc entrades, Suma, Ignora NoData
+desactivat i Conca C05 de referència. El bundle PNG/SVG/manifest l'ha generat
+el MCP0.6.1 amb pantalla privada, sense executar noves conques. Documenta
+configuració, no una execució. Fonts i intents anteriors es conserven a
+`sandbox/practiques/visibilitat-costa/2026-10-27-captures-01/`.
+La revisió posterior incorpora **nou captures natives del productor0.7.0**,
+en un render puntual autoritzat: taula plena, tres menús d'autoemplenat amb
+etiquetes, editors d'expressions, fila buida inicial, selecció d'entrades i
+EXTRA desplegat. La font és `context/qgis/visibilitat-batch.yml`; proves i
+bundles són a `sandbox/practiques/visibilitat-costa/2026-10-27-batch-01/`.
+Aquest ús puntual no reetiqueta les seleccions globals del helper de Web;
+[Web#117](https://github.com/dosquartsdedocs/unaltraweb/issues/117) continua
+descrivint aquell altre punt d'adopció.
+
+El lliurament d'aquella revisió és
+`sandbox/practiques/lliurament-geodisseny/2026-10-27-batch-01/`, amb
+`pdf-receipts02/`, `packages/review01/`, `reopen01/` i `pdf-review01/`.
+Només canvien els dos PDFs/ZIPs d'intervisibilitat i el seu enunciat:
+**52pàgines d'inici i14docents**, totes revisades. S'han reobert26QGZ dels
+ZIPs exactes i els164fitxers extrets romanen inalterats. Els altres vuit
+ZIPs/PDFs són byte-idèntics als anteriors. El dist conserva la disposició plana.
+
+La guia avisa de x/y no creats per pointsalonglines i mostra native:addxyfields
+amb EPSG:25831; explica desament/recuperació i edició del `.batch`, les evidències
+del procediment i la normalització de rutes Windows. La comprovació específica
+és `visibilitat-costa/comprovar-prerequisits-lot.py`:37punts, cinc files desades
+i recarregades amb el format natiu i10casos de format de ruta. No és una
+execució Windows ni un nou càlcul de conques. Les alertes dels PDFs utilitzen
+el component `manualcallout` ja present a la plantilla compartida.
+
+L'arbre pla anterior complet,37fitxers i10directoris, s'ha arxivat a
+`sandbox/practiques/arxiu-lliuraments/2026-10-27-abans-captures-batch-01/`.
+`current-verified.json` contrasta tots els hashes de l'arxiu i les sumes del
+dist nou. `REVISIO-RETINGUDA.json` conserva les passes copy preparades; el
+registre editorial gestionat continua intacte.
+
+## Organització de l'alumnat: edició del 30 d'octubre
+
+Les cinc pràctiques concreten ara la pauta `data/`–`sandbox/`–`dist/` a les
+deu lectures i als cinc enunciats Moodle. Les entrades es preserven, les proves
+es fan a `sandbox/` i el lliurament es prepara en un GeoPackage nou, amb QGZ
+extern relatiu, informe PDF i els GeoTIFF/recursos seleccionats. Els noms
+segueixen codi–tema–cognoms; `prN` és un marcador que el docent substitueix pel
+codi real de la tasca. Els grups de capes no mouen fitxers.
+
+Reconstrucció del lliurament actual:
+`sandbox/practiques/lliurament-geodisseny/2026-10-30-organitzacio-02/`.
+Reutilitza `layout02` del run batch del27/10; els154membres de dades, projectes
+i recursos dins dels deu ZIPs són byte-idèntics. Els PDFs nous tenen9/4,
+19/8,10/8,53/16i16/7pàgines d'inici/docents, en l'ordre de la taula de pràctiques.
+S'han revisat les150pàgines i s'han reobert els26QGZ dels ZIPs exactes
+offline/readonly, amb164fitxers extrets inalterats. Es manté el dist pla.
+
+La verificació de la sessió és a
+`sandbox/practiques/lliurament-geodisseny/2026-10-30-organitzacio-01/`:
+fonts abans/després, prosa i passes editorials preparades, `prerequisits01/`,
+`portabilitat01/`, build del manual, revisió web/PDF i inventari d'autocorrelació.
+El verificador de lots comprova70destinacions de carretera des de `sandbox/`,
+10casos de format Windows i una còpia nativa de cinc files amb entrada i
+sortides reassignades. Moure el QGZ no modifica el `.batch` original; les
+lectures separen aquesta traça de la còpia preparada per reexecutar.
+
+Les cinc mostres tècniques de `portabilitat01/` exporten un GeoPackage nou,
+copien els recursos seleccionats i desen un QGZ extern relatiu. Els ZIPs
+s'extreuen en una ubicació nova i es reobren sense els inputs originals:
+atributs, FIDs, geometries i ràsters es mantenen, i el mapa coincideix píxel a
+píxel. Són proves tècniques amb resultats retinguts, no treballs d'estudiants
+ni nous paquets docents. No s'ha repetit cap anàlisi ni les179conques.
+
+Abans de substituir el dist s'ha arxivat l'arbre anterior complet,
+37fitxers i10directoris, a
+`sandbox/practiques/arxiu-lliuraments/2026-10-30-abans-organitzacio-01/`.
+`current-verified.json` del run02comprova independentment l'arxiu, les sumes,
+els PDFs separats i els membres dels ZIPs. Els rebuts de la sessió són a
+`final-checks.json` del run01; l'estat editorial gestionat continua intacte.
+
+També s'ha inventariat la base per a una activitat d'autocorrelació separada:
+94membres del segell municipal i dos ZIPs originals verificats,98potències
+publicades i151seccions de renda. L'inventari no prepara una nova edició ni
+qualifica el runtime actual per a aquella activitat. La continuació, els
+apartats assignats, el codi i els requisits pendents són al traspàs del run01.
+
+Les lectures són **candidates en review**, amb PDF marcat ESBORRANY.
+L'aprovació anterior s'aplica només a la base retinguda, no a aquests documents
+o projectes revisats. Càrrega a Moodle i publicació web continuen sent explícites.
+Les seccions següents conserven l'historial dels preparadors i edicions anteriors.
+
 ## Estructura
 
 ```text
@@ -18,16 +296,20 @@ sandbox/practiques/<practica>/<execucio>/
   alumnat/
   docent/
   captures/
-dist/practiques/<practica>/<versio>/ca/
-  <practica>-<versio>-ca.zip
-  <practica>-docent-<versio>-ca.zip
+dist/practiques/<practica>/ca/
+  <practica>.zip
+  <practica>-docent.zip
   manifest.json
+sandbox/practiques/arxiu-lliuraments/<execucio>/
+  dist-practiques/
+  original-tree.json
+  verified.json
 ```
 
 Per a les altres llengües, el document es diu `es/.../LEEME.md` o
 `en/.../README.md`. Actualment aquest manual manté únicament català.
-El nom dels ZIPs identifica la pràctica, la versió/data i l'idioma quan es
-copia a Moodle. El lliurament d'inici no inclou «alumnat» o «estudiants» al
+El nom dels ZIPs identifica la pràctica; la llengua és al directori i les dates
+i versions són al manifest. El lliurament d'inici no inclou «alumnat» o «estudiants» al
 nom del ZIP ni a l'arrel interna; els manifests sí que conserven el destinatari.
 
 ## Propietat i reconstrucció

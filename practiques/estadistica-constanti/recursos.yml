@@ -2,7 +2,10 @@ schema_version: 1
 activity: estadistica-constanti
 language: ca
 scope: recompte, centres, cercle i el·lipse, kernel
-reading_status: approved
+reading_status: review
+edition: '2026-10-30'
+title: Estadística espacial descriptiva
+handoff_slug: estadistica-espacial-descriptiva
 runtime:
   producer: unaltracaptura-qgis
   version: 0.6.0
@@ -13,7 +16,7 @@ runtime:
   network: none
 readings:
   provider: unaltraweb
-  version: 0.7.2
+  version: 0.7.4
   template: private-practice-a4-landscape
   image: sha256:618163d3f924439792b2306617bd9612f566c5881166102fa544b4e782d569fa
 retained_source:
@@ -32,7 +35,10 @@ resources:
     ortho_edition: 2025
     ortho_source: WMS local snapshot, 8 metres per pixel
 delivery:
-  student: dades/projecte inicial i LLEGIU-ME.pdf
-  teacher: entrades, resultats descriptius, projecte docent i lectura treballada
+  student: LLEGIU-ME.pdf a l'arrel, vectors GeoPackage, ràsters GeoTIFF i data/inici.qgz
+  teacher: entrades, resultats descriptius, data/docent.qgz i lectura treballada
   reconstruction: retained separately; never infer handout contents from the whole source ZIP
-  human_approved: true
+  human_approved: false
+  current_handoff_generator: practiques/lliurament-geodisseny.py
+  moodle_statement: ca/docent/ENUNCIAT-MOODLE.md
+  orthophoto_context: local snapshot and optional ICGC2025 WMS grouped together
