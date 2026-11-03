@@ -1,0 +1,172 @@
+id: visibilitat-batch
+title: Taula de lots de Viewshed i opcions d'autoemplenat
+source_prompt: context/qgis/visibilitat-batch.md
+runtime: {display_backend: offscreen, locale: ca_ES}
+plugins: [processing]
+compat: {qgis: '>=3.44'}
+project:
+  output: projectes/intervisibilitat.qgz
+  reuse: refresh
+  title: Intervisibilitat - preparació de lots
+data:
+  - {id: inici, type: gpkg, path: sandbox/practiques/lliurament-geodisseny/2026-10-26-pdf-data-01/handouts/layout02/visibilitat-costa/alumnat/data/visibilitat-costa.gpkg}
+  - {id: mdt, type: raster, path: sandbox/practiques/lliurament-geodisseny/2026-10-26-pdf-data-01/handouts/layout02/visibilitat-costa/alumnat/data/rasters/mdt.tif}
+  - {id: orto, type: raster, path: sandbox/practiques/lliurament-geodisseny/2026-10-26-pdf-data-01/handouts/layout02/visibilitat-costa/alumnat/data/rasters/ortofoto.tif}
+connections:
+  - {id: inici, type: gpkg, name: visibilitat-costa.gpkg, path: sandbox/practiques/lliurament-geodisseny/2026-10-26-pdf-data-01/handouts/layout02/visibilitat-costa/alumnat/data/visibilitat-costa.gpkg}
+setup:
+  - {action: set_project_crs, auth_id: 'EPSG:25831'}
+  - {action: load_raster, path: sandbox/practiques/lliurament-geodisseny/2026-10-26-pdf-data-01/handouts/layout02/visibilitat-costa/alumnat/data/rasters/ortofoto.tif, name: Ortofoto local}
+  - {action: load_raster, path: sandbox/practiques/lliurament-geodisseny/2026-10-26-pdf-data-01/handouts/layout02/visibilitat-costa/alumnat/data/rasters/mdt.tif, name: MDT}
+  - {action: set_layer_visible, layer: MDT, visible: false}
+  - {action: load_vector, path: 'sandbox/practiques/lliurament-geodisseny/2026-10-26-pdf-data-01/handouts/layout02/visibilitat-costa/alumnat/data/visibilitat-costa.gpkg|layername=mostres_carretera', name: C}
+  - {action: zoom_to_layer, layer: C, scale: 1.3}
+  - {action: clear_message_bar}
+presentation:
+  expand_geopackages: true
+  checks: {project_crs: 'EPSG:25831', required_layers: [MDT, C, Ortofoto local]}
+captures:
+  - id: visibilitat-batch-autofill
+    output: {path: assets/captures/visibilitat-batch-autofill.png, annotations_svg: assets/captures/visibilitat-batch-autofill.annotations.svg, manifest: context/qgis/manifests/visibilitat-batch-autofill.yml}
+    title: Afegir coordenades amb Add Values by Expression
+    window: &batch {processing_algorithm: 'gdal:viewshed', processing_mode: batch}
+    target: &batch_target {class_name: BatchAlgorithmDialog}
+    mode: screen
+    steps:
+      - {action: resize_window, width: 1180, height: 540}
+      - {action: batch_set_row_count, rows: 1}
+      - {action: processing_show_advanced, visible: true}
+      - {action: batch_show_columns, parameters: [OBSERVER, OBSERVER_HEIGHT, OUTPUT], widths: {OBSERVER: 330, OBSERVER_HEIGHT: 200, OUTPUT: 540}}
+      - {action: batch_autofill_menu, parameter: OBSERVER, active: add_values}
+    drawings:
+      - {type: callout, text: 'Afegeix un punt per fila nova', target_marker: box, target: {batch_autofill: OBSERVER}}
+  - id: visibilitat-batch-expressio
+    output: {path: assets/captures/visibilitat-batch-expressio.png, annotations_svg: assets/captures/visibilitat-batch-expressio.annotations.svg, manifest: context/qgis/manifests/visibilitat-batch-expressio.yml}
+    title: Array de les cinc coordenades reals
+    window: *batch
+    target: {object_name: unaltracapturaProcessingExpression}
+    mode: window
+    steps:
+      - action: batch_expression
+        parameter: OBSERVER
+        mode: add_values
+        expression: &punts >-
+          aggregate(layer := 'C', aggregate := 'array_agg',
+          expression := to_string("x") || ',' || to_string("y") || ' [EPSG:25831]',
+          filter := "id" IN ('C05','C11','C13','C25','C37'), order_by := "id")
+    drawings: []
+  - id: visibilitat-batch-fila-buida
+    output: {path: assets/captures/visibilitat-batch-fila-buida.png, annotations_svg: assets/captures/visibilitat-batch-fila-buida.annotations.svg, manifest: context/qgis/manifests/visibilitat-batch-fila-buida.yml}
+    title: Sis execucions abans de retirar la fila inicial
+    window: *batch
+    target: *batch_target
+    mode: window
+    steps:
+      - {action: batch_confirm_expression}
+      - {action: batch_assert, rows: 6}
+    drawings:
+      - {type: callout, text: 'Retira aquesta execució buida', target_marker: box, target: {batch_cell: {row: 0, parameter: OBSERVER}}}
+  - id: visibilitat-batch-fill-down
+    output: {path: assets/captures/visibilitat-batch-fill-down.png, annotations_svg: assets/captures/visibilitat-batch-fill-down.annotations.svg, manifest: context/qgis/manifests/visibilitat-batch-fill-down.yml}
+    title: Copiar una constant amb Fill Down
+    window: *batch
+    target: *batch_target
+    mode: screen
+    steps:
+      - {action: batch_remove_rows, rows: [0]}
+      - action: batch_set_parameters
+        rows:
+          - {INPUT: MDT, BAND: 1, OBSERVER_HEIGHT: 1.7, TARGET_HEIGHT: 1.7, MAX_DISTANCE: 0, EXTRA: '-vv 1 -iv 0 -ov 255 -a_nodata 255 -cc 0.85714'}
+          - {}
+          - {}
+          - {}
+          - {}
+      - {action: batch_show_columns, parameters: [OBSERVER, EXTRA, OUTPUT], widths: {OBSERVER: 310, EXTRA: 430, OUTPUT: 330}}
+      - {action: batch_autofill_menu, parameter: EXTRA, active: fill_down}
+    drawings:
+      - {type: callout, text: 'Copia la primera constant cap avall', target_marker: box, target: {batch_autofill: EXTRA}}
+  - id: visibilitat-batch-calcula
+    output: {path: assets/captures/visibilitat-batch-calcula.png, annotations_svg: assets/captures/visibilitat-batch-calcula.annotations.svg, manifest: context/qgis/manifests/visibilitat-batch-calcula.yml}
+    title: Calcular una sortida per fila existent
+    window: *batch
+    target: *batch_target
+    mode: screen
+    steps:
+      - {action: batch_fill_down, parameter: INPUT}
+      - {action: batch_fill_down, parameter: BAND}
+      - {action: batch_fill_down, parameter: OBSERVER_HEIGHT}
+      - {action: batch_fill_down, parameter: TARGET_HEIGHT}
+      - {action: batch_fill_down, parameter: MAX_DISTANCE}
+      - {action: batch_fill_down, parameter: EXTRA}
+      - {action: batch_show_columns, parameters: [OBSERVER, OUTPUT], widths: {OBSERVER: 330, OUTPUT: 740}}
+      - {action: batch_autofill_menu, parameter: OUTPUT, active: calculate}
+    drawings:
+      - {type: callout, text: 'Calcula un nom diferent per fila', target_marker: box, target: {batch_autofill: OUTPUT}}
+  - id: visibilitat-batch-sortides
+    output: {path: assets/captures/visibilitat-batch-sortides.png, annotations_svg: assets/captures/visibilitat-batch-sortides.annotations.svg, manifest: context/qgis/manifests/visibilitat-batch-sortides.yml}
+    title: Expressió de les cinc sortides úniques
+    window: *batch
+    target: {object_name: unaltracapturaProcessingExpression}
+    mode: window
+    steps:
+      - action: batch_expression
+        parameter: OUTPUT
+        mode: calculate
+        expression: >-
+          @project_folder || '/conques-mdt-prova/conca-' ||
+          array_get(aggregate(layer := 'C', aggregate := 'array_agg', expression := "id",
+          filter := "id" IN ('C05','C11','C13','C25','C37'), order_by := "id"),
+          @row_number) || '-mdt.tif'
+    drawings: []
+  - id: visibilitat-batch-taula
+    output: {path: assets/captures/visibilitat-batch-taula.png, annotations_svg: assets/captures/visibilitat-batch-taula.annotations.svg, manifest: context/qgis/manifests/visibilitat-batch-taula.yml}
+    title: Cinc coordenades acceptades i cinc sortides
+    window: *batch
+    target: *batch_target
+    mode: window
+    steps:
+      - {action: batch_confirm_expression}
+      - action: batch_assert
+        rows: 5
+        unique_outputs: true
+        parameters:
+          OBSERVER:
+            - '344977.5,4552147.5 [EPSG:25831]'
+            - '345422.5,4551812.5 [EPSG:25831]'
+            - '345587.5,4551707.5 [EPSG:25831]'
+            - '346417.5,4550937.5 [EPSG:25831]'
+            - '347257.5,4550157.5 [EPSG:25831]'
+          EXTRA: ['-vv 1 -iv 0 -ov 255 -a_nodata 255 -cc 0.85714', '-vv 1 -iv 0 -ov 255 -a_nodata 255 -cc 0.85714', '-vv 1 -iv 0 -ov 255 -a_nodata 255 -cc 0.85714', '-vv 1 -iv 0 -ov 255 -a_nodata 255 -cc 0.85714', '-vv 1 -iv 0 -ov 255 -a_nodata 255 -cc 0.85714']
+          OBSERVER_HEIGHT: [1.7, 1.7, 1.7, 1.7, 1.7]
+          TARGET_HEIGHT: [1.7, 1.7, 1.7, 1.7, 1.7]
+    drawings:
+      - {type: rect, colour: information, shadow: false, target: {batch_header: OBSERVER}}
+      - {type: rect, colour: information, shadow: false, target: {batch_header: OUTPUT}}
+      - {type: rect, colour: example, shadow: false, target: {object_name: btnSave}}
+      - {type: rect, colour: example, shadow: false, target: {object_name: btnOpen}}
+  - id: visibilitat-batch-seleccio
+    output: {path: assets/captures/visibilitat-batch-seleccio.png, annotations_svg: assets/captures/visibilitat-batch-seleccio.annotations.svg, manifest: context/qgis/manifests/visibilitat-batch-seleccio.yml}
+    title: Seleccionar entrades entre les capes obertes
+    window: *batch
+    target: *batch_target
+    mode: screen
+    steps:
+      - {action: batch_show_columns, parameters: [INPUT, OBSERVER, OUTPUT], widths: {INPUT: 200, OBSERVER: 300, OUTPUT: 570}}
+      - {action: batch_autofill_menu, parameter: INPUT}
+    drawings:
+      - {type: callout, text: 'Selecciona capes o fitxers d’entrada', target_marker: box, target: {batch_autofill: INPUT}}
+  - id: visibilitat-extra-obert
+    output: {path: assets/captures/visibilitat-extra-obert.png, annotations_svg: assets/captures/visibilitat-extra-obert.annotations.svg, manifest: context/qgis/manifests/visibilitat-extra-obert.yml}
+    title: Camp de paràmetres addicionals desplegat
+    window: {processing_algorithm: 'gdal:viewshed', processing_mode: single}
+    target: {class_name: AlgorithmDialog}
+    mode: screen
+    camera: {mode: crop, target: {processing_parameter: EXTRA}, padding: 70}
+    steps:
+      - {action: close_popups}
+      - {action: resize_window, width: 1000, height: 820}
+      - action: open_processing_algorithm_dialog
+        algorithm: gdal:viewshed
+        show_advanced: true
+        parameters: {INPUT: MDT, BAND: 1, OBSERVER: '346892.5,4552507.5 [EPSG:25831]', OBSERVER_HEIGHT: 131.37, TARGET_HEIGHT: 1.7, MAX_DISTANCE: 0, EXTRA: '-vv 1 -iv 0 -ov 255 -a_nodata 255 -cc 0.85714'}
+    drawings: []

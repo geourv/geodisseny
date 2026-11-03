@@ -1,9 +1,9 @@
 ---
-title: "Guia docent: model ràster de cost"
+title: "Guia docent: accessibilitat — model ràster de cost"
 author: Benito Zaragozí
 lang: ca
-date: "Edició: 18 d'octubre de 2026"
-content_status: approved
+date: "Edició: 30 d'octubre de 2026"
+content_status: review
 ---
 
 # Abast i durada orientativa
@@ -23,27 +23,15 @@ Estimació pendent de contrast amb una classe, amb QGIS/GDAL/GRASS preparats, da
 # Preparar Moodle
 
 1. Crea una **Tasca** amb el nom **Accessibilitat: model ràster de cost**.
-2. Adjunta `accessibilitat-raster-vilaseca-2026-10-18-ca.zip` a **Fitxers addicionals**.
-3. Copia el bloc següent a **Descripció**, fins a «Qualificació», i afegeix la selecció anunciada a classe.
+2. Adjunta `accessibilitat-raster.zip` a **Fitxers addicionals**.
+3. Obre **`ENUNCIAT-MOODLE.md`**, lliurat al costat d'aquest PDF, i copia'n el text editable a **Descripció**. Afegeix la selecció anunciada a classe i el codi real de la pràctica. El marcador `prN` dels patrons de nom s'ha de substituir per aquell codi.
 4. Revisa la vista d'estudiant. Conserva la resolució i els projectes docents per contrastar errors de graella, passos o NoData.
-
-## Enunciat per copiar a la descripció
-
-**Dades.** Descarregueu `accessibilitat-raster-vilaseca-2026-10-18-ca.zip`. Obriu inici de `accessibilitat-vilaseca.gpkg` amb QGIS3.44, GDAL i GRASS, i llegiu `LLEGIU-ME.pdf`. Manteniu O/D, EPSG:25831/NONE i graella5m.
-
-**Treball de classe.** El professor indicarà els apartats obligatoris del70%: proximitat, reclassificació de cobertes, vials de pes1, barreres/passos, r.cost/r.path i comparació de longitud/cost. La guia completa no obliga a lliurar tots els passos. Comproveu alineació i la prioritat pas → barrera → vial → coberta.
-
-**Ampliacions per aspirar a l'excel·lent.** Compareu el model només de cobertes amb el que integra vials, o canvieu pesos/resolució o zona amb una referència i controls. Què passa quan la coberta generalitza un camí dins d'un conreu? Desenvolupeu una aplicació geogràfica i identifiqueu les dades que faltaria contrastar.
-
-**Informe i lliurament.** Entregueu vectors en GeoPackage, projecte relatiu, TIFF requerits i PDF amb pregunta, fonts, decisions, controls, mapes/taula i conclusions. Podeu enregistrar la pantalla i extreure captures llegibles i comentades; el vídeo només es lliura si el professor ho indica. Comproveu l'obertura des d'una altra carpeta.
-
-**Qualificació.** 70% apartats indicats a classe;20% ampliacions;10% informe, captures, mapes i organització. Es valoren pregunta, controls i interpretació, no el nombre d'operacions.
 
 # Graella, cobertes i vials
 
 Graella EPSG:25831/NONE, X 343000–346000 i Y 4552000–4555200; cel·la de 5×5 m i 600×640 cel·les.
 
-O = (344407; 4553668,36) m; D = (344473,01; 4554030,72) m. La proximitat entre centres és 370,742498 m; la recta vectorial, 368,323349 m.
+O = (344407; 4553668,36) m; D = (344473,01; 4554030,72) m. La proximitat entre centres és d'uns 370,74 m; la recta vectorial, 368,32 m.
 
 Rasteritza **classe** de cobertes i reclassifica amb límits inclusius. Pesos1/2/3/4/6 i99com a codi de barrera. El fons desconegut0 es recodifica a99; no s'interpreta com cost zero. La base de cobertes es conserva per contrastar el model.
 
@@ -89,8 +77,8 @@ r.cost utilitza cost_cella, Origen O, nuls conservats, cost dels nuls buit i sen
 
 | Magnitud | Obert | Tancat |
 | --- | ---: | ---: |
-| Longitud del camí | 474,766594m | 1920,990258m |
-| Cost acumulat a D | 474,766594m ponderats | 2840,376259m ponderats |
+| Longitud del camí | 474,77 m | 1.920,99 m |
+| Cost acumulat a D | 474,77 m ponderats | 2.840,38 m ponderats |
 | Cel·les excloses | 16.987 | 17.078 |
 
 Table: Controls de referència del model amb vials integrats.
@@ -101,8 +89,16 @@ El camí obert recorre cel·les de pes1; per això cost i longitud coincideixen.
 
 # Projectes, revisió i fonts
 
-El docent conserva les vistes00/01/02/05/06/07amb les dependències: inici, distàncies, xarxa de contrast, friccions i cost. Intermedis de cobertes, vials, passos, barrera i direccions permeten reprendre la diagnosi sense recalcular durant la classe.
+La lectura `LLEGIU-ME.pdf` és a l'arrel i els recursos a `data/`. A `data/projectes/`, el docent conserva les vistes00/01/02/05/06/07: inici, distàncies, xarxa de contrast, friccions i cost. Els vectors es guarden als GeoPackage; els ràsters, com a GeoTIFF sota `data/rasters/`. Les dependències són relatives i el dibuix segueix el panell Capes. Intermedis de cobertes, vials, passos, barrera i direccions permeten reprendre la diagnosi sense recalcular durant la classe.
 
 Revisa els apartats anunciats, les quatre màscares, la graella, NoData, les unitats i la interpretació. En una altra zona, demana controls propis. Les ampliacions han d'explicar què es manté i què canvia; les captures d'un vídeo són evidències seleccionades, no un informe complet.
+
+## Selecció final i portabilitat
+
+L'alumnat preserva `data/`, treballa amb una còpia del QGZ i intermedis a `sandbox/` i prepara `dist/` només amb els lliurables. Els grups del panell Capes no substitueixen el desament físic. Les vistes docents conserven més fases de diagnosi que les que necessàriament s'assignen a cada estudiant.
+
+Comprova un GeoPackage **nou** amb els vectors seleccionats, un QGZ **extern** relatiu, l'informe PDF i els GeoTIFF necessaris a `rasters/`, amb noms codi–tema–cognoms. La selecció de TIFF ha de permetre representar i revisar els apartats demanats; no exigeix totes les alternatives descartades. Mantén CRS, graella, unitats i NoData en preparar la còpia final.
+
+Reobre una carpeta traslladada o un ZIP extret sense xarxa: les fonts de dades han de ser dins de la còpia, sense dependències de `data/` o `sandbox/` originals. Contrasta valors, estils, etiquetes i ordre. Si es manté el WMS, incorpora l'XML i comprova el context local amb el servei desactivat.
 
 Fonts: [MCSC2024](https://www.icgc.cat/ca/Geoinformacio-i-mapes/Mapes/Mapa-de-cobertes-del-sol-de-Catalunya), [RTT2024](https://www.icgc.cat/ca/Geoinformacio-i-mapes/Dades-i-productes/Geoinformacio-cartografica/Referencial-Topografic-Territorial), ortofoto2025/límit20/1/2026, [condicions ICGC](https://www.icgc.cat/condicions), [r.cost](https://grass.osgeo.org/grass84/manuals/r.cost.html), [r.path](https://grass.osgeo.org/grass84/manuals/r.path.html).

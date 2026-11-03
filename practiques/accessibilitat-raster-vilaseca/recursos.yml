@@ -1,7 +1,9 @@
 version: 1
 practica: accessibilitat-raster-vilaseca
 idioma: ca
-edicio: '2026-10-18'
+edicio: '2026-10-30'
+nom_practica: 'Accessibilitat: model ràster de cost'
+lliurament_slug: accessibilitat-raster
 calcul_comu: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01
 preparador_comu: practiques/accessibilitat-vilaseca/preparar.py
 fonts_documents:
@@ -17,4 +19,7 @@ runtime_qgis: sha256:1003721d96abe9607d8337b36851f9b29f84c2f8f92b377d1a73ff03c9d
 runtime_pdf: sha256:618163d3f924439792b2306617bd9612f566c5881166102fa544b4e782d569fa
 fonts: [ICGC MCSC2024, RTT2024, limit municipal 2026-01-20, ortofoto2025]
 friccio: passos admesos; barrera i P2 tancat; eixos RTT amb pes1; cobertes
-human_approved: true
+human_approved: false
+preparador_lliurament: practiques/lliurament-geodisseny.py
+enunciat_moodle: ca/docent/ENUNCIAT-MOODLE.md
+context_ortofoto: retall local i WMS ICGC2025 agrupats; servei opcional

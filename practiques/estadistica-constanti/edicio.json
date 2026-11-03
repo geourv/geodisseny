@@ -2,7 +2,7 @@
   "schema_version": 1,
   "kind": "unaltraweb-practice-edition",
   "slug": "estadistica-constanti",
-  "version": "2026-10-18",
+  "version": "2026-10-30",
   "language": "ca",
   "gis": {
     "profile": "qgis-practice-v2",
@@ -20,7 +20,7 @@
   },
   "selection": {"alumnat": ["initial-data"], "docent": ["resolved-data", "kernel-500", "kernel-1500"]},
   "readings": {
-    "alumnat": {"source": "practiques/estadistica-constanti/ca/alumnat/LLEGIU-ME.md", "approved_sha256": "833d2680ce8d5b79820260b6ac803db6168ed2049b48e695a65da3d40b0c2f7a"},
-    "docent": {"source": "practiques/estadistica-constanti/ca/docent/LLEGIU-ME.md", "approved_sha256": "a7bd2c58f1021a429a8584cd4ca5a9d415fbab9ea7ef3c9bf0a185cceb74cce5"}
+    "alumnat": {"source": "practiques/estadistica-constanti/ca/alumnat/LLEGIU-ME.md", "approved_sha256": "6d2686be12fce6bd34932d44a5070c88f67baa67b4e22be4308ad175692b18f0"},
+    "docent": {"source": "practiques/estadistica-constanti/ca/docent/LLEGIU-ME.md", "approved_sha256": "3aa5b930b69252b29ff238dca3f5a3cf67335a389c6804f5a6ae586786c5076b"}
   }
 }

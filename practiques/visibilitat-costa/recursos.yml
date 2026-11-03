@@ -2,7 +2,10 @@ schema_version: 1
 activity: visibilitat-costa
 language: ca
 scope: torxa de la Canonja, TV-3148 i recinte petroquímic
-reading_status: approved
+reading_status: review
+edition: '2026-10-30'
+title: Anàlisi d'intervisibilitat
+handoff_slug: analisi-intervisibilitat
 runtime:
   producer: unaltracaptura-qgis
   version: 0.6.0
@@ -13,9 +16,18 @@ runtime:
   network: none
 readings:
   provider: unaltraweb
-  version: 0.7.2
+  version: 0.7.4
   template: private-practice-a4-landscape
   image: sha256:618163d3f924439792b2306617bd9612f566c5881166102fa544b4e782d569fa
+captures:
+  provider: unaltracaptura-qgis
+  version: 0.7.0
+  revision: d6f9511e1fe4509d7d3361bcae64500b932a93b9
+  controller: sha256:45fd7b5ec04a6a5ec44ca5250ccc64ec548e4637f212933b3030387caf612233
+  image: sha256:1003721d96abe9607d8337b36851f9b29f84c2f8f92b377d1a73ff03c9d15cd2
+  selection: author-approved one-off public CLI capture; global MCP/helper selections unchanged
+  recipe: context/qgis/visibilitat-batch.yml
+  verification_source: practiques/visibilitat-costa/comprovar-prerequisits-lot.py
 retained_source:
   path: tmp/dades-docents/practica-visibilitat-costa-20261002-r3.zip
   sha256: b7f2c5f38c8ee45cca592ce35db4aaeac77a413f6ace210948e47e338c3369cc
@@ -42,7 +54,10 @@ resources:
     node: 7682543312
     version: 1
 delivery:
-  student: prepared inputs, embedded initial project, local font and LLEGIU-ME.pdf
-  teacher: initial inputs, exact retained classroom results, embedded teacher project and worked reading
+  student: root LLEGIU-ME.pdf, prepared vector GeoPackage, GeoTIFF rasters, data/inici.qgz and local font
+  teacher: initial inputs, exact retained classroom results, data/docent.qgz and worked reading
   reconstruction: retained separately, including the 179 original viewshed executions and their evidence
-  human_approved: true
+  human_approved: false
+  current_handoff_generator: practiques/lliurament-geodisseny.py
+  moodle_statement: ca/docent/ENUNCIAT-MOODLE.md
+  orthophoto_context: local snapshot and optional ICGC2025 WMS grouped together

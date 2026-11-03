@@ -1,9 +1,9 @@
 ---
-title: "Resolució docent: visibilitat de torxa, carretera i recinte petroquímic"
+title: "Guia docent: anàlisi d'intervisibilitat"
 author: Benito Zaragozí
 lang: ca
-date: "Edició: 18 d'octubre de 2026"
-content_status: approved
+date: "Edició: 30 d'octubre de 2026"
+content_status: review
 ---
 
 # Preparar la tasca de Moodle
@@ -20,33 +20,10 @@ Table: Estimacions orientatives segons la selecció dels tres blocs.
 
 Preparació docent orientativa: 45–60 min amb QGIS/GDAL preparats, dades locals i resultats de referència disponibles. Les estimacions no provenen d'una prova d'aula; no inclouen instal·lacions ni descàrregues. Selecciona els apartats del 70% segons el temps disponible. Els lots repeteixen càlculs, però configurar-los, controlar cobertura i interpretar denominadors també demana temps. Les sis pàgines de la resolució anterior eren un resum de controls, no una mesura de durada.
 
-1. Activa l'edició del curs i tria **Afegir una activitat o un recurs → Tasca**. Posa-hi el nom **Visibilitat: torxa, carretera i recinte petroquímic**.
-2. A **Descripció**, enganxa el bloc següent, des de «Dades de partida» fins al final de «Qualificació».
-3. A **Fitxers addicionals**, adjunta **`visibilitat-costa-2026-10-18-ca.zip`**, el paquet d'inici. Inclou les dades locals i el `LLEGIU-ME.pdf` de l'alumnat.
+1. Activa l'edició del curs i tria **Afegir una activitat o un recurs → Tasca**. Posa-hi el nom **Anàlisi d'intervisibilitat**.
+2. Obre **`ENUNCIAT-MOODLE.md`**, el document editable lliurat al costat d'aquest PDF. Copia'n el text a **Descripció** i concreta els apartats seleccionats a classe i el codi real de pràctica que substituirà `prN` als patrons de nom.
+3. A **Fitxers addicionals**, adjunta **`analisi-intervisibilitat.zip`**, el paquet d'inici. Inclou les dades locals i el `LLEGIU-ME.pdf` de l'alumnat.
 4. Revisa la tasca amb la vista d'estudiant i comprova la descàrrega. La resolució i els resultats del paquet docent permeten reprendre les diferents fases durant la classe.
-
-## Enunciat per copiar a la descripció
-
-**Dades de partida.** Descarregueu `visibilitat-costa-2026-10-18-ca.zip`, adjunt a aquesta tasca, i descomprimiu-lo en una carpeta pròpia, conservant-ne l'estructura. Llegiu `LLEGIU-ME.pdf` i obriu el projecte **inici** de `payload/data/visibilitat-costa.gpkg` amb QGIS 3.44 i GDAL. El paquet inclou MDT, MDS, domini comparable, ortofoto, torxa T, carretera i mostres, receptors i coberta industrial. Conserveu els recursos de `payload/data/fonts/`.
-
-**Treball de classe.** El professor indicarà a classe quins apartats, exercicis i comprovacions són obligatoris dins del **70% de la qualificació** i ho recollirà en aquesta tasca. La guia desenvolupa la progressió completa: no tots els passos són automàticament obligatoris. Els blocs que es poden seleccionar estudien si es veu una torxa de la Canonja, quines posicions es veuen al llarg de la TV-3148 i des d'on es veu alguna part del recinte petroquímic:
-
-1. **Punt.** Calculeu la conca de T sobre MDT i contrasteu-la amb MDS mantenint la mateixa cota dels receptors. Consulteu R1–R5 i distingiu visibilitat, ocultació i lloc no calculat.
-2. **Carretera.** Reviseu el mostreig de 37 posicions. Feu les execucions individuals indicades a la guia i prepareu el lot i la suma de conques. Distingiu territori visible des de la carretera i carretera des d'on es veu T; declareu la cobertura de les posicions comparables entre MDT/MDS.
-3. **Àrea.** Generalitzeu la coberta amb el buffer positiu i després el negatiu. Creeu la graella de 250 m, retalleu-la, mostregeu els fragments i conserveu-ne els pesos d'àrea. Prepareu els lots i compareu nombre de mostres visibles, percentatge ponderat i resposta d'alguna part del recinte o T.
-4. **Interpretació.** Expliqueu com canvia la pregunta quan es passa de punt a línia i àrea. Identifiqueu superfície, altures, domini, denominadors i unitats de cada resultat.
-
-**Ampliacions per aspirar a l'excel·lent.** Podeu comparar altures o receptors, repetir el mostreig amb altres intervals o graelles, provar altres distàncies de tancament del recinte, o estudiar un mirador, itinerari o objectiu en una zona alternativa. Manteniu una referència i canvieu un paràmetre cada vegada. Declareu cotes, pesos i domini perquè la comparació sigui interpretable. Justifiqueu què heu après; fer més conques no substitueix una pregunta ni els obligatoris.
-
-**Preguntes obertes i aplicacions.** Quins resultats persisteixen quan canvia el mostreig? Pot una graella ometre una estructura alta? Quins punts seleccionaríeu per contrastar la visió al camp? Desenvolupeu una aplicació geogràfica, com comparar un itinerari o preparar observacions de paisatge, i expliqueu què falta per relacionar visió, freqüentació, percepció o impacte. En una zona alternativa acordada amb el professor, recalculeu altures, domini i controls propis.
-
-**Informe.** Presenteu pregunta i àmbit, dades i decisions, procediment amb controls, mapes i taules dels apartats seleccionats, i interpretació amb límits. Podeu enregistrar fragments de la pantalla i després pausar el vídeo per desar captures de configuració i resultats importants. Comproveu la llegibilitat, numereu-les i expliqueu què demostra cadascuna; exporteu els mapes finals amb llegenda, escala i unitats. El vídeo és una ajuda, no un lliurament obligatori tret que el professor ho indiqui. La guia detalla com preparar l'informe.
-
-**Lliurament.** Entregueu `visibilitat-costa-cognom.gpkg`, amb els vectors generats; `visibilitat-costa-cognom.qgz`, amb rutes relatives; els TIFF de càlcul; i `visibilitat-costa-cognom.pdf`, amb l'informe. Manteniu els fitxers referenciats pel projecte dins de la carpeta de treball. En una zona alternativa, identifiqueu el cas al nom dels fitxers i conserveu fonts i controls propis.
-
-**Comprovacions.** Reviseu EPSG:25831/NONE, graella de 5 m, extensió, bandes, cotes, altures i NoData. Comproveu l'ordre dels buffers, els pesos i la cobertura dels observadors. NoData no és ocultació; una visió geomètrica no mesura persones exposades ni impacte paisatgístic. Comproveu que el projecte s'obre després de moure la carpeta completa.
-
-**Qualificació.** El **70%** correspon als apartats obligatoris que indicarà el professor. Les ampliacions permeten aspirar a l'excel·lent segons els criteris comunicats a classe i recollits en aquesta tasca. Es valoren pregunta, controls i interpretació, no només el nombre de conques. No substitueixen els obligatoris ni garanteixen una nota per haver-les intentat.
 
 # Preparació i progressió
 
@@ -54,24 +31,28 @@ El recorregut és **T i parelles receptor–torxa → carretera → àrea més T
 
 Selecciona els apartats que entraran al 70% obligatori, comunica'ls a classe i deixa la mateixa selecció a Moodle. Distingeix demostració docent, execució individual i repetició per lots, segons el temps disponible. Per orientar una ampliació, demana pregunta, comparació de referència, registre de paràmetres i interpretació; una altra zona necessita controls propis.
 
-Conserva el GeoPackage d'inici i obre el projecte **docent** des de `payload/data/visibilitat-costa-docent.gpkg`. Els resultats de referència corresponen al paquet costa r3 del 2/10/2026, amb QGIS 3.44.11/GDAL 3.10.3. EPSG:25831/NONE; ràsters de càlcul a 5 m i recursos locals.
+`LLEGIU-ME.pdf` és a l'arrel i els recursos a `data/`. Obre **`data/docent.qgz`** i conserva tots els GeoPackage vectorials, GeoTIFF de `data/rasters/` i recursos locals. El dibuix segueix el panell Capes. Els resultats de referència corresponen al paquet costa r3 del 2/10/2026, amb QGIS 3.44.11/GDAL 3.10.3. EPSG:25831/NONE; ràsters de càlcul a 5 m.
+
+Per seguir el treball de l'alumnat, preserva les entrades de `data/` i desa la còpia del projecte, proves i lots a `sandbox/`. La selecció final es prepara separadament a `dist/`. Els grups de capes organitzen la vista, però no mouen fitxers. Les captures il·lustren una sessió de referència amb rutes locals; el valor de `@project_folder` s'ha de comprovar a cada ubicació.
 
 # Geometries, cotes i cobertura
 
 | Control | Valor |
 | --- | --- |
 | T ràster | (346892,5; 4552507,5) m |
-| MDT / pic MDS | 20,941999 /151,311996 m |
-| Cota T del model | 152,311996 m, pic +1 m |
-| Altura relativa MDT /MDS | 131,369997 /1 m |
-| TV-3148 | 3.652,272633 m; 37 intervals |
-| Pas /inici | 98,710071 /49,355036 m |
+| MDT / pic MDS | 20,94 / 151,31 m |
+| Cota T del model | 152,31 m, pic +1 m |
+| Altura relativa MDT / MDS | 131,37 / 1 m |
+| TV-3148 | 3.652,27 m; 37 intervals |
+| Pas / inici | 98,71 / 49,36 m |
 | Coberta MCSC original | id1459998, categoria347, 162,59 ha, 19 forats |
-| Recinte de +150/−150 m | 2.229.408,741960 m², cap forat |
+| Recinte de +150/−150 m | 2.229.408,74 m², cap forat |
 | Mostreig d'àrea | 57 fragments de graella de250 m |
 | Domini comparable | 3.490.455 cel·les |
 
 Table: Controls comuns de la pràctica.
+
+Les magnituds de la taula estan arrodonides per a la lectura. Les dades i els controls tècnics conserven els valors de procedència; els decimals mostrats no acrediten aquesta exactitud sobre el terreny.
 
 L'MDS màxim pot eixamplar obstacles estrets. El metre sobre la superfície és un desplaçament de model, no una mesura de flama. Els buits del mar s'han tractat a 0 m; els altres buits i les trajectòries afectades per elevacions desconegudes queden fora del domini. NoData no és ocultació.
 
@@ -91,6 +72,20 @@ Table: Respostes amb el mateix domini; el recompte de mostres i el percentatge d
 
 Sobre MDS, el mode DEM retorna cota absoluta mínima i ignora l'altura de destinació. Comparar-la amb **MDT +1,7 m**, no amb ulls damunt de la teulada, preserva els receptors entre models. El mapa d'alguna part ha d'incloure tota la conca de T.
 
+## Mostrar els avançats i declarar NoData
+
+Al diàleg individual, desplega el triangle **Advanced Parameters** i localitza **Additional command-line parameters**, `EXTRA`. Escriu en un sol camp, amb espais i sense cometes:
+
+```text
+-vv 1 -iv 0 -ov 255 -a_nodata 255 -cc 0.85714
+```
+
+`-vv 1` substitueix el valor visible per defecte 255; `-iv 0` conserva els ocults com a dades vàlides; `-a_nodata 255` declara el codi de NoData de sortida. `-ov 255` és el valor fora d'abast, no la declaració de NoData. El formulari principal de Viewshed no ofereix una casella NoData pròpia. Comprova l'ordre al registre i la banda crua Byte/NoData 255 a les propietats de la capa. No confonguis aquest codi amb el de la sortida posterior de Calculadora ràster.
+
+![Paràmetres addicionals de Viewshed amb el camp desplegat i la línia completa d'opcions. L'entrada de NoData es fa al mateix camp de text que els codis visible i ocult.](captures/visibilitat-extra-obert.png)
+
+Per al mode de cota mínima, **substitueix** la línia per `-om DEM -cc 0.85714 -a_nodata -9999`: sortida Float64 i NoData −9999. Al lot, les opcions avançades apareixen com a columnes: prem **Toggle advanced mode** a la barra superior i desplaça't horitzontalment fins a `EXTRA`. Copia'l amb Fill Down només quan sigui una constant del lot.
+
 | Receptor | Mostra | T MDT | T MDS |
 | --- | --- | ---: | ---: |
 | R1 | C05 | 1 | 1 |
@@ -105,6 +100,18 @@ Els perfils independents a 0,5 m confirmen els signes: marge MDS de R1 aproximad
 
 # Carretera: recompte i denominador
 
+```{=latex}
+\begin{manualcallout}{ManualCalloutWarning}{Alerta}
+```
+
+**Preparació dels camps.** Punts al llarg de la geometria no afegeix automàticament `x` i `y`. La guia diferencia la prova de mostreig de la capa `mostres_carretera` ja preparada, que s'utilitza en el lot guiat. Si es treballa amb punts nous, mostra **Afegeix camps X/Y a la capa**, `native:addxyfields`, amb **EPSG:25831 i prefix buit**: calcula les coordenades de tots els registres de cop. El valor inicial EPSG:4326 donaria coordenades geogràfiques, inadequades per a les expressions UTM de la pràctica.
+
+```{=latex}
+\end{manualcallout}
+```
+
+La capa nova necessita també identificadors únics i ordenació coherent. Afegir X/Y no ajusta els punts als centres de cel·la ni crea pesos, altures o cobertura MDT/MDS. Les referències numèriques següents corresponen a les mostres preparades. Abans d'autoemplenar, demana obrir la taula i identificar `id`, `x` i `y`; no obliguis a transcriure 37 parells de coordenades.
+
 - La suma MDT de **37 conques** té 1.461.016 cel·les amb alguna visió i màxim 33.
 - Un valor12 representa 1.184,52 m i 32,43% del recorregut mostrejat.
 - T amb MDT: 34/37 visibles, 3.356,14 m, 91,89%.
@@ -114,7 +121,80 @@ Els perfils independents a 0,5 m confirmen els signes: marge MDS de R1 aproximad
 
 Les9 desconegudes representen888,39 m. Sobre totes les37, els límits de visió són18,92% i43,24%; no substituir-les perzeros. La suma MDT de37 i el contrast MDT/MDS de28 estan diferenciats al projecte i als noms de capa.
 
-Viewshed té un origen per execució. El lot GUI repeteix37files; encara no emmascara ni suma. Les tres execucions individuals de la guia serveixen per comprendre el procediment. No exigir179 introduccions manuals de coordenades per reproduir els quatre lots històrics.
+## Presentar els lots per primera vegada
+
+L'opció de procés per lots apareix al menú contextual de moltes eines i al botó inferior dels diàlegs. Relaciona-la amb opcions que l'alumnat pot haver vist abans sense utilitzar-les. La guia introdueix aquí la taula de manera autònoma: **una fila és una execució; una columna és un paràmetre o una sortida**.
+
+![Taula plena del lot de cinc observadors, amb coordenades acceptades i sortides diferents. Els requadres verds identifiquen els botons de carpeta i disc que permeten recuperar i desar el .batch. Es mostren les columnes de coordenades i sortida per fer-les llegibles.](captures/visibilitat-batch-taula.png)
+
+Fes primer una demostració amb **cinc punts de carretera: C05, C11, C13, C25 i C37**. No són R1–R5: R5 queda fora del retall. La guia mostra les cinc coordenades, l'expressió filtrada i els noms de sortida; la prova serveix per comprovar correspondències, no per afegir cinc observadors al recompte de 37.
+
+Hi ha dues incidències diferents que cal mostrar i distingir:
+
+- **Array correcte però cel·les a `0,0`.** Amb **Calculate by Expression**, enganxar l'array sencer en una cel·la de punt pot convertir-lo a zero. La guia utilitza **Add Values by Expression** per afegir una fila per element. Per recalcular files existents, l'expressió ha de retornar **un sol punt**, amb `array_get(aggregate(...), @row_number)`; l'índex comença en 0.
+- **Fila inicial buida conservada.** En QGIS 3.44.11, Add Values afegeix cinc coordenades després de la fila buida inicial: queden sis execucions. Retira aquella fila i comprova'n cinc. Amb 37 valors, queden 38 abans de retirar-la. No n'hi ha prou amb revisar la previsualització de l'expressió: cal llegir les coordenades ja escrites a la taula.
+
+| Columna | Tractament al lot MDT |
+| --- | --- |
+| Entrada, banda | MDT/1; copiar cap avall |
+| Altures i abast | 1,7/1,7 m i 0; copiar cap avall |
+| Opcions | Codis 1/0/255 i curvatura 0,85714; copiar cap avall |
+| Observador | Una coordenada diferent per fila |
+| Sortida | Un TIFF diferent per observador |
+
+Table: Valors comuns i variables que l'alumnat ha de distingir.
+
+Mostra **Autofill… → Fill Down** en les columnes comunes. A la sortida, la guia utilitza Calculate by Expression amb el mateix filtre i ordre d'IDs que les coordenades, `@row_number` i `@project_folder`. Desa abans el projecte a `sandbox/intervisibilitat.qgz` i crea les carpetes. La prova de 5 punts i el lot de 37 han de tenir, respectivament, 5 i 37 rutes diferents. Fill with numbers és una alternativa si es conserva la correspondència observador–fitxer.
+
+Relaciona cada opció amb la seva funció: **Omple cap avall** copia una constant; **Calcula segons una expressió** retorna un valor per fila existent; **Selecciona valors segons una expressió** correspon a Add Values by Expression i afegeix files a partir d'un array. En la columna d'entrada també es poden seleccionar capes obertes o fitxers; no és seleccionar objectes de la capa C.
+
+![Selecciona valors segons una expressió, al menú de les coordenades, afegeix una fila per element. L'etiqueta explica la funció de l'opció seleccionada.](captures/visibilitat-batch-autofill.png)
+
+![Omple cap avall copia el primer valor d'una columna comuna. El menú mostrat correspon als paràmetres addicionals, no als noms de sortida.](captures/visibilitat-batch-fill-down.png)
+
+![Calcula segons una expressió, al menú de Sortida, genera una destinació per fila existent. L'expressió ha d'identificar l'observador de la mateixa fila.](captures/visibilitat-batch-calcula.png)
+
+```{=latex}
+\begin{manualcallout}{ManualCalloutWarning}{Alerta}
+```
+
+**Rutes a Windows.** Comprova una destinació completa abans d'executar. Una carpeta aportada com `C:\Users\…` i un sufix amb `/` poden deixar separadors barrejats. La lectura d'inici dona l'expressió que normalitza tota la ruta a `\` amb `replace`; en una cadena de QGIS, `'\\'` representa una barra invertida. Cal desar el QGZ, crear les carpetes i recalcular les cel·les antigues, també després de corregir l'expressió.
+
+```{=latex}
+\end{manualcallout}
+```
+
+Comprova el valor de `@project_folder` abans d'emplenar: ha de ser una carpeta ordinària. Un projecte incrustat d'una edició anterior pot retornar `geopackage:/…`; aquesta URI no serveix com a ruta de sortida GeoTIFF. Desa com a `.qgz` i recalcula les cel·les ja emplenades. Separar els ràsters no arregla per si sol una ruta antiga. Revisa el codi de sortida de GDAL, l'existència dels TIFF i la seva validesa, també si el resum de Processament anuncia que l'algorisme ha acabat.
+
+Abans d'executar, demana identificar els errors: comptar Autofill com una execució, deixar una fila buida o a zero, afegir 37 files al darrere de les cinc de prova, desordenar altures i coordenades o copiar un únic nom de sortida amb Fill Down. La configuració `.batch` de QGIS 3.44.11 té contingut JSON, però no desa dades ni resultats; després de moure carpetes cal revisar rutes.
+
+Viewshed té un origen per execució. El lot complet repeteix 37 files; **encara no emmascara ni suma**. La prova individual, el lot gràfic i la cadena posterior s'han de distingir. No exigeixis 179 introduccions manuals de coordenades per reproduir els quatre lots històrics.
+
+## Recuperar el lot i conservar evidències
+
+Mostra els botons **Desa el lot** i **Obre el lot** a la barra de la taula. Desa la configuració `.batch` després de comprovar les files i abans d'executar. Per recuperar-la, s'obre la taula de lots de Viewshed i es carrega el fitxer amb el botó de carpeta. Si hi ha hagut una interrupció, cal distingir TIFF correctes i files pendents abans de tornar a calcular.
+
+El fitxer és text JSON. En aquesta versió, `format` val `batch_3.40` i `rows` conté `PARAMETERS` i `OUTPUTS` per a cada execució. Es poden preparar sèries de valors amb un full de càlcul o un editor; per editar el JSON complet, parteix d'un fitxer desat per la mateixa versió i comprova'n la càrrega. Un CSV reanomenat no és un `.batch` vàlid. A JSON, les barres invertides de Windows necessiten l'escapament `\\`.
+
+Quan s'hagin fet lots, conserva com a evidències el `.batch`, les expressions emprades i una captura de la taula plena, juntament amb el registre i els controls dels resultats. Serveixen per revisar el procediment, també amb Unaltramesa. El `.batch` conté valors i rutes, no dades ni resultats, i no conserva l'historial de les expressions d'autoemplenat; no acredita per si sol una execució correcta.
+
+Desa l'original del `.batch` a `sandbox/`. Després de traslladar el treball, recupera'n una còpia: reassigna entrades, crea destinacions noves i recalcula totes les sortides amb la nova carpeta del projecte. Les rutes relatives del QGZ no actualitzen les adreces absolutes guardades al lot. Comprova les files sense executar-les; una reexecució posterior no ha de sobreescriure resultats comprovats. Mantén identificades la configuració original i la còpia corregida.
+
+## Acumular tots els TIFF en una sola operació
+
+Obre **Estadístiques de cel·la**, `native:cellstatistics`, en execució normal. A la llista d'entrades selecciona els cinc TIFF de prova o els 37 definitius, **mai tots dos conjunts junts**. Tria **Suma**, no Count/Recompte, desactiva Ignora NoData i usa una conca del mateix conjunt com a referència. A avançats fixa NoData 255. Aplica Domini una vegada a la suma crua; no cal sumar fitxers de dos en dos ni escriure 37 termes a la calculadora. Merge/Fusiona és un mosaic, no aquesta acumulació.
+
+![Configuració de la suma de les cinc conques de prova: cinc entrades, Suma i referència Conca C05. El diàleg combina fitxers en una execució normal; no és una taula de lots. Desplega els avançats per fixar NoData 255 abans d'executar.](captures/visibilitat-lots-suma.png){width=75% height=420pt}
+
+| Control de la suma MDT dins de Domini | Cinc punts de prova | Carretera completa |
+| --- | ---: | ---: |
+| Entrades | 5 | 37 |
+| Màxim observat | 4 | 33 |
+| Cel·les amb alguna visió | 1.307.684 | 1.461.016 |
+
+Table: Cinc punts C05/C11/C13/C25/C37 i conjunt complet, amb els mateixos paràmetres.
+
+El percentatge es calcula amb una sola expressió `100 * suma / n`: n=5, 37 o 28 segons el conjunt. Per al lot MDS de carretera, la guia filtra `calculable=1`, autocompleta 28 coordenades i 28 altures `h_mds_m` en el mateix ordre i genera cotes mínimes. Un lot posterior de Calculadora ràster de GDAL les converteix en binaris amb `B * ((A + 1.7) >= C)` (A=MDT, B=Domini, C=cota mínima). Només aquests binaris s'acumulen. El contrast amb MDT també utilitza les mateixes 28 posicions.
 
 # Recinte, pesos i torxa singular
 
@@ -129,6 +209,10 @@ Table: Alternatives per discutir l'escala de generalització.
 
 Els57 fragments representen el recinte generalitzat, inclosos entrants incorporats. Els pesos són les seues àrees. A és1m sobre l'MDS local; en MDT es manté la mateixa cota absoluta mitjançant `h_mdt_m`.
 
+La guia desenvolupa també el lot de 57 punts: `id_lot` únic A01–A57, coordenades als centres de cel·la, pesos heretats dels fragments i altures obtingudes mostrejant MDT/MDS. L'expressió de les coordenades retorna un array; les d'altura i sortida retornen un valor per fila amb `array_get`. Mantén el mateix `order_by := "id_lot"` a totes les columnes. Sobre MDS, calcula cota mínima amb altura 1 m i converteix a binari mantenint els receptors a MDT +1,7 m.
+
+Per ponderar, **no multipliquis la suma final per un únic pes**. El lot de Calculadora ràster de GDAL calcula cada binari pel seu pes, amb Float32 i NoData −9999. Estadístiques de cel·la suma després els 57 ràsters ponderats en una operació; el percentatge divideix per la suma exacta dels pesos (aproximadament 2.229.408,74 m²). Per al recompte sense pes, suma els 57 binaris, amb NoData 255. El tipus Byte no és adequat per a les superfícies ponderades.
+
 Amb MDS, R1 dona **T=1, alguna part=1 i A=0%**: es veu la torxa però cap mostra interior. Afegir-la al binari evita perdre una estructura singular; no li assigna un pes d'àrea arbitrari. Demanar que l'explicació diferencie resposta binària, nombre de mostres i fracció ponderada.
 
 # Revisió del treball i fonts
@@ -136,6 +220,14 @@ Amb MDS, R1 dona **T=1, alguna part=1 i A=0%**: es veu la torxa però cap mostra
 Comprovar CRS/NONE, banda, codis de NoData, extensió, altures, ordre dels buffers, geometria vàlida, pesos, cobertura d'observadors i rutes relatives. Les captures acrediten configuració i representació; els controls del paquet històric acrediten càlcul, no una seqüència manual clic a clic.
 
 Revisar els apartats obligatoris anunciats i la comparabilitat de les ampliacions: cotes, domini, pesos i denominadors han de permetre entendre què ha canviat. Demanar una aplicació geogràfica proporcionada i una proposta de contrast al camp. Les captures extretes d'un vídeo són evidències seleccionades; la gravació completa no substitueix l'informe ni els controls numèrics.
+
+## Selecció final i reobertura
+
+El lliurament es prepara a `dist/`: GeoPackage **nou** amb els vectors seleccionats, QGZ **extern** relatiu, informe PDF, GeoTIFF necessaris i evidències dels lots utilitzats. Carpeta/ZIP i fitxers principals segueixen codi–tema–cognoms. No demana automàticament totes les conques individuals, proves o alternatives; la selecció ha de permetre interpretar i revisar els apartats assignats.
+
+El projecte final carrega només dades i recursos inclosos a la selecció; es retiren les seves referències a `data/` i `sandbox/`, sense esborrar els originals. La configuració `.batch` original és una traça de l'execució: una nota ha de relacionar-ne les rutes amb els resultats lliurats. Una còpia per reexecutar requereix rutes revisades i destinacions noves; no s'infereix portabilitat de la configuració perquè el mapa s'obri.
+
+Obre una còpia traslladada o un ZIP extret sense xarxa i revisa capes, dades, estils, etiquetes, fonts tipogràfiques i ordre. Les fonts de dades del QGZ han de ser dins de la còpia. Conserva la font local si és necessària i l'XML si es manté el WMS opcional, amb el context local disponible offline.
 
 Fonts: ICGC elevacions LiDAR2021–2023, MCSC/RTT2024 i ortofoto WMS2025; OSM node7682543312v1. [Condicions ICGC](https://www.icgc.cat/condicions), [OSM](https://www.openstreetmap.org/copyright), [GDAL Viewshed](https://gdal.org/en/stable/programs/gdal_viewshed.html) i [QGIS3.44](https://docs.qgis.org/3.44/en/docs/user_manual/). Context històric: [Farnós Marsal2025](https://publicacions.iec.cat/repository/pdf/00000528/00000061.pdf), Polígons Nord/Sud, port i conduccions.
 

@@ -37,17 +37,49 @@ Sobre aquest territori, un mapa de pendents es pot interpretar amb coneixements 
 
 Aquesta referència propera s'adapta a cada problema. Una xarxa de transport pot necessitar connexions que travessen el límit comarcal; una estimació climàtica, observacions d'un àmbit més ampli. Els temes, les àrees i les dades de les pràctiques poden variar. Treballar també en altres llocs permet reconèixer què es manté del mètode i què cal revisar segons les condicions del territori, la cobertura de les fonts o l'escala d'anàlisi.
 
-## Treballar amb els exemples i ampliar-los {#projecte-reproduible}
+## Programari i organització del treball {#projecte-reproduible}
 
 Els [fonaments del primer capítol]({{ site.baseurl }}/ca/chapters/fonaments-geodisseny/) serveixen de referència per als mètodes que es desenvolupen després. Els exemples petits permeten seguir les operacions; les aplicacions amb dades territorials mostren les decisions que comporta treballar amb observacions i cartografia. Les explicacions indiquen la procedència de les dades i els supòsits, de manera que es pugui revisar el càlcul i entendre'n els límits.
 
-[QGIS](https://qgis.org/) és l'entorn principal dels procediments del manual, amb la versió 3.44 LTR com a referència documental. Les eines i els complements concrets es presenten quan intervenen en una anàlisi. Els conceptes també són útils per treballar amb altres programes o biblioteques de R i Python: en comparar implementacions, interessa comprovar que les dades, els paràmetres i les convencions de càlcul siguin equivalents.
+### QGIS i els proveïdors d'eines {#qgis-proveidors}
+
+[QGIS](https://qgis.org/) és l'entorn principal dels procediments del manual, amb la versió 3.44 LTR com a referència documental. Integra eines pròpies, complements, biblioteques i altres programes d'anàlisi geogràfica. El [sistema de Processament](https://docs.qgis.org/3.44/en/docs/user_manual/processing/intro.html) ofereix una interfície comuna per executar algorismes de diferents **proveïdors**. GDAL/OGR aporta biblioteques i utilitats per a dades ràster i vectorials; GRASS GIS i SAGA GIS són sistemes d'informació geogràfica amb eines que es poden incorporar a aquest entorn. Els complements també poden afegir funcions, menús o proveïdors. El conjunt pot reunir centenars d'eines, segons els components instal·lats.
+
+Una mateixa pregunta es pot abordar amb més d'una eina. Dues eines de distància ràster, per exemple, poden demanar representacions diferents dels punts d'origen o tractar de manera diferent el NoData. La comparació requereix revisar el mètode, les unitats, els valors inicials, la graella i les dades d'entrada. La coincidència entre resultats pot servir de comprovació; una diferència s'ha d'interpretar a partir d'aquelles decisions. El manual desenvolupa aquestes distincions quan ajuden a entendre una anàlisi, i les pràctiques identifiquen el proveïdor i l'algorisme que s'utilitza.
+
+A TIGIT i TIG havien tingut menys pes les eines de proveïdors externs a `native:`. En aquesta assignatura se n'amplia l'ús i es presta una atenció especial, sobretot a les pràctiques, a les **ordres de línia de comandes** de GDAL, GRASS, SAGA i altres eines. Una ordre identifica un programa o mòdul, les entrades, les sortides i les opcions de càlcul. Llegir-la al registre de Processament, quan el proveïdor la mostra, permet relacionar la configuració del diàleg amb allò que s'ha executat, interpretar errors i repetir el procediment. Les expressions de QGIS que calculen valors de camps o omplen un lot tenen una sintaxi i una funció pròpies, que es distingeixen d'aquestes ordres.
 
 >> **Preparació del programari.** Les pràctiques d'autocorrelació utilitzen el complement **Hotspot Analysis**, versió 4.0.0, i les biblioteques Python **libpysal** i **esda**, del projecte PySAL. No totes les instal·lacions de QGIS les incorporen. Abans d'aquelles pràctiques, segueix la [instal·lació i la prova des de QGIS]({{ site.baseurl }}/ca/chapters/dependencia-espacial/#preparacio-pysal): s'hi distingeixen Windows amb OSGeo4W, macOS i Linux. Instal·lar un paquet en un altre Python de l'ordinador no garanteix que QGIS el pugui utilitzar.
 
-La preparació tècnica permet treballar després des dels diàlegs de Processament, sense haver de programar cada càlcul. Quan s'inclou una comprovació breu a la consola, s'indica què executa i quin resultat s'espera. Les captures i els exemples d'autocorrelació s'han calculat amb QGIS 3.44.11, libpysal 4.13.0 i esda 2.7.1; aquesta parella de biblioteques requereix Python 3.11 o posterior.
+La preparació tècnica permet combinar el treball des dels diàlegs amb la lectura de les ordres i, quan l'activitat ho requereix, amb l'execució des de la línia de comandes. Quan s'inclou una comprovació breu a la consola, s'indica què executa i quin resultat s'espera. Les captures i els exemples d'autocorrelació s'han calculat amb QGIS 3.44.11, libpysal 4.13.0 i esda 2.7.1; aquesta parella de biblioteques requereix Python 3.11 o posterior.
 
-Guardar les fonts originals, les dades preparades i els resultats per separat facilita reprendre una anàlisi i compartir-la. Les notes sobre dates, unitats, sistemes de coordenades, transformacions i paràmetres expliquen les decisions preses. El projecte de QGIS conserva la configuració, però també necessita les capes i altres dependències que utilitza. Aquesta cura en l'organització permet aprofitar el treball en altres exercicis i assignatures.
+### Carpetes de treball i lliurament {#carpetes-practiques}
+
+Cada pràctica parteix d'un paquet amb el `LLEGIU-ME.pdf` a l'arrel i les dades preparades a `data/`, incloent-hi el projecte `inici.qgz`. La pauta de treball separa les entrades, l'experimentació i la selecció final:
+
+::: table "Funció de les carpetes dins de cada pràctica"
+| Carpeta | Contingut i ús |
+| --- | --- |
+| `data/` | Dades i projecte d'inici, conservats com a referència |
+| `sandbox/` | Còpia del projecte de treball, proves, intermedis i alternatives |
+| `dist/` | Capes seleccionades, projecte final i documents que es lliuren |
+:::
+
+En preparar el lliurament es crea **un GeoPackage nou a `dist/`** i s'hi desen els vectors seleccionats. Els ràsters necessaris es conserven com a GeoTIFF, agrupats en una carpeta `rasters/` quan convé. El **projecte QGIS és un fitxer `.qgz` extern al GeoPackage**, desat amb rutes relatives. El lliurament inclou també l'informe en PDF i les evidències que demani l'activitat. Els fitxers descartats i les proves que no s'han utilitzat es queden a `sandbox/`; les dades de context imprescindibles per mostrar o revisar el resultat s'incorporen a la selecció final.
+
+Els fitxers principals s'identifiquen amb el **codi de la pràctica, el tema i els cognoms**, amb el codi que estableixi l'enunciat. Per exemple:
+
+```filetree
+pr1-visibilitat-cognoms.qgz
+pr1-visibilitat-cognoms.gpkg
+pr1-visibilitat-cognoms.pdf
+```
+
+La carpeta `dist/` es pot reanomenar amb aquest mateix prefix i comprimir en un ZIP. L'elecció dels lliurables respon als apartats demanats i als resultats que s'han seleccionat.
+
+Els grups del panell Capes ajuden a distingir **dades de partida, proves i resultats seleccionats**. Aquesta organització visual es complementa amb el desament dels fitxers: moure una capa a un grup no la copia a una altra carpeta. El projecte final conserva només les capes i els recursos necessaris, amb un ordre de dibuix, estils i etiquetes que permetin interpretar-los.
+
+**El lliurament ha d'obrir-se i representar-se igual que a l'ordinador de treball.** Abans de lliurar-lo, copia la carpeta final en una ubicació diferent o descomprimeix el ZIP en una carpeta nova i obre'n el `.qgz`. Comprova que totes les capes són vàlides, que mantenen els estils, les etiquetes i l'ordre de dibuix i que el projecte no depèn de fitxers temporals o de proves que s'han quedat fora del paquet. El `.qgz` conserva la configuració, però necessita les dades i altres dependències que utilitza. Els fitxers `.batch` també requereixen revisar les seves rutes quan es canvia la ubicació del treball.
 
 A mesura que avancis en el grau, pots recuperar una pregunta d'una altra assignatura, explorar un problema del teu entorn o provar una font de dades nova. Una tècnica estudiada per analitzar accessibilitat pot servir per comparar la cobertura d'un servei; un mètode d'interpolació pot donar peu a estudiar una altra variable ambiental, després de revisar-ne les condicions. Si un resultat sorprèn, contrastar-lo amb altres dades o discutir-ne la interpretació és una manera de continuar aprenent.
 
