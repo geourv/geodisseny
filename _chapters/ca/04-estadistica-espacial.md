@@ -63,11 +63,11 @@ A Constantí, el mapa dels **124 registres** d'autoconsum permet reconèixer un 
 
 La font és l'[Observatori d'autoconsum de l'ICAEN](https://icaen.gencat.cat/ca/energia/autoconsum/Observatori-de-lautoconsum-a-catalunya/localitzacio-dinstallacions/). La coordenada correspon al **consumidor elèctric associat**, no necessàriament a la petjada dels panells. Els kW expressen potència, no energia produïda en kWh. L'extracció és del 28/09/2026; la data efectiva del conjunt no s'ha pogut establir {% cite icaenLocalitzacio %}.
 
-El paquet docent **Constantí: estadística i autocorrelació** conté `constanti.gpkg`, ortofoto local i projectes per consultar els passos. Per començar, obre `01-recompte.qgz` i desa'n una còpia al teu directori de treball. També es pot preparar la vista des d'un projecte buit:
+El paquet de Moodle **Estadística espacial descriptiva** conté `LLEGIU-ME.pdf` a l'arrel i els recursos a `data/`. Per començar, obre **`data/inici.qgz`** i desa'n una còpia a `sandbox/`, al costat de `data/`. Les entrades es preserven a `data/`; les proves i els intermedis, a `sandbox/`; la selecció final es prepara a `dist/`, amb un GeoPackage nou i un QGZ extern relatiu, segons la [pauta d'organització del manual]({{ site.baseurl }}/ca/#carpetes-practiques). Els vectors inicials són a `data/estadistica-constanti.gpkg`; l'ortofoto és un GeoTIFF a `data/rasters/`. El paquet docent afegeix `data/docent.qgz` i els resultats de referència. També es pot preparar la vista des d'un projecte buit:
 
-1. Estableix **EPSG:25831**, amb coordenades en metres. Desa el projecte i les sortides pròpies a `treball/`.
-2. A **Explorador → GeoPackage → Connexió nova**, tria `constanti.gpkg` i desplega'l.
-3. Afegeix `punts`, `limit` i `ortofoto.tif`. Anomena la capa de punts **Constantí · 124 punts** i apropa't a l'ortofoto.
+1. Estableix **EPSG:25831**, amb coordenades en metres. Crea `sandbox/` i desa-hi el projecte i les sortides pròpies, sense modificar les entrades de `data/`.
+2. A **Explorador → GeoPackage → Connexió nova**, tria `data/estadistica-constanti.gpkg` i desplega'l.
+3. Afegeix `punts`, `limit` i `data/rasters/ortofoto.tif`. Anomena la capa de punts **Constantí · 124 punts** i apropa't a l'ortofoto.
 4. Obre la taula i comprova **124 files**. Dos registres amb la mateixa coordenada continuen sent dues observacions; al mapa poden superposar-se.
 
 ![Registres d'autoconsum sobre el municipi de Constantí]({{ site.baseurl }}/assets/captures/c4-constanti-dades.png "Els punts indiquen consumidors associats de l'inventari. El grup oriental coincideix amb el nucli; a l'oest es distingeixen els recintes industrials. El registre de 450 kW està etiquetat per poder-lo recuperar en els càlculs següents."){: data-figure-width-web="50rem" data-figure-width-pdf="100%" data-caption-source="ICAEN, extracció 28/09/2026; límits ICGC 20/01/2026; [ortofoto ICGC 2025](https://geoserveis.icgc.cat/servei/catalunya/orto-territorial/wms), retall WMS a 8 m/píxel. [Condicions ICGC](https://www.icgc.cat/condicions)."}
@@ -101,13 +101,15 @@ La capa `malla` del paquet té **90 quadrats d'1 km de costat**, sobre una exten
 
 Els dos primers nombres són el mínim i màxim est; els altres dos, el mínim i màxim nord. Aquí es mantenen els quadrats sencers, també quan travessen el límit municipal. Retallar-los canviaria les superfícies i, per tant, el denominador de la densitat.
 
+El costat d'1 km és una **decisió de resum**, no una distància calculada a partir dels punts. Permet començar amb una unitat de superfície coneguda i distingir el nucli del sector industrial. La finestra mesura $10\,000\times9\,000$ m: amb passos de 1.000 m hi caben $10\times9=90$ quadrats. Canviar el costat o l'origen de la malla és una manera de comprovar si la concentració observada depèn del suport escollit.
+
 ### Recompte amb QGIS
 
 Obre **Procés → Caixa d'eines → Anàlisi vectorial → Compta els punts al polígon**. L'eina també es pot cercar pel seu nom.
 
 ![Eina de recompte visible a la Caixa d'eines sobre el mapa de Constantí]({{ site.baseurl }}/assets/captures/c4-recompte-caixa.png "Compta els punts al polígon relaciona una capa de polígons amb una capa de punts. El mapa de fons conserva el mateix cas municipal, abans de calcular el resultat."){: data-figure-width-web="50rem" data-figure-width-pdf="100%"}
 
-1. Tria **Quadrats d'1 km²** com a polígons i **Constantí · 124 punts** com a punts.
+1. Tria `malla` com a polígons i `punts` com a punts, o el nom visual que els hagis assignat. Les captures els identifiquen com **Quadrats d'1 km²** i **Constantí · 124 punts**.
 2. Deixa buits pes i classe. Anomena el camp **n_punts**.
 3. Desa la sortida al GeoPackage de treball, amb nom `recompte`.
 4. Comprova **90 files** i suma **124** al camp `n_punts`: cada registre ha entrat una vegada.
@@ -132,9 +134,27 @@ El recompte mostra diferències dins de cada quadrat. Un **centre mitjà** resum
 
 Un **centroide municipal** respon a una altra pregunta: resumeix la geometria del límit, com si tota la superfície contribuís igualment. No depèn dels registres. Un centre de punts i un centroide territorial poden diferir sense que cap dels dos estigui mal calculat.
 
+### Un conjunt petit amb totes les coordenades {#exemple-cinc-punts}
+
+Considerem cinc punts **ficticis**, A–E, sobre una quadrícula local amb coordenades en quilòmetres. L'origen s'ha escollit per fer llegibles els comptes; aquestes xifres no són coordenades de Constantí. De moment, cada punt contribueix una vegada.
+
+::: table "Coordenades d'un exemple construït i separacions respecte del centre (3; 3) km"
+| Punt | Est $x$ (km) | Nord $y$ (km) | $\Delta x$ (km) | $\Delta y$ (km) | $d^2$ (km²) |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| A | 0 | 0 | −3 | −3 | 18 |
+| B | 2 | 4 | −1 | 1 | 2 |
+| C | 3 | 3 | 0 | 0 | 0 |
+| D | 4 | 2 | 1 | −1 | 2 |
+| E | 6 | 6 | 3 | 3 | 18 |
+:::
+
+Les dues mitjanes es calculen per separat: $\bar{x}=(0+2+3+4+6)/5=3$ km i $\bar{y}=(0+4+3+2+6)/5=3$ km. La barra indica una mitjana. El centre és, per tant, **(3; 3) km**. Coincideix amb C en aquest exemple, però no ho necessita: pot caure en un espai sense observacions.
+
+Les separacions s'obtenen restant el centre: $\Delta x=x-\bar{x}$ i $\Delta y=y-\bar{y}$. A és 3 km a l'oest i 3 km al sud; B és 1 km a l'oest i 1 km al nord. Amb Pitàgores, $d^2=(\Delta x)^2+(\Delta y)^2$. Així apareixen els 18 km² d'A i els 2 km² de B. Els quadrats eliminen els signes; les distàncies corresponents són $\sqrt{18}$ i $\sqrt{2}$ km.
+
 ### Estimar els pesos dels 26 intervals {#imputacio-intervals}
 
-Per comparar centres sobre els **mateixos 124 punts**, s'utilitza un escenari de potència. Es conserva cada xifra publicada; als camps buits s'assigna el punt mitjà de l'interval. Si només se sap «més de 5 i fins a 25 kW», l'escenari utilitza **15 kW**. És una **imputació**, és a dir, una estimació per poder fer l'operació. No passa a ser una nova observació del productor.
+Per comparar centres sobre els **mateixos 124 punts**, s'utilitza un escenari de potència. Es conserva cada xifra publicada; als camps buits s'assigna el punt mitjà de l'interval. Si només se sap «més de 5 i fins a 25 kW», el compte és $(5+25)/2=15$ kW. És una **imputació**, és a dir, una estimació per poder fer l'operació. No passa a ser una nova observació del productor. Escollir el punt mitjà suposa representar l'interval amb una xifra central; no demostra com s'hi reparteixen les potències reals.
 
 ::: table "Assignació central només quan falta POT_KW"
 | Interval publicat | Valor assignat | Casos de Constantí |
@@ -146,7 +166,7 @@ Per comparar centres sobre els **mateixos 124 punts**, s'utilitza un escenari de
 
 <span id="camps-descenari-a-qgis"></span>
 
-La capa `pesos` conserva `POT_KW` i afegeix **w_mid**, de tipus decimal. Per reproduir-la, crea una còpia de `punts` i aplica aquesta expressió a un camp nou amb aquell nom:
+La capa `pesos` conserva `POT_KW` i ja inclou **w_mid**, de tipus decimal. L'expressió següent mostra la regla utilitzada per assignar-ne els valors; no cal crear de nou el camp que aporta el paquet:
 
 ```sql
 CASE
@@ -158,7 +178,7 @@ CASE
 END
 ```
 
-El resultat suma **2.970 kW d'escenari**: 2.770 publicats i 200 assignats. El registre de 450 kW es conserva sense canvis. Una classe oberta «més de 100 kW» sense xifra no tindria punt mitjà definit; aquest problema no afecta els 26 intervals de Constantí.
+La part assignada és $19\times2{,}5+6\times15+1\times62{,}5=200$ kW. Afegida als 2.770 publicats, dona **2.970 kW d'escenari**. El registre de 450 kW es conserva sense canvis. Una classe oberta «més de 100 kW» sense xifra no tindria punt mitjà definit; aquest problema no afecta els 26 intervals de Constantí.
 
 ### Coordenades mitjanes a QGIS {#procediment-estadistica}
 
@@ -169,7 +189,7 @@ L'eina **Coordenades mitjanes** és a **Vectorial → Analysis Tools** i a **An�
 ![Coordenades mitjanes seleccionat a la Caixa d'eines]({{ site.baseurl }}/assets/captures/c4-centres-caixa.png "La mateixa eina és accessible a Anàlisi vectorial."){: data-figure-width-web="50rem" data-figure-width-pdf="100%"}
 :::
 
-1. Tria **Pesos de Constantí** i deixa buits **Pes del camp** i **Camp ID únic**. Així tots els 124 punts contribueixen igualment.
+1. Tria `pesos`, identificada com **Pesos de Constantí** a les captures, i deixa buits **Pes del camp** i **Camp ID únic**. Així tots els 124 punts contribueixen igualment.
 2. Desa aquesta sortida com a `centre_registres`.
 3. Repeteix amb **w_mid** com a pes, també amb ID buit. Desa `centre_ponderat`.
 4. Cada sortida ha de contenir **un punt**. Superposa'ls a les posicions originals i al mapa de pesos.
@@ -182,9 +202,11 @@ L'eina **Coordenades mitjanes** és a **Vectorial → Analysis Tools** i a **An�
 
 El centre dels registres és **(349.051,53; 4.557.573,88) m**. El ponderat és **(347.321,21; 4.558.177,04) m**: uns **1.832 m cap a l'oest i una mica al nord**. El grup del nucli té moltes observacions petites; al polígon industrial hi ha pesos elevats que fan una contribució important. Els decimals permeten comprovar el càlcul, sense atribuir precisió centimètrica al registre.
 
+La diferència de coordenades és aproximadament **−1.730,32 m en est** i **+603,16 m en nord**. La distància entre centres surt de $\sqrt{(-1\,730{,}32)^2+603{,}16^2}\simeq1\,832{,}43$ m. La direcció es llegeix dels signes i la separació es calcula amb Pitàgores; no s'ha escollit com a radi o llindar.
+
 ![Els mateixos punts amb contribució igual i amb símbols proporcionals al pes]({{ site.baseurl }}/assets/quarto/figures/constanti-pesos.qmd "A l'esquerra, tots els registres compten igual. A la dreta, l'àrea dels cercles és proporcional als pesos: blaus per als valors publicats i taronges per als assignats. El registre de 450 kW és al sector occidental. Els centres es poden identificar pel nom, sense confondre'ls amb punts observats."){: data-figure-width-web="46rem" data-figure-width-pdf="100%" data-caption-source="ICAEN i ortofoto ICGC 2025. Elaboració pròpia."}
 
-Els 450 kW representen un **15,2%** del pes de l'escenari. Els cinc pesos més grans n'aporten el **37,4%**, mentre que les 26 assignacions només n'aporten el **6,7%**. La ponderació descriu aquest repartiment; no demostra per què existeix ni recomana construir una instal·lació al centre resultant.
+Els 450 kW representen $100\times450/2\,970\simeq15{,}2\%$ del pes de l'escenari. Els cinc pesos més grans sumen 1.110 kW, un **37,4%**; les 26 assignacions sumen 200 kW, un **6,7%**. Els tres percentatges utilitzen el mateix denominador, 2.970 kW. La ponderació descriu aquest repartiment; no demostra per què existeix ni recomana construir una instal·lació al centre resultant.
 
 <span id="exemple-controlat"></span>
 
@@ -201,9 +223,11 @@ P&=\sum_i p_i.
 \label{eq:centre-x}
 $$
 
+L'índex $i$ identifica cadascun dels punts i el símbol $\sum$ indica que se sumen totes les contribucions. Si tots els pesos són 1, $P=n$, el nombre de punts, i es recuperen les coordenades mitjanes sense ponderar. El numerador té unitats de pes per longitud; dividir pel pes total retorna una coordenada en unitats de longitud.
+
 <span id="sensibilitat-imputacio"></span>
 
-Per comprovar la influència de l'estimació, les capes preparades conserven també un escenari baix i un d'alt. A Constantí, els centres extrems se separen **194 m**, força menys que el canvi de 1.832 m respecte del centre dels registres. Les tres regles provades mantenen el desplaçament cap al sector occidental. No són un interval de confiança ni cobreixen totes les combinacions possibles dels pesos absents.
+Per comprovar la influència de l'estimació, les capes preparades conserven també un escenari baix i un d'alt: als valors absents s'assignen els límits inferiors o superiors dels intervals. Les sumes passen a **2.825 i 3.115 kW**, respectivament; s'aplica de nou la mateixa fórmula del centre ponderat. La distància entre els dos centres és **193,67 m**, arrodonida a 194 m, força menys que els 1.832 m respecte del centre dels registres. Les tres regles mantenen el desplaçament cap al sector occidental. Són escenaris de sensibilitat: no són un interval de confiança ni cobreixen totes les combinacions possibles dels pesos absents.
 
 ## Extensió i orientació del conjunt {#dispersio-ellipse}
 
@@ -215,24 +239,79 @@ Un punt central no mostra quant s'escampen les observacions. Per descriure-ho es
 
 ### Cercle de dispersió
 
-La **distància estàndard** es calcula elevant al quadrat la distància de cada punt al centre, fent-ne la mitjana i obtenint l'arrel. El resultat de Constantí és **2.000,66 m**. En dibuixar un cercle d'aquest radi es conserva una mesura resumida de separació, sense exigir que tots els punts siguin a dins.
+Recuperem els cinc punts de la [taula de coordenades](#exemple-cinc-punts). La suma de les separacions est és zero, perquè les positives i negatives es compensen; passa igual amb les separacions nord. Fer-ne només la mitjana no descriuria l'extensió. En canvi, els quadrats de les distàncies sumen $18+2+0+2+18=40$ km². La mitjana és $40/5=8$ km² i la seva arrel és **2,83 km**.
 
-Amb distàncies de 1, 2 i 3 km, un exemple construït dona $\sqrt{(1^2+2^2+3^2)/3}=2{,}16$ km. No és el màxim de 3 km ni la mitjana ordinària de 2 km: el quadrat fa que les separacions grans contribueixin més. Per a $n$ punts amb distàncies $d_i$, sense pes:
+Aquesta arrel de la distància quadràtica mitjana és la **distància estàndard**, que es representa amb la lletra $D$. El quadrat fa que un punt llunyà contribueixi més que un de pròxim; l'arrel retorna les unitats de longitud. Per a $n$ punts amb distàncies $d_i$ al seu centre mitjà, sense pesos:
 
 $$
 D=\sqrt{\frac{\sum_i d_i^2}{n}}.
 \label{eq:distancia-estandard}
 $$
 
+El cercle té el centre calculat abans i radi $D$. A l'exemple conté B, C i D, però deixa A i E fora: inclou **3 de 5 punts, el 60%**. No s'ha construït per encerclar-los tots. Una mesura d'extensió total utilitzaria una altra regla, com la distància al punt més llunyà.
+
+També es poden fer els comptes per coordenades. La **variància est**, $V_x$, és la mitjana dels quadrats de $\Delta x$; la variància nord, $V_y$, fa el mateix amb $\Delta y$. Als cinc punts, totes dues valen $(9+1+0+1+9)/5=4$ km². Com que $d_i^2=(\Delta x_i)^2+(\Delta y_i)^2$, es compleix **$D^2=V_x+V_y$**: aquí $D=\sqrt{4+4}=\sqrt{8}$ km.
+
+El divisor és $n$ perquè es descriu el conjunt de punts disponible. En l'estimació habitual amb una mostra independent, la correcció amb $n-1$ evita el biaix en estimar una variància poblacional; és una altra pregunta. Barrejar els divisors canviaria les dimensions. A Constantí es manté $n=124$ i el centre sense ponderar.
+
 ### El·lipse i lectura de les direccions
 
-L'el·lipse de Constantí té **1.934,44 m de semieix llarg** i **510,47 m de semieix curt**. Un semieix és la distància del centre fins a un extrem de l'eix: la longitud completa és el doble. El llarg és gairebé quatre vegades el curt, coherent amb l'allargament visible entre els dos grups. Un cercle no expressa aquesta diferència.
+El cercle tracta igual totes les direccions. Per distingir un conjunt allargat d'un de més rodó, es pot girar una creu d'eixos al voltant del centre. Cada punt es projecta perpendicularment sobre cada eix: el peu de la perpendicular indica la seva posició al llarg d'aquella recta. La direcció amb més variació d'aquestes posicions és l'**eix principal**; la perpendicular té la variació mínima. L'el·lipse utilitza una desviació estàndard en cadascuna d'aquestes direccions: l'arrel de la variància corresponent {% cite wang2015confidence %}.
+
+Als cinc punts, la direcció més allargada és la diagonal sud-oest–nord-est. Sobre aquesta diagonal, A i E són a $\sqrt{18}$ km del centre; B, C i D tenen projecció zero. Sobre la perpendicular, B i D són a $\sqrt{2}$ km, amb signes oposats; els altres punts tenen projecció zero. Les dues variàncies són, per tant:
+
+$$
+\begin{aligned}
+V_{\mathrm{llarg}}&=(18+0+0+0+18)/5=7{,}2\ \mathrm{km}^2,\\
+V_{\mathrm{curt}}&=(0+2+0+2+0)/5=0{,}8\ \mathrm{km}^2.
+\end{aligned}
+\label{eq:variancies-direccions}
+$$
+
+Els **semieixos** són **$a=\sqrt{7{,}2}=2{,}68$ km** i **$b=\sqrt{0{,}8}=0{,}89$ km**. Un semieix va del centre a un extrem; la longitud completa és el doble. Es conserva $a^2+b^2=7{,}2+0{,}8=8=D^2$. L'el·lipse reparteix la dispersió entre dues direccions; no afegeix una extensió nova al conjunt.
+
+Els dos contorns no tenen la mateixa superfície. Com que $D^2=a^2+b^2$, el radi $D$ és com a mínim tan gran com el semieix llarg. Amb aquesta convenció i el mateix centre, el cercle envolta l'el·lipse; és coherent que contingui més punts.
 
 <span id="convenció-de-lellipse"></span><span id="entendre-la-forma-abans-dinterpretar-langle"></span>
 
-L'eix és una orientació, sense sentit de circulació. No indica que les instal·lacions avancin d'un grup a l'altre. La convenció utilitzada dona als semieixos una desviació de les coordenades sobre cada direcció principal; no s'hi atribueix un percentatge fix de punts ni confiança en la posició del centre.
+### Variàncies, covariància i angle {#calcul-ellipse}
 
-Per practicar la representació a QGIS, la capa `dispersio` conserva un centre amb aquests camps calculats:
+Amb un núvol menys simètric no n'hi ha prou amb reconèixer una diagonal. A més de $V_x$ i $V_y$, es calcula la mitjana dels productes $\Delta x\,\Delta y$: la **covariància**, $C_{xy}$. Un producte positiu indica que les dues separacions tenen el mateix signe; un de negatiu, signes oposats. La seva suma ajuda a detectar si les posicions tendeixen a allargar-se en una diagonal o en l'altra.
+
+Als cinc punts, els productes són $9,-1,0,-1,9$ km². La covariància és $16/5=3{,}2$ km². Amb els tres resums es poden obtenir directament les variàncies màxima i mínima, anomenades aquí $\lambda_1$ i $\lambda_2$:
+
+$$
+\begin{aligned}
+\lambda_1&=\frac{V_x+V_y+\sqrt{(V_x-V_y)^2+4C_{xy}^2}}{2},\\
+\lambda_2&=\frac{V_x+V_y-\sqrt{(V_x-V_y)^2+4C_{xy}^2}}{2},\\
+a&=\sqrt{\lambda_1},\qquad b=\sqrt{\lambda_2}.
+\end{aligned}
+\label{eq:semieixos-covariancia}
+$$
+
+Són dos comptes iguals, amb una suma i una resta davant de l'arrel. A l'exemple, $V_x=V_y=4$ i $C_{xy}=3{,}2$: l'arrel interior dona 6,4 km², i els resultats són $(8+6{,}4)/2=7{,}2$ i $(8-6{,}4)/2=0{,}8$ km². Es recuperen les variàncies de les dues diagonals. En notació matricial, aquests resultats són els autovalors de la taula de variàncies i covariàncies; no cal resoldre una matriu per seguir el càlcul anterior.
+
+L'angle de l'eix llarg es pot obtenir amb $\theta=\tfrac12\operatorname{atan2}(2C_{xy},V_x-V_y)$. Aquí `atan2` és la funció trigonomètrica amb arguments en ordre vertical, horitzontal: retorna l'angle tenint en compte el quadrant. Si es calcula en radians, es multiplica per $180/\pi$ per passar a graus. L'angle $\theta$ es mesura des de l'est, en sentit antihorari; a l'exemple dona $45^\circ$. Amb $\theta$ en graus, l'azimut horari des del nord que utilitza `make_ellipse` de QGIS és $\alpha=(90^\circ-\theta)\bmod180^\circ$. El mòdul 180 expressa que es tracta d'un eix sense fletxa, no d'un sentit de moviment.
+
+Quan $a=b$, el contorn és un cercle i no hi ha una orientació privilegiada. Si tots els punts són exactament alineats, el semieix curt és zero i el resum es redueix a un segment. Aquestes situacions es reconeixen al mapa abans d'interpretar un angle.
+
+### Aplicar els comptes a Constantí {#dispersio-calcul-constanti}
+
+Amb les coordenades dels 124 registres i divisor 124 s'obtenen els resums següents. Es mostren arrodonits per poder seguir les operacions; les distàncies no són mesures de precisió centimètrica sobre el terreny.
+
+::: table "Resums de les coordenades de Constantí abans de dibuixar el cercle i l'el·lipse"
+| Resum | Valor (m²) | Procediment |
+| --- | ---: | --- |
+| $V_x$ | 3.326.162,49 | Sumar $(x_i-\bar{x})^2$ i dividir per 124 |
+| $V_y$ | 676.463,64 | Sumar $(y_i-\bar{y})^2$ i dividir per 124 |
+| $C_{xy}$ | −1.129.131,02 | Sumar $(x_i-\bar{x})(y_i-\bar{y})$ i dividir per 124 |
+:::
+
+La suma de les dues variàncies és 4.002.626,13 m²; la seva arrel dona el **radi de 2.000,66 m**. La fórmula dels semieixos dona aproximadament $\lambda_1=3\,742\,049{,}36$ m² i $\lambda_2=260\,576{,}77$ m². Les arrels són **1.934,44 m i 510,47 m**. Per tant, les dimensions provenen de les separacions dels punts respecte del seu centre, no d'una mida escollida per al dibuix.
+
+La covariància negativa acompanya l'allargament nord-oest–sud-est. La fórmula de l'angle dona $\theta\simeq-20{,}22^\circ$ des de l'est, equivalent a **110,22° d'azimut**. El llarg és gairebé quatre vegades el curt, coherent amb la forma entre el sector industrial i el nucli. Aquesta orientació no demostra que les instal·lacions es desplacin d'un grup a l'altre.
+
+A QGIS es poden obtenir aquests resums afegint les coordenades i les separacions a la taula de punts: primer les mitjanes, després els quadrats i el producte, i finalment les mitjanes d'aquests camps. Totes les operacions han d'utilitzar els mateixos 124 registres. Al projecte docent, la capa `dispersio` ja conserva el centre i els camps resultants:
 
 ::: table "Magnituds que es dibuixen a Constantí"
 | Camp | Valor arrodonit | Lectura |
@@ -243,14 +322,54 @@ Per practicar la representació a QGIS, la capa `dispersio` conserva un centre a
 | azimut | 110,22° | Eix mesurat en sentit horari des del nord |
 :::
 
-Cerca **Geometria segons l'expressió** a la Caixa d'eines, tria `dispersio` com a entrada i Polígon com a sortida. Executa per separat les dues expressions i desa `cercle` i `ellipse`. El 72 controla el detall del contorn, no el nombre d'observacions.
+Cerca **Geometria segons l'expressió** a la Caixa d'eines, tria `dispersio` com a entrada i Polígon com a sortida. Executa per separat les dues expressions i desa `cercle` i `ellipse`:
 
 ```text
 make_circle($geometry, "D_m", 72)
 make_ellipse($geometry, "a_m", "b_m", "azimut", 72)
 ```
 
-L'eina dibuixa a partir dels atributs; no estima la dispersió a partir d'un centre sol. El preparador calcula abans variàncies i covariància de les coordenades, que s'han introduït als [fonaments](../fonaments-geodisseny/). Per comprendre el resultat aquí, interessa reconèixer quines separacions resumeixen les dues formes i què amaguen del conjunt.
+El **72 és una decisió de representació**: divideix la volta en 72 segments, amb un pas angular de $360^\circ/72=5^\circ$. En aquest cercle, la separació màxima entre una corda i l'arc és $D[1-\cos(\pi/72)]\simeq1{,}9$ m, amb el cosinus en radians. Augmentar el nombre de segments suavitza el dibuix, però no canvia el radi o els semieixos calculats ni afegeix observacions. Geometria segons l'expressió dibuixa els atributs; un centre sol no conté la informació necessària per estimar la dispersió.
+
+### Quants punts queden dins? {#cobertura-cercle-ellipse}
+
+La proporció **observada** es pot comptar: nombre de punts interiors dividit pel total. Per decidir si un punt entra a l'el·lipse, es mesuren les seves separacions sobre l'eix llarg i el curt, anomenades $u$ i $v$. Dividir cadascuna pel seu semieix permet comparar-les en la mateixa escala. El punt és dins del contorn, o a la vora, si **$(u/a)^2+(v/b)^2\leq1$**.
+
+Als cinc punts ficticis, B té $u=0$ i $v^2=2$ km²: el compte és $0/7{,}2+2/0{,}8=2{,}5$, superior a 1. Queda fora pel costat curt, malgrat ser pròxim al centre; passa igual amb D. Només C és dins: **1/5=20%**, mentre que el cercle inclou 3 punts. Dos contorns que resumeixen el mateix conjunt poden contenir proporcions diferents.
+
+A Constantí, el cercle conté **86 dels 124 registres (69,4%)** i l'el·lipse, **68 registres (54,8%)**. S'ha comptat sobre els mateixos punts, sense ponderar. Aquests percentatges descriuen aquest conjunt i aquests contorns; no s'han fixat abans de calcular-los. Una altra distribució pot donar valors molt diferents, com mostra l'exemple de cinc punts.
+
+La **cobertura teòrica** necessita, a més, un model de distribució. Un model normal bidimensional descriu un únic núvol al voltant d'un centre, amb una concentració que disminueix cap a les vores i contorns de densitat el·líptics. No és necessari per calcular les mitjanes i la dispersió; és un supòsit addicional per atribuir proporcions poblacionals als contorns.
+
+En una sola variable normal, l'interval mitjana±una desviació inclou aproximadament el 68,3% de la població. Un mapa té dues coordenades: traslladar-hi directament aquell percentatge no és correcte {% cite wang2015confidence %}.
+
+Per a una població **normal bidimensional**, amb el seu centre i dos semieixos positius que representen la dispersió, l'el·lipse de semieixos $ka$ i $kb$ inclou la fracció teòrica:
+
+$$
+F(k)=1-e^{-k^2/2}.
+\label{eq:cobertura-bidimensional}
+$$
+
+Aquí $k$ multiplica tots dos semieixos, $F(k)$ és una fracció entre 0 i 1, i $e$ és la base del logaritme natural. Per exemple, $k=1$ dona $1-e^{-1/2}\simeq0{,}393$: **39,3%, no 66% ni 68%**. Amb paràmetres estimats a partir d'un conjunt finit, la cobertura poblacional és aproximada; el recompte real de punts dins s'ha de comprovar.
+
+::: table "Cobertura sota una normal bidimensional, respecte dels semieixos d'una desviació"
+| Multiplicador dels dos semieixos | Fracció teòrica inclosa |
+| --- | ---: |
+| $k=1$ | 39,3% |
+| $k=\sqrt{2}$ | 63,2% |
+| $k=2$ | 86,5% |
+| $k=3$ | 98,9% |
+:::
+
+Si es vol un percentatge teòric concret, es fixa primer una fracció $p$ entre 0 i 1, sense incloure els extrems, i es calcula **$k=\sqrt{-2\ln(1-p)}$**, on $\ln$ és el logaritme natural. Per al 66%, $p=0{,}66$ dona $k\simeq1{,}469$; per al 95%, $k\simeq2{,}448$. Aquests factors provenen del model normal bidimensional, no d'una regla universal sobre qualsevol núvol de punts. Algunes eines adopten altres factors d'escala: cal comparar les fórmules i els semieixos, no només una etiqueta com «una desviació».
+
+Els grups de Constantí no formen un únic núvol normal. La descripció amb mitjanes, variàncies i el·lipse continua sent possible, però la fórmula normal no garanteix la proporció observada. Tampoc converteix l'interior en una àrea servida ni en una regió de confiança sobre la posició del centre poblacional; aquesta última pregunta exigeix un model de mostreig i d'incertesa diferent.
+
+### Aplicacions i decisions que el resum no resol {#aplicacions-dispersio}
+
+En comparar anys d'un inventari d'arbres, el centre pot resumir un desplaçament de les plantacions i l'el·lipse, si s'estenen al llarg d'un passeig. En comparar equipaments de barris, ponderar per places descriu el repartiment de capacitat, mentre que donar pes 1 descriu el nombre d'equipaments. En tots dos casos es mantenen definicions, cobertura i àmbit per atribuir les diferències a una mateixa pregunta.
+
+Una el·lipse allargada de punts d'accident pot orientar la revisió d'un corredor, però no explica per si sola si hi circulen més vehicles o si el risc per trajecte és més gran. Es necessiten exposició i dades de la xarxa. De manera semblant, un centre d'equipaments no permet seleccionar un emplaçament sense considerar població, accessos, capacitat i restriccions. Els resums descriuen localitzacions; la diagnosi i la decisió incorporen altres relacions territorials.
 
 ## Comparar distribucions municipals {#comparacio-municipis}
 
@@ -272,13 +391,15 @@ La malla imposa vores: dos punts molt pròxims poden quedar en quadrats diferent
 
 El **radi** fixa fins on arriba aquesta influència. Amb 500 m es distingeixen grups locals; amb 1.500 m es fusionen més contribucions. La **mida de píxel**, de 100 m en aquest exemple, és el detall de la graella que desa la superfície: no és el radi d'influència. Ampliar el radi no afegeix registres ni descobreix una causa de l'agrupació.
 
+Els radis de 500 i 1.500 m són **dues opcions exploratòries**, no resultats d'una fórmula que n'hagi trobat un d'òptim. Permeten contrastar una influència local amb una altra tres vegades més extensa en distància. Amb píxels de 100 m, el radi petit equival a 5 amplades de píxel i el gran, a 15. Es manté el mateix detall entre superfícies. Aquest criteri facilita la comparació; en una altra escala o amb una altra pregunta es justifiquen altres mides.
+
 ### Accés i paràmetres de QGIS {#mapa-de-calor-amb-qgis}
 
 Obre la Caixa d'eines i cerca **Mapa de calor**. En la versió de referència és dins d'**Interpolació**, amb el nom **Mapa de calor (KDE, estimació de densitat de nuclis)**.
 
 ![Mapa de calor seleccionat a la Caixa d'eines]({{ site.baseurl }}/assets/captures/c4-kernel-caixa.png "La fila ressaltada localitza l'eina que crea el ràster. El mapa continua mostrant els punts de Constantí; es pot relacionar la configuració següent amb aquest conjunt concret."){: data-figure-width-web="50rem" data-figure-width-pdf="100%"}
 
-1. Entrada: **Constantí · 124 punts**. Radi: **500 m**. Píxel X i Y: **100 m**.
+1. Entrada: `punts`, o **Constantí · 124 punts** si l'has reanomenada. Radi: **500 m**. Píxel X i Y: **100 m**.
 2. A **Advanced Parameters**, tria kernel **Quartic**, sortida **Raw**, i deixa buit el pes. Cada registre aporta una contribució.
 3. Desa `kernel-500-raw.tif`. Repeteix amb radi **1.500 m**, mateix píxel i una sortida diferent.
 
@@ -286,13 +407,15 @@ Obre la Caixa d'eines i cerca **Mapa de calor**. En la versió de referència é
 
 ### Comparar els dos radis amb les mateixes unitats
 
-La sortida **Raw** de QGIS és una suma crua de contribucions. No s'ha d'etiquetar automàticament com registres/km². En el kernel Quartic, la conversió utilitzada multiplica aquella suma per $3\times10^6/(\pi h^2)$, amb el radi $h$ en metres. Es pot reproduir a **Ràster → Calculadora ràster**:
+La forma **Quartic** assigna a un punt una contribució $(1-d^2/h^2)^2$ si la distància $d$ és menor que el radi $h$, i zero a partir de la vora. Al centre val 1; a mitja distància, $(1-1/4)^2=9/16$. S'escull una forma de suport limitat i descens suau per poder interpretar-ne el radi. Canviar la forma del kernel és una altra decisió que s'ha de declarar.
+
+La sortida **Raw** de QGIS suma aquestes contribucions crues. Per obtenir una densitat, la contribució d'un punt, sumada sobre tota la superfície i tenint en compte l'àrea, ha de donar 1. La suma contínua, o integral, del kernel Quartic cru és $\pi h^2/3$; per això es multiplica pel seu invers, $3/(\pi h^2)$. El factor 3 prové d'aquesta normalització. Amb $h$ en metres s'obtenen registres/m²; multiplicar per $10^6$ els passa a registres/km². Es pot reproduir a **Ràster → Calculadora ràster**:
 
 ```text
 "kernel-500-raw@1" * 3 * 1000000 / (3.141592653589793 * 500^2)
 ```
 
-Per al ràster de 1.500 m es canvien el nom de banda i el radi de la fórmula. Mantén extensió, files, columnes i NoData de cada entrada. Les capes `densitat-500.tif` i `densitat-1500.tif` del paquet ja incorporen aquesta conversió i una llegenda comuna. La suma de densitats multiplicada per 0,01 km² —àrea d'un píxel— és aproximadament **124**, com el recompte original.
+Per al ràster de 1.500 m es canvien el nom de banda i el radi de la fórmula. Mantén extensió, files, columnes i NoData de cada entrada. Les capes `densitat-500.tif` i `densitat-1500.tif` del paquet docent ja incorporen aquesta conversió i una llegenda comuna. Un píxel de 100×100 m té $10\,000/10^6=0{,}01$ km². Sumar les densitats multiplicades per aquesta àrea dona aproximadament **124 registres**: cadascun ha repartit una contribució total pròxima a 1. La discretització en píxels explica que la suma numèrica no sigui una identitat exacta.
 
 ![Kernel de Constantí normalitzat amb els punts visibles]({{ site.baseurl }}/assets/captures/c4-kernel-resultat.png "El color representa registres/km² després de normalitzar. Cada valor pot rebre contribucions de punts pròxims, encara que no siguin dins del mateix píxel. Els punts sobre la superfície ajuden a distingir una concentració observada del seu resum suavitzat."){: data-figure-width-web="50rem" data-figure-width-pdf="100%" data-caption-source="ICAEN, ortofoto i límits ICGC; kernel Quartic de QGIS i normalització explícita."}
 
@@ -338,7 +461,9 @@ Reprodueix els centres amb els mateixos 124 punts, sense pes i amb `w_mid`. Desa
 
 ### Cercle i el·lipse sobre els punts {#eix-i-sensibilitat}
 
-Obre `03-dispersio.qgz`. Identifica el centre, una zona amb pocs punts dins dels contorns i algun punt exterior. Conserva una captura amb tot el context i explica què expressen els **2.001 m de radi** i els **1.934/510 m de semieix**, sense donar-los significat de cobertura o confiança.
+Reprodueix primer els comptes dels cinc punts A(0;0), B(2;4), C(3;3), D(4;2) i E(6;6), en quilòmetres: centre (3;3), $D=\sqrt{8}$ km i semieixos $\sqrt{7{,}2}$ i $\sqrt{0{,}8}$ km, a 45°. Comprova que el cercle conté 3 punts i l'el·lipse, 1. Explica per què aquesta diferència és possible.
+
+A Constantí, obre `data/docent.qgz` o dibuixa els contorns sobre el centre sense ponderar. Identifica un punt exterior i un espai interior amb pocs registres. Conserva el càlcul dels **2.001 m de radi** i dels **1.934/510 m de semieix**, i comprova els recomptes 86 i 68. Distingeix la proporció observada d'una cobertura teòrica normal i d'una regió de confiança del centre.
 
 ### Comparació municipal {#distribucions-municipals}
 

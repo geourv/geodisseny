@@ -1,9 +1,9 @@
 ---
-title: "Pràctica: accessibilitat per xarxa vectorial a Vila-seca"
+title: "Pràctica: accessibilitat — xarxa vectorial"
 author: Benito Zaragozí
 lang: ca
-date: "Edició: 18 d'octubre de 2026"
-content_status: approved
+date: "Edició: 30 d'octubre de 2026"
+content_status: review
 ---
 
 # Distància recta i itinerari per vials
@@ -14,14 +14,20 @@ Dos punts propers poden quedar separats per l'AP-7. Al Camí del Mas de la Plana
 
 # Dades i projecte d'inici
 
-El ZIP conté `accessibilitat-vilaseca.gpkg` i `LLEGIU-ME.pdf`. El GeoPackage conserva el nom comú del cas i el projecte **inici**. Hi ha també entrades per als altres blocs; aquí s'utilitzen O/D, xarxa, passos, límit i ortofoto.
+El ZIP conté `LLEGIU-ME.pdf` a l'arrel i els recursos a `data/`. Obre **`data/inici.qgz`**. El GeoPackage `data/accessibilitat-vilaseca.gpkg` conté els vectors; els ràsters són GeoTIFF separats a `data/rasters/`. Hi ha també entrades per als altres blocs; aquí s'utilitzen O/D, xarxa, passos, límit i ortofoto.
 
-1. Utilitza **QGIS 3.44**. Descomprimeix el paquet en una carpeta pròpia i treballa sobre una còpia del GeoPackage.
-2. A **Explorador → GeoPackage → Connexió nova**, selecciona el fitxer i desplega'l. Obre **inici**, o utilitza **Projecte → Obre des de → GeoPackage**.
+1. Utilitza **QGIS 3.44**. Descomprimeix el paquet en una carpeta pròpia i conserva l'estructura completa.
+2. A **Projecte → Obre**, selecciona `data/inici.qgz`. A **Explorador → GeoPackage → Connexió nova**, connecta també `data/accessibilitat-vilaseca.gpkg` per consultar-ne les capes vectorials.
 3. Comprova **EPSG:25831** i el·lipsoide **Cap / NONE**. Les coordenades i longituds planes són en metres.
-4. Desa un projecte de treball al costat de les dades. Conserva els resultats amb noms de capa nous.
+4. Conserva `data/` com a referència. Crea `sandbox/` al seu costat i desa-hi una còpia del projecte com a `accessibilitat-xarxa.qgz`, amb rutes relatives. Guarda els vectors de les proves en un GeoPackage nou de `sandbox/`, amb noms de capa diferents per a cada resultat.
 
-![Connexió al GeoPackage del cas amb el projecte i les capes desplegats.](captures/inici.png){width=80% height=350pt}
+Les entrades es mantenen a `data/`; el projecte de treball, les proves i els intermedis, a `sandbox/`. Al final prepararàs `dist/` només amb allò que lliures. Els grups **Dades de partida**, **Proves** i **Resultats seleccionats** poden ordenar el panell Capes, però moure-hi una capa no mou ni copia el fitxer.
+
+![Consulta de les capes vectorials del GeoPackage des del panell Explorador.](captures/inici.png){width=80% height=350pt}
+
+El grup **Ortofoto ICGC** reuneix el retall local de 2025 i el **WMS** del mateix productor. Utilitza el WMS amb internet per examinar millor els passos i el context; deixa només el retall local activat quan treballis sense connexió. Les dues ortofotos són context: no determinen per si soles quins trams del graf estan connectats o tenen accés autoritzat.
+
+Conserva també `data/ortofoto-wms.xml`: és la configuració del context en línia que utilitza el projecte. L'ordre de dibuix segueix l'ordre visible del panell **Capes**.
 
 La xarxa procedeix dels **eixos RTT2024 de l'ICGC**, amb escala òptima de treball d'1:5.000. Té 7.945 parts i conserva `rtt_id`, atributs cartogràfics i nodes preparats. Els contactes extrem–interior s'han dividit entre eixos de terreny genèric; no s'han creat cruïlles a cada creuament visual.
 
@@ -30,8 +36,8 @@ La selecció de trams i la velocitat uniforme són supòsits docents. Un eix car
 Mantén les coordenades d'O/D durant tota la comparació:
 
 ```text
-O: 344407.000000,4553668.360000 [EPSG:25831]
-D: 344473.010000,4554030.720000 [EPSG:25831]
+O: 344407,4553668.36 [EPSG:25831]
+D: 344473.01,4554030.72 [EPSG:25831]
 ```
 
 # Distància euclidiana
@@ -80,7 +86,20 @@ Presenta pregunta i àmbit, fonts i decisions, procediment amb controls, mapes c
 
 Pots enregistrar fragments de pantalla amb un enregistrador com OBS Studio. Fes una prova de llegibilitat, anota els moments útils i desa fotogrames des d'un reproductor. Numera les captures i explica què demostren. Exporta els mapes finals amb llegenda, escala i unitats. El vídeo és una ajuda; només es lliura si el professor ho indica.
 
-Lliura `accessibilitat-xarxa-vilaseca-cognom.gpkg`, amb les capes generades; un projecte `.qgz` amb rutes relatives; i un informe `.pdf`. Conserva les dades referenciades i comprova l'obertura després de moure la carpeta completa.
+## Preparar la carpeta final
+
+1. Crea `dist/`. Amb **Exporta → Desa els objectes com a…**, crea-hi un **GeoPackage nou** amb els vectors dels apartats seleccionats: recta, rutes i xarxa de contrast quan corresponguin. Incorpora les entrades necessàries per interpretar-los. Per afegir capes al mateix fitxer, utilitza noms de capa nous; no sobreescriguis el GeoPackage complet.
+2. Copia només els GeoTIFF de context o altres recursos necessaris. Una ortofoto local permet consultar el mapa sense internet. Les proves descartades i els fitxers no utilitzats es queden a `sandbox/`.
+3. Desa una còpia del projecte com a `.qgz` **extern** dins de `dist/`, amb rutes relatives. Carrega els vectors del GeoPackage final i els recursos d'aquesta carpeta; retira del projecte final les capes que continuïn apuntant a `data/` o `sandbox/`. Conserva o torna a aplicar els estils i les etiquetes i comprova l'ordre de dibuix. Retirar una capa del projecte no esborra el fitxer.
+4. Desa-hi l'informe PDF. Identifica carpeta/ZIP i fitxers principals amb el codi de pràctica, el tema i els cognoms. En aquest patró, substitueix **`prN` pel codi real de Moodle**:
+
+```filetree
+prN-accessibilitat-xarxa-cognoms.gpkg
+prN-accessibilitat-xarxa-cognoms.qgz
+prN-accessibilitat-xarxa-cognoms.pdf
+```
+
+5. Copia la carpeta final a una altra ubicació, o reanomena-la amb el mateix prefix, comprimeix-la i extreu el ZIP en una carpeta nova. Obre el `.qgz` de la còpia sense connexió. Comprova les capes, les dades, els estils, les etiquetes i l'ordre; les fonts han de ser dins de la còpia, sense dependències del `sandbox/` original. Si conserves el WMS opcional, incorpora també el seu XML i mantén el context local per a la prova offline.
 
 La qualificació distribueix **70% als apartats obligatoris indicats a classe**, **20% a les ampliacions** i **10% a l'informe, captures, mapes i organització**. Les ampliacions no substitueixen els obligatoris ni garanteixen una nota per haver-les intentat.
 

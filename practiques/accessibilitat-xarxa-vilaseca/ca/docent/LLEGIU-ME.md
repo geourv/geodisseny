@@ -1,9 +1,9 @@
 ---
-title: "Guia docent: accessibilitat per xarxa vectorial"
+title: "Guia docent: accessibilitat — xarxa vectorial"
 author: Benito Zaragozí
 lang: ca
-date: "Edició: 18 d'octubre de 2026"
-content_status: approved
+date: "Edició: 30 d'octubre de 2026"
+content_status: review
 ---
 
 # Abast i durada orientativa
@@ -23,32 +23,20 @@ Estimació pendent de contrast amb una classe, amb QGIS preparat, dades locals i
 # Preparar Moodle
 
 1. Crea una **Tasca** amb el nom **Accessibilitat: xarxa vectorial**.
-2. Adjunta `accessibilitat-xarxa-vilaseca-2026-10-18-ca.zip` a **Fitxers addicionals**.
-3. Copia el bloc següent a **Descripció**, fins al final de «Qualificació». Comunica a classe i a Moodle els apartats seleccionats.
+2. Adjunta `accessibilitat-xarxa-vectorial.zip` a **Fitxers addicionals**.
+3. Obre **`ENUNCIAT-MOODLE.md`**, lliurat al costat d'aquest PDF, i copia'n el text editable a **Descripció**. Comunica a classe i a Moodle els apartats seleccionats i el codi real de la pràctica. El marcador `prN` dels patrons de nom no assigna cap número.
 4. Revisa la vista d'estudiant. El ZIP docent conté aquesta lectura i els projectes/resultats per preparar la sessió.
-
-## Enunciat per copiar a la descripció
-
-**Dades.** Descarregueu `accessibilitat-xarxa-vilaseca-2026-10-18-ca.zip`. Obriu el projecte inici de `accessibilitat-vilaseca.gpkg` amb QGIS3.44 i seguiu `LLEGIU-ME.pdf`. Els eixos de xarxa i el context cartogràfic són de l'ICGC; trams admesos i velocitats són supòsits docents.
-
-**Treball de classe.** El professor indicarà els apartats obligatoris dins del70%: distància recta, connexions, ruta curta/ràpida, tancament de P2 i interpretació. La guia completa no és una llista de passos automàticament obligatoris. Manteniu O/D i distingiu «sense ruta» de distància zero.
-
-**Ampliacions per aspirar a l'excel·lent.** Compareu destins, velocitats o una altra zona, amb una referència i controls. Quin accés és més vulnerable? Quines dades permetrien contrastar la ruta? Proposeu una aplicació geogràfica proporcionada als resultats.
-
-**Informe i lliurament.** Entregueu vectors en un GeoPackage, projecte relatiu i PDF amb pregunta, dades, decisions, controls, mapes/taula i conclusions. Podeu enregistrar la pantalla i extreure'n captures llegibles, numerades i comentades; el vídeo només es lliura si el professor ho indica. Comproveu l'obertura en una altra carpeta.
-
-**Qualificació.** 70% apartats obligatoris indicats a classe;20% ampliacions;10% informe, captures, mapes i organització. Una ampliació necessita pregunta, controls i interpretació; no substitueix els obligatoris ni garanteix una nota.
 
 # Resolució i controls
 
-El paquet docent conserva `docent/projectes/00-inici.qgz` i `02-xarxa.qgz`, amb dependències relatives. El GeoPackage inicial és el del cas comú; `docent/resultats.gpkg` conté els resultats vectorials de referència. Els projectes seleccionen les capes pertinents al bloc.
+El paquet docent conté `LLEGIU-ME.pdf` a l'arrel i els recursos a `data/`. Conserva `data/projectes/00-inici.qgz` i `02-xarxa.qgz`, amb dependències relatives. `data/accessibilitat-vilaseca.gpkg` conté els vectors inicials; `data/resultats.gpkg`, els resultats vectorials de referència. Els ràsters són GeoTIFF a `data/rasters/`. Els projectes seleccionen les capes pertinents al bloc i el dibuix segueix l'ordre del panell Capes.
 
 | Magnitud | Control |
 | --- | --- |
 | O /D | (344407;4553668,36) /(344473,01;4554030,72) m |
-| Recta vectorial | 368,323349 m |
-| Ruta oberta | 454,104650 m |
-| Temps a5km/h | 5,449256 min |
+| Recta vectorial | 368,32 m |
+| Ruta oberta | 454,10 m |
+| Temps a 5 km/h | 5,45 min |
 | Eix retirat | rtt_id1354754 |
 | Ruta tancada | Sense ruta; longitud/temps nuls |
 
@@ -61,6 +49,14 @@ Table: Controls del cas vectorial amb els mateixos O/D.
 El tancament conserva `"rtt_id" <> 1354754`, amb `native:extractbyexpression`. Retirar tots els eixos que toquen el corredor ràster eliminaria també accessos que es volen mantenir. La xarxa preparada té7.945parts i no nodifica cada creuament visual.
 
 Revisa justificació de toleràncies, punts fixos, unitats i connexions. La manca de ruta és un resultat del graf preparat, no una certificació de totes les alternatives físiques. En una altra zona, els controls impresos deixen de ser resultats esperats.
+
+# Organització i lliurament portable
+
+Mostra la separació entre `data/`, que es conserva com a referència, `sandbox/`, amb la còpia del QGZ i les proves, i `dist/`, amb els lliurables seleccionats. Els grups de capes no mouen fitxers. Les vistes del paquet docent permeten reprendre fases de classe; no converteixen totes les capes de referència en lliurables obligatoris.
+
+La guia demana un GeoPackage **nou** a `dist/`, un QGZ **extern** relatiu i l'informe PDF, amb el patró codi–tema–cognoms. Els vectors i recursos necessaris s'exporten/copien a la selecció final; el projecte deixa de dependre de `data/` o `sandbox/`. Les proves descartades romanen fora del lliurament.
+
+Obre una còpia traslladada o un ZIP acabat d'extreure, sense xarxa. Comprova les fonts de dades de la còpia, les capes, els estils, les etiquetes i l'ordre de dibuix. Si es conserva el WMS, també cal el seu XML i un context local per a la revisió offline. Un projecte que només funciona perquè troba les dades a l'ordinador original no acredita portabilitat.
 
 # Posada en comú i fonts
 

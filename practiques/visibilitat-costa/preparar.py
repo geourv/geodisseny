@@ -196,8 +196,11 @@ def compose(project, project_id, parameters, products):
     order = {'torxa': 0, 'receptors': 1, 'carretera': 2, 'poligon': 3,
              'coberta_original': 4, 'mostres_carretera': 5, 'Ortofoto ICGC 2025': 100}
     tree = project.layerTreeRoot()
-    tree.setHasCustomLayerOrder(True)
-    tree.setCustomLayerOrder(sorted(project.mapLayers().values(), key=lambda layer: order.get(layer.name(), 20)))
+    for layer in reversed(sorted(project.mapLayers().values(), key=lambda layer: order.get(layer.name(), 20))):
+        node = tree.findLayer(layer.id())
+        tree.insertChildNode(0, node.clone())
+        tree.removeChildNode(node)
+    tree.setHasCustomLayerOrder(False)
 
 
 def snapshot(run_id):

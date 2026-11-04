@@ -1,9 +1,9 @@
 ---
-title: "Guia docent: temps d'accés i ampliacions"
+title: "Guia docent: accessibilitat — temps d'accés"
 author: Benito Zaragozí
 lang: ca
-date: "Edició: 18 d'octubre de 2026"
-content_status: approved
+date: "Edició: 30 d'octubre de 2026"
+content_status: review
 ---
 
 # Abast, prerequisits i durada
@@ -22,22 +22,10 @@ Estimació pendent de prova d'aula, amb QGIS/GDAL/GRASS preparats i coneixement 
 
 # Preparar Moodle
 
-1. Crea una **Tasca** amb el nom **Accessibilitat: temps d'accés i ampliacions**.
-2. Adjunta `accessibilitat-temps-vilaseca-2026-10-18-ca.zip` a **Fitxers addicionals**.
-3. Copia el bloc següent a **Descripció**, fins al final de «Qualificació», i recull la selecció de classe.
+1. Crea una **Tasca** amb el nom **Accessibilitat: temps d'accés**.
+2. Adjunta `accessibilitat-temps-acces.zip` a **Fitxers addicionals**.
+3. Obre **`ENUNCIAT-MOODLE.md`**, lliurat al costat d'aquest PDF, i copia'n el text editable a **Descripció**. Recull-hi la selecció de classe i el codi real de pràctica que substituirà `prN` als patrons de nom.
 4. Revisa la vista d'estudiant i les dues friccions d'inici. El docent conserva aquesta lectura, els resultats i les vistes de servei, marxa i isòcrones.
-
-## Enunciat per copiar a la descripció
-
-**Dades.** Descarregueu `accessibilitat-temps-vilaseca-2026-10-18-ca.zip`. Obriu inici de `accessibilitat-vilaseca.gpkg` amb QGIS3.44, GDAL i GRASS, i carregueu les friccions oberta/tancada. Són entrades del bloc; haureu de calcular temps i isòcrones.
-
-**Treball de classe.** El professor indicarà els apartats obligatoris del70%: àrees de servei, marxa d'anada/tornada, control pla, isòcrones/franges i interpretació. La guia completa no converteix tots els procediments en obligatoris. Manteniu O/D, graella i paràmetres en cada comparació.
-
-**Ampliacions per aspirar a l'excel·lent.** Compareu orígens, llindars, pesos o una zona amb més pendent. Quina connexió o superfície es perd? Quina observació permetria contrastar els temps? Desenvolupeu una aplicació geogràfica amb una referència, controls i límits explícits.
-
-**Informe i lliurament.** Entregueu vectors en GeoPackage, projecte relatiu, TIFF requerits i PDF amb pregunta, fonts, decisions, mapes/taules i conclusions. Diferencieu branques de xarxa, superfícies, longitud, cost i temps. Podeu enregistrar la pantalla i extreure captures comentades; el vídeo només es lliura si el professor ho indica. Comproveu l'obertura des d'una altra ubicació.
-
-**Qualificació.** 70%apartats indicats a classe;20%ampliacions;10%informe, captures, mapes i organització. Una ampliació necessita pregunta, controls i interpretació i no substitueix els obligatoris.
 
 # Xarxa i superfície temporal
 
@@ -45,9 +33,9 @@ O=(344407;4553668,36)m;D=(344473,01;4554030,72)m. EPSG:25831/NONE, graella5m i60
 
 | Límit | Xarxa oberta, longitud única | Xarxa tancada, longitud única |
 | --- | ---: | ---: |
-| 3min | 448,384607m | 68,418647m |
-| 6min | 1116,560723m | 68,418647m |
-| 12min | 3606,611447m | 68,418647m |
+| 3 min | 448,38 m | 68,42 m |
+| 6 min | 1.116,56 m | 68,42 m |
+| 12 min | 3.606,61 m | 68,42 m |
 
 Table: Branques accessibles; unió geomètrica per evitar duplicats.
 
@@ -59,9 +47,9 @@ La fricció temporal és `("friccio_obert@1" - 1) * 0.125`, en s/m, sense multip
 
 | Model | O→D | D→O |
 | --- | ---: | ---: |
-| MDT, P2obert | 401,797517s =6,696625min | 394,465679s =6,574428min |
-| Elevació constant | 340,724610s | 340,724610s |
-| MDT, P2tancat | 1555,331669s =25,922194min | No requerit per aquest control |
+| MDT, P2 obert | 401,80 s = 6,70 min | 394,47 s = 6,57 min |
+| Elevació constant | 340,72 s | 340,72 s |
+| MDT, P2 tancat | 1.555,33 s = 25,92 min | No requerit per aquest control |
 
 Table: Temps dels models amb vials integrats a la fricció inicial.
 
@@ -75,9 +63,9 @@ Usa marxa des d'O **en minuts**. r.contour:nivells3/6/12, mínim3punts per líni
 
 | Límit | Obert, cel·les | Obert, ha | Tancat, cel·les | Tancat, ha |
 | --- | ---: | ---: | ---: | ---: |
-| Fins a3min | 2831 | 7,0775 | 2552 | 6,3800 |
-| Fins a6min | 10924 | 27,3100 | 7677 | 19,1925 |
-| Fins a12min | 35430 | 88,5750 | 22109 | 55,2725 |
+| Fins a 3 min | 2831 | 7,08 | 2552 | 6,38 |
+| Fins a 6 min | 10924 | 27,31 | 7677 | 19,19 |
+| Fins a 12 min | 35430 | 88,58 | 22109 | 55,27 |
 
 Table: Recomptes i àrees acumulades;25m²per cel·la.
 
@@ -89,8 +77,16 @@ Les franges de referència no toquen el límit de càlcul. En altres zones, comp
 
 # Projectes, posada en comú i fonts
 
-Vistes docents00/03/04/08/09/10: inici, àrees de servei obertes/tancades, marxa i isòcrones. Conserven dependències relatives i els intermedis temporals per reprendre controls de classe.
+La lectura `LLEGIU-ME.pdf` és a l'arrel i els recursos a `data/`. Vistes docents00/03/04/08/09/10 de `data/projectes/`: inici, àrees de servei obertes/tancades, marxa i isòcrones. Els vectors són als GeoPackage; els ràsters són GeoTIFF sota `data/rasters/`. Conserven dependències relatives i els intermedis temporals per reprendre controls de classe; el dibuix segueix el panell Capes.
 
 Revisa la selecció anunciada, les unitats, els dos sentits, el control pla, la cobertura i la interpretació. En ampliacions, demana què canvia respecte de la referència i quines dades permetrien contrastar-ho. Una superfície temporal no mesura directament població servida ni permisos d'accés.
+
+## Preparar i reobrir el lliurament
+
+Mostra `data/` com a entrada preservada, `sandbox/` per a projecte de treball, proves i intermedis, i `dist/` per a la selecció final. Els grups del panell Capes no mouen fitxers. Els resultats i intermedis del paquet docent serveixen per reprendre controls; no constitueixen una llista de lliurament completa per a l'alumnat.
+
+La selecció final conté un GeoPackage **nou** amb els vectors pertinents, un QGZ **extern** relatiu, l'informe PDF i els GeoTIFF necessaris, amb noms codi–tema–cognoms. Revisa quins temps, franges, direccions i entrades requereixen els apartats assignats. Omet experiments descartats i fitxers no utilitzats, preservant-los a `sandbox/`.
+
+Obre una còpia traslladada o un ZIP extret sense xarxa. Cap capa del QGZ final ha de dependre de `data/` o `sandbox/` originals. Comprova fonts de dades dins de la còpia, segons/minuts, estils, etiquetes i ordre. El context en línia, si es conserva amb el seu XML, ha de tenir l'alternativa local per a la revisió offline.
 
 Fonts: [ICGC elevacions](https://www.icgc.cat/ca/Geoinformacio-i-mapes/Dades-i-productes/Elevacions), LiDAR2021–2023/MDT5m, MCSC/RTT2024/ortofoto2025; [condicions ICGC](https://www.icgc.cat/condicions), [r.walk](https://grass.osgeo.org/grass84/manuals/r.walk.html), [r.contour](https://grass.osgeo.org/grass84/manuals/r.contour.html).

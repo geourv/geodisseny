@@ -1,0 +1,124 @@
+{
+  "ok": true,
+  "capture_id": "visibilitat-lots-acces",
+  "worker_process": {
+    "role": "qgis-render",
+    "pid": 1,
+    "ppid": 0,
+    "pid_namespace": "pid:[4026533471]"
+  },
+  "provenance": {
+    "recipe_id": "visibilitat-lots",
+    "recipe_title": "Primera execuci\u00f3 per lots de Viewshed",
+    "recipe_path": "/workspace/sandbox/practiques/visibilitat-costa/2026-10-18-lots-01/render-final-host-01/recipe.yml",
+    "capture_title": "Accedir al proc\u00e9s per lots des del di\u00e0leg de Viewshed",
+    "source_prompt": "/workspace/context/qgis/visibilitat-lots.md",
+    "recipe_source_prompt": "/workspace/context/qgis/visibilitat-lots.md",
+    "capture_source_prompt": null
+  },
+  "image": "sha256:1003721d96abe9607d8337b36851f9b29f84c2f8f92b377d1a73ff03c9d15cd2",
+  "image_digest": "sha256:1003721d96abe9607d8337b36851f9b29f84c2f8f92b377d1a73ff03c9d15cd2",
+  "probe": {
+    "ok": true,
+    "python_version": "3.13.7",
+    "qgis_version": "3.44.11",
+    "qt_version": "5.15.17",
+    "gdal_version": "3.10.3",
+    "qgis_process": {
+      "ok": true,
+      "path": "/usr/bin/qgis_process",
+      "version": "QGIS 3.44.11-Solothurn 'Solothurn' (f8f5812197f)\nQGIS code revision f8f5812197f\nQt version 5.15.17\nPython version 3.13.7\nGDAL/OGR version 3.10.3\nPROJ version 9.6.0\nEPSG Registry database version v12.004 (2025-03-02)\nGEOS version 3.13.1-CAPI-1.19.2\nSQLite version 3.46.1\nOS Ubuntu 25.10",
+      "returncode": 0
+    },
+    "analysis_checked": false,
+    "process": {
+      "role": "qgis-probe",
+      "pid": 1,
+      "ppid": 0,
+      "pid_namespace": "pid:[4026533471]"
+    },
+    "image": "sha256:1003721d96abe9607d8337b36851f9b29f84c2f8f92b377d1a73ff03c9d15cd2",
+    "digest": "sha256:1003721d96abe9607d8337b36851f9b29f84c2f8f92b377d1a73ff03c9d15cd2",
+    "raw": "{\"ok\": true, \"python_version\": \"3.13.7\", \"qgis_version\": \"3.44.11-Solothurn\", \"qt_version\": \"5.15.17\", \"gdal_version\": \"3.10.3\", \"qgis_process\": {\"ok\": true, \"path\": \"/usr/bin/qgis_process\", \"version\": \"QGIS 3.44.11-Solothurn 'Solothurn' (f8f5812197f)\\nQGIS code revision f8f5812197f\\nQt version 5.15.17\\nPython version 3.13.7\\nGDAL/OGR version 3.10.3\\nPROJ version 9.6.0\\nEPSG Registry database version v12.004 (2025-03-02)\\nGEOS version 3.13.1-CAPI-1.19.2\\nSQLite version 3.46.1\\nOS Ubuntu 25.10\", \"returncode\": 0}, \"analysis_checked\": false, \"process\": {\"role\": \"qgis-probe\", \"pid\": 1, \"ppid\": 0, \"pid_namespace\": \"pid:[4026533471]\"}}\n",
+    "returncode": 0
+  },
+  "output": "/home/benizar/git/geodisseny/assets/captures/visibilitat-lots-acces.png",
+  "annotation_svg": "/home/benizar/git/geodisseny/assets/captures/visibilitat-lots-acces.annotations.svg",
+  "annotation_svg_background": {
+    "mode": "embedded_png_data_uri",
+    "width": 760,
+    "height": 690
+  },
+  "manifest": "/home/benizar/git/geodisseny/context/qgis/manifests/visibilitat-lots-acces.yml",
+  "backend": "x11",
+  "locale": {
+    "requested": "ca",
+    "qsettings_user_locale": "ca",
+    "qsettings_override": true
+  },
+  "device_pixel_ratio": 1.0,
+  "coordinate_space": "logical pixels in the captured image; recipe relative coordinates share this space for PNG and SVG annotations",
+  "camera": {
+    "mode": "full",
+    "requested": {
+      "mode": "full",
+      "target": null,
+      "padding": 0,
+      "output_size": null
+    },
+    "full_capture": {
+      "width": 760,
+      "height": 690
+    },
+    "scale": 1.0
+  },
+  "layout_policy": {
+    "reading_direction": "left_to_right",
+    "prefer_local_empty_space": true,
+    "prefer_leaderless_labels": true,
+    "avoid_diagonal_leaders": true,
+    "allow_diagonal_leaders": "when_no_clear_local_candidate",
+    "protect_text": true,
+    "protect_controls": true,
+    "obstacle_padding": 4.0
+  },
+  "project_crs": "EPSG:25831",
+  "canvas_crs": "EPSG:25831",
+  "warnings": [],
+  "target": {
+    "object_name": "unaltracapturaProcessingDialog:gdal:viewshed",
+    "class_name": null,
+    "text": null,
+    "item_text": null,
+    "layer_name": null,
+    "target_part": null,
+    "title": null,
+    "parent_window": null,
+    "fallback": []
+  },
+  "annotations": [
+    {
+      "type": "rect",
+      "source": "coordinate",
+      "colour": {
+        "mode": "explicit",
+        "token": "information",
+        "hex": "#0072b2"
+      },
+      "shadow": false,
+      "coordinate": {
+        "x": 104.0,
+        "y": 653.0,
+        "unit": "logical_px",
+        "relative_to": "capture",
+        "widget": null
+      },
+      "bbox": {
+        "x": 104,
+        "y": 653,
+        "width": 230,
+        "height": 28
+      }
+    }
+  ]
+}

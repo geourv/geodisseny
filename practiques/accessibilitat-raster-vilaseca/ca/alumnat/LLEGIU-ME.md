@@ -1,9 +1,9 @@
 ---
-title: "Pràctica: accessibilitat amb un model ràster de cost"
+title: "Pràctica: accessibilitat — model ràster de cost"
 author: Benito Zaragozí
 lang: ca
-date: "Edició: 18 d'octubre de 2026"
-content_status: approved
+date: "Edició: 30 d'octubre de 2026"
+content_status: review
 ---
 
 # Cobertes, vials, barreres i camí de cost
@@ -14,9 +14,17 @@ El moviment entre cel·les permet comparar un itinerari amb una superfície terr
 
 # Preparació i graella
 
-El ZIP conté `accessibilitat-vilaseca.gpkg` i aquest PDF. Obre el projecte **inici** des d'**Explorador → GeoPackage → Connexió nova**, amb QGIS3.44, GDAL i GRASS. Cerca `r.grow.distance`, `r.cost` i `r.path` a **Procés → Caixa d'eines**; revisa la instal·lació si no apareixen.
+El ZIP conté `LLEGIU-ME.pdf` a l'arrel i els recursos a `data/`: vectors a `accessibilitat-vilaseca.gpkg`, ràsters GeoTIFF a `rasters/` i projecte **`inici.qgz`**. Obre `data/inici.qgz` amb QGIS3.44, GDAL i GRASS. Cerca `r.grow.distance`, `r.cost` i `r.path` a **Procés → Caixa d'eines**; revisa la instal·lació si no apareixen.
 
-Treballa sobre una còpia i crea `intermedis/` per als TIFF. Guarda vectors amb noms nous en un GeoPackage i el projecte amb rutes relatives. Selecciona la capa concreta —Origen O, Destí D, cobertes o xarxa—, no el fitxer complet amb totes les taules.
+Conserva `data/` com a referència. Crea `sandbox/` al seu costat i desa-hi una còpia del projecte com a `accessibilitat-raster.qgz`, amb rutes relatives. Utilitza `sandbox/intermedis/` per als TIFF de preparació i un GeoPackage nou de `sandbox/` per als vectors, amb noms de capa nous. Selecciona la capa concreta —Origen O, Destí D, cobertes o xarxa—, no el fitxer complet amb totes les taules.
+
+Desa també les proves i alternatives a `sandbox/`. Al final seleccionaràs els lliurables a `dist/`. Els grups del panell Capes poden distingir entrades, proves i resultats, però no mouen fitxers entre carpetes.
+
+El grup **Ortofoto ICGC** conté el retall local i el **WMS**. Activa el WMS amb internet per contrastar vials i passos amb més detall; sense connexió, deixa només la còpia local. El context no canvia la graella ni les dades d'anàlisi.
+
+Conserva `data/ortofoto-wms.xml`; el projecte el necessita per al context en línia. L'ordre de dibuix segueix el panell **Capes**.
+
+Els GeoTIFF ja estan separats del GeoPackage i carregats al projecte. Utilitza les capes concretes als càlculs i conserva CRS, resolució, alineació i NoData en desar els intermedis.
 
 | Propietat | Valor |
 | --- | --- |
@@ -142,7 +150,21 @@ Proposa una aplicació geogràfica: comparar accessos o estudiar una barrera. Qu
 
 L'informe ha d'explicar pregunta, dades, decisions, controls d'alineació/NoData, mapes i taula, i interpretació. Pots enregistrar fragments de pantalla i desar fotogrames llegibles des d'un reproductor; numera'ls i comenta'ls. Exporta els mapes finals amb llegenda, escala i unitats. El vídeo només es lliura si el professor ho indica.
 
-Lliura GeoPackage amb vectors, projecte `.qgz` relatiu, TIFF referenciats i informe PDF, amb el prefix **accessibilitat-raster-vilaseca-cognom**. Comprova l'obertura després de moure la carpeta completa.
+## Seleccionar i comprovar el lliurament
+
+1. Crea `dist/` i un **GeoPackage nou** amb els vectors dels apartats lliurats, com els camins, la barrera o els punts de control necessaris. Utilitza **Exporta → Desa els objectes com a…**; afegeix cada capa amb un nom diferent al mateix fitxer, sense sobreescriure'l complet.
+2. Copia a `dist/rasters/` els GeoTIFF necessaris per representar i revisar la selecció: per exemple, friccions i costos del contrast obert/tancat. Conserva direccions o màscares si els controls demanats les necessiten. Les alternatives descartades i els intermedis que no s'utilitzen es queden a `sandbox/`.
+3. Desa un `.qgz` **extern** a `dist/`, amb rutes relatives. Torna a carregar les capes des dels fitxers finals i retira del projecte les referències a `data/` o `sandbox/`. Comprova estils, etiquetes, ordre de dibuix i que les unitats, la graella i NoData no han canviat en copiar les dades. Afegeix només el context local necessari; si mantens el WMS, copia també el seu XML.
+4. Desa l'informe PDF amb el mateix prefix. En el patró següent, **`prN` es reemplaça pel codi real de la tasca de Moodle**:
+
+```filetree
+prN-accessibilitat-raster-cognoms.gpkg
+prN-accessibilitat-raster-cognoms.qgz
+prN-accessibilitat-raster-cognoms.pdf
+rasters/
+```
+
+5. Reanomena la carpeta final amb el mateix prefix i/o comprimeix-la. Obre una còpia traslladada o el ZIP acabat d'extreure en una ubicació nova, sense connexió. Verifica que totes les fonts són dins de la còpia i que el mapa es representa igual: capes vàlides, valors, estils, etiquetes i ordre. No lliuris tot el directori de proves per resoldre una dependència que s'ha de seleccionar explícitament.
 
 Qualificació: **70% apartats obligatoris indicats a classe**, **20% ampliacions**, **10% informe, captures, mapes i organització**. Les ampliacions no substitueixen els obligatoris ni garanteixen una nota.
 

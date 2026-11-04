@@ -1,14 +1,14 @@
 ---
-title: "Pràctica: punts, centres i dispersió a Constantí"
+title: "Pràctica: estadística espacial descriptiva"
 author: Benito Zaragozí
 lang: ca
-date: "Edició: 18 d'octubre de 2026"
-content_status: approved
+date: "Edició: 30 d'octubre de 2026"
+content_status: review
 ---
 
-# Què expliquen els punts de Constantí?
+# Distribució de punts, centres, dispersió i densitat
 
-Una concentració de punts no és necessàriament una concentració de potència. Compararem el nombre de registres, la seua localització i els pesos abans de dibuixar resums de dispersió i superfícies de densitat. Tot el recorregut utilitza el mateix conjunt municipal.
+Una concentració de punts no és necessàriament una concentració de potència. Compararem el nombre de registres, la seua localització i els pesos abans de dibuixar resums de dispersió i superfícies de densitat. El cas d'aplicació és Constantí; tot el recorregut utilitza el mateix conjunt municipal.
 
 Els punts de l'ICAEN representen consumidors associats a instal·lacions d'autoconsum, no la petjada dels panells. Hi ha **124 registres**, dels quals **98 tenen una potència publicada** i 26 només un interval. Les coincidències de coordenades es conserven. La suma coneguda és **2.770 kW**; una dada absent no es converteix en zero.
 
@@ -16,11 +16,13 @@ Els punts de l'ICAEN representen consumidors associats a instal·lacions d'autoc
 
 ## Obrir el paquet
 
-1. Descomprimeix el ZIP complet en una carpeta pròpia. Llegeix aquest PDF i conserva l'estructura de carpetes.
+1. Descomprimeix el ZIP complet en una carpeta pròpia. Llegeix `LLEGIU-ME.pdf`, a l'arrel, i conserva `data/` amb tots els recursos.
 2. Utilitza **QGIS 3.44 LTR**. Les operacions d'aquesta pràctica són de Processament de QGIS; el mapa de calor no necessita Hotspot Analysis.
-3. Al panell **Explorador**, crea una connexió GeoPackage a `payload/data/estadistica-constanti.gpkg` i desplega-la. Obre el projecte **inici** guardat dins del GeoPackage.
+3. Obre **`data/inici.qgz`**. Al panell **Explorador**, crea també una connexió a `data/estadistica-constanti.gpkg` per consultar els vectors. L'ortofoto és un GeoTIFF a `data/rasters/`.
 4. Comprova **EPSG:25831** i el·lipsoide **Cap / NONE**. Les longituds planes són en metres.
-5. Crea `treball/` al costat de `payload/`. Desa-hi les teues sortides i una còpia del projecte; conserva el GeoPackage d'inici.
+5. Conserva `data/` com a referència. Crea `sandbox/` al seu costat i desa-hi una còpia del projecte com a `estadistica.qgz`, amb rutes relatives. Utilitza un GeoPackage nou per als vectors de treball i `sandbox/rasters/` per als TIFF, sense modificar les entrades.
+
+Les proves i alternatives es conserven a `sandbox/`; el lliurament es prepara després a `dist/`. L'ordre de dibuix segueix el panell **Capes**. Els grups poden distingir entrades, proves i resultats seleccionats, però no mouen ni copien els fitxers.
 
 | Entrada | Contingut | Funció |
 | --- | --- | --- |
@@ -33,7 +35,9 @@ Els punts de l'ICAEN representen consumidors associats a instal·lacions d'autoc
 
 Table: Entrades preparades i funció en la pràctica.
 
-La font local DejaVu Sans de `payload/data/fonts/` forma part dels recursos del projecte. Conserva-la amb el paquet. L'ortofoto és un retall del servei WMS ICGC de 2025; no cal connectar-se al servei per treballar.
+La font local DejaVu Sans de `data/fonts/` forma part dels recursos del projecte. Conserva-la amb el paquet. El grup **Ortofoto ICGC** conté el retall local de 2025 i el **WMS**, que ofereix més detall amb internet. Activa una sola ortofoto cada vegada. Per treballar sense connexió, deixa el WMS desactivat i utilitza el retall local; les dades d'anàlisi continuen sent locals.
+
+Conserva també `data/ortofoto-wms.xml`, que configura la capa de context en línia.
 
 ![Punts de Constantí, límit municipal i ortofoto que permeten situar el cas.](captures/c4-constanti-dades.png){width=100% height=380pt}
 
@@ -42,7 +46,7 @@ La font local DejaVu Sans de `payload/data/fonts/` forma part dels recursos del 
 Obre **Procés → Caixa d'eines**, o utilitza **Ctrl+Alt+T**. Cerca **Compta els punts al polígon**, `native:countpointsinpolygon`.
 
 1. Polígons: `malla`. Punts: `punts`. Deixa buits pes i classe.
-2. Camp de recompte: `n_punts`. Desa una capa `recompte` en un GeoPackage nou de `treball/`.
+2. Camp de recompte: `n_punts`. Desa una capa `recompte` al GeoPackage de `sandbox/`.
 3. Comprova **90 files** i suma **124**. Representa `n_punts` amb intervals i conserva els punts damunt de la malla.
 4. Repeteix sobre la capa de recompte amb els punts de `coneguda`, pes `POT_KW` i camp `kw_pub`.
 5. Comprova que la suma de `kw_pub` és **2.770 kW**. Els 26 registres sense xifra no aporten un pes inventat.
@@ -74,9 +78,9 @@ El cercle resumeix una distància quadràtica al centre; l'el·lipse descriu l'a
 
 | Paràmetre | Valor de referència |
 | --- | ---: |
-| Radi del cercle | 2.000,6564 m |
-| Semieix major de l'el·lipse | 1.934,4377 m |
-| Semieix menor | 510,4672 m |
+| Radi del cercle | 2.000,66 m |
+| Semieix major de l'el·lipse | 1.934,44 m |
+| Semieix menor | 510,47 m |
 | Azimut del semieix major | 110,22° |
 
 Table: Paràmetres de dispersió per dibuixar els resums sobre el centre dels registres.
@@ -85,16 +89,16 @@ Table: Paràmetres de dispersió per dibuixar els resums sobre el centre dels re
 2. Tria sortida Polígon i executa aquesta expressió per al cercle:
 
 ```text
-make_circle($geometry, 2000.6564, 72)
+make_circle($geometry, 2000.66, 72)
 ```
 
 3. En una segona execució, sobre el mateix centre, dibuixa l'el·lipse:
 
 ```text
-make_ellipse($geometry, 1934.4377, 510.4672, 110.22, 72)
+make_ellipse($geometry, 1934.44, 510.47, 110.22, 72)
 ```
 
-4. Desa les dues capes a `treball/`, amb farciment transparent i contorns diferents. Mantén visibles els 124 punts, el centre, el límit i l'ortofoto.
+4. Desa les dues capes al GeoPackage de `sandbox/`, amb farciment transparent i contorns diferents. Mantén visibles els 124 punts, el centre, el límit i l'ortofoto.
 
 ![Cercle i el·lipse de referència sobre els punts de Constantí.](captures/c4-cercle-ellipse.png){width=95% height=380pt}
 
@@ -107,7 +111,7 @@ Les xifres impreses estan arrodonides; la referència docent conserva els paràm
 Cerca **Mapa de calor**, `qgis:heatmapkerneldensityestimation`, dins d'Interpolació.
 
 1. Entrada: `punts`, **sense pes**. Radi **500 m** i mida de píxel X/Y **100 m**.
-2. A paràmetres avançats: kernel **Quartic** i valors de sortida **Raw**. Desa `kernel-500-raw.tif`.
+2. Prem el triangle de **Paràmetres avançats / Advanced Parameters** per desplegar els camps ocults. Al desplegable de forma del kernel, tria **Quartic**; al de valors de sortida, tria **Raw**. Desa `kernel-500-raw.tif`.
 3. Repeteix amb radi **1.500 m**, mateix píxel i sense pes.
 4. Per convertir el primer ràster en registres/km², utilitza Calculadora ràster:
 
@@ -157,7 +161,21 @@ No cal lliurar el vídeo tret que el professor ho indiqui. L'informe ha de selec
 
 # Lliurament i fonts
 
-Lliura `estadistica-constanti-cognom.gpkg`, amb els vectors generats; `estadistica-constanti-cognom.qgz`, amb rutes relatives; els TIFF referenciats; i `estadistica-constanti-cognom.pdf`, amb l'informe. El treball ha de permetre comprovar les operacions i interpretacions seleccionades a classe. Mantén tots els fitxers referenciats al costat del projecte i comprova que s'obre després de moure la carpeta completa, amb la xarxa desconnectada.
+Prepara `dist/` com una selecció dels apartats anunciats a classe:
+
+1. Amb **Exporta → Desa els objectes com a…**, crea-hi un **GeoPackage nou** amb els vectors lliurats: recompte i potència per quadrats, centres, cercle/el·lipse i punts necessaris, segons la selecció. Conserva els camps que permeten interpretar-los, com `POT_KW`, `w_mid` i `imputat` quan s'han utilitzat. Afegeix cada capa amb un nom nou al mateix fitxer; no sobreescriguis el GeoPackage complet.
+2. Copia a `dist/rasters/` els GeoTIFF necessaris. Si lliures el bloc de densitat, inclou els ràsters raw i normalitzats corresponents, amb els paràmetres i controls a l'informe. Conserva el context local que utilitza el mapa i `fonts/` si cal la font tipogràfica; si mantens el WMS opcional, copia'n també l'XML. Les proves descartades i els fitxers no utilitzats es queden a `sandbox/`.
+3. Desa un `.qgz` **extern al GeoPackage** dins de `dist/`, amb rutes relatives. Carrega els vectors i ràsters dels fitxers finals; retira del projecte les referències a `data/` o `sandbox/`. Conserva o torna a aplicar els estils, les etiquetes i l'ordre de dibuix. En un altre ordinador, comprova la disponibilitat de la font tipogràfica i instal·la la còpia inclosa si és necessària.
+4. Desa l'informe PDF amb el mateix prefix. Carpeta/ZIP i fitxers principals s'identifiquen amb codi, tema i cognoms. En el patró següent, **`prN` es substitueix pel codi real de Moodle**:
+
+```filetree
+prN-estadistica-descriptiva-cognoms.gpkg
+prN-estadistica-descriptiva-cognoms.qgz
+prN-estadistica-descriptiva-cognoms.pdf
+rasters/
+```
+
+5. Reanomena la carpeta final amb el mateix prefix i/o comprimeix-la. Obre una còpia traslladada o el ZIP extret en una carpeta nova, sense connexió. Verifica que totes les fonts de dades són dins de la còpia i que capes, valors, estils, etiquetes, fonts tipogràfiques i ordre coincideixen. Un `.qgz` amb rutes relatives encara depèn dels fitxers que referencia: moure només el projecte no els empaqueta.
 
 El **70%** correspon als apartats obligatoris que indicarà el professor. Les ampliacions permeten aspirar a l'excel·lent segons els criteris comunicats a classe i recollits a Moodle; no substitueixen els obligatoris ni garanteixen una nota per haver-les intentat. En una zona alternativa, identifica el cas al nom dels fitxers i conserva les fonts i els controls propis.
 
