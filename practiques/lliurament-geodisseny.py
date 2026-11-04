@@ -446,8 +446,10 @@ def capture_projects(run):
     print(json.dumps({'ok': True, 'capture_projects': len(SLUGS)}), flush=True)
 
 
-def package(run, package_pass, pdf_receipts, version, layout_pass):
+def package(run, package_pass, pdf_receipts, version, layout_pass, only_slug=None, reuse_unaffected_from=None):
     assert Path(package_pass).name == package_pass and package_pass not in ('.', '..')
+    assert bool(only_slug) == bool(reuse_unaffected_from), 'A selected revision requires a verified unaffected-package source.'
+    assert only_slug is None or only_slug in SLUGS
     out = run_root(run)
     destination = out / 'packages' / package_pass
     destination.mkdir(parents=True)
@@ -461,7 +463,48 @@ def package(run, package_pass, pdf_receipts, version, layout_pass):
     assert layout['context_receipt_sha256'] == sha(out / 'context.json')
     layout_records = {(row['slug'], row['recipient']): row for row in layout['records']}
     records = []
+    reused = None
+    if reuse_unaffected_from:
+        previous = run_root(reuse_unaffected_from)
+        assert json.loads((previous / 'current-verified.json').read_text())['ok']
+        old_root = previous / 'packages' / package_pass
+        old_report = json.loads((old_root / 'packages.json').read_text())
+        old_verified = json.loads((old_root / 'verified.json').read_text())
+        assert old_verified['ok'] and old_verified['packages_sha256'] == sha(old_root / 'packages.json')
+        assert old_verified['all_extracted_files_unchanged']
+        assert sha(ROOT / old_verified['qgis_receipt']) == old_verified['qgis_receipt_sha256']
+        assert sha(ROOT / old_report['layout_receipt']) == old_report['layout_receipt_sha256']
+        old_layout = json.loads((ROOT / old_report['layout_receipt']).read_text())
+        old_layout_records = {(row['slug'], row['recipient']): row for row in old_layout['records']}
+        for old in old_report['packages']:
+            if old['slug'] == only_slug:
+                continue
+            slug, role = old['slug'], old['recipient']
+            assert slug in SLUGS and role in ('alumnat', 'docent')
+            source = ROOT / 'practiques' / slug / 'ca' / role / 'LLEGIU-ME.md'
+            assert sha(source) == old['source_sha256']
+            assert sha(ROOT / old['zip']) == old['zip_sha256'] and sha(ROOT / old['pdf']) == old['pdf_sha256']
+            assert sha(ROOT / old['pdf_receipt']) == old['pdf_receipt_sha256']
+            built = json.loads((ROOT / old['pdf_receipt']).read_text())
+            assert built['ok'] and sha(ROOT / built['job'] / 'inputs/original.md') == sha(source)
+            assert built['pdf_sha256'] == old['pdf_sha256']
+            assert layout_records[slug, role]['files'] == old_layout_records[slug, role]['files']
+            row = dict(old)
+            row['version'] = built['version']
+            row['reused_package_report'] = str((old_root / 'packages.json').relative_to(ROOT))
+            records.append(row)
+            if role == 'docent':
+                statement = source.with_name('ENUNCIAT-MOODLE.md')
+                assert sha(statement) == old['moodle_statement_sha256']
+                target = destination / slug / role / statement.name
+                target.parent.mkdir(parents=True)
+                shutil.copyfile(statement, target)
+        assert len(records) == 8 and len({(row['slug'], row['recipient']) for row in records}) == 8
+        reused = {'run': reuse_unaffected_from, 'package_report_sha256': sha(old_root / 'packages.json'),
+                  'unchanged_zip_pdf_pairs': 8, 'original_editions_preserved': True}
     for slug in SLUGS:
+        if only_slug and slug != only_slug:
+            continue
         enunciat = ROOT / 'practiques' / slug / 'ca/docent/ENUNCIAT-MOODLE.md'
         for role in ('alumnat', 'docent'):
             result_path = receipts / f'{slug}-{role}.data.json'
@@ -533,7 +576,7 @@ def package(run, package_pass, pdf_receipts, version, layout_pass):
                 assert archive.testzip() is None and len(archive.namelist()) == len(inventory)
                 for item in inventory:
                     assert hashlib.sha256(archive.read(item['path'])).hexdigest() == item['sha256']
-            row = {'slug': slug, 'handoff_slug': HANDOFFS[slug][0], 'title': HANDOFFS[slug][1],
+            row = {'slug': slug, 'handoff_slug': HANDOFFS[slug][0], 'title': HANDOFFS[slug][1], 'version': version,
                    'recipient': role, 'zip': str(archive_path.relative_to(ROOT)),
                    'zip_sha256': sha(archive_path), 'pdf': str((role_folder / 'LLEGIU-ME.pdf').relative_to(ROOT)),
                    'pdf_sha256': sha(pdf), 'source_sha256': sha(source), 'pdf_pages': len(pages),
@@ -544,10 +587,12 @@ def package(run, package_pass, pdf_receipts, version, layout_pass):
                 row['moodle_statement_sha256'] = sha(enunciat)
             records.append(row)
             print(json.dumps({key: row[key] for key in ('slug', 'recipient', 'pdf_pages', 'zip_sha256')}), flush=True)
+    assert len(records) == 10 and {(row['slug'], row['recipient']) for row in records} == {
+        (slug, role) for slug in SLUGS for role in ('alumnat', 'docent')}
     save(destination / 'packages.json', {'kind': 'geodisseny-course-reading-handoffs', 'version': version,
-         'human_approved': False, 'context_receipt_sha256': sha(out / 'context.json'),
-         'layout_receipt': str((handouts / 'layout.json').relative_to(ROOT)),
-         'layout_receipt_sha256': sha(handouts / 'layout.json'), 'packages': records})
+          'human_approved': False, 'context_receipt_sha256': sha(out / 'context.json'),
+          'layout_receipt': str((handouts / 'layout.json').relative_to(ROOT)),
+          'layout_receipt_sha256': sha(handouts / 'layout.json'), 'packages': records, 'unaffected_reuse': reused})
     shutil.copyfile(Path(__file__), destination / 'source-preparer.py')
 
 
@@ -711,6 +756,9 @@ def publish_current(run, package_pass, archive_id):
     summaries = []
     for slug in SLUGS:
         handoff_slug, title = HANDOFFS[slug]
+        editions = {row.get('version', report['version']) for row in report['packages'] if row['slug'] == slug}
+        assert len(editions) == 1, 'Both readings of an activity must share their actual edition.'
+        edition = editions.pop()
         target = staged / handoff_slug / 'ca'
         target.mkdir(parents=True)
         files = []
@@ -731,7 +779,7 @@ def publish_current(run, package_pass, archive_id):
                 files.append({'path': 'ENUNCIAT-MOODLE.md', 'sha256': sha(statement), 'bytes': statement.stat().st_size})
         manifest = {'kind': 'geodisseny-current-practice-handoff', 'activity': handoff_slug,
                     'source_activity': slug, 'title': title, 'language': 'ca',
-                    'version': report['version'], 'status': 'review', 'human_approved': False,
+                    'version': edition, 'status': 'review', 'human_approved': False,
                     'moodle_uploaded': False, 'reconstruction': str(out.relative_to(ROOT)),
                     'package_report': str((package_root / 'packages.json').relative_to(ROOT)),
                     'package_report_sha256': sha(package_root / 'packages.json'), 'files': files}
@@ -742,11 +790,13 @@ def publish_current(run, package_pass, archive_id):
         assert all(sha(target / row['path']) == row['sha256'] for row in files)
         assert all(path.is_file() for path in target.iterdir()), 'Visible handoff documents must not use recipient folders.'
         summaries.append({'activity': handoff_slug, 'source_activity': slug, 'title': title,
+                          'version': edition,
                           'path': 'dist/practiques/' + handoff_slug + '/ca',
                           'manifest_sha256': sha(target / 'manifest.json')})
     with (staged / 'LLEGIU-ME.md').open('x') as stream:
         stream.write('# Lliuraments actuals de les pràctiques\n\n'
-                     'Edició en revisió: ' + report['version'] + '. Els PDFs porten ESBORRANY.\n\n'
+                      'Revisió del conjunt: ' + report['version'] + '. Cada activitat conserva '
+                      'la seva edició al manifest. Els PDFs porten ESBORRANY.\n\n'
                      'Cada carpeta de pràctica conté, sota `ca/`, el ZIP d’inici i el ZIP docent. '
                      'Adjunta el ZIP d’inici a **Fitxers addicionals** de Moodle i copia el text editable de '
                       '`ENUNCIAT-MOODLE.md` a **Descripció**. Les lectures separades són '
@@ -798,6 +848,8 @@ if __name__ == '__main__':
     parser.add_argument('--package', action='store_true')
     parser.add_argument('--package-pass', default='review01')
     parser.add_argument('--pdf-receipts')
+    parser.add_argument('--only-slug', choices=SLUGS)
+    parser.add_argument('--reuse-unaffected-packages-from')
     parser.add_argument('--version', default='2026-10-27')
     parser.add_argument('--verify-relocated', action='store_true')
     parser.add_argument('--relocated-root', default='/paquet')
@@ -818,7 +870,8 @@ if __name__ == '__main__':
     if args.capture_projects:
         capture_projects(args.run)
     if args.package:
-        package(args.run, args.package_pass, args.pdf_receipts, args.version, args.layout_pass)
+        package(args.run, args.package_pass, args.pdf_receipts, args.version, args.layout_pass,
+                args.only_slug, args.reuse_unaffected_packages_from)
     if args.verify_relocated:
         verify_relocated(Path(args.relocated_root), Path(args.proof))
     if args.publish_current:
