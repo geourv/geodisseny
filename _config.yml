@@ -343,6 +343,7 @@ unaltraweb:
             path: assets/captures/visibilitat-lots-suma.png
             sha256: b56f181410298e7798823294ad619686079bd73ea350d053294745ac71c4b7d5
   manual:
+    id: geodisseny
     collection: chapters
     nav_title: Geodisseny
     show_chapter_index: true

@@ -2,7 +2,7 @@
 title: "Guia docent: estadística espacial descriptiva"
 author: Benito Zaragozí
 lang: ca
-date: "Edició: 30 d'octubre de 2026"
+date: "Edició: 3 de novembre de 2026"
 content_status: review
 ---
 
@@ -71,6 +71,9 @@ Revisar que es compten els 124 registres i no només els 98 coneguts. Un camp ab
 | Radi de dispersió | 2.000,66 m |
 | Semieixos de l'el·lipse | 1.934,44 / 510,47 m |
 | Azimut major | 110,22° |
+| Variància est | 3.326.162,49 m² |
+| Variància nord | 676.463,64 m² |
+| Covariància | −1.129.131,02 m² |
 
 Table: Centres i resums de dispersió en EPSG:25831, amb xifres impreses arrodonides.
 
@@ -80,9 +83,23 @@ Els dos resums de dispersió utilitzen **124 punts i el centre no ponderat**. El
 
 ![Resums sobre els mateixos punts, centre, límit i ortofoto.](captures/c4-cercle-ellipse.png){width=95% height=380pt}
 
-La guia practica el dibuix amb constants arrodonides sobre el centre produït per l'estudiant. La capa docent conserva els paràmetres i geometries complets. Una diferència mínima de vora per arrodoniment no justifica moure punts, eliminar coincidències o canviar el conjunt de referència.
+La lectura d'alumnat desenvolupa ara el **càlcul dels paràmetres**, no només el dibuix amb constants: capa municipal P → centre no ponderat → camps de recompte, variàncies i covariància → radi, semieixos i angle → geometries. Les expressions de `make_circle` i `make_ellipse` llegeixen `D_m`, `a_m`, `b_m` i `azimut`. La capa docent conserva la referència calculada completa; les xifres de la taula serveixen per contrastar Constantí, no per corregir qualsevol altre municipi.
 
-Discutir un punt exterior i un espai interior amb pocs registres. El contorn no implica que tots els registres hi siguen dins, ni una cobertura de servei o probabilitat fixa.
+## Comprovar el procediment de l'alumnat
+
+1. Demana identificar **quina capa és P** i comprovar-ne el recompte i el CRS real. La selecció visual d'objectes no limita tots els agregats: per a un altre municipi s'extreu una capa pròpia. Mantén registres coincidents i evita barrejar geometries buides o coordenades en graus amb longituds en metres.
+2. El punt **dispersio** ha de tenir una fila i ser el centre sense pesos dels mateixos punts. Les nou expressions de la lectura s'apliquen a aquesta fila; `@parent` recupera el seu centre dins de l'agregat. Afegir els camps a P calcularia separacions respecte de cada punt, una altra operació.
+3. Revisa `n_punts`, `vx_m2`, `vy_m2` i `cxy_m2`, abans de jutjar la forma dibuixada. Les dues variàncies no poden ser negatives; la covariància sí. Es treballa amb divisor **n**, sense ponderar i amb tots els 124 registres del cas guiat, no només els 98 que publiquen potència.
+4. Contrasta **`D_m`² ≈ `a_m`² + `b_m`²**, amb `a_m` ≥ `b_m`, unitats i angle. `make_ellipse` espera semieixos, no longituds completes. `atan2` retorna radians; la guia usa `degrees` i transforma a azimut des del nord. Revisa els arguments i la conversió si l'orientació no segueix l'allargament; intercanviar eix llarg i curt gira el contorn 90°.
+5. Comprova que s'han guardat els camps, que les geometries es generen sobre aquell centre i que no s'han substituït els resultats per les constants de la taula. En canviar P, els camps persistents no es recalculen automàticament: cal tornar a obtenir centre i paràmetres.
+
+Els cinc punts ficticis del manual i de la lectura d'alumnat permeten un control petit: centre (3; 3) km, variàncies 4/4 km², covariància 3,2 km², radi √8 km, semieixos √7,2/√0,8 km i azimut 45°. Si es creen a QGIS en metres, s'han de multiplicar les coordenades per 1.000; els resums quadràtics passen a m². El cercle conté 3 punts i l'el·lipse, 1.
+
+Si `delta_m2` és zero, la dispersió principal és igual en totes dues direccions; l'azimut 0 és només una convenció de representació. Amb punts alineats, `b_m=0`: el resum és un segment, no un polígon el·líptic vàlid. Amb totes les posicions coincidents també el radi és zero. No exigir una el·lipse amb àrea en aquests casos ni modificar les dades per forçar-la.
+
+Una diferència mínima de vora per arrodoniment no justifica moure punts, eliminar coincidències o canviar el conjunt de referència. Per a un municipi alternatiu, contrasta els camps amb les seves pròpies coordenades i pregunta què descriu la forma; no utilitzis 1.934/510 m com a plantilla de correcció.
+
+Discutir un punt exterior i un espai interior amb pocs registres. A Constantí, cercle/el·lipse contenen 86/68 registres, respectivament; aquests recomptes no són garanties per a altres conjunts. El contorn no implica que tots els registres hi siguen dins, ni una cobertura de servei o probabilitat fixa.
 
 # Densitat i normalització
 
