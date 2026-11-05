@@ -3,7 +3,7 @@ activity: estadistica-constanti
 language: ca
 scope: recompte, centres, cercle i el·lipse, kernel
 reading_status: review
-edition: '2026-10-30'
+edition: '2026-11-03'
 title: Estadística espacial descriptiva
 handoff_slug: estadistica-espacial-descriptiva
 runtime:
@@ -42,3 +42,4 @@ delivery:
   current_handoff_generator: practiques/lliurament-geodisseny.py
   moodle_statement: ca/docent/ENUNCIAT-MOODLE.md
   orthophoto_context: local snapshot and optional ICGC2025 WMS grouped together
+  procedure_check: practiques/estadistica-constanti/comprovar-dispersio-qgis.py

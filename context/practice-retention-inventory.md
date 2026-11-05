@@ -572,3 +572,75 @@ el registre gestionat continua intacte a revision123, al límit100. Els pendents
 són a la memòria de projecte `edd48b8eae204f13bb990cad9a029fe6` i al traspàs local.
 Tot continua review/ESBORRANY. No s'ha concedit aprovació humana, fet commit,
 publicat el web o pujat res a Moodle. La retenció continua sent local.
+
+## Dimensions de dispersió transferibles, 3 de novembre de 2026
+
+Tasca pròpia [Geodisseny#22](https://github.com/geourv/geodisseny/issues/22),
+branca `content/22-calcul-dispersio` des de main
+`a644a6a3ddcff3ad09e8684207968ee1c826868f`, amb preflightELIGIBLE abans d'editar.
+L'autor demana calcular radi i semieixos al manual i a la lectura d'alumnat:
+altres municipis no poden reutilitzar les dimensions de Constantí.
+
+Reconstrucció de sessió:
+`sandbox/practiques/estadistica-constanti/2026-11-03-dispersio-01/`.
+Conservar `before.json`, fonts/artefactes anteriors, `check01/` fallit i
+`check02/` correcte, `web-checks/`, `build01/`, `browser-review01/`,
+`manual-pdf-review01/`, `REVISIO-RETINGUDA.json`, fonts finals i `final-checks.json`.
+
+El procediment usa una capa municipal P, CRS real mètric, centre no ponderat i
+nou camps a la fila d'aquell centre. Les variàncies/covariància amb divisor n
+alimenten D, delta, a, b i azimut. Les funcions de dibuix llegeixen aquests camps.
+Es distingeixen selecció d'objectes i capa d'anàlisi, geometria de P i del
+`@parent`, precisió de càlcul i presentació, angle/radians i semieixos/eixos.
+Es documenten isotropia, alineació i coincidència sense forçar polígons.
+
+El verificador específic executa les expressions literals del manual i de la
+lectura amb `native:fieldcalculator`, `native:meancoordinates` i
+`native:geometrybyexpression` a QGIS3.44.11/engine100…, sense xarxa i amb inputs
+readonly. Nou casos: Constantí124, el Morell111, el Catllar437, cinc punts
+construïts, dos girs, isotropia, alineació i coincidència. Contrast independent
+amb NumPy/autovalors i covariància dels vèrtexs;86/68registres interiors de
+Constantí. El primer intent només falla serialitzant un bool NumPy; no es
+reescriu. El report íntegre és `check02/verified.json`.
+
+Les lectures d'alumnat/docent tenen19/8pàgines, amb27pàgines inspeccionades,
+A4horitzontal, codi i límits correctes. La primera dona procediment i expressions;
+la segona, controls i diagnosi del càlcul. Enunciat, recursos i locks d'edició
+coherents. Els paràmetres i resultats del cas no es converteixen en constants
+esperades per a altres municipis.
+
+Reconstrucció del lliurament actual:
+`sandbox/practiques/lliurament-geodisseny/2026-11-03-dispersio-01/`.
+Conservar `reuse.json`, `classroom/`, `handouts/layout02/`, `pdf-receipts01/`,
+`packages/review01/`, `reopen01/`, `pdf-review01/`, els rebuts de promoció i
+`current-verified.json`. El collector revisa un sol slug i consumeix els
+paquets no afectats verificats; els vuit ZIPs/PDFs originals mantenen els bytes
+i l'edició30/10. Només estadística passa a03/11. Els manifests declaren l'edició
+real de cada activitat, independentment de la data de revisió del conjunt.
+
+Els154membres de dades/projectes/recursos no canvien.26QGZ dels ZIPs exactes
+reoberts offline/readonly i164fitxers extrets inalterats. El dist anterior
+complet —37fitxers/10directoris— és a
+`sandbox/practiques/arxiu-lliuraments/2026-11-03-abans-calcul-dispersio-01/dist-practiques/`.
+La comprovació independent contrasta paths, bytes, hashes i directoris, els
+cinc SHA256SUMS, els PDFs separats i els membres de dades dels ZIPs.
+
+| Rebut | SHA-256 |
+| --- | --- |
+| `dist/practiques/manifest.json` actual | `e666ba6473cc14c96242b875269372c7178f5635475e7ad015745c1881c7cdb5` |
+| `original-tree.json` del nou arxiu | `1ab04bc647929d7ac41a56026ffab2af9f5f6fbf0bbf40cc756c9d24168753f8` |
+| `verified.json` del nou arxiu | `71c3379b7cf8d90b9dce405086d8d3eeb72f8b640494bab75d29b45177d81288` |
+| `published-current.json` del nou run | `ff994e0a27fb86bca15d019daa14f76d111bba36056fdbf71b7757afb954a4c6` |
+| `packages/review01/packages.json` | `0eb53d6112021b4a564f3653f5ef7f8294df0ee70f90936e7ef5e9f4de9f6c92` |
+
+Manual local233pàgines, SHA
+`5dfb4483e75c1b8bd89b573431aa7f5273d786ac939688fdaf540d1cb4e7dc25`.
+Prosa, fonts, site_check, build i html_audit passen. Tots els límits de paraula
+comprovats; pàgines163–167inspeccionades. Web1440/430px sense overflow, errors
+JavaScript/MathJax o imatges absents; còpies PDF generada/preview/servida iguals.
+
+Tres passes editorials es preparen contra els digests actuals i es retenen;
+registre gestionat intacte al límit100/revision123. Fonts i candidata enreview,
+sense commit ni nova publicació autoritzats pel simple lliurament d'aquesta
+revisió. La beta pública del03/11resta documentada separadament a
+`context/publication-beta-20261103.md`. La retenció continua sent local.

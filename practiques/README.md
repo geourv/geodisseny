@@ -240,7 +240,7 @@ extern relatiu, informe PDF i els GeoTIFF/recursos seleccionats. Els noms
 segueixen codi–tema–cognoms; `prN` és un marcador que el docent substitueix pel
 codi real de la tasca. Els grups de capes no mouen fitxers.
 
-Reconstrucció del lliurament actual:
+Reconstrucció d'aquella edició:
 `sandbox/practiques/lliurament-geodisseny/2026-10-30-organitzacio-02/`.
 Reutilitza `layout02` del run batch del27/10; els154membres de dades, projectes
 i recursos dins dels deu ZIPs són byte-idèntics. Els PDFs nous tenen9/4,
@@ -276,6 +276,44 @@ També s'ha inventariat la base per a una activitat d'autocorrelació separada:
 publicades i151seccions de renda. L'inventari no prepara una nova edició ni
 qualifica el runtime actual per a aquella activitat. La continuació, els
 apartats assignats, el codi i els requisits pendents són al traspàs del run01.
+
+## Radi i semieixos calculats: revisió del 3 de novembre
+
+La pràctica d'estadística espacial descriptiva té una nova edició del **3/11**.
+La lectura d'alumnat, **19pàgines**, desenvolupa el càlcul a QGIS: capa municipal
+P i CRS real mètric, centre sense pesos, recompte, variàncies/covariància, radi,
+semieixos i angle, camps persistents i dibuix amb `make_circle`/`make_ellipse`.
+Els valors de Constantí són controls, no dimensions codificades per a altres llocs.
+La guia docent, **8pàgines**, aporta resultats i diagnosi del procediment: conjunt,
+centre, divisor, unitats, angles, semieixos i casos degenerats. Són lectures amb
+funcions diferents que comparteixen el cas territorial i les figures pertinents.
+
+`estadistica-constanti/comprovar-dispersio-qgis.py` executa les expressions
+publicades als textos amb la Calculadora de camps nativa: Constantí124punts,
+el Morell111i el Catllar437, cinc punts construïts, dos girs, isotropia,
+alineació i coincidència. Els nou casos passen. Es contrasten amb covariància
+i autovalors independents, geometries QGIS i els recomptes86/68de Constantí.
+L'intent inicial amb error de serialització NumPy es conserva; el resultat
+complet és a `check02/verified.json` de la reconstrucció de la sessió.
+
+Sessió:
+`sandbox/practiques/estadistica-constanti/2026-11-03-dispersio-01/`.
+Lliurament actual:
+`sandbox/practiques/lliurament-geodisseny/2026-11-03-dispersio-01/`.
+Només es regeneren els dos PDFs/ZIPs d'estadística i l'enunciat. Les27pàgines
+afectades s'han inspeccionat. Els altres vuit ZIPs/PDFs són byte-idèntics i
+conserven la versió30/10als seus manifests; el collector admet
+`--only-slug` amb `--reuse-unaffected-packages-from` verificat.
+Els154membres de dades/projectes/recursos dels ZIPs no canvien. Els26QGZ dels
+ZIPs exactes es reobren offline/readonly amb164fitxers extrets inalterats.
+
+Abans de substituir el dist s'arxiven i verifiquen íntegrament els37fitxers i
+10directoris anteriors a
+`sandbox/practiques/arxiu-lliuraments/2026-11-03-abans-calcul-dispersio-01/`.
+Es manté la disposició plana dels PDFs/enunciat i l'arrel mínima PDF+data dels
+ZIPs. El manual incorpora el mateix procediment general a
+`#calcul-dispersio-qgis`; el PDF local té233pàgines. La revisió del capítol
+és local i en review; no modifica per si sola la beta pública.
 
 Les lectures són **candidates en review**, amb PDF marcat ESBORRANY.
 L'aprovació anterior s'aplica només a la base retinguda, no a aquests documents

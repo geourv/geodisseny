@@ -5,7 +5,7 @@ description: "Comptar, localitzar centres i descriure dispersió i densitat amb 
 lang: ca
 ref: distribucions-punts-densitat
 profiles: [unaltremanual]
-content_status: approved
+content_status: review
 permalink: /ca/chapters/punts-densitat/
 weight: 40
 part: Continguts
@@ -311,7 +311,7 @@ La suma de les dues variàncies és 4.002.626,13 m²; la seva arrel dona el **ra
 
 La covariància negativa acompanya l'allargament nord-oest–sud-est. La fórmula de l'angle dona $\theta\simeq-20{,}22^\circ$ des de l'est, equivalent a **110,22° d'azimut**. El llarg és gairebé quatre vegades el curt, coherent amb la forma entre el sector industrial i el nucli. Aquesta orientació no demostra que les instal·lacions es desplacin d'un grup a l'altre.
 
-A QGIS es poden obtenir aquests resums afegint les coordenades i les separacions a la taula de punts: primer les mitjanes, després els quadrats i el producte, i finalment les mitjanes d'aquests camps. Totes les operacions han d'utilitzar els mateixos 124 registres. Al projecte docent, la capa `dispersio` ja conserva el centre i els camps resultants:
+Al projecte docent, la capa `dispersio` conserva el centre i els camps resultants. Aquests són controls del càlcul de Constantí, no dimensions que s'hagin de copiar en un altre municipi:
 
 ::: table "Magnituds que es dibuixen a Constantí"
 | Camp | Valor arrodonit | Lectura |
@@ -322,7 +322,90 @@ A QGIS es poden obtenir aquests resums afegint les coordenades i les separacions
 | azimut | 110,22° | Eix mesurat en sentit horari des del nord |
 :::
 
-Cerca **Geometria segons l'expressió** a la Caixa d'eines, tria `dispersio` com a entrada i Polígon com a sortida. Executa per separat les dues expressions i desa `cercle` i `ellipse`:
+### Calcular les dimensions amb QGIS {#calcul-dispersio-qgis}
+
+El procediment següent obté els paràmetres a partir de qualsevol capa municipal adequada. A la pràctica guiada, **P** és el nom de treball de `punts`, amb els 124 registres de Constantí, sense pesos. En un altre municipi, extreu primer el conjunt en una capa pròpia i anomena-la P: seleccionar objectes al mapa no restringeix automàticament les expressions d'agregació.
+
+Comprova el **CRS real de la capa** i les unitats. Aquí s'utilitza EPSG:25831, en metres. Canviar el CRS del projecte no transforma les coordenades que llegeixen les expressions; quan calgui, utilitza **Reprojecta la capa**, `native:reprojectlayer`. La capa ha de contenir punts simples amb geometria no buida; els registres coincidents es conserven.
+
+Executa **Coordenades mitjanes**, `native:meancoordinates`, sobre P amb pes i ID únic buits, sense limitar-la a una selecció. Desa el punt resultant com a **dispersio**, amb una fila. Les dimensions següents es calculen **en aquesta fila del centre**, no a cada fila de P. A Calculadora de camps, crea camps reals —no virtuals—, enter per al recompte i decimals per a les magnituds. Desa'ls en l'ordre indicat i conserva la precisió; l'arrodoniment és per presentar els valors.
+
+En l'agregat, `$geometry` representa cada punt de P; `geometry(@parent)` recupera el centre de la fila exterior. Així les expressions calculen les separacions de tots els punts respecte **del mateix centre**. `mean` utilitza el divisor n.
+
+**`n_punts`**. Recompte del conjunt utilitzat, que s'ha de contrastar amb la taula de P.
+
+```text
+aggregate('P', 'count', $id)
+```
+
+**`vx_m2`**. Variància est, en m².
+
+```text
+aggregate(
+  layer := 'P', aggregate := 'mean',
+  expression := (x($geometry) - x(geometry(@parent)))^2
+)
+```
+
+**`vy_m2`**. Variància nord, en m².
+
+```text
+aggregate(
+  layer := 'P', aggregate := 'mean',
+  expression := (y($geometry) - y(geometry(@parent)))^2
+)
+```
+
+**`cxy_m2`**. Covariància, en m²: mitjana del producte de les dues separacions de cada punt.
+
+```text
+aggregate(
+  layer := 'P', aggregate := 'mean',
+  expression :=
+    (x($geometry) - x(geometry(@parent))) *
+    (y($geometry) - y(geometry(@parent)))
+)
+```
+
+**`D_m`**. Radi de dispersió, en metres.
+
+```text
+sqrt("vx_m2" + "vy_m2")
+```
+
+**`delta_m2`**. Arrel que combina les variàncies i la covariància; el resultat encara és en m².
+
+```text
+sqrt(("vx_m2" - "vy_m2")^2 + 4 * "cxy_m2"^2)
+```
+
+**`a_m`**. Semieix major, en metres.
+
+```text
+sqrt(("vx_m2" + "vy_m2" + "delta_m2") / 2)
+```
+
+**`b_m`**. Semieix menor, en metres. El màxim amb zero només protegeix davant un negatiu minúscul d'arrodoniment; un valor clarament negatiu indica un càlcul incoherent que s'ha de revisar.
+
+```text
+sqrt(max(0, ("vx_m2" + "vy_m2" - "delta_m2") / 2))
+```
+
+**`azimut`**. Angle horari des del nord, en graus. L'expressió transforma l'angle de l'est antihorari i el limita a l'orientació d'un eix, entre 0 i 180°. Si la dispersió és igual en totes dues direccions, el 0 és una convenció de dibuix sense orientació privilegiada.
+
+```text
+CASE
+  WHEN "delta_m2" = 0 THEN 0
+  ELSE (
+    90 - degrees(atan2(2 * "cxy_m2", "vx_m2" - "vy_m2")) / 2
+    + 180
+  ) % 180
+END
+```
+
+Comprova que el centre i `n_punts` corresponen al mateix conjunt i que es compleix **$D^2\simeq a^2+b^2$**, amb $a\geq b$. Si les posicions són alineades, $b=0$ i el resum és un segment; si totes coincideixen, també $D=0$. No s'hi força una amplada arbitrària per generar un polígon. En un altre territori també cal revisar si el CRS mètric és adequat.
+
+Amb dimensions positives, cerca **Geometria segons l'expressió**, `native:geometrybyexpression`, tria `dispersio` com a entrada i Polígon com a sortida. Executa per separat les dues expressions i desa `cercle` i `ellipse`:
 
 ```text
 make_circle($geometry, "D_m", 72)
@@ -330,6 +413,8 @@ make_ellipse($geometry, "a_m", "b_m", "azimut", 72)
 ```
 
 El **72 és una decisió de representació**: divideix la volta en 72 segments, amb un pas angular de $360^\circ/72=5^\circ$. En aquest cercle, la separació màxima entre una corda i l'arc és $D[1-\cos(\pi/72)]\simeq1{,}9$ m, amb el cosinus en radians. Augmentar el nombre de segments suavitza el dibuix, però no canvia el radi o els semieixos calculats ni afegeix observacions. Geometria segons l'expressió dibuixa els atributs; un centre sol no conté la informació necessària per estimar la dispersió.
+
+Els camps són valors desats, no una vinculació que recalculi tota l'anàlisi. En canviar de municipi, prepara la nova P, recalcula el centre i torna a obtenir tots els camps. Les dimensions de Constantí i els seus recomptes interiors deixen de ser resultats esperats per al nou conjunt.
 
 ### Quants punts queden dins? {#cobertura-cercle-ellipse}
 
@@ -399,7 +484,7 @@ Obre la Caixa d'eines i cerca **Mapa de calor**. En la versió de referència é
 
 ![Mapa de calor seleccionat a la Caixa d'eines]({{ site.baseurl }}/assets/captures/c4-kernel-caixa.png "La fila ressaltada localitza l'eina que crea el ràster. El mapa continua mostrant els punts de Constantí; es pot relacionar la configuració següent amb aquest conjunt concret."){: data-figure-width-web="50rem" data-figure-width-pdf="100%"}
 
-1. Entrada: `punts`, o **Constantí · 124 punts** si l'has reanomenada. Radi: **500 m**. Píxel X i Y: **100 m**.
+1. Entrada: `punts`, anomenada **P** si has seguit el càlcul de dispersió, o **Constantí · 124 punts** a les captures. Radi: **500 m**. Píxel X i Y: **100 m**.
 2. A **Advanced Parameters**, tria kernel **Quartic**, sortida **Raw**, i deixa buit el pes. Cada registre aporta una contribució.
 3. Desa `kernel-500-raw.tif`. Repeteix amb radi **1.500 m**, mateix píxel i una sortida diferent.
 

@@ -2,7 +2,7 @@
 title: "Pràctica: estadística espacial descriptiva"
 author: Benito Zaragozí
 lang: ca
-date: "Edició: 30 d'octubre de 2026"
+date: "Edició: 3 de novembre de 2026"
 content_status: review
 ---
 
@@ -74,43 +74,145 @@ El desplaçament és d'uns **1.832 m cap a l'oest i una mica al nord**. El regis
 
 # Cercle i el·lipse de dispersió
 
-El cercle resumeix una distància quadràtica al centre; l'el·lipse descriu l'allargament segons dues direccions. Per practicar-ne el dibuix utilitzarem els paràmetres de referència del mateix conjunt de 124 punts.
+El radi i els semieixos **es calculen a partir dels punts**. Les xifres de Constantí serviran per comprovar el resultat, no per dibuixar els contorns d'un altre municipi. Mantindrem els 124 registres amb coordenades, sense ponderar: la potència no intervé en aquesta dispersió.
 
-| Paràmetre | Valor de referència |
+## Preparar la capa i el centre
+
+1. Utilitza la capa `punts` del paquet i anomena-la **P** al panell Capes. És un nom de treball per a les expressions; no canvia el nom de la taula del GeoPackage. Evita tenir dues capes anomenades P.
+2. Si treballes un altre municipi, extreu-ne primer els registres en una **capa pròpia**, per exemple amb **Extreu per expressió**, i anomena-la P. Una selecció visual d'objectes no limita automàticament els agregats de les expressions. Comprova el nombre de registres i treu les seleccions abans de calcular.
+3. Comprova el **CRS de la capa P**, no només el del projecte: aquí és EPSG:25831, en metres. Si cal, utilitza **Reprojecta la capa**, `native:reprojectlayer`; canviar el CRS de visualització del projecte no transforma les coordenades que llegeix `x($geometry)`. P ha de contenir punts simples amb geometria no buida; conserva els registres coincidents.
+4. Executa **Coordenades mitjanes**, `native:meancoordinates`, sobre P, amb **pes i ID únic buits**. Desa el punt resultant al GeoPackage de `sandbox/` amb nom **dispersio**. Ha de tenir **una fila** i coincidir amb el centre dels registres del mateix conjunt, no amb el centre ponderat.
+
+Els camps següents es creen **a la taula de dispersio, sobre aquell únic centre**, no a les files de P. A Calculadora de camps, crea un camp real cada vegada —no un camp virtual— i desa les edicions. Utilitza tipus **Nombre decimal / Real** per a les magnituds i **Nombre enter** per al recompte. Conserva la precisió del càlcul; arrodoneix només la presentació. Si els camps ja existeixen, actualitza'ls en el mateix ordre.
+
+## Variàncies i covariància
+
+La diferència entre la coordenada d'un punt i la del centre indica quant se'n separa en est o en nord. La mitjana dels quadrats d'aquestes diferències és una variància. La mitjana dels productes de les dues diferències és la covariància: informa de l'allargament diagonal i pot ser negativa. Les tres magnituds són en m².
+
+A dins d'`aggregate`, `$geometry` és cada punt de P i `geometry(@parent)` és **el centre** de la fila que estàs calculant. `mean` divideix la suma pel nombre de punts: aquí s'utilitza el divisor descriptiu **n**, no n−1.
+
+**`n_punts`**. Camp enter: nombre de registres de P, que ha de coincidir amb el conjunt utilitzat al centre.
+
+```text
+aggregate('P', 'count', $id)
+```
+
+**`vx_m2`**. Camp decimal: mitjana de les separacions est elevades al quadrat.
+
+```text
+aggregate(
+  layer := 'P', aggregate := 'mean',
+  expression := (x($geometry) - x(geometry(@parent)))^2
+)
+```
+
+**`vy_m2`**. Camp decimal: mateixa operació per a les separacions nord.
+
+```text
+aggregate(
+  layer := 'P', aggregate := 'mean',
+  expression := (y($geometry) - y(geometry(@parent)))^2
+)
+```
+
+**`cxy_m2`**. Camp decimal: mitjana del producte de les dues separacions del mateix punt.
+
+```text
+aggregate(
+  layer := 'P', aggregate := 'mean',
+  expression :=
+    (x($geometry) - x(geometry(@parent))) *
+    (y($geometry) - y(geometry(@parent)))
+)
+```
+
+Per entendre els comptes, els cinc punts ficticis A(0;0), B(2;4), C(3;3), D(4;2) i E(6;6), en quilòmetres, tenen centre (3;3). Les variàncies est i nord són totes dues 4 km² i la covariància és 3,2 km². El manual desenvolupa les diferències i els productes d'aquest exemple; les expressions anteriors apliquen aquelles mateixes operacions a tots els punts de P.
+
+## Radi, semieixos i orientació
+
+Crea ara els camps següents, en aquest ordre, a **dispersio**. Les expressions llegeixen els camps ja calculats de la mateixa fila.
+
+**`D_m`**. Radi del cercle, en metres: arrel de la suma de les dues variàncies. És la distància quadràtica mitjana al centre, no la distància al punt més llunyà.
+
+```text
+sqrt("vx_m2" + "vy_m2")
+```
+
+**`delta_m2`**. Magnitud auxiliar, en m², que combina la diferència entre variàncies i la covariància.
+
+```text
+sqrt(("vx_m2" - "vy_m2")^2 + 4 * "cxy_m2"^2)
+```
+
+**`a_m`**. Semieix major, en metres: arrel de la variància màxima entre les direccions del conjunt.
+
+```text
+sqrt(("vx_m2" + "vy_m2" + "delta_m2") / 2)
+```
+
+**`b_m`**. Semieix menor, en metres: arrel de la variància mínima, sobre la direcció perpendicular.
+
+```text
+sqrt(max(0, ("vx_m2" + "vy_m2" - "delta_m2") / 2))
+```
+
+En un càlcul coherent, el terme del semieix menor no és negatiu. `max(0, …)` només protegeix davant un negatiu minúscul d'arrodoniment numèric; un valor clarament negatiu requereix revisar dades i camps, no amagar l'error.
+
+**`azimut`**. Angle de l'eix major en graus, mesurat en sentit horari des del nord. `atan2` calcula l'angle en radians; `degrees` el passa a graus. Es divideix per 2 i es transforma la convenció de l'est antihorari a la del nord horari. `% 180` expressa que és un eix sense fletxa.
+
+```text
+CASE
+  WHEN "delta_m2" = 0 THEN 0
+  ELSE (
+    90 - degrees(atan2(2 * "cxy_m2", "vx_m2" - "vy_m2")) / 2
+    + 180
+  ) % 180
+END
+```
+
+Si les dues variàncies principals són iguals, l'el·lipse és circular i no té una orientació preferent: el 0 de l'expressió només permet dibuixar-la. Si tots els punts són alineats, `b_m` és zero i el resum és un segment; no es representa com una el·lipse poligonal vàlida. Si totes les posicions coincideixen, també el radi és zero. No eliminis coincidències ni inventis amplades per forçar un polígon.
+
+Als cinc punts ficticis, la magnitud auxiliar val 6,4 km². Els semieixos surten de les arrels de (8+6,4)/2 i (8−6,4)/2: aproximadament 2,68 i 0,89 km. El radi és l'arrel de 8, uns 2,83 km, i l'azimut és 45°. Els camps de la pràctica són en metres: no hi barregis aquestes xifres en quilòmetres.
+
+## Dibuixar amb els camps calculats
+
+1. Comprova que `n_punts` correspon al teu conjunt i que `D_m`, `a_m` i `b_m` són positius per dibuixar contorns poligonals. S'ha de complir **`D_m`² ≈ `a_m`² + `b_m`²** i `a_m` ≥ `b_m`.
+2. A **Geometria segons l'expressió**, `native:geometrybyexpression`, tria **dispersio** com a entrada i **Polígon** com a sortida. Dibuixa el cercle amb:
+
+```text
+make_circle($geometry, "D_m", 72)
+```
+
+3. Executa una segona vegada sobre **el mateix centre**, amb:
+
+```text
+make_ellipse($geometry, "a_m", "b_m", "azimut", 72)
+```
+
+4. Desa `cercle` i `ellipse` al GeoPackage de `sandbox/`, amb farciment transparent i contorns diferents. Mantén P, el centre, el límit i l'ortofoto visibles. Les expressions utilitzen **semieixos**, no les longituds completes 2a i 2b. El 72 divideix la volta en segments de 5°: suavitza la representació, però no estima les dimensions ni representa el nombre de registres.
+
+| Control sobre els 124 registres de Constantí | Valor aproximat |
 | --- | ---: |
-| Radi del cercle | 2.000,66 m |
-| Semieix major de l'el·lipse | 1.934,44 m |
-| Semieix menor | 510,47 m |
-| Azimut del semieix major | 110,22° |
+| `vx_m2` | 3.326.162,49 m² |
+| `vy_m2` | 676.463,64 m² |
+| `cxy_m2` | −1.129.131,02 m² |
+| `D_m` | 2.000,66 m |
+| `a_m` / `b_m` | 1.934,44 / 510,47 m |
+| `azimut` | 110,22° |
 
-Table: Paràmetres de dispersió per dibuixar els resums sobre el centre dels registres.
-
-1. Pren **el teu `centre_registres`**, no el centre ponderat, com a entrada de **Geometria segons l'expressió**, `native:geometrybyexpression`.
-2. Tria sortida Polígon i executa aquesta expressió per al cercle:
-
-```text
-make_circle($geometry, 2000.66, 72)
-```
-
-3. En una segona execució, sobre el mateix centre, dibuixa l'el·lipse:
-
-```text
-make_ellipse($geometry, 1934.44, 510.47, 110.22, 72)
-```
-
-4. Desa les dues capes al GeoPackage de `sandbox/`, amb farciment transparent i contorns diferents. Mantén visibles els 124 punts, el centre, el límit i l'ortofoto.
+Table: Resultats calculats de Constantí per comprovar el procediment; no són paràmetres per a qualsevol municipi.
 
 ![Cercle i el·lipse de referència sobre els punts de Constantí.](captures/c4-cercle-ellipse.png){width=95% height=380pt}
 
-Les xifres impreses estan arrodonides; la referència docent conserva els paràmetres complets. Els semieixos són la meitat de les longituds completes. Aquests contorns **no indiquen un percentatge fix de punts, una cobertura de servei ni un interval de confiança**.
+Les xifres impreses estan arrodonides; el dibuix utilitza els valors calculats als teus camps, sense substituir-los pels de la taula. Aquests contorns **no indiquen un percentatge fix de punts, una cobertura de servei ni un interval de confiança**. A Constantí el cercle inclou 86 registres i l'el·lipse, 68; una altra distribució pot donar proporcions diferents.
 
-**Conserva:** les dues geometries, un punt exterior i un espai interior amb pocs registres identificats al mapa. Explica què mostra el radi i què afegeix l'allargament de l'el·lipse.
+**Conserva:** el centre amb els camps calculats, les dues geometries, un punt exterior i un espai interior amb pocs registres identificats al mapa. Explica d'on surten les dimensions i què mostra cada contorn. En canviar de municipi, prepara una nova P, torna a calcular el centre i tots els camps en el mateix ordre. Els valors desats no s'actualitzen automàticament perquè canviïs la capa de punts o el nom del projecte.
 
 # Mapa de calor i radi de contribució
 
 Cerca **Mapa de calor**, `qgis:heatmapkerneldensityestimation`, dins d'Interpolació.
 
-1. Entrada: `punts`, **sense pes**. Radi **500 m** i mida de píxel X/Y **100 m**.
+1. Entrada: `punts`, que hem anomenat **P** al panell Capes, **sense pes**. Radi **500 m** i mida de píxel X/Y **100 m**.
 2. Prem el triangle de **Paràmetres avançats / Advanced Parameters** per desplegar els camps ocults. Al desplegable de forma del kernel, tria **Quartic**; al de valors de sortida, tria **Raw**. Desa `kernel-500-raw.tif`.
 3. Repeteix amb radi **1.500 m**, mateix píxel i sense pes.
 4. Per convertir el primer ràster en registres/km², utilitza Calculadora ràster:
