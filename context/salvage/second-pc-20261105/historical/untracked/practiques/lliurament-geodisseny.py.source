@@ -1,0 +1,746 @@
+"""Current Moodle handoffs for the five Geodisseny activities.
+
+Course-specific selection/presentation: reuse the approved local GIS products,
+add the declared optional ICGC context, consume Web's reading-PDF receipts and
+archive the previous distribution before publishing simple current filenames.
+No analysis engine, renderer or shared provider receipt is implemented here.
+"""
+import argparse
+import hashlib
+import json
+import os
+from pathlib import Path, PurePosixPath
+import shutil
+import re
+import subprocess
+import zipfile
+import xml.etree.ElementTree as ET
+
+ROOT = Path(__file__).resolve().parents[1]
+SLUGS = ('accessibilitat-xarxa-vilaseca', 'accessibilitat-raster-vilaseca',
+         'accessibilitat-temps-vilaseca', 'estadistica-constanti', 'visibilitat-costa')
+HANDOFFS = {
+    'accessibilitat-xarxa-vilaseca': ('accessibilitat-xarxa-vectorial', 'Accessibilitat: xarxa vectorial'),
+    'accessibilitat-raster-vilaseca': ('accessibilitat-raster', 'Accessibilitat: model ràster de cost'),
+    'accessibilitat-temps-vilaseca': ('accessibilitat-temps-acces', 'Accessibilitat: temps d’accés'),
+    'estadistica-constanti': ('estadistica-espacial-descriptiva', 'Estadística espacial descriptiva'),
+    'visibilitat-costa': ('analisi-intervisibilitat', 'Anàlisi d’intervisibilitat'),
+}
+ENGINE = 'sha256:1003721d96abe9607d8337b36851f9b29f84c2f8f92b377d1a73ff03c9d15cd2'
+WMS = 'https://geoserveis.icgc.cat/servei/catalunya/orto-territorial/wms?'
+WMS_LAYER = 'ortofoto_25cm_color_2025'
+
+
+def sha(path):
+    with Path(path).open('rb') as stream:
+        return hashlib.file_digest(stream, 'sha256').hexdigest()
+
+
+def save(path, value):
+    with Path(path).open('x') as stream:
+        json.dump(value, stream, ensure_ascii=False, indent=2)
+        stream.write('\n')
+
+
+def run_root(run):
+    assert Path(run).name == run and run not in ('.', '..')
+    return ROOT / 'sandbox/practiques/lliurament-geodisseny' / run
+
+
+def initial_relative(slug):
+    return (Path('accessibilitat-vilaseca.gpkg') if slug.startswith('accessibilitat-')
+            else Path('payload/data') / f'{slug}.gpkg')
+
+
+def stage(run, source_handoff=None):
+    out = run_root(run)
+    assert not out.exists(), 'Select a new course handoff run.'
+    previous = ROOT / (source_handoff or 'dist/practiques/lliurament-moodle/2026-10-18/ca')
+    assert previous.resolve().is_relative_to(ROOT)
+    inventory = json.loads((previous / 'inventari.json').read_text())
+    expected = {(entry['slug'], entry['recipient']): entry for entry in inventory['files']
+                if entry['kind'] == 'zip'}
+    assert len(expected) == 10
+    out.mkdir(parents=True)
+    source = out / 'source'
+    source.mkdir()
+    records = []
+    for slug in SLUGS:
+        for role in ('alumnat', 'docent'):
+            item = expected[slug, role]
+            original = previous / item['path']
+            assert sha(original) == item['sha256']
+            retained = source / f'{slug}-{role}.zip'
+            shutil.copyfile(original, retained)
+            assert sha(retained) == item['sha256']
+            target = out / 'classroom' / slug / role
+            target.mkdir(parents=True)
+            prefix = slug + ('-docent' if role == 'docent' else '') + '/'
+            files = []
+            with zipfile.ZipFile(retained) as archive:
+                assert archive.testzip() is None
+                for entry in archive.infolist():
+                    name = entry.filename
+                    if name.startswith(prefix):
+                        name = name[len(prefix):]
+                    path = PurePosixPath(name)
+                    assert not path.is_absolute() and '..' not in path.parts
+                    if entry.is_dir():
+                        continue
+                    if path.name == 'LLEGIU-ME.pdf':
+                        continue
+                    assert path.suffix.lower() in ('.gpkg', '.tif', '.qgz', '.qml', '.ttf')
+                    destination = target / str(path)
+                    destination.parent.mkdir(parents=True, exist_ok=True)
+                    with destination.open('xb') as stream:
+                        stream.write(archive.read(entry))
+                    files.append({'path': str(path), 'sha256': sha(destination), 'bytes': destination.stat().st_size})
+            records.append({'slug': slug, 'recipient': role, 'source': str(original.relative_to(ROOT)),
+                            'source_sha256': item['sha256'], 'retained_zip': str(retained.relative_to(ROOT)),
+                            'files': files})
+    shutil.copyfile(Path(__file__), source / 'lliurament-geodisseny-stage.py')
+    save(out / 'source.json', {'kind': 'geodisseny-approved-gis-source', 'source_version': '2026-10-18',
+                             'source_approval': inventory['author_approval'], 'packages': records})
+    print(json.dumps({'stage': str(out.relative_to(ROOT)), 'retained_packages': len(records)}), flush=True)
+
+
+def raster_signature(path):
+    from osgeo import gdal
+    dataset = gdal.Open(str(path), gdal.GA_ReadOnly)
+    assert dataset
+    return {'size': [dataset.RasterXSize, dataset.RasterYSize, dataset.RasterCount],
+            'transform': dataset.GetGeoTransform(), 'projection': dataset.GetProjection(),
+            'nodata': [dataset.GetRasterBand(i).GetNoDataValue() for i in range(1, dataset.RasterCount + 1)],
+            # GeoTIFF identifies a single numeric band as Gray; GPKG uses
+            # Undefined. Both have the same scalar data and QGIS renderer.
+            'bands': [{'type': band.DataType,
+                       'colour': ('scalar' if dataset.RasterCount == 1 and band.GetColorInterpretation() in (0, 1)
+                                  else band.GetColorInterpretation()),
+                       'scale': band.GetScale(), 'offset': band.GetOffset(),
+                       'mask_sha256': hashlib.sha256(band.GetMaskBand().ReadRaster()).hexdigest()}
+                      for band in (dataset.GetRasterBand(i) for i in range(1, dataset.RasterCount + 1))],
+            'samples_sha256': hashlib.sha256(dataset.ReadRaster()).hexdigest()}
+
+
+def gpkg_signature(path):
+    from osgeo import gdal, ogr
+    import sqlite3
+    database = ogr.Open(str(path), 0)
+    vectors = {}
+    for layer in database:
+        if layer.GetName() in ('qgis_projects', 'layer_styles', 'qgis_styles'):
+            continue
+        digest = hashlib.sha256()
+        for feature in layer:
+            digest.update(str(feature.GetFID()).encode())
+            digest.update(json.dumps(feature.items(), sort_keys=True, default=str).encode())
+            geometry = feature.GetGeometryRef()
+            if geometry:
+                digest.update(bytes(geometry.ExportToWkb()))
+        vectors[layer.GetName()] = {'count': layer.GetFeatureCount(), 'sha256': digest.hexdigest()}
+    database = None
+    with sqlite3.connect(f'file:{path}?mode=ro', uri=True) as connection:
+        names = [row[0] for row in connection.execute(
+            "SELECT table_name FROM gpkg_contents WHERE data_type IN ('tiles','2d-gridded-coverage')")]
+    rasters = {name: raster_signature('GPKG:' + str(path) + ':' + name) for name in names}
+    return {'vectors': vectors, 'rasters': rasters}
+
+
+def context_descriptor(path, reference):
+    """Declare the course WMS through GDAL WMS, whose metadata opens offline.
+
+    Pixel requests occur only if this optional layer is made visible. This
+    avoids needing live GetCapabilities to reopen a local teaching project.
+    """
+    x0, pixel, _, y1, _, ypixel = reference['transform']
+    x1 = x0 + pixel * reference['size'][0]
+    y0 = y1 + ypixel * reference['size'][1]
+    root = ET.Element('GDAL_WMS')
+    service = ET.SubElement(root, 'Service', {'name': 'WMS'})
+    for name, value in [('Version', '1.1.1'), ('ServerUrl', WMS), ('Layers', WMS_LAYER),
+                        ('Styles', ''), ('SRS', 'EPSG:25831'), ('ImageFormat', 'image/jpeg')]:
+        ET.SubElement(service, name).text = value
+    window = ET.SubElement(root, 'DataWindow')
+    for name, value in [('UpperLeftX', x0), ('UpperLeftY', y1), ('LowerRightX', x1),
+                        ('LowerRightY', y0), ('SizeX', round((x1 - x0) / .25)), ('SizeY', round((y1 - y0) / .25))]:
+        ET.SubElement(window, name).text = str(value)
+    for name, value in [('Projection', 'EPSG:25831'), ('BandsCount', 3), ('DataType', 'Byte'),
+                        ('BlockSizeX', 512), ('BlockSizeY', 512), ('OverviewCount', 8),
+                        ('Timeout', 5), ('MaxConnections', 2), ('AdviseRead', 'false')]:
+        ET.SubElement(root, name).text = str(value)
+    ET.indent(root)
+    with path.open('xb') as stream:
+        # GDAL's WMS file identification expects this root at byte zero.
+        stream.write(ET.tostring(root, encoding='utf-8', xml_declaration=False))
+
+
+def add_context(project, descriptor, title):
+    from qgis.core import QgsRasterLayer, Qgis
+    tree = project.layerTreeRoot()
+    ordered = list(tree.layerOrder())
+    candidates = [layer for layer in project.mapLayers().values()
+                  if 'ortofoto' in layer.name().lower() and layer.providerType() == 'gdal']
+    assert len(candidates) == 1, [layer.name() for layer in candidates]
+    local = candidates[0]
+    local.setName('Ortofoto ICGC 2025 · local (sense internet)')
+    online = QgsRasterLayer(str(descriptor), 'Ortofoto ICGC 2025 · WMS (internet)', 'gdal')
+    assert online.isValid(), descriptor
+    online.setCustomProperty('geodisseny/optional_online_context', True)
+    project.addMapLayer(online, False)
+    group = tree.addGroup('Ortofoto ICGC')
+    node = tree.findLayer(local.id())
+    group.addChildNode(node.clone())
+    node.parent().removeChildNode(node)
+    group.addLayer(online)
+    group.findLayer(local.id()).setItemVisibilityChecked(True)
+    group.findLayer(online.id()).setItemVisibilityChecked(False)
+    # Persist the intended order in the visible tree. A separate render-order
+    # override prevents students from reordering newly created layers normally.
+    for layer in reversed([layer for layer in ordered if layer.id() != local.id()]):
+        node = tree.findLayer(layer.id())
+        assert node.parent() == tree, 'Review unexpected teaching groups before reordering.'
+        tree.insertChildNode(0, node.clone())
+        tree.removeChildNode(node)
+    tree.setHasCustomLayerOrder(False)
+    project.setFilePathStorage(Qgis.FilePathType.Relative)
+    project.setTitle(title)
+    assert all(layer.isValid() for layer in project.mapLayers().values())
+
+
+def prepare_context(run):
+    from qgis.core import QgsApplication, QgsProject
+    os.environ.setdefault('QT_QPA_PLATFORM', 'offscreen')
+    application = QgsApplication([], False)
+    application.initQgis()
+    project = QgsProject.instance()
+    out = run_root(run)
+    assert not (out / 'context.json').exists(), 'Context preparation is create-only.'
+    observations = []
+    for slug in SLUGS:
+        folder = out / 'classroom' / slug
+        initial = folder / 'alumnat' / initial_relative(slug)
+        before = gpkg_signature(initial)
+        descriptor = initial.parent / 'ortofoto-wms.xml'
+        context_descriptor(descriptor, before['rasters']['ortofoto'])
+        uri = 'geopackage:' + str(initial) + '?projectName=inici'
+        assert project.read(uri), uri
+        add_context(project, descriptor, HANDOFFS[slug][1])
+        assert project.write(uri)
+        project.clear()
+        assert gpkg_signature(initial) == before, 'Changing context altered analytical data.'
+        if slug.startswith('accessibilitat-'):
+            teacher_initial = folder / 'docent/alumnat/accessibilitat-vilaseca.gpkg'
+            shutil.copyfile(initial, teacher_initial)
+            shutil.copyfile(descriptor, teacher_initial.parent / descriptor.name)
+            projects = sorted((folder / 'docent/docent/projectes').glob('*.qgz'))
+            assert projects
+            for path in projects:
+                assert project.read(str(path))
+                add_context(project, teacher_initial.parent / descriptor.name, HANDOFFS[slug][1])
+                assert project.write(str(path))
+                project.clear()
+        else:
+            teacher_initial = folder / 'docent' / initial_relative(slug)
+            shutil.copyfile(initial, teacher_initial)
+            shutil.copyfile(descriptor, teacher_initial.parent / descriptor.name)
+            teacher = teacher_initial.with_name(slug + '-docent.gpkg')
+            reference = gpkg_signature(teacher)
+            uri = 'geopackage:' + str(teacher) + '?projectName=docent'
+            assert project.read(uri)
+            add_context(project, teacher_initial.parent / descriptor.name, HANDOFFS[slug][1])
+            assert project.write(uri)
+            project.clear()
+            assert gpkg_signature(teacher) == reference
+            projects = [teacher]
+        assert project.read('geopackage:' + str(initial) + '?projectName=inici')
+        group = project.layerTreeRoot().findGroup('Ortofoto ICGC')
+        assert group and len(group.findLayers()) == 2
+        assert all(layer.isValid() for layer in project.mapLayers().values())
+        assert not group.findLayers()[1].itemVisibilityChecked()
+        observations.append({'slug': slug, 'analytical_inputs_unchanged': True,
+                             'initial_gpkg_sha256': sha(initial), 'wms_descriptor_sha256': sha(descriptor),
+                             'local_visible_wms_optional': True, 'teacher_projects': len(projects)})
+        project.clear()
+    save(out / 'context.json', {'kind': 'geodisseny-course-context', 'qgis_image': ENGINE,
+                               'network': 'none', 'context': 'ICGC 2025 WMS via a local GDAL WMS declaration',
+                               'activities': observations})
+    print(json.dumps({'ok': True, 'activities': len(observations), 'network': 'none'}), flush=True)
+
+
+def handout_relative(slug, role, path):
+    """Map the retained historical layouts to this course's data/ folder."""
+    if not slug.startswith('accessibilitat-'):
+        path = path.relative_to('payload/data')
+    elif role == 'docent':
+        assert path.parts[0] in ('alumnat', 'docent'), path
+        path = Path(*path.parts[1:])
+    return Path('data/rasters') / path if path.suffix == '.tif' else Path('data') / path
+
+
+def prepare_layout(run, layout_pass):
+    from qgis.core import QgsApplication, QgsProject, QgsMapLayerStyle, Qgis
+    from osgeo import gdal
+    import sqlite3
+    gdal.UseExceptions()
+    assert Path(layout_pass).name == layout_pass and layout_pass not in ('.', '..')
+    os.environ.setdefault('QT_QPA_PLATFORM', 'offscreen')
+    application = QgsApplication([], False)
+    application.initQgis()
+    project = QgsProject.instance()
+    out = run_root(run)
+    destination = out / 'handouts' / layout_pass
+    assert not destination.exists(), 'Select a new create-only layout pass.'
+    destination.mkdir(parents=True)
+    records, projects, exported = [], [], []
+    for slug in SLUGS:
+        for role in ('alumnat', 'docent'):
+            original = out / 'classroom' / slug / role
+            target = destination / slug / role
+            target.mkdir(parents=True)
+            mapping, raster_mapping, references = {}, {}, {}
+            for path in sorted(original.rglob('*')):
+                if path.is_file():
+                    assert not path.is_symlink()
+                    relative = handout_relative(slug, role, path.relative_to(original))
+                    moved = target / relative
+                    moved.parent.mkdir(parents=True, exist_ok=True)
+                    assert not moved.exists(), 'Layout collision: ' + str(relative)
+                    if path.suffix == '.gpkg':
+                        reference = gpkg_signature(path)
+                        references[path] = reference
+                        vectors = gdal.VectorTranslate(str(moved), str(path), format='GPKG',
+                            layers=list(reference['vectors']), options=['-preserve_fid'])
+                        assert vectors is not None, path
+                        vectors = None
+                        assert gpkg_signature(moved) == {'vectors': reference['vectors'], 'rasters': {}}
+                        for name, signature in reference['rasters'].items():
+                            assert re.fullmatch(r'[A-Za-z0-9_-]+', name), name
+                            raster = target / 'data/rasters' / (name + '.tif')
+                            raster.parent.mkdir(parents=True, exist_ok=True)
+                            assert not raster.exists(), 'Raster layout collision: ' + str(raster)
+                            uri = 'GPKG:' + str(path) + ':' + name
+                            translated = gdal.Translate(str(raster), uri, format='GTiff',
+                                creationOptions=['COMPRESS=DEFLATE', 'TILED=YES', 'BIGTIFF=IF_SAFER'])
+                            assert translated is not None
+                            translated = None
+                            actual = raster_signature(raster)
+                            assert actual == signature, (uri, {key: (signature[key], actual[key])
+                                                               for key in signature if signature[key] != actual[key]})
+                            raster_mapping[uri] = raster
+                            exported.append({'slug': slug, 'recipient': role, 'source': str(path.relative_to(out)),
+                                'table': name, 'path': str(raster.relative_to(destination)), 'sha256': sha(raster),
+                                'signature': signature, 'values_grid_crs_nodata_masks_unchanged': True})
+                    else:
+                        shutil.copyfile(path, moved)
+                        assert sha(moved) == sha(path)
+                    mapping[path] = moved
+            before = {str(path): sha(path) for path in mapping}
+            for path, moved in mapping.items():
+                slots = []
+                if path.suffix == '.gpkg':
+                    with sqlite3.connect(f'file:{path}?mode=ro', uri=True) as database:
+                        if database.execute("SELECT name FROM sqlite_master WHERE name='qgis_projects'").fetchone():
+                            slots = [row[0] for row in database.execute('SELECT name FROM qgis_projects')]
+                elif path.suffix == '.qgz':
+                    slots = [None]
+                for slot in slots:
+                    assert slot in (None, 'inici', 'docent'), slot
+                    uri = 'geopackage:' + str(path) + '?projectName=' + slot if slot else str(path)
+                    assert project.read(uri), uri
+                    assert all(layer.isValid() for layer in project.mapLayers().values()), uri
+                    for layer in project.mapLayers().values():
+                        source = layer.source()
+                        updated = str(raster_mapping[source]) if source in raster_mapping else source
+                        if updated == source:
+                            for old, new in mapping.items():
+                                updated = updated.replace(str(old), str(new))
+                        assert updated != source, (uri, source)
+                        assert not updated.startswith(('GPKG:', 'geopackage:')), updated
+                        style = QgsMapLayerStyle()
+                        style.readFromLayer(layer)
+                        layer.setDataSource(updated, layer.name(), layer.providerType())
+                        style.writeToLayer(layer)
+                        assert layer.isValid(), updated
+                    assert not project.layerTreeRoot().hasCustomLayerOrder()
+                    project.setFilePathStorage(Qgis.FilePathType.Relative)
+                    output = str(moved.with_name(slot + '.qgz')) if slot else str(moved)
+                    if slot:
+                        assert not Path(output).exists(), output
+                    assert project.write(output), output
+                    project.clear()
+                    assert project.read(output), output
+                    assert all(layer.isValid() for layer in project.mapLayers().values()), output
+                    assert not project.layerTreeRoot().hasCustomLayerOrder()
+                    projects.append({'slug': slug, 'recipient': role,
+                                     'path': str(Path(output).relative_to(destination)), 'project': slot or path.stem,
+                                     'all_valid': True, 'render_order_follows_tree': True})
+                    project.clear()
+                if path.suffix == '.gpkg':
+                    assert gpkg_signature(moved) == {'vectors': references[path]['vectors'], 'rasters': {}}
+                elif path.suffix != '.qgz':
+                    assert sha(moved) == before[str(path)]
+            assert before == {str(path): sha(path) for path in mapping}, 'Retained classroom source changed.'
+            initial = target / 'data' / ('accessibilitat-vilaseca.gpkg' if slug.startswith('accessibilitat-') else slug + '.gpkg')
+            records.append({'slug': slug, 'recipient': role, 'initial_gpkg_sha256': sha(initial),
+                             'analytical_data_unchanged': True,
+                             'source_files': [{'path': str(path.relative_to(out)), 'sha256': before[str(path)]}
+                                              for path in mapping],
+                             'files': [{'path': str(path.relative_to(destination)), 'sha256': sha(path)}
+                                       for path in sorted(target.rglob('*')) if path.is_file()]})
+    assert len(projects) == 26
+    save(destination / 'layout.json', {'kind': 'geodisseny-pdf-data-layout', 'qgis_image': ENGINE,
+         'network': 'none', 'context_receipt_sha256': sha(out / 'context.json'),
+         'records': records, 'projects': projects, 'exported_rasters': exported,
+         'raster_format': 'GeoTIFF', 'project_format': 'QGZ', 'render_order_follows_tree': True})
+    print(json.dumps({'ok': True, 'relocated_projects': len(projects), 'layout': str(destination.relative_to(ROOT))}), flush=True)
+
+
+def capture_projects(run):
+    from qgis.core import QgsApplication, QgsProject, Qgis
+    os.environ.setdefault('QT_QPA_PLATFORM', 'offscreen')
+    application = QgsApplication([], False)
+    application.initQgis()
+    project = QgsProject.instance()
+    out = run_root(run)
+    destination = out / 'capture-projects'
+    destination.mkdir()
+    for slug in SLUGS:
+        initial = out / 'classroom' / slug / 'alumnat' / initial_relative(slug)
+        before = sha(initial)
+        assert project.read('geopackage:' + str(initial) + '?projectName=inici')
+        project.setFilePathStorage(Qgis.FilePathType.Relative)
+        assert project.write(str(destination / (slug + '-inici.qgz')))
+        project.clear()
+        assert sha(initial) == before
+    print(json.dumps({'ok': True, 'capture_projects': len(SLUGS)}), flush=True)
+
+
+def package(run, package_pass, pdf_receipts, version, layout_pass):
+    assert Path(package_pass).name == package_pass and package_pass not in ('.', '..')
+    out = run_root(run)
+    destination = out / 'packages' / package_pass
+    destination.mkdir(parents=True)
+    receipts = (ROOT / pdf_receipts).resolve()
+    assert receipts.is_relative_to(ROOT / 'sandbox/practiques')
+    contexts = json.loads((out / 'context.json').read_text())
+    contexts = {row['slug']: row for row in contexts['activities']}
+    handouts = out / 'handouts' / layout_pass
+    layout = json.loads((handouts / 'layout.json').read_text())
+    assert layout['render_order_follows_tree'] and len(layout['projects']) == 26
+    assert layout['context_receipt_sha256'] == sha(out / 'context.json')
+    layout_records = {(row['slug'], row['recipient']): row for row in layout['records']}
+    records = []
+    for slug in SLUGS:
+        enunciat = ROOT / 'practiques' / slug / 'ca/docent/ENUNCIAT-MOODLE.md'
+        for role in ('alumnat', 'docent'):
+            result_path = receipts / f'{slug}-{role}.data.json'
+            built = json.loads(result_path.read_text())
+            assert built['ok'] and not built['publishes'] and built['version'] == version
+            assert built['language'] == 'ca' and built['audience'] == role
+            assert built['renderer']['observed_image_id'] == 'sha256:618163d3f924439792b2306617bd9612f566c5881166102fa544b4e782d569fa'
+            source = ROOT / 'practiques' / slug / 'ca' / role / 'LLEGIU-ME.md'
+            assert built['source'] == str(source.relative_to(ROOT))
+            assert sha(ROOT / built['job'] / 'inputs/original.md') == sha(source)
+            pdf = ROOT / built['pdf']
+            assert sha(pdf) == built['pdf_sha256']
+            document = ET.fromstring(subprocess.run(['pdftotext', '-bbox', str(pdf), '-'],
+                                                   check=True, capture_output=True).stdout)
+            pages = document.findall('.//{*}page')
+            for page in pages:
+                width, height = float(page.get('width')), float(page.get('height'))
+                assert abs(width - 841.89) < .1 and abs(height - 595.28) < .1
+                for word in page.findall('.//{*}word'):
+                    assert (float(word.get('xMin')) >= -1 and float(word.get('yMin')) >= -1
+                            and float(word.get('xMax')) <= width + 1 and float(word.get('yMax')) <= height + 1), word.text
+            text = subprocess.run(['pdftotext', str(pdf), '-'], check=True, capture_output=True).stdout.decode()
+            assert 'ESBORRANY' in text.upper() and version in text and '21234116' in text
+            compact = re.sub(r'\s+', '', text)
+            blocks = re.findall(r'```[^\n]*\n(.*?)```', source.read_text(), re.S)
+            assert all(re.sub(r'\s+', '', block) in compact for block in blocks)
+            if role == 'docent':
+                assert 'ENUNCIAT-MOODLE.md' in compact and 'Descarregueu' not in text
+            initial = out / 'classroom' / slug / 'alumnat' / initial_relative(slug)
+            assert sha(initial) == contexts[slug]['initial_gpkg_sha256']
+            role_folder = destination / slug / role
+            role_folder.mkdir(parents=True)
+            shutil.copyfile(pdf, role_folder / 'LLEGIU-ME.pdf')
+            shutil.copyfile(source, role_folder / 'source.md')
+            if role == 'docent':
+                shutil.copyfile(enunciat, role_folder / 'ENUNCIAT-MOODLE.md')
+            data = handouts / slug / role
+            assert sha(data / 'data' / initial.name) == layout_records[slug, role]['initial_gpkg_sha256']
+            files = sorted(path for path in data.rglob('*') if path.is_file())
+            assert [{'path': str(path.relative_to(handouts)), 'sha256': sha(path)} for path in files] == layout_records[slug, role]['files']
+            prefix = HANDOFFS[slug][0] + ('-docent' if role == 'docent' else '')
+            archive_path = destination / slug / (prefix + '.zip')
+            inventory = []
+            retained_cache = []
+            with zipfile.ZipFile(archive_path, 'x', compression=zipfile.ZIP_DEFLATED, compresslevel=6) as archive:
+                for path in files:
+                    assert not path.is_symlink()
+                    if path.name.endswith('.aux.xml'):
+                        cache = ET.fromstring(path.read_bytes())
+                        assert cache.tag == 'PAMDataset'
+                        assert cache.find('SRS') is None and cache.find('GeoTransform') is None
+                        assert cache.find('.//NoDataValue') is None
+                        retained_cache.append({'path': str(path.relative_to(data)), 'sha256': sha(path)})
+                        continue
+                    assert path.suffix.lower() in ('.gpkg', '.tif', '.qgz', '.qml', '.ttf', '.xml'), path
+                    if path.suffix == '.xml':
+                        xml = ET.fromstring(path.read_bytes())
+                        assert path.name == 'ortofoto-wms.xml' and xml.tag == 'GDAL_WMS'
+                        assert xml.findtext('Service/ServerUrl') == WMS
+                        assert xml.findtext('Service/Layers') == WMS_LAYER
+                    relative = prefix + '/' + str(path.relative_to(data))
+                    assert relative.startswith(prefix + '/data/') and 'payload' not in PurePosixPath(relative).parts
+                    archive.write(path, relative)
+                    inventory.append({'path': relative, 'sha256': sha(path), 'bytes': path.stat().st_size})
+                archive.write(pdf, prefix + '/pdf/LLEGIU-ME.pdf')
+                inventory.append({'path': prefix + '/pdf/LLEGIU-ME.pdf', 'sha256': sha(pdf), 'bytes': pdf.stat().st_size})
+            with zipfile.ZipFile(archive_path) as archive:
+                assert archive.testzip() is None and len(archive.namelist()) == len(inventory)
+                for item in inventory:
+                    assert hashlib.sha256(archive.read(item['path'])).hexdigest() == item['sha256']
+            row = {'slug': slug, 'handoff_slug': HANDOFFS[slug][0], 'title': HANDOFFS[slug][1],
+                   'recipient': role, 'zip': str(archive_path.relative_to(ROOT)),
+                   'zip_sha256': sha(archive_path), 'pdf': str((role_folder / 'LLEGIU-ME.pdf').relative_to(ROOT)),
+                   'pdf_sha256': sha(pdf), 'source_sha256': sha(source), 'pdf_pages': len(pages),
+                   'pdf_receipt': str(result_path.relative_to(ROOT)), 'pdf_receipt_sha256': sha(result_path),
+                   'a4_landscape': True, 'draft': True, 'code_blocks_preserved': len(blocks),
+                   'zip_crc': True, 'inventory': inventory, 'cache_retained_only_in_reconstruction': retained_cache}
+            if role == 'docent':
+                row['moodle_statement_sha256'] = sha(enunciat)
+            records.append(row)
+            print(json.dumps({key: row[key] for key in ('slug', 'recipient', 'pdf_pages', 'zip_sha256')}), flush=True)
+    save(destination / 'packages.json', {'kind': 'geodisseny-course-reading-handoffs', 'version': version,
+         'human_approved': False, 'context_receipt_sha256': sha(out / 'context.json'),
+         'layout_receipt': str((handouts / 'layout.json').relative_to(ROOT)),
+         'layout_receipt_sha256': sha(handouts / 'layout.json'), 'packages': records})
+    shutil.copyfile(Path(__file__), destination / 'source-preparer.py')
+
+
+def verify_relocated(root, proof):
+    from qgis.core import QgsApplication, QgsProject, QgsVectorLayer
+    from qgis.gui import QgsMapCanvas, QgsLayerTreeMapCanvasBridge
+    os.environ.setdefault('QT_QPA_PLATFORM', 'offscreen')
+    application = QgsApplication([], False)
+    application.initQgis()
+    project = QgsProject.instance()
+    canvas = QgsMapCanvas()
+    canvas.setRenderFlag(False)
+    bridge = QgsLayerTreeMapCanvasBridge(project.layerTreeRoot(), canvas)
+    observations = []
+    for slug in SLUGS:
+        for role in ('alumnat', 'docent'):
+            prefix = HANDOFFS[slug][0] + ('-docent' if role == 'docent' else '')
+            folder = root / slug / role / prefix
+            projects = [(path.stem, path, False) for path in sorted((folder / 'data').rglob('*.qgz'))]
+            expected = (1 if role == 'alumnat' else
+                        {'accessibilitat-xarxa-vilaseca': 3, 'accessibilitat-raster-vilaseca': 7,
+                         'accessibilitat-temps-vilaseca': 7, 'estadistica-constanti': 2, 'visibilitat-costa': 2}[slug])
+            assert len(projects) == expected, (slug, role, projects)
+            for path in (folder / 'data').glob('*.gpkg'):
+                import sqlite3
+                with sqlite3.connect(f'file:{path}?mode=ro', uri=True) as database:
+                    assert not database.execute("SELECT name FROM sqlite_master WHERE name='qgis_projects'").fetchone()
+                    assert not database.execute("SELECT table_name FROM gpkg_contents WHERE data_type IN ('tiles','2d-gridded-coverage')").fetchall()
+            for name, path, embedded in projects:
+                uri = 'geopackage:' + str(path) + '?projectName=' + name if embedded else str(path)
+                assert project.read(uri), uri
+                assert project.crs().authid() == 'EPSG:25831'
+                assert project.title() == HANDOFFS[slug][1]
+                group = project.layerTreeRoot().findGroup('Ortofoto ICGC')
+                assert group and len(group.findLayers()) == 2
+                assert group.findLayers()[0].itemVisibilityChecked()
+                assert not group.findLayers()[1].itemVisibilityChecked()
+                tree = project.layerTreeRoot()
+                assert not tree.hasCustomLayerOrder(), uri
+                assert all(layer.isValid() for layer in project.mapLayers().values()), uri
+                for layer in project.mapLayers().values():
+                    source = layer.source()
+                    assert not source.startswith(('GPKG:', 'geopackage:')), source
+                    source = source.split('|', 1)[0]
+                    assert Path(source).is_relative_to(root) and Path(source).is_file(), (uri, source)
+                layer_count = len(project.mapLayers())
+                # Exercise the same public tree/canvas bridge used by QGIS:
+                # insertion, moving below existing layers, then back to the top.
+                probe = QgsVectorLayer('Point?crs=EPSG:25831', 'Comprovació temporal de l’ordre', 'memory')
+                project.addMapLayer(probe)
+                probe_id = probe.id()
+                for position in ('top', 'bottom', 'top'):
+                    node = tree.findLayer(probe_id)
+                    clone = node.clone()
+                    parent = node.parent()
+                    tree.insertChildNode(0 if position == 'top' else -1, clone)
+                    parent.removeChildNode(node)
+                    assert project.mapLayer(probe_id), 'Moving the node must retain the map layer.'
+                    application.processEvents()
+                    bridge.setCanvasLayers()
+                    visible = [node.layerId() for node in tree.findLayers() if node.isVisible() and node.layer().isSpatial()]
+                    assert [layer.id() for layer in canvas.layers()] == visible, (uri, position)
+                    assert (visible[0] if position == 'top' else visible[-1]) == probe_id, (uri, position)
+                project.removeMapLayer(probe_id)
+                observations.append({'slug': slug, 'recipient': role, 'project': name,
+                                     'layers': layer_count, 'all_valid': True,
+                                     'datasources_confined': True, 'local_visible_wms_optional': True,
+                                     'render_order_follows_tree': True, 'new_layer_top_bottom_top': True,
+                                     'external_qgz': True, 'local_rasters_are_geotiff': True})
+                project.clear()
+    assert len(observations) == 26
+    save(proof, {'ok': True, 'qgis_image': ENGINE, 'network': 'none', 'readonly': True,
+                 'verification_source_sha256': sha(Path(__file__)), 'projects': observations})
+    print(json.dumps({'ok': True, 'relocated_projects': len(observations)}), flush=True)
+
+
+def publish_current(run, package_pass, archive_id):
+    assert Path(package_pass).name == package_pass and package_pass not in ('.', '..')
+    assert Path(archive_id).name == archive_id and archive_id not in ('.', '..')
+    out = run_root(run)
+    assert not (out / 'published-current.json').exists(), 'This run already has a current handoff.'
+    promotion_source = out / 'published-current-source.py'
+    assert not promotion_source.exists()
+    package_root = out / 'packages' / package_pass
+    report = json.loads((package_root / 'packages.json').read_text())
+    verified = json.loads((package_root / 'verified.json').read_text())
+    assert verified['ok'] and verified['packages_sha256'] == sha(package_root / 'packages.json')
+    assert verified['all_extracted_files_unchanged']
+    assert sha(ROOT / verified['qgis_receipt']) == verified['qgis_receipt_sha256']
+    expected = {(slug, role) for slug in SLUGS for role in ('alumnat', 'docent')}
+    assert len(report['packages']) == 10 and {
+        (row['slug'], row['recipient']) for row in report['packages']} == expected
+    for row in report['packages']:
+        assert sha(ROOT / row['zip']) == row['zip_sha256']
+        assert sha(ROOT / row['pdf']) == row['pdf_sha256']
+        source = ROOT / 'practiques' / row['slug'] / 'ca' / row['recipient'] / 'LLEGIU-ME.md'
+        assert sha(source) == row['source_sha256']
+        if row['recipient'] == 'docent':
+            statement = source.with_name('ENUNCIAT-MOODLE.md')
+            assert sha(statement) == row['moodle_statement_sha256']
+    archive = ROOT / 'sandbox/practiques/arxiu-lliuraments' / archive_id
+    assert not archive.exists()
+    previous = ROOT / 'dist/practiques'
+    assert previous.is_dir() and not previous.is_symlink()
+
+    def inventory(folder):
+        files, directories = [], []
+        for path in sorted(folder.rglob('*')):
+            assert not path.is_symlink(), path
+            relative = str(path.relative_to(folder))
+            if path.is_file():
+                files.append({'path': relative, 'sha256': sha(path), 'bytes': path.stat().st_size})
+            else:
+                assert path.is_dir(), path
+                directories.append(relative)
+        return {'files': files, 'directories': directories}
+
+    before = inventory(previous)
+    # Finish copying and checking the candidate before moving the old handoff.
+    staged = out / 'current' / package_pass
+    staged.mkdir(parents=True)
+    summaries = []
+    for slug in SLUGS:
+        handoff_slug, title = HANDOFFS[slug]
+        target = staged / handoff_slug / 'ca'
+        target.mkdir(parents=True)
+        files = []
+        for row in (item for item in report['packages'] if item['slug'] == slug):
+            role = row['recipient']
+            role_target = target / role
+            role_target.mkdir()
+            assert row['handoff_slug'] == handoff_slug and row['title'] == title
+            zip_target = target / (handoff_slug + ('-docent' if role == 'docent' else '') + '.zip')
+            pdf_target = role_target / 'LLEGIU-ME.pdf'
+            shutil.copyfile(ROOT / row['zip'], zip_target)
+            shutil.copyfile(ROOT / row['pdf'], pdf_target)
+            assert sha(zip_target) == row['zip_sha256'] and sha(pdf_target) == row['pdf_sha256']
+            for path in (zip_target, pdf_target):
+                files.append({'path': str(path.relative_to(target)), 'sha256': sha(path), 'bytes': path.stat().st_size})
+            if role == 'docent':
+                statement = package_root / slug / role / 'ENUNCIAT-MOODLE.md'
+                assert sha(statement) == row['moodle_statement_sha256']
+                shutil.copyfile(statement, role_target / statement.name)
+                files.append({'path': 'docent/ENUNCIAT-MOODLE.md', 'sha256': sha(statement), 'bytes': statement.stat().st_size})
+        manifest = {'kind': 'geodisseny-current-practice-handoff', 'activity': handoff_slug,
+                    'source_activity': slug, 'title': title, 'language': 'ca',
+                    'version': report['version'], 'status': 'review', 'human_approved': False,
+                    'moodle_uploaded': False, 'reconstruction': str(out.relative_to(ROOT)),
+                    'package_report': str((package_root / 'packages.json').relative_to(ROOT)),
+                    'package_report_sha256': sha(package_root / 'packages.json'), 'files': files}
+        save(target / 'manifest.json', manifest)
+        with (target / 'SHA256SUMS').open('x') as stream:
+            for row in files + [{'path': 'manifest.json', 'sha256': sha(target / 'manifest.json')}]:
+                stream.write(row['sha256'] + '  ' + row['path'] + '\n')
+        assert all(sha(target / row['path']) == row['sha256'] for row in files)
+        summaries.append({'activity': handoff_slug, 'source_activity': slug, 'title': title,
+                          'path': 'dist/practiques/' + handoff_slug + '/ca',
+                          'manifest_sha256': sha(target / 'manifest.json')})
+    with (staged / 'LLEGIU-ME.md').open('x') as stream:
+        stream.write('# Lliuraments actuals de les pràctiques\n\n'
+                     'Edició en revisió: ' + report['version'] + '. Els PDFs porten ESBORRANY.\n\n'
+                     'Cada carpeta de pràctica conté, sota `ca/`, el ZIP d’inici i el ZIP docent. '
+                     'Adjunta el ZIP d’inici a **Fitxers addicionals** de Moodle i copia el text editable de '
+                     '`docent/ENUNCIAT-MOODLE.md` a **Descripció**. Les lectures separades són '
+                     '`alumnat/LLEGIU-ME.pdf` i `docent/LLEGIU-ME.pdf`.\n\n' +
+                     'Dins de cada ZIP, `pdf/LLEGIU-ME.pdf` és la lectura i `data/` conté els projectes, '
+                     'les dades i els recursos locals. L’ordre de dibuix segueix el panell Capes.\n\n' +
+                     '\n'.join('- **' + row['title'] + '**: `' + row['path'] + '`' for row in summaries) + '\n\n' +
+                     'Versions anteriors i rebuts complets: `' + str(archive.relative_to(ROOT)) + '`. '
+                     'Dates i hashes són als manifests; no formen part dels noms visibles dels ZIPs.\n\n'
+                     'Anàlisi d’intervisibilitat: continuen pendents les captures de la taula real de lots i del camp '
+                     'avançat desplegat. Seguiment: https://github.com/dosquartsdedocs/unaltracaptura-qgis/issues/26.\n')
+    assert inventory(previous) == before, 'Previous handoff changed during preparation; stop and coordinate.'
+    with Path(__file__).open('rb') as source, promotion_source.open('xb') as snapshot:
+        shutil.copyfileobj(source, snapshot)
+    archive.mkdir(parents=True)
+    save(archive / 'original-tree.json', {'original_root': 'dist/practiques', **before})
+    retained = archive / 'dist-practiques'
+    previous.rename(retained)
+    assert inventory(retained) == before, 'Preserve the archive and staged candidate; do not retry in place.'
+    save(archive / 'verified.json', {'ok': True, 'files': len(before['files']),
+                                  'directories': len(before['directories']), 'all_hashes_match': True,
+                                  'tree_manifest_sha256': sha(archive / 'original-tree.json')})
+    save(staged / 'manifest.json', {'kind': 'geodisseny-current-moodle-handoffs', 'version': report['version'],
+          'human_approved': False, 'previous_tree': str(retained.relative_to(ROOT)),
+          'archive_verification_sha256': sha(archive / 'verified.json'), 'activities': summaries,
+          'pending_capture_issue': 'https://github.com/dosquartsdedocs/unaltracaptura-qgis/issues/26'})
+    staged.rename(previous)
+    save(out / 'published-current.json', {'ok': True, 'archive': str(archive.relative_to(ROOT)),
+          'archived_files': len(before['files']), 'dist_manifest_sha256': sha(previous / 'manifest.json'),
+          'promotion_source_sha256': sha(promotion_source), 'activities': summaries})
+    print(json.dumps({'ok': True, 'current_activities': len(summaries), 'archived_files': len(before['files']),
+                       'archive': str(archive.relative_to(ROOT))}), flush=True)
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--run')
+    parser.add_argument('--stage', action='store_true')
+    parser.add_argument('--context', action='store_true')
+    parser.add_argument('--layout', action='store_true')
+    parser.add_argument('--layout-pass', default='layout01')
+    parser.add_argument('--capture-projects', action='store_true')
+    parser.add_argument('--source-handoff')
+    parser.add_argument('--package', action='store_true')
+    parser.add_argument('--package-pass', default='review01')
+    parser.add_argument('--pdf-receipts')
+    parser.add_argument('--version', default='2026-10-26')
+    parser.add_argument('--verify-relocated', action='store_true')
+    parser.add_argument('--relocated-root', default='/paquet')
+    parser.add_argument('--proof', default='/proof/qgis.json')
+    parser.add_argument('--publish-current', action='store_true')
+    parser.add_argument('--archive-id')
+    args = parser.parse_args()
+    if args.stage:
+        stage(args.run, args.source_handoff)
+    if args.context:
+        prepare_context(args.run)
+    if args.layout:
+        prepare_layout(args.run, args.layout_pass)
+    if args.capture_projects:
+        capture_projects(args.run)
+    if args.package:
+        package(args.run, args.package_pass, args.pdf_receipts, args.version, args.layout_pass)
+    if args.verify_relocated:
+        verify_relocated(Path(args.relocated_root), Path(args.proof))
+    if args.publish_current:
+        publish_current(args.run, args.package_pass, args.archive_id)

@@ -1,0 +1,360 @@
+title: "Anàlisi Espacial i Geodisseny"
+description: "Manual de teoria aplicada, pràctiques i criteris d'anàlisi espacial i geodisseny amb QGIS."
+copyright_holder: "Benito Zaragozí"
+keywords: "anàlisi espacial, geodisseny, QGIS, geoestadística, autocorrelació espacial, kriging, avaluació multicriteri, AHP"
+url: "https://geourv.github.io"
+baseurl: "/geodisseny"
+lang: "ca"
+default_lang: "ca"
+languages: ["ca"]
+first_name: Benito
+last_name: Zaragozí
+author:
+  name: Benito Zaragozí
+  name_ca: Benito Zaragozí
+  bio: Manual de l'assignatura Anàlisi Espacial i Geodisseny.
+  bio_ca: Manual de l'assignatura Anàlisi Espacial i Geodisseny.
+  affiliation: Universitat Rovira i Virgili
+  affiliation_ca: Universitat Rovira i Virgili
+  location: Vila-seca
+  location_ca: Vila-seca
+  email: benito.zaragozi@urv.cat
+  github: geourv
+theme: unaltraweb
+exclude:
+  - context/
+  - sandbox/
+  - practiques/
+  - dist/
+  - tmp/
+  - assets/quarto/
+  - vendor/
+  - _site/
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - AGENTS.md
+  - opencode.json
+  - opencode.jsonc
+defaults:
+  - scope:
+      path: assets
+    values:
+      sitemap: false
+  - scope:
+      path: assets/plotly/demo.html
+    values:
+      published: false
+unaltraweb:
+  site_profile: unaltremanual
+  content_status_field: content_status
+  approved_status: approved
+  footer:
+    show_logo: true
+    brand_name: "Anàlisi Espacial i Geodisseny"
+    brand_url: "https://geourv.github.io/geodisseny/ca/"
+  features:
+    news: false
+    blog: false
+    cv: false
+    projects: false
+    publications: false
+    metrics: false
+    docs: false
+    manual: true
+    readings: true
+  practices:
+    readings:
+      - source: practiques/accessibilitat-vilaseca/ca/alumnat/LLEGIU-ME.md
+        slug: accessibilitat-vilaseca
+        lang: ca
+        recipient: alumnat
+        bindings:
+          - reference: captures/inici.png
+            path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-r5-02/captures/icgc-final/rendered/inici.png
+            sha256: d0e57f1c580f49a5462d3cc3c38fd86499a9c4df2c6fd18bb0322316bd0cfb20
+          - reference: captures/distancies-vector-parametres.png
+            path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-r5-02/captures/icgc-final/rendered/distancies-vector-parametres.png
+            sha256: 1248044ec2b43c8e0ab30e94505d636b0a07a7c1baf0e75a5f914fa5602402ff
+          - reference: captures/distancia-grass.png
+            path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-r5-02/captures/icgc-final/rendered/distancia-grass.png
+            sha256: da719f056fd45b4492b2a1e97a6c3cbdc76db6f5477cb70c55721e78c26ca0e3
+          - reference: captures/xarxa.png
+            path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/xarxa.png
+            sha256: 09b24dbf85cc2358d448103392ac9679c32fa6d9905840bbb8a0f42abf1a403e
+          - reference: captures/rasteritzar-cobertes.png
+            path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-r5-02/captures/icgc-final/rendered/rasteritzar-cobertes.png
+            sha256: 0d9370c48a4666fa26b371c8c655d0e4b5c2467ba3f4fbfa1ede00f182797c8d
+          - reference: captures/rasteritzar-passos.png
+            path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-r5-02/captures/icgc-final/rendered/rasteritzar-passos.png
+            sha256: bc1e1c343b4df88b0a372b3a58eb9859c6eaacd5a8ac469f77eb950ae66793da
+          - reference: captures/friccio.png
+            path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/friccio.png
+            sha256: 520d52355d63c89fb2d6266eb290ee8f7240ebd128d3ea4a87c85c6f18b16fcf
+          - reference: captures/cost-cella-pas.png
+            path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/cost-cella-pas.png
+            sha256: 0227e6595f14f29b2a9bc7dda973371484619ec6c5a22cb38a0270b3f5f7bb08
+          - reference: captures/distancies-cost-parametres.png
+            path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-r5-02/captures/icgc-final/rendered/distancies-cost-parametres.png
+            sha256: 9ec3ec21c5ba221174f0335ea4db8224b152f0161d02cab985fa4d12e9b8233e
+          - reference: captures/distancies-path-parametres.png
+            path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-r5-02/captures/icgc-final/rendered/distancies-path-parametres.png
+            sha256: 3fff4d5a3560a55092524e1382e4baf3c77099429c70f29d5946b5ac7164a816
+          - reference: captures/cost.png
+            path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/cost.png
+            sha256: 986b1ce359064aa2d66407e61f09b53acb315e99abcef0571375f43fac312fca
+          - reference: captures/marxa-parametres.png
+            path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-r5-02/captures/icgc-final/rendered/marxa-parametres.png
+            sha256: 1421453ee33829c4c18984b9dd3d54b8c4f89c4aed7d6040fadb30127e6497c0
+          - reference: captures/marxa.png
+            path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/marxa.png
+            sha256: f2a2475798719e2729aa9ce4b9588c7dcd211d3345d8d1ff5e73e219cc0b08b5
+          - reference: captures/isocrones-obert.png
+            path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/isocrones-obert.png
+            sha256: 1f64b6399a689d97fd12788083c3b9a86c4816822edbf08b8e19e9be0963574c
+          - reference: captures/isocrones-tancat.png
+            path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/isocrones-tancat.png
+            sha256: 77f03b7cc0f46de80f49c324919e6ccd31534bf4cf19977812456520f056f96b
+          - reference: captures/rasteritzar-vials.png
+            path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/rasteritzar-vials.png
+            sha256: ad2a6a20228468a45942484105586655db56e0523cd61e38d1bd267b7fed0533
+      - source: practiques/accessibilitat-vilaseca/ca/docent/LLEGIU-ME.md
+        slug: accessibilitat-vilaseca
+        lang: ca
+        recipient: docent
+        bindings:
+          - reference: captures/inici.png
+            path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-r5-02/captures/icgc-final/rendered/inici.png
+            sha256: d0e57f1c580f49a5462d3cc3c38fd86499a9c4df2c6fd18bb0322316bd0cfb20
+          - reference: captures/distancies-vector-parametres.png
+            path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-r5-02/captures/icgc-final/rendered/distancies-vector-parametres.png
+            sha256: 1248044ec2b43c8e0ab30e94505d636b0a07a7c1baf0e75a5f914fa5602402ff
+          - reference: captures/distancia-grass.png
+            path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-r5-02/captures/icgc-final/rendered/distancia-grass.png
+            sha256: da719f056fd45b4492b2a1e97a6c3cbdc76db6f5477cb70c55721e78c26ca0e3
+          - reference: captures/xarxa.png
+            path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/xarxa.png
+            sha256: 09b24dbf85cc2358d448103392ac9679c32fa6d9905840bbb8a0f42abf1a403e
+          - reference: captures/rasteritzar-cobertes.png
+            path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-r5-02/captures/icgc-final/rendered/rasteritzar-cobertes.png
+            sha256: 0d9370c48a4666fa26b371c8c655d0e4b5c2467ba3f4fbfa1ede00f182797c8d
+          - reference: captures/rasteritzar-passos.png
+            path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-r5-02/captures/icgc-final/rendered/rasteritzar-passos.png
+            sha256: bc1e1c343b4df88b0a372b3a58eb9859c6eaacd5a8ac469f77eb950ae66793da
+          - reference: captures/friccio.png
+            path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/friccio.png
+            sha256: 520d52355d63c89fb2d6266eb290ee8f7240ebd128d3ea4a87c85c6f18b16fcf
+          - reference: captures/cost-cella-pas.png
+            path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/cost-cella-pas.png
+            sha256: 0227e6595f14f29b2a9bc7dda973371484619ec6c5a22cb38a0270b3f5f7bb08
+          - reference: captures/distancies-cost-parametres.png
+            path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-r5-02/captures/icgc-final/rendered/distancies-cost-parametres.png
+            sha256: 9ec3ec21c5ba221174f0335ea4db8224b152f0161d02cab985fa4d12e9b8233e
+          - reference: captures/distancies-path-parametres.png
+            path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-r5-02/captures/icgc-final/rendered/distancies-path-parametres.png
+            sha256: 3fff4d5a3560a55092524e1382e4baf3c77099429c70f29d5946b5ac7164a816
+          - reference: captures/cost.png
+            path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/cost.png
+            sha256: 986b1ce359064aa2d66407e61f09b53acb315e99abcef0571375f43fac312fca
+          - reference: captures/marxa-parametres.png
+            path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-r5-02/captures/icgc-final/rendered/marxa-parametres.png
+            sha256: 1421453ee33829c4c18984b9dd3d54b8c4f89c4aed7d6040fadb30127e6497c0
+          - reference: captures/marxa.png
+            path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/marxa.png
+            sha256: f2a2475798719e2729aa9ce4b9588c7dcd211d3345d8d1ff5e73e219cc0b08b5
+          - reference: captures/isocrones-obert.png
+            path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/isocrones-obert.png
+            sha256: 1f64b6399a689d97fd12788083c3b9a86c4816822edbf08b8e19e9be0963574c
+          - reference: captures/isocrones-tancat.png
+            path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/isocrones-tancat.png
+            sha256: 77f03b7cc0f46de80f49c324919e6ccd31534bf4cf19977812456520f056f96b
+          - reference: captures/rasteritzar-vials.png
+            path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/rasteritzar-vials.png
+            sha256: ad2a6a20228468a45942484105586655db56e0523cd61e38d1bd267b7fed0533
+      - source: practiques/accessibilitat-xarxa-vilaseca/ca/alumnat/LLEGIU-ME.md
+        slug: accessibilitat-xarxa-vilaseca
+        lang: ca
+        recipient: alumnat
+        bindings:
+          - {reference: captures/inici.png, path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/inici.png, sha256: d0e57f1c580f49a5462d3cc3c38fd86499a9c4df2c6fd18bb0322316bd0cfb20}
+          - {reference: captures/distancies-vector-parametres.png, path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/distancies-vector-parametres.png, sha256: 1248044ec2b43c8e0ab30e94505d636b0a07a7c1baf0e75a5f914fa5602402ff}
+          - {reference: captures/xarxa.png, path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/xarxa.png, sha256: 09b24dbf85cc2358d448103392ac9679c32fa6d9905840bbb8a0f42abf1a403e}
+      - source: practiques/accessibilitat-xarxa-vilaseca/ca/docent/LLEGIU-ME.md
+        slug: accessibilitat-xarxa-vilaseca
+        lang: ca
+        recipient: docent
+        bindings:
+          - {reference: captures/xarxa.png, path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/xarxa.png, sha256: 09b24dbf85cc2358d448103392ac9679c32fa6d9905840bbb8a0f42abf1a403e}
+      - source: practiques/accessibilitat-raster-vilaseca/ca/alumnat/LLEGIU-ME.md
+        slug: accessibilitat-raster-vilaseca
+        lang: ca
+        recipient: alumnat
+        bindings:
+          - {reference: captures/distancia-grass.png, path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/distancia-grass.png, sha256: da719f056fd45b4492b2a1e97a6c3cbdc76db6f5477cb70c55721e78c26ca0e3}
+          - {reference: captures/rasteritzar-cobertes.png, path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/rasteritzar-cobertes.png, sha256: 0d9370c48a4666fa26b371c8c655d0e4b5c2467ba3f4fbfa1ede00f182797c8d}
+          - {reference: captures/rasteritzar-vials.png, path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/rasteritzar-vials.png, sha256: ad2a6a20228468a45942484105586655db56e0523cd61e38d1bd267b7fed0533}
+          - {reference: captures/rasteritzar-passos.png, path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/rasteritzar-passos.png, sha256: bc1e1c343b4df88b0a372b3a58eb9859c6eaacd5a8ac469f77eb950ae66793da}
+          - {reference: captures/friccio.png, path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/friccio.png, sha256: 520d52355d63c89fb2d6266eb290ee8f7240ebd128d3ea4a87c85c6f18b16fcf}
+          - {reference: captures/distancies-cost-parametres.png, path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/distancies-cost-parametres.png, sha256: 9ec3ec21c5ba221174f0335ea4db8224b152f0161d02cab985fa4d12e9b8233e}
+          - {reference: captures/distancies-path-parametres.png, path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/distancies-path-parametres.png, sha256: 3fff4d5a3560a55092524e1382e4baf3c77099429c70f29d5946b5ac7164a816}
+          - {reference: captures/cost.png, path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/cost.png, sha256: 986b1ce359064aa2d66407e61f09b53acb315e99abcef0571375f43fac312fca}
+      - source: practiques/accessibilitat-raster-vilaseca/ca/docent/LLEGIU-ME.md
+        slug: accessibilitat-raster-vilaseca
+        lang: ca
+        recipient: docent
+        bindings:
+          - {reference: captures/rasteritzar-vials.png, path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/rasteritzar-vials.png, sha256: ad2a6a20228468a45942484105586655db56e0523cd61e38d1bd267b7fed0533}
+          - {reference: captures/cost-cella-pas.png, path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/cost-cella-pas.png, sha256: 0227e6595f14f29b2a9bc7dda973371484619ec6c5a22cb38a0270b3f5f7bb08}
+          - {reference: captures/cost.png, path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/cost.png, sha256: 986b1ce359064aa2d66407e61f09b53acb315e99abcef0571375f43fac312fca}
+      - source: practiques/accessibilitat-temps-vilaseca/ca/alumnat/LLEGIU-ME.md
+        slug: accessibilitat-temps-vilaseca
+        lang: ca
+        recipient: alumnat
+        bindings:
+          - {reference: captures/marxa-parametres.png, path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/marxa-parametres.png, sha256: 1421453ee33829c4c18984b9dd3d54b8c4f89c4aed7d6040fadb30127e6497c0}
+          - {reference: captures/marxa.png, path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/marxa.png, sha256: f2a2475798719e2729aa9ce4b9588c7dcd211d3345d8d1ff5e73e219cc0b08b5}
+          - {reference: captures/isocrones-obert.png, path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/isocrones-obert.png, sha256: 1f64b6399a689d97fd12788083c3b9a86c4816822edbf08b8e19e9be0963574c}
+          - {reference: captures/isocrones-tancat.png, path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/isocrones-tancat.png, sha256: 77f03b7cc0f46de80f49c324919e6ccd31534bf4cf19977812456520f056f96b}
+      - source: practiques/accessibilitat-temps-vilaseca/ca/docent/LLEGIU-ME.md
+        slug: accessibilitat-temps-vilaseca
+        lang: ca
+        recipient: docent
+        bindings:
+          - {reference: captures/marxa.png, path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/marxa.png, sha256: f2a2475798719e2729aa9ce4b9588c7dcd211d3345d8d1ff5e73e219cc0b08b5}
+          - {reference: captures/isocrones-obert.png, path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/isocrones-obert.png, sha256: 1f64b6399a689d97fd12788083c3b9a86c4816822edbf08b8e19e9be0963574c}
+          - {reference: captures/isocrones-tancat.png, path: sandbox/practiques/accessibilitat-vilaseca/2026-10-14-vials-01/captures/icgc-final/rendered/isocrones-tancat.png, sha256: 77f03b7cc0f46de80f49c324919e6ccd31534bf4cf19977812456520f056f96b}
+      - source: practiques/estadistica-constanti/ca/alumnat/LLEGIU-ME.md
+        slug: estadistica-constanti
+        lang: ca
+        recipient: alumnat
+        bindings:
+          - reference: captures/c4-constanti-dades.png
+            path: sandbox/practiques/estadistica-constanti/2026-10-12-pilot-04/inputs/c4-constanti-dades.png
+            sha256: 5300448923dee265c57f5308a07dc07e903668ea6d003cc1569ed02a12667b34
+          - reference: captures/c4-recompte-caixa.png
+            path: sandbox/practiques/estadistica-constanti/2026-10-12-pilot-04/inputs/c4-recompte-caixa.png
+            sha256: dd511f1d7510a2688c6d75df0475794316d8dd768e078d246722d34f67717c51
+          - reference: captures/c4-centres-resultat.png
+            path: sandbox/practiques/estadistica-constanti/2026-10-12-pilot-04/inputs/c4-centres-resultat.png
+            sha256: 97d775b7b1d39ae97bab0172854cdf3bc5c9f4b01ed5a9a8c01becc8e8ec0543
+          - reference: captures/c4-cercle-ellipse.png
+            path: sandbox/practiques/estadistica-constanti/2026-10-12-pilot-04/inputs/c4-cercle-ellipse.png
+            sha256: 105692b28e294e7d17805e1eacf70f098d23c8d03a319aa19d11ca5d09797e8c
+          - reference: captures/c4-kernel-caixa.png
+            path: sandbox/practiques/estadistica-constanti/2026-10-12-pilot-04/inputs/c4-kernel-caixa.png
+            sha256: 4ef0afea4730e29dce295743d83611c3c1268bed7da5a58d398c0c4cdfe064d1
+      - source: practiques/estadistica-constanti/ca/docent/LLEGIU-ME.md
+        slug: estadistica-constanti
+        lang: ca
+        recipient: docent
+        bindings:
+          - reference: captures/c4-cercle-ellipse.png
+            path: sandbox/practiques/estadistica-constanti/2026-10-12-pilot-04/inputs/c4-cercle-ellipse.png
+            sha256: 105692b28e294e7d17805e1eacf70f098d23c8d03a319aa19d11ca5d09797e8c
+      - source: practiques/visibilitat-costa/ca/alumnat/LLEGIU-ME.md
+        slug: visibilitat-costa
+        lang: ca
+        recipient: alumnat
+        bindings:
+          - reference: captures/visibilitat-costa-dades.png
+            path: sandbox/practiques/visibilitat-costa/2026-10-12-pilot-01/inputs/capture-visibilitat-costa-dades.png
+            sha256: eff6b7ed9f060095c95e18c6b59ebce3088e24c1fbe0d3892d4cd75796432fb8
+          - reference: captures/visibilitat-costa-mds.png
+            path: sandbox/practiques/visibilitat-costa/2026-10-12-pilot-01/inputs/capture-visibilitat-costa-mds.png
+            sha256: 022da8bd2c06667167b42d9c0cd92ae6b12aae3701ee272ffe9574ffb4c0ef5c
+          - reference: captures/visibilitat-costa-torxa.png
+            path: sandbox/practiques/visibilitat-costa/2026-10-12-pilot-01/inputs/capture-visibilitat-costa-torxa.png
+            sha256: da5a9ec473ecff63b5c1f386fef3b6331fa80d7fe050e07375387f1b64c8d8bc
+          - reference: captures/visibilitat-costa-intervisibilitat.png
+            path: sandbox/practiques/visibilitat-costa/2026-10-12-pilot-01/inputs/capture-visibilitat-costa-intervisibilitat.png
+            sha256: e0bb7ca2386336d28e87a265e62c2815f47f62a0f4b0b8c3daca1633bf5f7229
+          - reference: captures/visibilitat-lots-acces.png
+            path: assets/captures/visibilitat-lots-acces.png
+            sha256: 3a64af14f76b70e95f784f6d94ebd198262403d00fe26ac40ea48effdd515047
+          - reference: captures/visibilitat-ortofoto-context.png
+            path: assets/captures/visibilitat-ortofoto-context.png
+            sha256: a381d15f04d39bde41425b704eba4b1af4654b729d9a6dadcb30136ae0838fc5
+          - reference: captures/visibilitat-opcions-avancades.png
+            path: assets/captures/visibilitat-opcions-avancades.png
+            sha256: 352fd5b082c9202000bd2e6400ebb8e76ac445e38f854d325fc4382261e650c3
+          - reference: captures/visibilitat-carretera-parametres.png
+            path: assets/captures/visibilitat-carretera-parametres.png
+            sha256: 3cbb882f49a4d71c209041eea1d5d0c736658483dce93d8fc0e23f30bfe217e0
+          - reference: captures/visibilitat-costa-acumulada.png
+            path: sandbox/practiques/visibilitat-costa/2026-10-12-pilot-01/inputs/capture-visibilitat-costa-acumulada.png
+            sha256: f05f5c81aab3aa4c524059ada7fd4cb829a7268fa1864b0422e5550ec445812e
+          - reference: captures/visibilitat-costa-buffer-positiu.png
+            path: sandbox/practiques/visibilitat-costa/2026-10-12-pilot-01/inputs/capture-visibilitat-costa-buffer-positiu.png
+            sha256: 1bd405af48b232f4cbfafe79fa37f3c2579a205d142e17b534859318c6b72731
+          - reference: captures/visibilitat-costa-perimetre.png
+            path: sandbox/practiques/visibilitat-costa/2026-10-12-pilot-01/inputs/capture-visibilitat-costa-perimetre.png
+            sha256: 9fb5b217705af0c78807983eb7d382215905e37be44bd2c5fb97c3fe9f04f584
+          - reference: captures/visibilitat-costa-area.png
+            path: sandbox/practiques/visibilitat-costa/2026-10-12-pilot-01/inputs/capture-visibilitat-costa-area.png
+            sha256: af4f40372eedc021244347856dfc86545087fc097d1336eb7c2b001958097f05
+          - reference: captures/visibilitat-costa-poligon.png
+            path: sandbox/practiques/visibilitat-costa/2026-10-12-pilot-01/inputs/capture-visibilitat-costa-poligon.png
+            sha256: f580632ffa39b290ab913796e877ef13abb1c1e670d7eda8cef9982f600754d5
+      - source: practiques/visibilitat-costa/ca/docent/LLEGIU-ME.md
+        slug: visibilitat-costa
+        lang: ca
+        recipient: docent
+        bindings:
+          - reference: captures/visibilitat-lots-acces.png
+            path: assets/captures/visibilitat-lots-acces.png
+            sha256: 3a64af14f76b70e95f784f6d94ebd198262403d00fe26ac40ea48effdd515047
+  manual:
+    collection: chapters
+    nav_title: Geodisseny
+    show_chapter_index: true
+    cover_image: /assets/img/manual-cover-ca.png
+    logo: /assets/img/brand/dosquartsdedocs-logo.svg
+    logo_inverse: /assets/img/brand/dosquartsdedocs-logo-white.svg
+    logo_cafe: /assets/img/brand/dosquartsdedocs-logo-cafe.svg
+    bibliography: true
+    bibliography_file: manual.bib
+    metadata:
+      title: "Anàlisi Espacial i Geodisseny"
+      short_title: Geodisseny
+      description: Manual de teoria aplicada, pràctiques i criteris d'anàlisi espacial i geodisseny amb QGIS.
+      series: Dos quarts de docs
+      series_subtitle: Recursos d'aprenentatge
+      publisher: Dos quarts de docs
+      edition: Edició digital de treball, curs 2026/2027
+      source: https://geourv.github.io/geodisseny/
+      subject: Anàlisi Espacial i Geodisseny
+      teaching_guides:
+        - degree: Grau en Geografia, Anàlisi Territorial i Sostenibilitat
+          subject_code: "21234116"
+      department: Departament de Geografia
+      faculty: Facultat de Turisme i Geografia
+      institution: Universitat Rovira i Virgili
+      location: Vila-seca
+      academic_year: 2026/2027
+      instructors:
+        - name: Benito Zaragozí
+      rights: © Benito Zaragozí. Les marques, les figures i els materials de tercers conserven els drets i les llicències indicats.
+    release:
+      selector: latest
+    pdf:
+      enabled: true
+      languages: ["ca"]
+      build_dir: tmp/manual-pdf
+      output: assets/pdf/manual-{lang}.pdf
+      cover_output: assets/img/manual-cover-{lang}.png
+      include_home: true
+      include_bibliography: true
+      toc: true
+      mark_drafts: true
+      home_title: Presentació
+      cover:
+        image: assets/img/manual-cover-background.jpg
+        series_logo: assets/img/brand/docs-quarts-logo-small-white.png
+        institution_logo: assets/img/brand/dgeo-apilat-color.pdf
+        band_color: "990000"
+        primary_color: "990000"
+        secondary_color: "003366"
+        muted_color: "666666"
+  figure_captions:
+    enabled: true
+    collections: [chapters]

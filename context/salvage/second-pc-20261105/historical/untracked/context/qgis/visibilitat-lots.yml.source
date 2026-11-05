@@ -1,0 +1,78 @@
+id: visibilitat-lots
+title: Context, paràmetres i accés als lots de Viewshed
+source_prompt: context/qgis/visibilitat-lots.md
+runtime: {display_backend: offscreen, locale: ca}
+plugins: [processing]
+compat: {qgis: '>=3.44'}
+data:
+  - {id: lots-mdt, type: raster, path: tmp/dades-docents/qgis/visibilitat-costa-20261002-r3/dades/mdt-calcul.tif}
+  - {id: lots-orto, type: raster, path: tmp/dades-docents/qgis/visibilitat-costa-20261002-r3/fonts/ortofoto-context-2025.tif}
+  - {id: lots-wms, type: raster, path: sandbox/practiques/lliurament-geodisseny/2026-10-20-revisio-02/classroom/visibilitat-costa/alumnat/payload/data/ortofoto-wms.xml}
+  - {id: lots-inici, type: gpkg, path: sandbox/practiques/lliurament-geodisseny/2026-10-20-revisio-02/classroom/visibilitat-costa/alumnat/payload/data/visibilitat-costa.gpkg}
+connections:
+  - {id: lots-inici, type: gpkg, name: visibilitat-costa.gpkg, path: sandbox/practiques/lliurament-geodisseny/2026-10-20-revisio-02/classroom/visibilitat-costa/alumnat/payload/data/visibilitat-costa.gpkg}
+setup:
+  - {action: set_project_crs, auth_id: 'EPSG:25831'}
+  - {action: load_raster, path: tmp/dades-docents/qgis/visibilitat-costa-20261002-r3/fonts/ortofoto-context-2025.tif, name: Ortofoto local 2025}
+  - {action: load_raster, path: sandbox/practiques/lliurament-geodisseny/2026-10-20-revisio-02/classroom/visibilitat-costa/alumnat/payload/data/ortofoto-wms.xml, name: WMS ICGC 2025 (internet)}
+  - {action: set_layer_visible, layer: WMS ICGC 2025 (internet), visible: false}
+  - {action: load_vector, path: 'sandbox/practiques/lliurament-geodisseny/2026-10-20-revisio-02/classroom/visibilitat-costa/alumnat/payload/data/visibilitat-costa.gpkg|layername=torxa', name: Torxa T}
+  - {action: load_vector, path: 'sandbox/practiques/lliurament-geodisseny/2026-10-20-revisio-02/classroom/visibilitat-costa/alumnat/payload/data/visibilitat-costa.gpkg|layername=carretera', name: Carretera}
+  - {action: load_raster, path: tmp/dades-docents/qgis/visibilitat-costa-20261002-r3/dades/mdt-calcul.tif, name: MDT de treball}
+  - {action: set_layer_visible, layer: MDT de treball, visible: false}
+  - {action: zoom_to_layer, layer: Ortofoto local 2025, scale: 1.0}
+presentation:
+  active_layer: WMS ICGC 2025 (internet)
+  groups:
+    - {path: [Dades del cas], layers: [Torxa T, Carretera, MDT de treball], expanded: true}
+    - {path: [Ortofoto ICGC], layers: [Ortofoto local 2025, WMS ICGC 2025 (internet)], expanded: true}
+  expand_geopackages: true
+  checks:
+    project_crs: 'EPSG:25831'
+    required_layers: [Torxa T, Carretera, Ortofoto local 2025, WMS ICGC 2025 (internet)]
+captures:
+  - id: visibilitat-ortofoto-context
+    title: Ortofoto local i WMS opcional agrupats
+    mode: window
+    target: {object_name: QgisApp}
+    camera: {mode: crop, target: {class_name: QgsLayerTreeView}, padding: 18, output_size: {width: 600, height: 560}}
+    steps:
+      - {action: clear_message_bar, wait_ms: 600}
+    drawings:
+      - {type: rect, target: {class_name: QgsLayerTreeView}, colour: information, shadow: false}
+    output: {path: assets/captures/visibilitat-ortofoto-context.png, annotations_svg: assets/captures/visibilitat-ortofoto-context.annotations.svg, manifest: context/qgis/manifests/visibilitat-ortofoto-context.yml}
+  - id: visibilitat-opcions-avancades
+    title: Altura arrodonida i accés als camps avançats
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:gdal:viewshed'}
+    steps:
+      - action: open_processing_algorithm_dialog
+        algorithm: gdal:viewshed
+        parameters: {INPUT: MDT de treball, BAND: 1, OBSERVER: '346892.5,4552507.5 [EPSG:25831]', OBSERVER_HEIGHT: 131.37, TARGET_HEIGHT: 1.7, MAX_DISTANCE: 0, EXTRA: '-vv 1 -iv 0 -ov 255 -a_nodata 255 -cc 0.85714', OUTPUT: TEMPORARY_OUTPUT}
+    drawings:
+      - {type: rect, target: {object_name: grpAdvanced}, colour: information, shadow: false}
+      - {type: rect, target: {object_name: 'unaltracapturaProcessingParameter:OBSERVER_HEIGHT'}, colour: information, shadow: false}
+    output: {path: assets/captures/visibilitat-opcions-avancades.png, annotations_svg: assets/captures/visibilitat-opcions-avancades.annotations.svg, manifest: context/qgis/manifests/visibilitat-opcions-avancades.yml}
+  - id: visibilitat-lots-acces
+    title: Accedir al procés per lots des del diàleg de Viewshed
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:gdal:viewshed'}
+    steps:
+      - action: open_processing_algorithm_dialog
+        algorithm: gdal:viewshed
+        parameters: {INPUT: MDT de treball, BAND: 1, OBSERVER: '344977.5,4552147.5 [EPSG:25831]', OBSERVER_HEIGHT: 1.7, TARGET_HEIGHT: 1.7, MAX_DISTANCE: 0, EXTRA: '-vv 1 -iv 0 -ov 255 -a_nodata 255 -cc 0.85714', OUTPUT: TEMPORARY_OUTPUT}
+    drawings:
+      - {type: rect, anchor: {x: 110, y: 682, unit: logical_px}, width: 238, height: 28, colour: information, shadow: false}
+    output: {path: assets/captures/visibilitat-lots-acces.png, annotations_svg: assets/captures/visibilitat-lots-acces.annotations.svg, manifest: context/qgis/manifests/visibilitat-lots-acces.yml}
+  - id: visibilitat-carretera-parametres
+    title: Mostreig de carretera amb distàncies llegibles
+    mode: window
+    target: {object_name: 'unaltracapturaProcessingDialog:native:pointsalonglines'}
+    steps:
+      - action: open_processing_algorithm_dialog
+        algorithm: native:pointsalonglines
+        parameters: {INPUT: Carretera, DISTANCE: 98.71, START_OFFSET: 49.36, END_OFFSET: 0, OUTPUT: TEMPORARY_OUTPUT}
+    drawings:
+      - {type: rect, target: {object_name: 'unaltracapturaProcessingParameter:DISTANCE'}, colour: information, shadow: false}
+      - {type: rect, target: {object_name: 'unaltracapturaProcessingParameter:START_OFFSET'}, colour: information, shadow: false}
+    output: {path: assets/captures/visibilitat-carretera-parametres.png, annotations_svg: assets/captures/visibilitat-carretera-parametres.annotations.svg, manifest: context/qgis/manifests/visibilitat-carretera-parametres.yml}

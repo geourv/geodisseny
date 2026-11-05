@@ -1,0 +1,56 @@
+"""Bounded Hotspot Analysis 4 qualification; retained inputs stay readonly."""
+import hashlib
+import json
+import math
+from pathlib import Path
+import sys
+
+sys.path[:0]=['/plugins','/usr/share/qgis/python/plugins']
+import numpy as np
+from qgis.core import QgsApplication,Qgis,QgsVectorLayer,QgsProcessingContext,QgsProcessingFeedback
+from processing.core.Processing import Processing
+from HotSpotAnalysis_v3.processing.provider import HotspotProvider
+from libpysal.weights import KNN
+from esda import Moran
+import processing
+
+app=QgsApplication([],False)
+app.initQgis()
+Processing.initialize()
+provider=HotspotProvider()
+assert QgsApplication.processingRegistry().addProvider(provider)
+algorithm=QgsApplication.processingRegistry().algorithmById('hotspotanalysis:moranlocal')
+assert algorithm
+layer=QgsVectorLayer('/dades/constanti.gpkg|layername=coneguda','Potències conegudes','ogr')
+assert layer.isValid() and layer.featureCount()==98
+features=list(layer.getFeatures())
+values=np.array([feature['POT_KW'] for feature in features],dtype=float)
+coordinates=np.array([(feature.geometry().asPoint().x(),feature.geometry().asPoint().y()) for feature in features])
+assert float(values.sum())==2770 and np.isfinite(values).all()
+weights=KNN.from_array(coordinates,k=8)
+weights.transform='R'
+global_i=float(Moran(values,weights,permutations=0).I)
+assert abs(global_i-0.191856301)<1e-8,global_i
+parameters={'INPUT':layer,'FIELD':'POT_KW','WEIGHTS_TYPE':1,'KNN_K':8,'OPTIMIZE':False,
+    'BINARY_WEIGHTS':True,'DISTANCE_METRIC':0,'ROW_STANDARDIZE':True,
+    'PERMUTATIONS':99,'TWO_TAILED':False,'OUTPUT':'TEMPORARY_OUTPUT'}
+assert set(parameters)<={parameter.name() for parameter in algorithm.parameterDefinitions()}
+context=QgsProcessingContext()
+feedback=QgsProcessingFeedback()
+result=processing.run(algorithm,parameters,context=context,feedback=feedback)['OUTPUT']
+output=result if isinstance(result,QgsVectorLayer) else QgsVectorLayer(result,'Prova Moran','ogr')
+assert output.isValid() and output.featureCount()==98
+assert {'p_value','q_value'}<=set(output.fields().names())
+rows=list(output.getFeatures())
+assert all(math.isfinite(float(feature['p_value'])) and 0<=float(feature['p_value'])<=1 and
+           int(feature['q_value']) in (1,2,3,4) for feature in rows)
+assert sorted(float(feature['POT_KW']) for feature in rows)==sorted(values)
+report={'ok':True,'kind':'geodisseny-activity-runtime-probe','qgis':Qgis.QGIS_VERSION,
+    'plugin':'Hotspot Analysis 4.0.0','algorithm':algorithm.id(),'input_count':98,'known_kw':2770,
+    'global_i':global_i,'knn':8,'row_standardization':True,'probe_permutations':99,
+    'local_output_count':98,'output_fields':output.fields().names(),'all_p_quadrants_valid':True,
+    'known_values_preserved':True,'processing_log':feedback.textLog(),
+    'teaching_reference_replaced':False,'classroom_package_produced':False,
+    'limitation':'99-permutation smoke, not the retained 9999-permutation teaching reference.'}
+with Path('/proof/verified.json').open('x') as stream:json.dump(report,stream,ensure_ascii=False,indent=2)
+print(json.dumps({key:report[key] for key in ('ok','qgis','plugin','input_count','global_i','local_output_count')}),flush=True)

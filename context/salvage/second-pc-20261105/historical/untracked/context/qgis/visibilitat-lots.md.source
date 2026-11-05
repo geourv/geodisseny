@@ -1,0 +1,92 @@
+# Primera introducció al processament per lots de QGIS
+
+Documentar el processament per lots de GDAL Viewshed sobre les dades reals de la
+TV-3148 de la pràctica de visibilitat. QGIS3.44, interfície en català, proveïdor
+Processament i imatge fixada del projecte. No simular menús o taules en una figura.
+
+Mostrar l'opció del menú contextual de Viewshed a la Caixa d'eines. L'estudiant
+pot haver-la vist en altres eines sense utilitzar-la; aquí s'explica per primera
+vegada de manera guiada. Obrir després la taula del lot i relacionar una fila
+amb una execució i una columna amb un paràmetre.
+
+Preparar primer cinc posicions reals, C05/C11/C13/C25/C37, sobre el mateix MDT i amb
+altures1,7/1,7m. Ressaltar què canvia —observador i fitxer de sortida— i què es
+copia a la columna —MDT, banda, altures, abast i opcions. Mostrar el menú real
+d'emplenament i la generació de noms de sortida diferents. Ampliar després el
+procediment a les37posicions de la capa C amb una expressió documentada.
+
+Captures previstes: accés al lot, taula amb files/columnes, emplenament automàtic
+i sortides. Requadres semàntics que no tapin les opcions; conservar suficient
+interfície per reconèixer l'eina i el context. La connexió GeoPackage s'ha de
+mostrar desplegada quan el diàleg no l'oculti.
+
+La recepta actual materialitza només l'accés des del diàleg: els sondejos no han
+trobat una acció pública utilitzable per obrir i emplenar la taula del lot. No
+incloure passos desconeguts ni donar per capturades aquestes altres escenes.
+El botó no té objectName i els selectors de text provats han resolt controls
+equivocats. El requadre d'accés utilitza coordenades lògiques absolutes mesurades
+al sondeig UI —finestra760×690, DPR1— i s'ha de tornar a comprovar visualment si
+canvia la geometria. No s'utilitza el mode screen que ha capturat una finestra
+aliena en el primer sondeig.
+
+Les captures documenten configuració i repetició. El lot no emmascara ni suma
+les conques: aquestes operacions es presenten després. Reutilitzar els inputs i
+resultats segellats; no repetir les179conques per preparar la documentació.
+
+## Auditoria de la pantalla i tancament, 19 d'octubre de 2026
+
+El render d'accés retingut es va obtenir amb la CLI pública del paquet instal·lat,
+després dels problemes de la connexió MCP. El rebut acredita el worker Docker
+amb la imatge fixada i el backend X11. El client de preparació heretava
+`DISPLAY=:0`; l'autor va observar QGIS al seu escriptori. Aquesta via no va
+respectar l'aïllament de pantalla esperat i no s'ha de repetir com a alternativa
+silenciosa al MCP.
+
+El manifest de la captura conserva el backend històric; la recepta versionada
+s'ha actualitzat després per a les escenes aïllades del20/10. Una regeneració de
+l'accés requereix també aquesta pantalla privada a través del MCP. Es va aturar el
+sondeig gràfic en la passada del19/10. La figura d'accés s'ha comprovat i els peus
+indiquen que encara mostra el diàleg individual. Taula, emplenament i sortides
+queden pendents d'una via pública compatible i aïllada. L'informe privat de
+tancament conserva els rebuts i no reprodueix la captura de pantalla rebutjada.
+
+## Revisió completa de les pràctiques, 20 d'octubre de 2026
+
+Les captures noves utilitzen el MCP publicat0.6.1, controllerd06b742c… i engine1003721d…,
+amb pantalla privada Xvfb acreditada als rebuts. La recepta actual declara el
+context local/WMS agrupat, l'altura de T arrodonida i el control que desplega els
+paràmetres avançats, i l'accés al lot amb C05. Les escenes es materialitzen de
+manera independent per conservar un setup comú sense dependències de diàlegs
+anteriors. El WMS es carrega mitjançant una declaració local GDAL WMS i queda
+desactivat; la imatge mostrada és el retall local, no una petició en línia.
+
+La imatge dels avançats mostra l'accés al bloc, no el camp EXTRA desplegat.
+No donar per obtinguda una taula de lots ni fingir controls: el sondeig de menú
+contextual de Processing ha quedat bloquejat i s'ha aturat el seu worker exacte.
+Els flags de presentació provats al diàleg no han desplegat el bloc. Es conserva
+el límit del servei i es continua la resta de la revisió i dels lliuraments.
+Seguiment públic: [unaltracaptura-qgis#26](https://github.com/dosquartsdedocs/unaltracaptura-qgis/issues/26).
+
+## Comprovació de l'autocompletat, 21 d'octubre de 2026
+
+La pràctica s'anomena Anàlisi d'intervisibilitat. L'autor ha observat un array
+correcte a la previsualització i coordenades a zero a la taula. Amb els diàlegs
+i controls de QGIS 3.44.11 del contenidor fixat s'han reproduït dues situacions:
+Calculate by Expression amb l'array sencer dona 0,0; Add Values el distribueix,
+però conserva la fila buida inicial (6 files per a 5 punts i 38 per a 37). La
+seqüència corregida retira aquella fila, comprova coordenades persistides i usa
+`array_get(..., @row_number)` per recalcular un valor per fila, amb índex 0.
+
+Proves a `sandbox/practiques/visibilitat-costa/2026-10-21-lots-01/`: `ui02/`
+reté les dues reproduccions; `workflow02/` comprova els lots de 5 i 37, rutes
+úniques, Fill Down de constants, columna EXTRA visible i execució amb NoData 255.
+Suma multifitxer nativa de 5/37 conques comprovada píxel a píxel; `later01/`
+valida les expressions escalars de 28 observadors MDS i 57 mostres d'àrea i una
+ponderació ràster real en Float32/NoData −9999. No s'han repetit les 179 conques.
+
+Aquestes són proves programàtiques dels controls QGIS i dels algorismes dins
+del contenidor, sense finestres al host ni screenshots. No són noves captures
+del MCP ni una execució humana clic a clic. La captura de la taula i del camp
+EXTRA obert continua pendent de la via pública de l'owner#26; no se substitueix
+el capturador per un renderer del consumidor. Les figures d'accés anteriors
+continuen identificant el seu estat real.

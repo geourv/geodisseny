@@ -1,0 +1,11 @@
+# Accessibilitat: model ràster de cost
+
+**Dades.** Descarregueu `accessibilitat-raster.zip` i conserveu l'estructura completa. Llegiu `pdf/LLEGIU-ME.pdf` i obriu `data/inici.qgz` amb QGIS 3.44, GDAL i GRASS. Els vectors són al GeoPackage de `data/`; els ràsters són GeoTIFF separats a `data/rasters/`. El cas d'aplicació és Vila-seca. Manteniu O/D, EPSG:25831/NONE i graella de 5 m. El grup Ortofoto ICGC conté el retall local i el WMS de context per consultar més detall amb connexió.
+
+**Treball de classe.** El professor indicarà els apartats obligatoris del 70%: proximitat, reclassificació de cobertes, vials de pes 1, barreres/passos, r.cost/r.path i comparació de longitud/cost. La guia completa no obliga a lliurar tots els passos. Comproveu alineació i la prioritat pas → barrera → vial → coberta.
+
+**Ampliacions per aspirar a l'excel·lent.** Compareu el model només de cobertes amb el que integra vials, o canvieu pesos/resolució o zona amb una referència i controls. Què passa quan la coberta generalitza un camí dins d'un conreu? Desenvolupeu una aplicació geogràfica i identifiqueu les dades que faltaria contrastar.
+
+**Informe i lliurament.** Entregueu vectors en GeoPackage, projecte relatiu, TIFF requerits i PDF amb pregunta, fonts, decisions, controls, mapes/taula i conclusions. Podeu enregistrar la pantalla i extreure captures llegibles i comentades; el vídeo només es lliura si el professor ho indica. Comproveu l'obertura des d'una altra carpeta.
+
+**Qualificació.** 70% apartats indicats a classe; 20% ampliacions; 10% informe, captures, mapes i organització. Es valoren pregunta, controls i interpretació, no el nombre d'operacions.

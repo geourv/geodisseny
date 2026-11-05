@@ -1,0 +1,11 @@
+# Accessibilitat: temps d'accés
+
+**Dades.** Descarregueu `accessibilitat-temps-acces.zip` i conserveu l'estructura completa. Llegiu `pdf/LLEGIU-ME.pdf` i obriu `data/inici.qgz` amb QGIS 3.44, GDAL i GRASS. Els vectors són al GeoPackage de `data/`; l'MDT i les friccions oberta/tancada són GeoTIFF a `data/rasters/`. El cas d'aplicació és Vila-seca. Són entrades del bloc; haureu de calcular temps i isòcrones. El grup Ortofoto ICGC permet alternar el context local amb el WMS quan hi ha connexió.
+
+**Treball de classe.** El professor indicarà els apartats obligatoris del 70%: àrees de servei, marxa d'anada/tornada, control pla, isòcrones/franges i interpretació. La guia completa no converteix tots els procediments en obligatoris. Manteniu O/D, graella i paràmetres en cada comparació.
+
+**Ampliacions per aspirar a l'excel·lent.** Compareu orígens, llindars, pesos o una zona amb més pendent. Quina connexió o superfície es perd? Quina observació permetria contrastar els temps? Desenvolupeu una aplicació geogràfica amb una referència, controls i límits explícits.
+
+**Informe i lliurament.** Entregueu vectors en GeoPackage, projecte relatiu, TIFF requerits i PDF amb pregunta, fonts, decisions, mapes/taules i conclusions. Diferencieu branques de xarxa, superfícies, longitud, cost i temps. Podeu enregistrar la pantalla i extreure captures comentades; el vídeo només es lliura si el professor ho indica. Comproveu l'obertura des d'una altra ubicació.
+
+**Qualificació.** 70% apartats indicats a classe; 20% ampliacions; 10% informe, captures, mapes i organització. Una ampliació necessita pregunta, controls i interpretació i no substitueix els obligatoris.

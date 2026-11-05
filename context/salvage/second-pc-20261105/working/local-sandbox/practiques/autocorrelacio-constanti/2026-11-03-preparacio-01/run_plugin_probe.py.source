@@ -1,0 +1,37 @@
+"""Confined native public-QGIS probe with exact retained plugin-file hashes."""
+import hashlib
+import json
+import os
+from pathlib import Path
+import shutil
+import subprocess
+
+ROOT=Path('/home/benizar/git/geodisseny')
+HERE=Path(__file__).resolve().parent
+OUT=HERE/'plugin01'
+OUT.mkdir()
+DATA=ROOT/'tmp/dades-docents/qgis/constanti-pedagogia-20261005'
+PLUGINS=ROOT/'tmp/qgis/cache/plugins/sha256-950ee7bf7cbab5163849415d4f7fd72dc400b1e81127913ff308244ae4a6ebdc-139383569f94'
+def sha(path):
+    with path.open('rb') as stream:return hashlib.file_digest(stream,'sha256').hexdigest()
+lock=json.loads((ROOT/'context/qgis/plugins-lock.json').read_text())['plugins']['HotSpotAnalysis_v3']
+assert lock['version']=='4.0.0'
+for name,digest in lock['files'].items():
+    assert sha(PLUGINS/'HotSpotAnalysis_v3'/name)==digest,name
+before={name:sha(DATA/name) for name in ('constanti.gpkg','controls.json','sealed.json')}
+command=['docker','run','--rm','--pull','never','--init','--network','none','--read-only','--tmpfs','/tmp',
+    '--cpus','2','--memory','4g','--pids-limit','512','--user',f'{os.getuid()}:{os.getgid()}',
+    '--env','HOME=/tmp','--env','QT_QPA_PLATFORM=offscreen','--env','GDAL_PAM_ENABLED=NO',
+    '--mount',f'type=bind,src={DATA},dst=/dades,readonly',
+    '--mount',f'type=bind,src={PLUGINS},dst=/plugins,readonly',
+    '--mount',f'type=bind,src={HERE/"plugin_probe.py"},dst=/script/check.py,readonly',
+    '--mount',f'type=bind,src={OUT},dst=/proof','--entrypoint','python3',
+    'sha256:1003721d96abe9607d8337b36851f9b29f84c2f8f92b377d1a73ff03c9d15cd2','-B','/script/check.py']
+result=subprocess.run(command,cwd=ROOT,capture_output=True,text=True,timeout=600)
+with (OUT/'process.json').open('x') as stream:json.dump({'command':command,'returncode':result.returncode,
+    'stdout':result.stdout,'stderr':result.stderr,'plugin_files_verified':len(lock['files']),
+    'source_sha256':sha(HERE/'plugin_probe.py')},stream,ensure_ascii=False,indent=2)
+shutil.copy2(HERE/'plugin_probe.py',OUT/'verification-source.py')
+assert before=={name:sha(DATA/name) for name in before}
+assert result.returncode==0,result.stdout+result.stderr
+print(result.stdout,flush=True)

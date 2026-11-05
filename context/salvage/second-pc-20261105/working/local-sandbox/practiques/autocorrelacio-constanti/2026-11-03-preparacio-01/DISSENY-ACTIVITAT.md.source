@@ -1,0 +1,89 @@
+# Preparació de la pràctica següent: autocorrelació espacial
+
+Estat: disseny i qualificació tècnica inicials. No és un paquet d'aula nou.
+La pràctica de punts, centres i el·lipses del30/10es conserva intacta per a avui.
+
+## Base ja verificada
+
+- Capítol5del manual aprovat: Constantí → veïns → Moran → permutacions → mapa
+  local → transferència a renda.
+- Inventari anterior:
+  `sandbox/practiques/lliurament-geodisseny/2026-10-30-organitzacio-01/autocorrelacio-inventari01/inventory.json`.
+  Verifica94membres segellats i dos ZIPs originals, sense repetir l'anàlisi.
+- `coneguda`,98potències publicades de Constantí; suma2770kW. Els26intervals
+  sense xifra no s'imputen ni es tracten com a zero.
+- Renda:151seccions amb les geometries completes, renda2023i seccions2024;
+  transferència posterior, no substitut de la intuïció puntual.
+- Set bundles de captures i les figures computades del manual reutilitzables,
+  amb hashes i procedència; cap mapa nou presentat com a captura nativa antiga.
+
+## Runtime actual comprovat
+
+`runtime.yml` selecciona el worker1003721d… ja preparat, xarxa desactivada i
+sense pull. La crida pública `probe_runtime` observa QGIS3.44.11,
+Python3.13.7, GDAL3.10.3, libpysal4.13.0i esda2.7.1, amb prova estadística
+funcional. També observa GRASS8.4.1i SAGA9.8.0.
+
+El probe genèric refusa un import del connector antic Hotspot Analysis2
+(`Local_Spatial_Pearson`). Això no s'equipara a l'estat del complement4.0.0
+utilitzat pel manual. `run_plugin_probe.py` verifica els fitxers del4.0.0contra
+`plugins-lock.json`, el munta readonly i registra el proveïdor en un procés
+QGIS aïllat amb la imatge fixada.
+
+Resultat real a `plugin01/verified.json`:
+
+- `hotspotanalysis:moranlocal` disponible i executable.
+-98entrades i98sortides, `POT_KW` preservat, camps `p_value` i `q_value` vàlids.
+- kNN8i normalització per files. Moran global independent:
+  **0,19185630104632875**, coincident amb la referència retinguda.
+- Prova local amb **99permutacions** només per qualificar la instal·lació.
+  No substitueix les9999permutacions de les referències docents.
+- GeoPackage, controls i segell originals byte-idèntics després de la prova.
+
+No s'ha canviat la selecció del hub, el runtime global ni cap paquet de Moodle.
+
+## Recorregut docent proposat
+
+1. Recuperar els98valors coneguts i interpretar450kW/3kW amb les mitjanes
+   veïnes65i4,125kW. Separar concentració de localitzacions i associació d'atributs.
+2. Construir el veïnatge explícit, explicar diagonal zero, contribució1/8,
+   distàncies variables, empats i posicions coincidents. Preservar ordre i IDs.
+3. Interpretar el global i el contrast amb valors permutats. Distingir resultat
+   observat, llavor de la referència i pseudo-p, sense atribuir causes.
+4. Executar Moran local des de Hotspot Analysis4.0.0. `q_value` identifica el
+   quadrant; no és un ajust FDR. Llegir valors propis, veïns, p i un cas no destacat.
+5. Comparar amb una decisió alternativa de veïnatge o variable, amb referència
+   conservada. Els kW originals precedeixen el logaritme.
+6. Transferir opcionalment a renda per seccions. Queen requereix en aquest
+   connector un Shapefile de treball complet; exportar-lo a `sandbox/` amb els
+   sidecars, mantenint GeoPackage com a format vectorial de distribució preferit.
+
+El docent determina el codi i la selecció obligatòria del70%. Les ampliacions
+no es converteixen en requisits per inferència ni en deduccions automàtiques.
+
+## Edició a preparar
+
+- Paquet d'inici: lectura i dades inicials, sense resultats Moran; QGZ extern
+  relatiu i GeoTIFF local de context quan sigui necessari.
+- Paquet docent: lectura treballada i resultats retinguts, separant referència
+  amb llavor i execució GUI sense llavor; els pseudo-p no s'han d'igualar a força.
+- `data/`, `sandbox/` i selecció final `dist/`, amb GPKG nou, QGZ extern,
+  informe i recursos necessaris. Proves de carpeta/ZIP traslladat.
+- Lectures i enunciat autònoms; prerequisits, camps, paràmetres, unitats i
+  controls a cada pas. Captures només dels bundles verificats o d'una execució
+  nova declarada explícitament.
+
+Abans d'editar fonts versionades, obrir una tasca pròpia i acordar la reserva
+exacta, en una única branca al checkout principal. Paths proposats:
+
+- `practiques/autocorrelacio-constanti/preparar.py`
+- `practiques/autocorrelacio-constanti/recursos.yml`
+- `practiques/autocorrelacio-constanti/ca/alumnat/LLEGIU-ME.md`
+- `practiques/autocorrelacio-constanti/ca/docent/LLEGIU-ME.md`
+- `practiques/autocorrelacio-constanti/ca/docent/ENUNCIAT-MOODLE.md`
+- `_config.yml`, per als bindings privats de les noves lectures.
+- `practiques/README.md` i `context/practice-retention-inventory.md`.
+
+Després d'aquesta activitat, les línies següents són interpolació/validació i
+avaluació multicriteri dels capítols6i7, amb inventari i proves propis. No es
+dona per assignat ni empaquetat el conjunt complet de continguts del manual.

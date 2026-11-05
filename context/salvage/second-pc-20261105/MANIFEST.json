@@ -1,0 +1,1013 @@
+{
+  "schema_version": 1,
+  "kind": "geodisseny.authored-source-preservation",
+  "status": "draft-unreviewed",
+  "human_approved": false,
+  "base_commit": "7b1c4fcd3e21062c7be19e322a000170cf9b0ba0",
+  "branch": "reference/22-second-pc-20261105-sources",
+  "depends_on_pr": "https://github.com/geourv/geodisseny/pull/25",
+  "stash": "127c2256d2aea5dd2c05d6595a1c33471ffa3400",
+  "sources": [
+    {
+      "original_path": "AGENTS.md",
+      "source_path": ".cache/geo2-20261104-01/salvage-20261105-01/stash-unique/tracked/AGENTS.md",
+      "sha256": "08ad26a673ddf2ec1b6d33656747e70f53ad085f0054dc8ad16f29e0fcc977ca",
+      "bytes": 6888,
+      "original_git_mode": "100644",
+      "git_blob": "7a460f200253d1b618cc2ad1ab6e2a4fb775bbec",
+      "origin_ref": "refs/stash",
+      "origin_commit": "127c2256d2aea5dd2c05d6595a1c33471ffa3400",
+      "stash_part": "tracked",
+      "role": "historical variant; not canonical",
+      "destination": "context/salvage/second-pc-20261105/historical/tracked/AGENTS.md.source",
+      "physical_mode": "0o644",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": "_chapters/ca/03-visibilitat.md",
+      "source_path": ".cache/geo2-20261104-01/salvage-20261105-01/stash-unique/tracked/_chapters/ca/03-visibilitat.md",
+      "sha256": "b1bc4c6e35f72a6fd02cc3a4ef299bf6b967b6acedee9c3ce4f7bd4a6fd425f6",
+      "bytes": 62103,
+      "original_git_mode": "100644",
+      "git_blob": "dea5ae2ead08b4ada475bbe3220ce958572a4f83",
+      "origin_ref": "refs/stash",
+      "origin_commit": "127c2256d2aea5dd2c05d6595a1c33471ffa3400",
+      "stash_part": "tracked",
+      "role": "historical variant; not canonical",
+      "destination": "context/salvage/second-pc-20261105/historical/tracked/_chapters/ca/03-visibilitat.md.source",
+      "physical_mode": "0o644",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": "_chapters/ca/04-estadistica-espacial.md",
+      "source_path": ".cache/geo2-20261104-01/salvage-20261105-01/stash-unique/tracked/_chapters/ca/04-estadistica-espacial.md",
+      "sha256": "f90e52770ae931507a706a9f7fb7950bbe55cb35e88e2cc8f4961a5fd9e24fad",
+      "bytes": 48177,
+      "original_git_mode": "100644",
+      "git_blob": "563182ebb0171635f176303529c5680af92baad7",
+      "origin_ref": "refs/stash",
+      "origin_commit": "127c2256d2aea5dd2c05d6595a1c33471ffa3400",
+      "stash_part": "tracked",
+      "role": "historical variant; not canonical",
+      "destination": "context/salvage/second-pc-20261105/historical/tracked/_chapters/ca/04-estadistica-espacial.md.source",
+      "physical_mode": "0o644",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": "_config.yml",
+      "source_path": ".cache/geo2-20261104-01/salvage-20261105-01/stash-unique/tracked/_config.yml",
+      "sha256": "3078aefa8d9f79b5556d53c8d9e210c4ac99281a19e4e56368d889f3855db223",
+      "bytes": 24732,
+      "original_git_mode": "100644",
+      "git_blob": "80daf46183d329c05a0fd1554ca0221edc29c9b7",
+      "origin_ref": "refs/stash",
+      "origin_commit": "127c2256d2aea5dd2c05d6595a1c33471ffa3400",
+      "stash_part": "tracked",
+      "role": "historical variant; not canonical",
+      "destination": "context/salvage/second-pc-20261105/historical/tracked/_config.yml.source",
+      "physical_mode": "0o644",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": [
+          "benito.zaragozi@urv.cat"
+        ]
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": "context/practice-retention-inventory.md",
+      "source_path": ".cache/geo2-20261104-01/salvage-20261105-01/stash-unique/tracked/context/practice-retention-inventory.md",
+      "sha256": "b5325daf931a60e0b8a48720fe6bbc83e480210513b96428dfbdb4059158fca5",
+      "bytes": 27244,
+      "original_git_mode": "100644",
+      "git_blob": "27943443a68fb9ce0f3bff51fb6eac93b05bfcbc",
+      "origin_ref": "refs/stash",
+      "origin_commit": "127c2256d2aea5dd2c05d6595a1c33471ffa3400",
+      "stash_part": "tracked",
+      "role": "historical variant; not canonical",
+      "destination": "context/salvage/second-pc-20261105/historical/tracked/context/practice-retention-inventory.md.source",
+      "physical_mode": "0o644",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": "context/writing-profile.md",
+      "source_path": ".cache/geo2-20261104-01/salvage-20261105-01/stash-unique/tracked/context/writing-profile.md",
+      "sha256": "d74d39df337c8d270b1b6be590548ea3cbcf5e306e1dbadbdcfa8450eb2fda7d",
+      "bytes": 28826,
+      "original_git_mode": "100644",
+      "git_blob": "34c5fc5f2089ba7c1efe311dc988366f55cfbe5d",
+      "origin_ref": "refs/stash",
+      "origin_commit": "127c2256d2aea5dd2c05d6595a1c33471ffa3400",
+      "stash_part": "tracked",
+      "role": "historical variant; not canonical",
+      "destination": "context/salvage/second-pc-20261105/historical/tracked/context/writing-profile.md.source",
+      "physical_mode": "0o644",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": "practiques/README.md",
+      "source_path": ".cache/geo2-20261104-01/salvage-20261105-01/stash-unique/tracked/practiques/README.md",
+      "sha256": "9922ae5776469d80616bfa3d55dde54fc218755e46b5ed5e1587a557ecf7c155",
+      "bytes": 21632,
+      "original_git_mode": "100644",
+      "git_blob": "f1c73d956998db03a6329ff1ed1438a18c903035",
+      "origin_ref": "refs/stash",
+      "origin_commit": "127c2256d2aea5dd2c05d6595a1c33471ffa3400",
+      "stash_part": "tracked",
+      "role": "historical variant; not canonical",
+      "destination": "context/salvage/second-pc-20261105/historical/tracked/practiques/README.md.source",
+      "physical_mode": "0o644",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": "practiques/accessibilitat-raster-vilaseca/ca/alumnat/LLEGIU-ME.md",
+      "source_path": ".cache/geo2-20261104-01/salvage-20261105-01/stash-unique/tracked/practiques/accessibilitat-raster-vilaseca/ca/alumnat/LLEGIU-ME.md",
+      "sha256": "bbf96c82b5df99b2aaf79f9cf73bdc95b80da6a223e5e58e99973f878ae5d44b",
+      "bytes": 10297,
+      "original_git_mode": "100644",
+      "git_blob": "2cb3ff8adec18e2586be7a5913b53b1fb6283b61",
+      "origin_ref": "refs/stash",
+      "origin_commit": "127c2256d2aea5dd2c05d6595a1c33471ffa3400",
+      "stash_part": "tracked",
+      "role": "historical variant; not canonical",
+      "destination": "context/salvage/second-pc-20261105/historical/tracked/practiques/accessibilitat-raster-vilaseca/ca/alumnat/LLEGIU-ME.md.source",
+      "physical_mode": "0o644",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": "practiques/accessibilitat-raster-vilaseca/ca/docent/LLEGIU-ME.md",
+      "source_path": ".cache/geo2-20261104-01/salvage-20261105-01/stash-unique/tracked/practiques/accessibilitat-raster-vilaseca/ca/docent/LLEGIU-ME.md",
+      "sha256": "e778d9d1dc76e0d9ac374e90bc8c7e7872dc9c37d97c2bad46758943302b3ed1",
+      "bytes": 5402,
+      "original_git_mode": "100644",
+      "git_blob": "837d1654e9e155d9b298354e1ddc6de2e138d076",
+      "origin_ref": "refs/stash",
+      "origin_commit": "127c2256d2aea5dd2c05d6595a1c33471ffa3400",
+      "stash_part": "tracked",
+      "role": "historical variant; not canonical",
+      "destination": "context/salvage/second-pc-20261105/historical/tracked/practiques/accessibilitat-raster-vilaseca/ca/docent/LLEGIU-ME.md.source",
+      "physical_mode": "0o644",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": "practiques/accessibilitat-raster-vilaseca/recursos.yml",
+      "source_path": ".cache/geo2-20261104-01/salvage-20261105-01/stash-unique/tracked/practiques/accessibilitat-raster-vilaseca/recursos.yml",
+      "sha256": "7f9530d731b15236d86c502cb01a0c325c8409dbb1666a827482063f119e2d52",
+      "bytes": 1207,
+      "original_git_mode": "100644",
+      "git_blob": "b78dffad43b988e8accaf824d20f4a3d0a17e1c0",
+      "origin_ref": "refs/stash",
+      "origin_commit": "127c2256d2aea5dd2c05d6595a1c33471ffa3400",
+      "stash_part": "tracked",
+      "role": "historical variant; not canonical",
+      "destination": "context/salvage/second-pc-20261105/historical/tracked/practiques/accessibilitat-raster-vilaseca/recursos.yml.source",
+      "physical_mode": "0o644",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": "practiques/accessibilitat-temps-vilaseca/ca/alumnat/LLEGIU-ME.md",
+      "source_path": ".cache/geo2-20261104-01/salvage-20261105-01/stash-unique/tracked/practiques/accessibilitat-temps-vilaseca/ca/alumnat/LLEGIU-ME.md",
+      "sha256": "58cfbdf9aaf2f893e2ffa8516e4d8548252f7f7558a3a9ab9b6f48972771e68d",
+      "bytes": 7498,
+      "original_git_mode": "100644",
+      "git_blob": "b34b675f822022fc3c061792ec05bf704126aecc",
+      "origin_ref": "refs/stash",
+      "origin_commit": "127c2256d2aea5dd2c05d6595a1c33471ffa3400",
+      "stash_part": "tracked",
+      "role": "historical variant; not canonical",
+      "destination": "context/salvage/second-pc-20261105/historical/tracked/practiques/accessibilitat-temps-vilaseca/ca/alumnat/LLEGIU-ME.md.source",
+      "physical_mode": "0o644",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": "practiques/accessibilitat-temps-vilaseca/ca/docent/LLEGIU-ME.md",
+      "source_path": ".cache/geo2-20261104-01/salvage-20261105-01/stash-unique/tracked/practiques/accessibilitat-temps-vilaseca/ca/docent/LLEGIU-ME.md",
+      "sha256": "9242dd0281ea217d80cdd5fb393aa3801bfe2090fc4e465812e1c01448a93b96",
+      "bytes": 5268,
+      "original_git_mode": "100644",
+      "git_blob": "993ff289a20759a152e117f16e2f443854126ab2",
+      "origin_ref": "refs/stash",
+      "origin_commit": "127c2256d2aea5dd2c05d6595a1c33471ffa3400",
+      "stash_part": "tracked",
+      "role": "historical variant; not canonical",
+      "destination": "context/salvage/second-pc-20261105/historical/tracked/practiques/accessibilitat-temps-vilaseca/ca/docent/LLEGIU-ME.md.source",
+      "physical_mode": "0o644",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": "practiques/accessibilitat-temps-vilaseca/recursos.yml",
+      "source_path": ".cache/geo2-20261104-01/salvage-20261105-01/stash-unique/tracked/practiques/accessibilitat-temps-vilaseca/recursos.yml",
+      "sha256": "33a83754c96bf65b53261d48983eca507d7f65135033adb798912cb6b8c5ce66",
+      "bytes": 1235,
+      "original_git_mode": "100644",
+      "git_blob": "a9771189988c18deaca28353297f74eaa40fcc30",
+      "origin_ref": "refs/stash",
+      "origin_commit": "127c2256d2aea5dd2c05d6595a1c33471ffa3400",
+      "stash_part": "tracked",
+      "role": "historical variant; not canonical",
+      "destination": "context/salvage/second-pc-20261105/historical/tracked/practiques/accessibilitat-temps-vilaseca/recursos.yml.source",
+      "physical_mode": "0o644",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": "practiques/accessibilitat-xarxa-vilaseca/ca/alumnat/LLEGIU-ME.md",
+      "source_path": ".cache/geo2-20261104-01/salvage-20261105-01/stash-unique/tracked/practiques/accessibilitat-xarxa-vilaseca/ca/alumnat/LLEGIU-ME.md",
+      "sha256": "3637599ee588908869df76d8f4a4dcdc802b8bb98ae5fcfef8df37967a988a1d",
+      "bytes": 7570,
+      "original_git_mode": "100644",
+      "git_blob": "73369643db77d6df818132afe0a1ff0b26619de9",
+      "origin_ref": "refs/stash",
+      "origin_commit": "127c2256d2aea5dd2c05d6595a1c33471ffa3400",
+      "stash_part": "tracked",
+      "role": "historical variant; not canonical",
+      "destination": "context/salvage/second-pc-20261105/historical/tracked/practiques/accessibilitat-xarxa-vilaseca/ca/alumnat/LLEGIU-ME.md.source",
+      "physical_mode": "0o644",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": "practiques/accessibilitat-xarxa-vilaseca/ca/docent/LLEGIU-ME.md",
+      "source_path": ".cache/geo2-20261104-01/salvage-20261105-01/stash-unique/tracked/practiques/accessibilitat-xarxa-vilaseca/ca/docent/LLEGIU-ME.md",
+      "sha256": "7a264d4ae05707491b39008591e3390615a6338a417833a79353a3378040409e",
+      "bytes": 3597,
+      "original_git_mode": "100644",
+      "git_blob": "da0919278cafbc5ea7c9f41887e8de69120dddf3",
+      "origin_ref": "refs/stash",
+      "origin_commit": "127c2256d2aea5dd2c05d6595a1c33471ffa3400",
+      "stash_part": "tracked",
+      "role": "historical variant; not canonical",
+      "destination": "context/salvage/second-pc-20261105/historical/tracked/practiques/accessibilitat-xarxa-vilaseca/ca/docent/LLEGIU-ME.md.source",
+      "physical_mode": "0o644",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": "practiques/accessibilitat-xarxa-vilaseca/recursos.yml",
+      "source_path": ".cache/geo2-20261104-01/salvage-20261105-01/stash-unique/tracked/practiques/accessibilitat-xarxa-vilaseca/recursos.yml",
+      "sha256": "f1109a84906c06358228d7eff66a5488976f1a86dc04d577fad9c7e48d0dc4a5",
+      "bytes": 1048,
+      "original_git_mode": "100644",
+      "git_blob": "4ced1302b82933e10f9777f0b174c38c85f147d0",
+      "origin_ref": "refs/stash",
+      "origin_commit": "127c2256d2aea5dd2c05d6595a1c33471ffa3400",
+      "stash_part": "tracked",
+      "role": "historical variant; not canonical",
+      "destination": "context/salvage/second-pc-20261105/historical/tracked/practiques/accessibilitat-xarxa-vilaseca/recursos.yml.source",
+      "physical_mode": "0o644",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": "practiques/estadistica-constanti/ca/alumnat/LLEGIU-ME.md",
+      "source_path": ".cache/geo2-20261104-01/salvage-20261105-01/stash-unique/tracked/practiques/estadistica-constanti/ca/alumnat/LLEGIU-ME.md",
+      "sha256": "119421371d4324ae885c0c9039e539b827407757af71711a0b04f8599778bb59",
+      "bytes": 14149,
+      "original_git_mode": "100644",
+      "git_blob": "ea7b35ff554e4afbcc791c4907053fe5ffbd8780",
+      "origin_ref": "refs/stash",
+      "origin_commit": "127c2256d2aea5dd2c05d6595a1c33471ffa3400",
+      "stash_part": "tracked",
+      "role": "historical variant; not canonical",
+      "destination": "context/salvage/second-pc-20261105/historical/tracked/practiques/estadistica-constanti/ca/alumnat/LLEGIU-ME.md.source",
+      "physical_mode": "0o644",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": "practiques/estadistica-constanti/ca/docent/LLEGIU-ME.md",
+      "source_path": ".cache/geo2-20261104-01/salvage-20261105-01/stash-unique/tracked/practiques/estadistica-constanti/ca/docent/LLEGIU-ME.md",
+      "sha256": "f585ef1f585224514c5870278d1fddc31eacea99eda8e9dc0ada4cd4f04b167d",
+      "bytes": 7478,
+      "original_git_mode": "100644",
+      "git_blob": "292529e9db1a2f7568785dcaa0bb72948f276ce8",
+      "origin_ref": "refs/stash",
+      "origin_commit": "127c2256d2aea5dd2c05d6595a1c33471ffa3400",
+      "stash_part": "tracked",
+      "role": "historical variant; not canonical",
+      "destination": "context/salvage/second-pc-20261105/historical/tracked/practiques/estadistica-constanti/ca/docent/LLEGIU-ME.md.source",
+      "physical_mode": "0o644",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": "practiques/estadistica-constanti/edicio.json",
+      "source_path": ".cache/geo2-20261104-01/salvage-20261105-01/stash-unique/tracked/practiques/estadistica-constanti/edicio.json",
+      "sha256": "e33cfc14bdbf983b5046266011d9995b986b5e3e88a945dc9a3d61e3564e0655",
+      "bytes": 1444,
+      "original_git_mode": "100644",
+      "git_blob": "d724668d3abd0dfb1fffc081011bb937dca17b33",
+      "origin_ref": "refs/stash",
+      "origin_commit": "127c2256d2aea5dd2c05d6595a1c33471ffa3400",
+      "stash_part": "tracked",
+      "role": "historical variant; not canonical",
+      "destination": "context/salvage/second-pc-20261105/historical/tracked/practiques/estadistica-constanti/edicio.json.source",
+      "physical_mode": "0o644",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": "practiques/estadistica-constanti/recursos.yml",
+      "source_path": ".cache/geo2-20261104-01/salvage-20261105-01/stash-unique/tracked/practiques/estadistica-constanti/recursos.yml",
+      "sha256": "515df060f53adabb18507de03cdebec0dfc53941d6c9660e66266029c03ff239",
+      "bytes": 1948,
+      "original_git_mode": "100644",
+      "git_blob": "f59196326d5f0000b5339af7f61b4a60a109b42b",
+      "origin_ref": "refs/stash",
+      "origin_commit": "127c2256d2aea5dd2c05d6595a1c33471ffa3400",
+      "stash_part": "tracked",
+      "role": "historical variant; not canonical",
+      "destination": "context/salvage/second-pc-20261105/historical/tracked/practiques/estadistica-constanti/recursos.yml.source",
+      "physical_mode": "0o644",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": "practiques/visibilitat-costa/ca/alumnat/LLEGIU-ME.md",
+      "source_path": ".cache/geo2-20261104-01/salvage-20261105-01/stash-unique/tracked/practiques/visibilitat-costa/ca/alumnat/LLEGIU-ME.md",
+      "sha256": "f448fd48a976fc2e6a5bc6ebd214b4fa3a08ba8831e1828405614b09c425922e",
+      "bytes": 42371,
+      "original_git_mode": "100644",
+      "git_blob": "018e16a00b5c7bd8314f9f9377fe3d9bdc2f1296",
+      "origin_ref": "refs/stash",
+      "origin_commit": "127c2256d2aea5dd2c05d6595a1c33471ffa3400",
+      "stash_part": "tracked",
+      "role": "historical variant; not canonical",
+      "destination": "context/salvage/second-pc-20261105/historical/tracked/practiques/visibilitat-costa/ca/alumnat/LLEGIU-ME.md.source",
+      "physical_mode": "0o644",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": "practiques/visibilitat-costa/ca/docent/LLEGIU-ME.md",
+      "source_path": ".cache/geo2-20261104-01/salvage-20261105-01/stash-unique/tracked/practiques/visibilitat-costa/ca/docent/LLEGIU-ME.md",
+      "sha256": "727f7fe96d9aab496002d0e03e6f058e3c8cbbcee54043b47716676eb887cfc3",
+      "bytes": 15120,
+      "original_git_mode": "100644",
+      "git_blob": "31196795b9399e3da860092f9d3f0e7c10731e02",
+      "origin_ref": "refs/stash",
+      "origin_commit": "127c2256d2aea5dd2c05d6595a1c33471ffa3400",
+      "stash_part": "tracked",
+      "role": "historical variant; not canonical",
+      "destination": "context/salvage/second-pc-20261105/historical/tracked/practiques/visibilitat-costa/ca/docent/LLEGIU-ME.md.source",
+      "physical_mode": "0o644",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": "practiques/visibilitat-costa/edicio.json",
+      "source_path": ".cache/geo2-20261104-01/salvage-20261105-01/stash-unique/tracked/practiques/visibilitat-costa/edicio.json",
+      "sha256": "93e2050a7644b8438bf93226c556aba2c9a4d9d8887e065c2876276dc710789d",
+      "bytes": 1544,
+      "original_git_mode": "100644",
+      "git_blob": "4d7ea3586ae0d9827b365d431d4ffbe0efc53a7f",
+      "origin_ref": "refs/stash",
+      "origin_commit": "127c2256d2aea5dd2c05d6595a1c33471ffa3400",
+      "stash_part": "tracked",
+      "role": "historical variant; not canonical",
+      "destination": "context/salvage/second-pc-20261105/historical/tracked/practiques/visibilitat-costa/edicio.json.source",
+      "physical_mode": "0o644",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": "practiques/visibilitat-costa/recursos.yml",
+      "source_path": ".cache/geo2-20261104-01/salvage-20261105-01/stash-unique/tracked/practiques/visibilitat-costa/recursos.yml",
+      "sha256": "c5d4762529911ae5c199313dd1e0c49719c80ee4828fdb68117f836b4ff0efd0",
+      "bytes": 2308,
+      "original_git_mode": "100644",
+      "git_blob": "91b3fafade68ce2df41b6c10863f82c2c62dd6d1",
+      "origin_ref": "refs/stash",
+      "origin_commit": "127c2256d2aea5dd2c05d6595a1c33471ffa3400",
+      "stash_part": "tracked",
+      "role": "historical variant; not canonical",
+      "destination": "context/salvage/second-pc-20261105/historical/tracked/practiques/visibilitat-costa/recursos.yml.source",
+      "physical_mode": "0o644",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": "context/qgis/visibilitat-lots.md",
+      "source_path": ".cache/geo2-20261104-01/salvage-20261105-01/stash-unique/untracked/context/qgis/visibilitat-lots.md",
+      "sha256": "522632c308570094e0bde05d60069fae3b83ea8b07978527e42f50a8de49508e",
+      "bytes": 5897,
+      "original_git_mode": "100644",
+      "git_blob": "f485ce5f496e15d57cf2680ed439313afff3be6b",
+      "origin_ref": "refs/stash",
+      "origin_commit": "127c2256d2aea5dd2c05d6595a1c33471ffa3400",
+      "stash_part": "untracked",
+      "role": "historical variant; not canonical",
+      "destination": "context/salvage/second-pc-20261105/historical/untracked/context/qgis/visibilitat-lots.md.source",
+      "physical_mode": "0o644",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": "context/qgis/visibilitat-lots.yml",
+      "source_path": ".cache/geo2-20261104-01/salvage-20261105-01/stash-unique/untracked/context/qgis/visibilitat-lots.yml",
+      "sha256": "72fc44349cc7b3e0b83656ee7c3dd3b6e9980d718edb4c51ae8190357bbe7b90",
+      "bytes": 6014,
+      "original_git_mode": "100644",
+      "git_blob": "bea17133d8b0290b413a5bc76637d5f105045695",
+      "origin_ref": "refs/stash",
+      "origin_commit": "127c2256d2aea5dd2c05d6595a1c33471ffa3400",
+      "stash_part": "untracked",
+      "role": "historical variant; not canonical",
+      "destination": "context/salvage/second-pc-20261105/historical/untracked/context/qgis/visibilitat-lots.yml.source",
+      "physical_mode": "0o644",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": "practiques/accessibilitat-raster-vilaseca/ca/docent/ENUNCIAT-MOODLE.md",
+      "source_path": ".cache/geo2-20261104-01/salvage-20261105-01/stash-unique/untracked/practiques/accessibilitat-raster-vilaseca/ca/docent/ENUNCIAT-MOODLE.md",
+      "sha256": "37d0eb032a1afe94327b9391bbb7b0fdf20329d66718f6827a8c7409aa9b6cee",
+      "bytes": 1688,
+      "original_git_mode": "100644",
+      "git_blob": "5a341f9bda4575cecce3a62c42870d60269adb76",
+      "origin_ref": "refs/stash",
+      "origin_commit": "127c2256d2aea5dd2c05d6595a1c33471ffa3400",
+      "stash_part": "untracked",
+      "role": "historical variant; not canonical",
+      "destination": "context/salvage/second-pc-20261105/historical/untracked/practiques/accessibilitat-raster-vilaseca/ca/docent/ENUNCIAT-MOODLE.md.source",
+      "physical_mode": "0o644",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": "practiques/accessibilitat-temps-vilaseca/ca/docent/ENUNCIAT-MOODLE.md",
+      "source_path": ".cache/geo2-20261104-01/salvage-20261105-01/stash-unique/untracked/practiques/accessibilitat-temps-vilaseca/ca/docent/ENUNCIAT-MOODLE.md",
+      "sha256": "5280059c564e42077f879cf680cd4568b598062817814a57a54b05c973e2c0c9",
+      "bytes": 1696,
+      "original_git_mode": "100644",
+      "git_blob": "ae1c226b44c788434ddd64b84cad23cece233f49",
+      "origin_ref": "refs/stash",
+      "origin_commit": "127c2256d2aea5dd2c05d6595a1c33471ffa3400",
+      "stash_part": "untracked",
+      "role": "historical variant; not canonical",
+      "destination": "context/salvage/second-pc-20261105/historical/untracked/practiques/accessibilitat-temps-vilaseca/ca/docent/ENUNCIAT-MOODLE.md.source",
+      "physical_mode": "0o644",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": "practiques/accessibilitat-xarxa-vilaseca/ca/docent/ENUNCIAT-MOODLE.md",
+      "source_path": ".cache/geo2-20261104-01/salvage-20261105-01/stash-unique/untracked/practiques/accessibilitat-xarxa-vilaseca/ca/docent/ENUNCIAT-MOODLE.md",
+      "sha256": "68a901654cf3897fa449a6ef2e92800c831fa14ecffdf62783904ce8a880054e",
+      "bytes": 1690,
+      "original_git_mode": "100644",
+      "git_blob": "e147ef6b1dd8f0763561466e373e148c394e102f",
+      "origin_ref": "refs/stash",
+      "origin_commit": "127c2256d2aea5dd2c05d6595a1c33471ffa3400",
+      "stash_part": "untracked",
+      "role": "historical variant; not canonical",
+      "destination": "context/salvage/second-pc-20261105/historical/untracked/practiques/accessibilitat-xarxa-vilaseca/ca/docent/ENUNCIAT-MOODLE.md.source",
+      "physical_mode": "0o644",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": "practiques/estadistica-constanti/ca/docent/ENUNCIAT-MOODLE.md",
+      "source_path": ".cache/geo2-20261104-01/salvage-20261105-01/stash-unique/untracked/practiques/estadistica-constanti/ca/docent/ENUNCIAT-MOODLE.md",
+      "sha256": "295053c622d5a49d50f34ed7ef4244b0cc9640791bc820953b9422a3e34a527d",
+      "bytes": 4381,
+      "original_git_mode": "100644",
+      "git_blob": "bad56add736d8f744cd282e534c5c8ace9f0cbf0",
+      "origin_ref": "refs/stash",
+      "origin_commit": "127c2256d2aea5dd2c05d6595a1c33471ffa3400",
+      "stash_part": "untracked",
+      "role": "historical variant; not canonical",
+      "destination": "context/salvage/second-pc-20261105/historical/untracked/practiques/estadistica-constanti/ca/docent/ENUNCIAT-MOODLE.md.source",
+      "physical_mode": "0o644",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": "practiques/lliurament-geodisseny.py",
+      "source_path": ".cache/geo2-20261104-01/salvage-20261105-01/stash-unique/untracked/practiques/lliurament-geodisseny.py",
+      "sha256": "d731dd6f47b2c5323c1f3d23b7e24685f92baf609eb3c8c3bf15483115f121e2",
+      "bytes": 44850,
+      "original_git_mode": "100644",
+      "git_blob": "ceab70ad02a46282ed9dba37de0fc3a6190424b6",
+      "origin_ref": "refs/stash",
+      "origin_commit": "127c2256d2aea5dd2c05d6595a1c33471ffa3400",
+      "stash_part": "untracked",
+      "role": "historical variant; not canonical",
+      "destination": "context/salvage/second-pc-20261105/historical/untracked/practiques/lliurament-geodisseny.py.source",
+      "physical_mode": "0o644",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": "practiques/visibilitat-costa/ca/docent/ENUNCIAT-MOODLE.md",
+      "source_path": ".cache/geo2-20261104-01/salvage-20261105-01/stash-unique/untracked/practiques/visibilitat-costa/ca/docent/ENUNCIAT-MOODLE.md",
+      "sha256": "9e2c58d9bf4eb03d43ed9b798e78419a35d6f01e3a4c72df7a50077bada32e7c",
+      "bytes": 4966,
+      "original_git_mode": "100644",
+      "git_blob": "b0215cd1fa70efc5063059895a6f6e36cce1f13e",
+      "origin_ref": "refs/stash",
+      "origin_commit": "127c2256d2aea5dd2c05d6595a1c33471ffa3400",
+      "stash_part": "untracked",
+      "role": "historical variant; not canonical",
+      "destination": "context/salvage/second-pc-20261105/historical/untracked/practiques/visibilitat-costa/ca/docent/ENUNCIAT-MOODLE.md.source",
+      "physical_mode": "0o644",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": "sandbox/practiques/autocorrelacio-constanti/2026-11-03-preparacio-01/DISSENY-ACTIVITAT.md",
+      "source_path": "sandbox/practiques/autocorrelacio-constanti/2026-11-03-preparacio-01/DISSENY-ACTIVITAT.md",
+      "sha256": "f1d03520f83a944c984050f3a8373f174908c28aff09c26d1ef95339ef67db43",
+      "bytes": 4983,
+      "declared_original_physical_mode": "0o664",
+      "git_blob": "512fbda3070c71135182af512e6e8ff8048adc3d",
+      "origin_ref": null,
+      "origin_commit": null,
+      "role": "authored local design/probe/orchestration source; not canonical",
+      "destination": "context/salvage/second-pc-20261105/working/local-sandbox/practiques/autocorrelacio-constanti/2026-11-03-preparacio-01/DISSENY-ACTIVITAT.md.source",
+      "physical_mode": "0o664",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": "sandbox/practiques/autocorrelacio-constanti/2026-11-03-preparacio-01/runtime.yml",
+      "source_path": "sandbox/practiques/autocorrelacio-constanti/2026-11-03-preparacio-01/runtime.yml",
+      "sha256": "3a4a6fc041c9d6424531333bff8c60d1f1fbfdf5879d2be17f95dbe0c206f317",
+      "bytes": 458,
+      "declared_original_physical_mode": "0o664",
+      "git_blob": "583b793b421b466c0918f9dff711d27724253153",
+      "origin_ref": null,
+      "origin_commit": null,
+      "role": "authored local design/probe/orchestration source; not canonical",
+      "destination": "context/salvage/second-pc-20261105/working/local-sandbox/practiques/autocorrelacio-constanti/2026-11-03-preparacio-01/runtime.yml.source",
+      "physical_mode": "0o664",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": "sandbox/practiques/autocorrelacio-constanti/2026-11-03-preparacio-01/plugin_probe.py",
+      "source_path": "sandbox/practiques/autocorrelacio-constanti/2026-11-03-preparacio-01/plugin_probe.py",
+      "sha256": "0d89f5f5e96d4717002efc849cd8d372f6cfa32eb229d6226766a620adf38035",
+      "bytes": 3189,
+      "declared_original_physical_mode": "0o664",
+      "git_blob": "d3ce71b4cf9b2fa34c6b37a529cfa3ff987a4623",
+      "origin_ref": null,
+      "origin_commit": null,
+      "role": "authored local design/probe/orchestration source; not canonical",
+      "destination": "context/salvage/second-pc-20261105/working/local-sandbox/practiques/autocorrelacio-constanti/2026-11-03-preparacio-01/plugin_probe.py.source",
+      "physical_mode": "0o664",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": "sandbox/practiques/autocorrelacio-constanti/2026-11-03-preparacio-01/run_plugin_probe.py",
+      "source_path": "sandbox/practiques/autocorrelacio-constanti/2026-11-03-preparacio-01/run_plugin_probe.py",
+      "sha256": "a9ee0f589e2d3027ab40fc1143a2e37d81ac2c73029dbedda0510c5486fd7957",
+      "bytes": 2167,
+      "declared_original_physical_mode": "0o664",
+      "git_blob": "dc258cc209e9d7d1d99f455a5de50c5dc95e2905",
+      "origin_ref": null,
+      "origin_commit": null,
+      "role": "authored local design/probe/orchestration source; not canonical",
+      "destination": "context/salvage/second-pc-20261105/working/local-sandbox/practiques/autocorrelacio-constanti/2026-11-03-preparacio-01/run_plugin_probe.py.source",
+      "physical_mode": "0o664",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": ".cache/practiques-dispersio-20261103-01/session.py",
+      "source_path": ".cache/practiques-dispersio-20261103-01/session.py",
+      "sha256": "556acdbb9bc4cd8620cea66ad2e2f0df18d458b0c42b1d6928f8c756b6c19526",
+      "bytes": 7700,
+      "declared_original_physical_mode": "0o664",
+      "git_blob": "612353bc0ef251ad3cacebfd0ef15337ab4b988b",
+      "origin_ref": null,
+      "origin_commit": null,
+      "role": "authored local design/probe/orchestration source; not canonical",
+      "destination": "context/salvage/second-pc-20261105/working/local-cache/practiques-dispersio-20261103-01/session.py.source",
+      "physical_mode": "0o664",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": ".cache/practiques-dispersio-20261103-01/closeout.py",
+      "source_path": ".cache/practiques-dispersio-20261103-01/closeout.py",
+      "sha256": "96c7dfd9bfa948053071cb2ef0601dafa4a3ca7ff860524e6ecb5dedbeec5cf7",
+      "bytes": 8047,
+      "declared_original_physical_mode": "0o664",
+      "git_blob": "1441529a744975702d12c5950cc6a1aedb79749c",
+      "origin_ref": null,
+      "origin_commit": null,
+      "role": "authored local design/probe/orchestration source; not canonical",
+      "destination": "context/salvage/second-pc-20261105/working/local-cache/practiques-dispersio-20261103-01/closeout.py.source",
+      "physical_mode": "0o664",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": ".cache/practiques-dispersio-20261103-01/review.py",
+      "source_path": ".cache/practiques-dispersio-20261103-01/review.py",
+      "sha256": "b57ddb69cb25d44471317923b8001e5f0a20ba213337a533c50a7bef015093ff",
+      "bytes": 4071,
+      "declared_original_physical_mode": "0o664",
+      "git_blob": "adf2e244e5e4842b997ce2881859e7553318ded5",
+      "origin_ref": null,
+      "origin_commit": null,
+      "role": "authored local design/probe/orchestration source; not canonical",
+      "destination": "context/salvage/second-pc-20261105/working/local-cache/practiques-dispersio-20261103-01/review.py.source",
+      "physical_mode": "0o664",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    },
+    {
+      "original_path": ".cache/practiques-dispersio-20261103-01/review.cjs",
+      "source_path": ".cache/practiques-dispersio-20261103-01/review.cjs",
+      "sha256": "042909022a06a289cf43bb142874e3e0372566687397967aa706f3158d2e042c",
+      "bytes": 2591,
+      "declared_original_physical_mode": "0o664",
+      "git_blob": "d70d46c346a025e154e337f116b4c9a6d4988f6b",
+      "origin_ref": null,
+      "origin_commit": null,
+      "role": "authored local design/probe/orchestration source; not canonical",
+      "destination": "context/salvage/second-pc-20261105/working/local-cache/practiques-dispersio-20261103-01/review.cjs.source",
+      "physical_mode": "0o664",
+      "text_encoding": "utf-8",
+      "review": {
+        "privacy": "reviewed authored teaching/procedure text; no student submissions/grade records",
+        "rights": "author-authorised preservation; existing source/third-party attributions retained; no new licence granted",
+        "public_suitable": true,
+        "contact_values": []
+      },
+      "git_tree_mode": "100644"
+    }
+  ],
+  "count": 40,
+  "bytes": 453474,
+  "historical_count": 32,
+  "historical_bytes": 420268,
+  "working_count": 8,
+  "working_bytes": 33206,
+  "exact_public_stash_duplicates": [
+    {
+      "path": "_bibliography/manual.bib",
+      "git_blob": "0b195ea6781c3b70cb2f7df10a7a939de9d84aa0",
+      "mode": "100644",
+      "bytes": 24145,
+      "sha256": "93d348fe749b59397c1138dfacd96b2b373a087b2c48c430c538a3ea68685316"
+    },
+    {
+      "path": "practiques/estadistica-constanti/preparar.py",
+      "git_blob": "c04c34a2c5751a9018b1f315e2dc7fb10bd11a9d",
+      "mode": "100644",
+      "bytes": 13170,
+      "sha256": "4cf673b1a1458231d360b83e98954a442e26556359465d63b63c1ba8df2b4feb"
+    },
+    {
+      "path": "practiques/visibilitat-costa/preparar.py",
+      "git_blob": "57e8cb8f1d884a046dae5484bde34890e809f3d8",
+      "mode": "100644",
+      "bytes": 14590,
+      "sha256": "5611ace102c2bad17114181a96a51e475cfae8e56a11d1bdcea9a4d158bfb43e"
+    },
+    {
+      "path": "assets/captures/visibilitat-carretera-parametres.annotations.svg",
+      "git_blob": "3911e3fb01efc332a11c623e94185085883e7f8d",
+      "mode": "100644",
+      "bytes": 294693,
+      "sha256": "2494352590f5d92f1491b1973bb3dd68989d9f6a5a57776adc1d18e528870fa8"
+    },
+    {
+      "path": "assets/captures/visibilitat-carretera-parametres.png",
+      "git_blob": "c9ef2613578e7cf2a9d88588f7bc9e4b83c7a74e",
+      "mode": "100644",
+      "bytes": 110050,
+      "sha256": "3cbb882f49a4d71c209041eea1d5d0c736658483dce93d8fc0e23f30bfe217e0"
+    },
+    {
+      "path": "assets/captures/visibilitat-lots-acces.annotations.svg",
+      "git_blob": "c720eb21dc388d5fb4bdd700465b728f351efd96",
+      "mode": "100644",
+      "bytes": 155047,
+      "sha256": "46d8218fadbde8e700d858347a43182b5f733c8214811621c3fa6ed0564e7c1d"
+    },
+    {
+      "path": "assets/captures/visibilitat-lots-acces.png",
+      "git_blob": "0fa3ac1013564956dbed0437ee963be6fb001d34",
+      "mode": "100644",
+      "bytes": 57948,
+      "sha256": "3a64af14f76b70e95f784f6d94ebd198262403d00fe26ac40ea48effdd515047"
+    },
+    {
+      "path": "assets/captures/visibilitat-opcions-avancades.annotations.svg",
+      "git_blob": "2088e234084d9dd23153f89af22eed87f60fd392",
+      "mode": "100644",
+      "bytes": 172878,
+      "sha256": "4d8913cc248a4142c3b154eb4da19b74b445e96be8d45d193bfe422c4faca5d8"
+    },
+    {
+      "path": "assets/captures/visibilitat-opcions-avancades.png",
+      "git_blob": "27363b4dd0a7dc44bcb5f4a12b3571ff085c0ff2",
+      "mode": "100644",
+      "bytes": 64491,
+      "sha256": "352fd5b082c9202000bd2e6400ebb8e76ac445e38f854d325fc4382261e650c3"
+    },
+    {
+      "path": "assets/captures/visibilitat-ortofoto-context.annotations.svg",
+      "git_blob": "7d46e49061e4597ae20bf7e2f8d3cf5cadc04996",
+      "mode": "100644",
+      "bytes": 405718,
+      "sha256": "624064e756c1a23c6bfaa208ff25c9a04127c0803fa89c1b48213cea98978c2e"
+    },
+    {
+      "path": "assets/captures/visibilitat-ortofoto-context.png",
+      "git_blob": "79e704b298e40f33d453474641bd7d0d761e6308",
+      "mode": "100644",
+      "bytes": 151377,
+      "sha256": "a381d15f04d39bde41425b704eba4b1af4654b729d9a6dadcb30136ae0838fc5"
+    },
+    {
+      "path": "context/qgis/manifests/visibilitat-carretera-parametres.yml",
+      "git_blob": "cffa8b890b4356e65a30d5c034aa129d03bee82b",
+      "mode": "100644",
+      "bytes": 8787,
+      "sha256": "9e6be01c7c8fcd33765d8422a97f0338ef4b3ed1be2a1a11f35914ec8fe42857"
+    },
+    {
+      "path": "context/qgis/manifests/visibilitat-lots-acces.yml",
+      "git_blob": "f3dd82e354c023bad64f343cbba8df0b502b4fbe",
+      "mode": "100644",
+      "bytes": 4607,
+      "sha256": "594cd45139937744b4e1fc4b13dc52ad0cd2821faf636764d465892730dd1f68"
+    },
+    {
+      "path": "context/qgis/manifests/visibilitat-opcions-avancades.yml",
+      "git_blob": "6fdd859817ce872cd417cc8b6330f17e09df517a",
+      "mode": "100644",
+      "bytes": 8740,
+      "sha256": "9c2a9163259c075ff953bc43025c010094d62648901934680e45c6044c95a1f1"
+    },
+    {
+      "path": "context/qgis/manifests/visibilitat-ortofoto-context.yml",
+      "git_blob": "5261800ecb634ab0a3ff92c1002d977d34760946",
+      "mode": "100644",
+      "bytes": 9004,
+      "sha256": "669a4aa1e746bd56d98593f8eab8c2bf3670260aee538236ee7840bd41c12620"
+    },
+    {
+      "path": "practiques/estadistica-constanti/comprovar-teoria.py",
+      "git_blob": "d3e3d9034a83a2d632034a2792229e115f92e65f",
+      "mode": "100644",
+      "bytes": 9950,
+      "sha256": "2d6db007e7c8b8a53def46b6e8bfed11a64f186ad6382586fc08e7a9daaf461f"
+    }
+  ],
+  "privacy_review": "full source content and historical differences reviewed; no credentials or student/grade records detected",
+  "rights": "author-authorised preservation; original notices and attributions retained; no new licence",
+  "source_review_sha256": "a8c32e847f7b10c0d1e69dfe5e731b6b6d27efed896b624fc81f75aeed8fac8a",
+  "review_diff_sha256": "8ac86f387b9f3e260232fb807ad44700d4b39f29f33e16e6ad2a6ba2ccc50675",
+  "role_sha256": "baa45ebd4cdc8595d89ecce214247ada703b2a78403043dc14f941113203ec5c",
+  "not_canonical": true,
+  "reconstruction_closure_not_implied": true
+}

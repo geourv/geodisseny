@@ -1,0 +1,122 @@
+"""Check the selective practice revision and archive-aware local promotion."""
+import hashlib
+import json
+from pathlib import Path
+import shutil
+import stat
+import subprocess
+import sys
+import zipfile
+from session import ROOT,RUN,COURSE,COURSE_NAME,SOURCES,sha,save,status
+
+before=json.loads((RUN/'before.json').read_text())
+package_root=COURSE/'packages/review01'
+report=json.loads((package_root/'packages.json').read_text())
+
+def guard():
+    assert subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()==before['head']
+    assert set(status())<=set(SOURCES),status()
+    assert all(value[0] in (' ','?') and 'U' not in value for value in status().values())
+    for name,row in before['files'].items():
+        if not row['exists']:continue
+        assert stat.S_IMODE((ROOT/name).stat().st_mode)==row['mode']
+        if name not in SOURCES:assert sha(ROOT/name)==row['sha256'],name
+
+action=sys.argv[1]
+if action=='prepare':
+    guard()
+    proof=json.loads((RUN/'check02/verified.json').read_text())
+    assert proof['ok'] and proof['case_count']==9 and proof['inputs_unchanged']
+    verified=json.loads((package_root/'verified.json').read_text())
+    assert verified['ok'] and verified['packages_sha256']==sha(package_root/'packages.json')
+    assert verified['checked_files']==164 and verified['all_extracted_files_unchanged']
+    assert report['unaffected_reuse']['unchanged_zip_pdf_pairs']==8
+    assert sorted(row['version'] for row in report['packages']).count('2026-10-30')==8
+    assert sorted(row['version'] for row in report['packages']).count('2026-11-03')==2
+    reviews=[]
+    for label,kind in (('review-main02','line'),('review-alumnat01','copy'),('review-docent01','copy')):
+        prepared=json.loads((RUN/'web-checks'/label/'data.json').read_text())
+        assert all(sha(ROOT/name)==digest for name,digest in prepared['source_hashes'].items())
+        reviews.append({'kind':kind,'source_digest':prepared['source_digest'],'source_hashes':prepared['source_hashes'],
+                        'findings':[],'registered':False})
+    save(RUN/'REVISIO-RETINGUDA.json',{'kind':'geodisseny-retained-agent-review','reviews':reviews,
+        'registration_limitation':'Existing managed review limit100/revision123; state preserved.',
+        'practice_pdf_pages_visually_reviewed':27,'manual_pdf_pages_visually_reviewed':[163,164,165,166,167],
+        'browser_viewports':[1440,430],'human_approved':False,'publishes':False})
+    assert sha(ROOT/'dist/practiques/manifest.json')==before['artifacts']['dist/practiques/manifest.json']
+    print('Two changed readings and selective reuse verified; local candidate ready.',flush=True)
+elif action=='promote':
+    guard()
+    assert (RUN/'REVISIO-RETINGUDA.json').is_file()
+    assert sha(ROOT/'dist/practiques/manifest.json')==before['artifacts']['dist/practiques/manifest.json']
+    subprocess.run(['python3','-B','practiques/lliurament-geodisseny.py','--run',COURSE_NAME,'--package-pass','review01',
+        '--publish-current','--archive-id','2026-11-03-abans-calcul-dispersio-01'],cwd=ROOT,check=True)
+elif action=='verify':
+    guard()
+    current=ROOT/'dist/practiques'
+    manifest=json.loads((current/'manifest.json').read_text())
+    previous=ROOT/manifest['previous_tree'];archive=previous.parent
+    tree=json.loads((archive/'original-tree.json').read_text())
+    assert sha(previous/'manifest.json')==before['artifacts']['dist/practiques/manifest.json']
+    actual={str(path.relative_to(previous)):path for path in previous.rglob('*') if path.is_file()}
+    assert set(actual)=={row['path'] for row in tree['files']}
+    assert all(sha(actual[row['path']])==row['sha256'] and actual[row['path']].stat().st_size==row['bytes'] for row in tree['files'])
+    assert sorted(str(path.relative_to(previous)) for path in previous.rglob('*') if path.is_dir())==tree['directories']
+    pairs_unchanged=0;data_members=0;versions={}
+    for activity in manifest['activities']:
+        folder=ROOT/activity['path'];slug=activity['activity']
+        child=json.loads((folder/'manifest.json').read_text())
+        versions[slug]=child['version']
+        assert sha(folder/'manifest.json')==activity['manifest_sha256']
+        assert {path.name for path in folder.iterdir()}=={slug+'.zip',slug+'-docent.zip','LLEGIU-ME.pdf',
+            'LLEGIU-ME-docent.pdf','ENUNCIAT-MOODLE.md','manifest.json','SHA256SUMS'}
+        for row in (item for item in report['packages'] if item['handoff_slug']==slug):
+            teacher=row['recipient']=='docent';suffix='-docent' if teacher else ''
+            pdf=folder/('LLEGIU-ME-docent.pdf' if teacher else 'LLEGIU-ME.pdf')
+            zip_path=folder/(slug+suffix+'.zip')
+            assert sha(pdf)==row['pdf_sha256'] and sha(zip_path)==row['zip_sha256']
+            assert child['version']==row['version']
+            old_folder=previous/slug/'ca'
+            if row['slug']!='estadistica-constanti':
+                assert sha(pdf)==sha(old_folder/pdf.name) and sha(zip_path)==sha(old_folder/zip_path.name)
+                pairs_unchanged+=1
+                assert child['version']=='2026-10-30'
+            else:assert child['version']=='2026-11-03'
+            with zipfile.ZipFile(zip_path) as new,zipfile.ZipFile(old_folder/zip_path.name) as old:
+                assert new.testzip() is None
+                current_data={name:hashlib.sha256(new.read(name)).hexdigest() for name in new.namelist() if '/data/' in name}
+                old_data={name:hashlib.sha256(old.read(name)).hexdigest() for name in old.namelist() if '/data/' in name}
+                assert current_data==old_data
+                data_members+=len(current_data)
+            if teacher:assert sha(folder/'ENUNCIAT-MOODLE.md')==row['moodle_statement_sha256']
+        subprocess.run(['sha256sum','--check','SHA256SUMS'],cwd=folder,check=True,capture_output=True)
+    assert pairs_unchanged==8 and data_members==154
+    result={'ok':True,'activities':5,'changed_pdf_zip_pairs':2,'unchanged_pdf_zip_pairs':8,
+        'all_154_dataset_project_resource_members_unchanged':True,'relocated_qgz':26,'all_extracted_files_unchanged':True,
+        'actual_activity_versions':versions,'all_current_sums_match':True,'all_archive_hashes_match':True,
+        'archive':str(archive.relative_to(ROOT)),'archived_files':len(tree['files']),'archived_directories':len(tree['directories']),
+        'dist_manifest_sha256':sha(current/'manifest.json'),'published_current_sha256':sha(COURSE/'published-current.json'),
+        'archive_inventory_sha256':sha(archive/'original-tree.json'),'archive_verification_sha256':sha(archive/'verified.json'),
+        'package_report_sha256':sha(package_root/'packages.json'),'human_approved':False}
+    save(COURSE/'current-verified.json',result)
+    print(json.dumps(result,ensure_ascii=False),flush=True)
+elif action=='final':
+    guard()
+    assert json.loads((COURSE/'current-verified.json').read_text())['ok']
+    sources={}
+    for name in SOURCES:
+        target=RUN/'final-sources'/name
+        target.parent.mkdir(parents=True,exist_ok=True)
+        shutil.copy2(ROOT/name,target)
+        sources[name]=sha(target)
+    save(RUN/'source-hashes.json',sources)
+    save(RUN/'final-checks.json',{'ok':True,'sources':sources,'head':before['head'],'issue':'https://github.com/geourv/geodisseny/issues/22',
+        'qgis_recipe_check':str((RUN/'check02/verified.json').relative_to(ROOT)),
+        'course_current_verification':str((COURSE/'current-verified.json').relative_to(ROOT)),
+        'course_current_verification_sha256':sha(COURSE/'current-verified.json'),
+        'practice_pages':{'alumnat':19,'docent':8},'all_27_practice_pages_visually_reviewed':True,
+        'manual_pdf':json.loads((RUN/'manual-pdf-review01/observations.json').read_text()),
+        'managed_editorial_state_unchanged':True,'human_approved':False,'site_published':False,'moodle_uploaded':False})
+    shutil.copy2(__file__,RUN/'closeout-source.py')
+    print('Final sources, checks and continuation retained.',flush=True)
+else:raise ValueError(action)

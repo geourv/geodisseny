@@ -1,0 +1,11 @@
+# Accessibilitat: xarxa vectorial
+
+**Dades.** Descarregueu `accessibilitat-xarxa-vectorial.zip` i conserveu l'estructura completa. Llegiu `pdf/LLEGIU-ME.pdf` i obriu `data/inici.qgz` amb QGIS 3.44. Els vectors són al GeoPackage de `data/`; els ràsters són GeoTIFF separats a `data/rasters/`. El cas d'aplicació és Vila-seca. Els eixos de xarxa i el context cartogràfic són de l'ICGC; trams admesos i velocitats són supòsits docents. El grup Ortofoto ICGC conté el retall local i el WMS per consultar més detall amb connexió.
+
+**Treball de classe.** El professor indicarà els apartats obligatoris dins del 70%: distància recta, connexions, ruta curta/ràpida, tancament de P2 i interpretació. La guia completa no és una llista de passos automàticament obligatoris. Manteniu O/D i distingiu «sense ruta» de distància zero.
+
+**Ampliacions per aspirar a l'excel·lent.** Compareu destins, velocitats o una altra zona, amb una referència i controls. Quin accés és més vulnerable? Quines dades permetrien contrastar la ruta? Proposeu una aplicació geogràfica proporcionada als resultats.
+
+**Informe i lliurament.** Entregueu vectors en un GeoPackage, projecte relatiu i PDF amb pregunta, dades, decisions, controls, mapes/taula i conclusions. Podeu enregistrar la pantalla i extreure'n captures llegibles, numerades i comentades; el vídeo només es lliura si el professor ho indica. Comproveu l'obertura en una altra carpeta.
+
+**Qualificació.** 70% apartats obligatoris indicats a classe; 20% ampliacions; 10% informe, captures, mapes i organització. Una ampliació necessita pregunta, controls i interpretació; no substitueix els obligatoris ni garanteix una nota.
