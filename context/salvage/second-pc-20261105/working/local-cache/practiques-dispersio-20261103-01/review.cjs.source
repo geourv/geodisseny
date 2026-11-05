@@ -1,0 +1,33 @@
+const {chromium}=require('playwright');
+const fs=require('node:fs/promises');
+const crypto=require('node:crypto');
+(async()=>{
+  const browser=await chromium.launch({headless:true,args:['--no-sandbox','--disable-gpu']});
+  const views=[];
+  try{
+    for(const [name,width,mobile] of [['desktop',1440,false],['mobile',430,true]]){
+      const context=await browser.newContext({viewport:{width,height:1200},isMobile:mobile});
+      const page=await context.newPage();const errors=[];
+      page.on('pageerror',error=>errors.push(error.message));
+      const response=await page.goto(process.env.REVIEW_URL+'chapters/punts-densitat/',{waitUntil:'load',timeout:60000});
+      await page.evaluate(async()=>{await document.fonts.ready;if(window.MathJax?.startup?.promise)await window.MathJax.startup.promise;});
+      for(const image of await page.locator('.manual-content img').all())await image.evaluate(el=>el.decode());
+      await page.locator('#calcul-dispersio-qgis').evaluate(el=>el.scrollIntoView({block:'start'}));
+      await page.screenshot({path:`/review/${name}-procediment.png`});
+      const state=await page.evaluate(()=>({overflow:document.documentElement.scrollWidth-window.innerWidth,
+        fields:['n_punts','vx_m2','vy_m2','cxy_m2','D_m','delta_m2','a_m','b_m','azimut'].every(value=>document.querySelector('.manual-content').textContent.includes(value)),
+        codeParent:[...document.querySelectorAll('.manual-content pre')].some(el=>el.textContent.includes('geometry(@parent)')),
+        mathErrors:document.querySelectorAll('mjx-merror,.MathJax_Error').length,
+        loadedImages:[...document.querySelectorAll('.manual-content img')].every(el=>el.complete&&el.naturalWidth>0)}));
+      if(response.status()!==200||state.overflow>1||!state.fields||!state.codeParent||state.mathErrors||!state.loadedImages||errors.length)
+        throw new Error(JSON.stringify({name,state,errors}));
+      views.push({name,width,status:response.status(),state,errors});await context.close();
+    }
+    const context=await browser.newContext();
+    const response=await context.request.get(new URL('../assets/pdf/manual-ca.pdf',process.env.REVIEW_URL).href);
+    const sha=crypto.createHash('sha256').update(await response.body()).digest('hex');
+    if(response.status()!==200||sha!==process.env.PDF_SHA256)throw new Error('Served PDF differs');
+    await context.close();
+    await fs.writeFile('/review/receipt.json',JSON.stringify({ok:true,views,pdfSha256:sha},null,2),{flag:'wx'});
+  }finally{await browser.close();}
+})().catch(error=>{console.error(error);process.exitCode=1;});

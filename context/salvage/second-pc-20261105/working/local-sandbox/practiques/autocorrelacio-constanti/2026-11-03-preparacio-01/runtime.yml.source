@@ -1,0 +1,13 @@
+runtime:
+  default_image: sha256:1003721d96abe9607d8337b36851f9b29f84c2f8f92b377d1a73ff03c9d15cd2
+  pull_policy: never
+  docker_network: none
+  display_backend: offscreen
+  locale: ca_ES
+paths:
+  recipes: []
+  data_root: /workspace
+  output_root: /workspace/sandbox/practiques/autocorrelacio-constanti/2026-11-03-preparacio-01/output
+  cache_root: /workspace/sandbox/practiques/autocorrelacio-constanti/2026-11-03-preparacio-01/cache
+plugins:
+  - processing

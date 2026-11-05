@@ -1,0 +1,65 @@
+"""Review the edited chapter's actual web and PDF representations."""
+import json
+import os
+from pathlib import Path
+import shutil
+import subprocess
+import sys
+import unicodedata
+import xml.etree.ElementTree as ET
+from PIL import Image,ImageDraw
+from session import ROOT,HERE,RUN,sha,save
+
+pass_id=sys.argv[1]
+assert pass_id.isdigit()
+preview=json.loads((ROOT/'.cache/practiques-minimal-20261027-01/disp1103-preview-status01/data.json').read_text())
+assert preview['owned'] and preview['running'] and preview['host_project']==str(ROOT)
+receipt=json.loads((ROOT/'.cache/unaltraweb/manual-pdf-preview.json').read_text())
+pdf=next(row for row in receipt['artifacts'] if row['kind']=='pdf')
+source=ROOT/pdf['source']
+assert sha(source)==pdf['sha256']==sha(ROOT/pdf['destination'])==sha(ROOT/'_site/assets/pdf/manual-ca.pdf')
+browser=RUN/('browser-review'+pass_id)
+browser.mkdir()
+shutil.copy2(HERE/'review.cjs',browser/'review.cjs')
+command=['docker','run','--rm','--pull','never','--network','host','--read-only','--tmpfs','/tmp',
+    '--shm-size','512m','--cpus','2','--memory','4g','--pids-limit','512','--user',f'{os.getuid()}:{os.getgid()}',
+    '--env','HOME=/tmp','--env','NODE_PATH=/opt/unaltraweb/scripts/web_captures/node_modules',
+    '--env','PLAYWRIGHT_BROWSERS_PATH=/ms-playwright','--env','REVIEW_URL='+preview['url'],
+    '--env','PDF_SHA256='+pdf['sha256'],'--mount',f'type=bind,src={browser},dst=/review',
+    '--entrypoint','node','ghcr.io/dosquartsdedocs/unaltraweb-web-capture@sha256:0bf1bc67fe63e1440bffe708a168beefa11c54441650a871ab99380d362f7c1e',
+    '/review/review.cjs']
+result=subprocess.run(command,cwd=ROOT,capture_output=True,text=True,timeout=300)
+save(browser/'worker.json',{'command':command,'returncode':result.returncode,'stdout':result.stdout,'stderr':result.stderr})
+assert result.returncode==0,result.stdout+result.stderr
+out=RUN/('manual-pdf-review'+pass_id)
+out.mkdir()
+shutil.copy2(source,out/'manual-ca.pdf')
+xml=ET.fromstring(subprocess.check_output(['pdftotext','-bbox',str(source),'-']))
+pages=xml.findall('.//{*}page');texts=[]
+for number,page in enumerate(pages,1):
+    width,height=float(page.get('width')),float(page.get('height'))
+    words=page.findall('.//{*}word')
+    assert all(-1<=float(word.get('xMin'))<=float(word.get('xMax'))<=width+1 and
+               -1<=float(word.get('yMin'))<=float(word.get('yMax'))<=height+1 for word in words),number
+    texts.append(unicodedata.normalize('NFC',''.join(word.text or '' for word in words)))
+start=next(i for i,text in enumerate(texts) if 'Elprocedimentsegüent' in text)
+end=next(i for i in range(start,len(texts)) if 'Quantspuntsquedendins?' in texts[i])
+section=''.join(texts[start:end+1])
+assert all(field in section for field in ('n_punts','vx_m2','vy_m2','cxy_m2','D_m','delta_m2','a_m','b_m','azimut'))
+assert 'geometry(@parent)' in section and 'make_ellipse' in section
+selected=list(range(max(1,start),min(len(pages),end+2)+1))
+for number in selected:
+    subprocess.run(['pdftoppm','-f',str(number),'-l',str(number),'-r','80','-png',str(source),str(out/'page')],check=True,capture_output=True)
+for offset in range(0,len(selected),4):
+    chosen=selected[offset:offset+4]
+    paths=[out/f'page-{number:03d}.png' for number in chosen]
+    with Image.open(paths[0]) as image:width,height=image.size
+    sheet=Image.new('RGB',(width*2,(height+24)*((len(paths)+1)//2)),'#ddd');draw=ImageDraw.Draw(sheet)
+    for index,(number,path) in enumerate(zip(chosen,paths)):
+        x,y=index%2*width,index//2*(height+24)
+        draw.text((x+5,y+3),f'Manual {number}/{len(pages)}',fill='black')
+        with Image.open(path) as image:sheet.paste(image.convert('RGB'),(x,y+24))
+    sheet.save(out/f'sheet-{offset//4+1:02d}.png')
+save(out/'observations.json',{'ok':True,'pages':len(pages),'sha256':pdf['sha256'],
+    'all_word_bounds_valid':True,'preview_copies_match':True,'selected_pages':selected,'human_approved':False})
+print(json.dumps({'ok':True,'pages':len(pages),'sha256':pdf['sha256'],'selected_pages':selected,'preview':preview['url']},ensure_ascii=False),flush=True)

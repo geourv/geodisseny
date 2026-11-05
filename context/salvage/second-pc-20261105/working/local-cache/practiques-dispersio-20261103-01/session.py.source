@@ -1,0 +1,129 @@
+"""Preserve and render this bounded revision through the published producers."""
+import hashlib
+import json
+import os
+from pathlib import Path
+import shutil
+import stat
+import subprocess
+import sys
+
+ROOT=Path('/home/benizar/git/geodisseny')
+HERE=Path(__file__).resolve().parent
+RUN=ROOT/'sandbox/practiques/estadistica-constanti/2026-11-03-dispersio-01'
+COURSE_NAME='2026-11-03-dispersio-01'
+COURSE=ROOT/'sandbox/practiques/lliurament-geodisseny'/COURSE_NAME
+WEB=ROOT/'.cache/practiques-minimal-20261027-01/session.py'
+IMAGE='sha256:1003721d96abe9607d8337b36851f9b29f84c2f8f92b377d1a73ff03c9d15cd2'
+CONTROLLER='sha256:ea14b1224382e47031b979d294f970b66773155584ac8f9eb94a33dc6421b0c9'
+SOURCES=('_chapters/ca/04-estadistica-espacial.md','practiques/estadistica-constanti/ca/alumnat/LLEGIU-ME.md',
+    'practiques/estadistica-constanti/ca/docent/LLEGIU-ME.md','practiques/estadistica-constanti/ca/docent/ENUNCIAT-MOODLE.md',
+    'practiques/estadistica-constanti/recursos.yml','practiques/estadistica-constanti/edicio.json',
+    'practiques/estadistica-constanti/comprovar-dispersio-qgis.py','practiques/lliurament-geodisseny.py',
+    'practiques/README.md','context/practice-retention-inventory.md','context/writing-profile.md')
+
+def sha(path):
+    with path.open('rb') as stream:return hashlib.file_digest(stream,'sha256').hexdigest()
+def save(path,data):
+    with path.open('x') as stream:json.dump(data,stream,ensure_ascii=False,indent=2)
+def status():
+    raw=subprocess.check_output(['git','status','--porcelain=v1','-z','--untracked-files=all'],cwd=ROOT)
+    return {os.fsdecode(row[3:]):row[:2].decode() for row in raw.split(b'\0') if row}
+def web(label,tool,*options):
+    folder=RUN/'web-checks'/label
+    folder.mkdir(parents=True)
+    result=subprocess.run(['python3','-B',str(WEB),'web','disp1103-'+label,tool,*options],cwd=ROOT)
+    source=WEB.parent/('disp1103-'+label)
+    for name in ('data.json','process.json'):
+        if (source/name).is_file():shutil.copy2(source/name,folder/name)
+    assert result.returncode==0,str(folder)
+    return json.loads((folder/'data.json').read_text()),folder/'data.json'
+
+if __name__=='__main__':
+    action,*args=sys.argv[1:]
+    if action=='before':
+        assert not status()
+        RUN.mkdir()
+        protected=('Makefile','Gemfile','Gemfile.lock','.unaltraweb/scaffold.json','.github/workflows/deploy.yml',
+            '.github/workflows/source-checks.yml','.gitignore','opencode.json','.git/info/exclude',
+            'context/editorial-state.json','_config.yml','_pages/ca/index.md','_chapters/ca/03-visibilitat.md')
+        files={}
+        for name in SOURCES+protected:
+            path=ROOT/name
+            if not path.exists():
+                files[name]={'exists':False}
+                continue
+            assert path.is_file() and not path.is_symlink()
+            target=RUN/'before-sources'/name
+            target.parent.mkdir(parents=True,exist_ok=True)
+            shutil.copy2(path,target)
+            files[name]={'exists':True,'sha256':sha(path),'mode':stat.S_IMODE(path.stat().st_mode)}
+        artifacts={}
+        for name in ('assets/pdf/manual-ca.pdf','.cache/unaltraweb/manual-pdf-preview.json','dist/practiques/manifest.json'):
+            target=RUN/'before-artifacts'/Path(name).name
+            target.parent.mkdir(exist_ok=True)
+            shutil.copy2(ROOT/name,target)
+            artifacts[name]=sha(target)
+        save(RUN/'before.json',{'head':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
+            'files':files,'artifacts':artifacts,'reserved_paths':SOURCES,'issue':'https://github.com/geourv/geodisseny/issues/22'})
+        print('Clean task baseline and current teaching/manual artifacts retained.',flush=True)
+    elif action=='web':
+        label,tool,*options=args
+        web(label,tool,*options)
+    elif action=='stage':
+        subprocess.run(['python3','-B','practiques/lliurament-geodisseny.py','--run',COURSE_NAME,
+            '--reuse-layout-from','2026-10-30-organitzacio-02','--layout-pass','layout02'],cwd=ROOT,check=True)
+    elif action=='proof':
+        label,=args
+        out=RUN/label
+        out.mkdir()
+        script=ROOT/'practiques/estadistica-constanti/comprovar-dispersio-qgis.py'
+        data=COURSE/'handouts/layout02/estadistica-constanti/alumnat/data'
+        command=['docker','run','--rm','--pull','never','--init','--network','none','--read-only','--tmpfs','/tmp',
+            '--cpus','2','--memory','4g','--pids-limit','512','--user',f'{os.getuid()}:{os.getgid()}',
+            '--env','HOME=/tmp','--env','QT_QPA_PLATFORM=offscreen','--env','GDAL_PAM_ENABLED=NO',
+            '--mount',f'type=bind,src={data},dst=/dades,readonly',
+            '--mount',f'type=bind,src={ROOT/"context/inputs/punts-municipis.json"},dst=/inputs/municipis.json,readonly',
+            '--mount',f'type=bind,src={ROOT/"practiques/estadistica-constanti/ca/alumnat/LLEGIU-ME.md"},dst=/guide/student.md,readonly',
+            '--mount',f'type=bind,src={ROOT/"_chapters/ca/04-estadistica-espacial.md"},dst=/guide/manual.md,readonly',
+            '--mount',f'type=bind,src={script},dst=/script/check.py,readonly',
+            '--mount',f'type=bind,src={out},dst=/proof','--entrypoint','python3',IMAGE,'-B','/script/check.py']
+        result=subprocess.run(command,cwd=ROOT,capture_output=True,text=True,timeout=600)
+        save(out/'process.json',{'command':command,'returncode':result.returncode,'stdout':result.stdout,'stderr':result.stderr})
+        shutil.copy2(script,out/'verification-source.py')
+        print(result.stdout,flush=True)
+        assert result.returncode==0,result.stdout+result.stderr
+    elif action=='pdfs':
+        pass_id,=args
+        assert pass_id.isdigit()
+        receipts=COURSE/('pdf-receipts'+pass_id)
+        receipts.mkdir()
+        for role in ('alumnat','docent'):
+            relative='practiques/estadistica-constanti/ca/'+role+'/LLEGIU-ME.md'
+            source=ROOT/relative
+            digest=sha(source)
+            web('prose-'+role+pass_id,'prose-check','--target',relative)
+            prepared,_=web('review-'+role+pass_id,'editorial-review-prepare','--target',relative,'--kind','copy')
+            assert prepared['source_hashes'][relative]==digest
+            data,path=web('pdf-'+role+pass_id,'manual-practice-pdf-build','--source',relative,
+                '--version','2026-11-03','--run','dispersio-'+pass_id)
+            assert data['ok'] and not data['publishes'] and data['version']=='2026-11-03'
+            assert sha(ROOT/data['job']/'inputs/original.md')==digest==sha(source)
+            assert sha(ROOT/data['pdf'])==data['pdf_sha256']
+            shutil.copy2(path,receipts/('estadistica-constanti-'+role+'.data.json'))
+    elif action=='build':
+        label,=args
+        out=RUN/label
+        out.mkdir()
+        environment=dict(os.environ)
+        for key in ('DISPLAY','WAYLAND_DISPLAY','XAUTHORITY','DOCKER_CONTEXT','DOCKER_TLS_VERIFY','DOCKER_CERT_PATH'):
+            environment.pop(key,None)
+        environment['DOCKER_HOST']='unix:///var/run/docker.sock'
+        command=['make','build','MCP_IMAGE='+CONTROLLER]
+        result=subprocess.run(command,cwd=ROOT,env=environment,capture_output=True,text=True,timeout=1500)
+        for name,text in (('stdout.log',result.stdout),('stderr.log',result.stderr)):
+            with (out/name).open('x') as stream:stream.write(text)
+        save(out/'receipt.json',{'command':command,'returncode':result.returncode,'publishes':False})
+        print(json.dumps({'returncode':result.returncode,'logs':str(out.relative_to(ROOT))}),flush=True)
+        assert result.returncode==0,result.stdout+result.stderr
+    else:raise ValueError(action)
